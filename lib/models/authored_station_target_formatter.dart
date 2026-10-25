@@ -10,12 +10,18 @@ class AuthoredStationTargetFormatter {
 
   static String? fromTimerSpec(TimerStationSpec spec) {
     if (spec.isRest) return 'Rest';
-    if (spec.workSeconds != null) {
-      return '${spec.workSeconds} s · recover remainder';
+    final target = spec.workSeconds != null
+        ? '${spec.workSeconds} s · recover remainder'
+        : spec.calories != null
+        ? '${spec.calories} cal'
+        : spec.reps != null
+        ? '${spec.reps} reps'
+        : formatDistance(meters: spec.distanceMeters, text: spec.distanceText);
+    final details = spec.authoredDetails;
+    if (details?['guidance_semantics'] == 'advisory_only') {
+      return '${target ?? ''} · Guidance: ${details!['guidance']}';
     }
-    if (spec.calories != null) return '${spec.calories} cal';
-    if (spec.reps != null) return '${spec.reps} reps';
-    return formatDistance(meters: spec.distanceMeters, text: spec.distanceText);
+    return target;
   }
 
   static String? formatDistance({double? meters, String? text}) {

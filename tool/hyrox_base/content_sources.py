@@ -4,6 +4,7 @@
 Run python3 tool/hyrox_base/content_sources.py --write to regenerate, or --check.
 The output is explicitly a review representation, never a Plan Package/session graph.
 """
+import copy
 import argparse
 import hashlib
 import json
@@ -92,8 +93,18 @@ def compile_sources(spec, root):
         if row['ski_wall_ball'][1] >= 60:
             raise ValueError('Ski work must leave recovery in its minute')
     source_pins = {name: digest((root / REL / name).read_bytes())
-                   for name in ['PROGRESSION.json', 'TRANSFER_BRIEF.txt', 'APPROVAL_2026_10_24.txt']}
+                   for name in ['PROGRESSION.json', 'TRANSFER_BRIEF.txt', 'APPROVAL_2026_10_24.txt', 'APPROVAL_2026_10_25.txt', 'EXERCISE_DEFINITION_PROPOSALS.json', 'PREPARATION_PROPOSALS.json']}
     source_pins['approved_brief'] = digest((root / 'docs/checkpoints/hyrox_base_personalisation/FOUNDER_BRIEF.txt').read_bytes())
+    approved = json.loads((root / REL / 'EXERCISE_DEFINITION_PROPOSALS.json').read_bytes())
+    if approved['approval_status'] != 'FOUNDER_CONTENT_APPROVED_2026_10_25' or not all(r['approved'] for r in approved['records']):
+        raise ValueError('Exact approved variant content unavailable')
+    variants = {r['authored_label']:dict(name=r['plain_english_name'], equipment=r['equipment'], position=r['position'], grip=r['grip'], execution_sequence=r['execution_sequence']) for r in approved['records']}
+    def annotate(value):
+        if isinstance(value,dict):
+            for child in list(value.values()): annotate(child)
+            if isinstance(value.get('exercise'),str): value['variant'] = copy.deepcopy(variants[value['exercise']])
+        elif isinstance(value,list):
+            for child in value: annotate(child)
     sessions, schedule = [], []
     for a, s in zip(spec['approved_weeks'], spec['supporting_weeks']):
         w = a['week']
@@ -104,7 +115,7 @@ def compile_sources(spec, root):
             if day == 7:
                 continue
             blocks, decisions, gaps, intents = [], [], [], []
-            prep = spec['preparation'][mode]
+            prep = copy.deepcopy(spec['preparation'][mode])
             if mode.startswith('gym'):
                 upper = s['upper']
                 gym = mode[-1]
@@ -158,11 +169,10 @@ def compile_sources(spec, root):
                                   minutes=rounds * 3, rpe=[6,6] if w in [4,8] else [6,7], rpe_approximate=w in [4,8],
                                   stations=[dict(exercise='ski_erg', work_seconds=ski_seconds),
                                             dict(exercise='wall_ball', reps=wb_reps,
-                                                 load='selected race weight', height='race-standard target',
-                                                 race_mapping=None), dict(kind='rest', seconds=60)],
+                                                 guidance='Use your race weight (advisory only; no exact load or target height prescribed).',
+                                                 guidance_semantics='advisory_only'), dict(kind='rest', seconds=60)],
                                   recovery='remainder_of_work_minutes_plus_full_third_minute_including_final_round',
-                                  provenance='supporting_direction', race_requirement_provenance='explicit_founder_requirement')
-                    decisions.append('D4')
+                                  provenance='supporting_direction', race_requirement_provenance='founder_advisory_correction_2026_10_25')
                 pair_exercises = [strength(e, upper['sets'], upper[k], upper['rir'],
                                           per_side=e.startswith('split_stance')) for e, k in pair]
                 if gym == 'c' and w == 1:
@@ -176,8 +186,8 @@ def compile_sources(spec, root):
                                                 (finish['repetitions'] - 1) * finish['recovery_seconds'])
                               if gym == 'a' else finish['minutes'] * 60,
                               full_seconds=None,
-                              unknown='rep/transition durations, ramp-ups, core rest placement')
-                gaps = ['B2'] if gym == 'c' else []
+                              unknown='rep/transition durations are not fixed tempo prescriptions; approved ramp guidance and core rest ranges remain intact')
+                gaps = []  # Advisory Base circuits do not require a race-division binding.
             else:
                 if mode == 'quality':
                     reps, mins = a['quality']
@@ -185,9 +195,8 @@ def compile_sources(spec, root):
                     intents.append(dict(kind='runningIntervals', parameters=dict(
                         repetitions=reps, work_seconds=mins * 60, recovery_seconds=120)))
                     base_seconds = 600 + 3 * 20 + 2 * 40 + reps * mins * 60 + (reps - 1) * 120 + 300
-                    timing = dict(kind='partial', known_seconds=[base_seconds+900, base_seconds+1200],
-                                  full_seconds=None, unknown='dynamic preparation duration and transitions')
-                    decisions.append('P2')
+                    timing = dict(kind='bounded', full_seconds=[base_seconds+900+120+40, base_seconds+1200+120+160],
+                                  preparation_seconds=[900,1020], transition_allowance_seconds=[40,160])
                 else:
                     window = a[f'{mode}_minutes']
                     blocks = [dict(kind='continuous_duration_window', exercise='running',
@@ -200,7 +209,10 @@ def compile_sources(spec, root):
             cooldown = (dict(easy_running_minutes=[15,20], walking_minutes=5)
                         if mode == 'quality' else dict(minutes=5, mode='easy movement', approximate=True)
                         if mode.startswith('gym') else dict(walking_minutes=5))
-            sessions.append(dict(source_id=sid, week=w, day=day, mode=mode,
+            annotate(prep)
+            annotate(blocks)
+            labels = identities({'preparation':prep,'blocks':blocks})
+            sessions.append(dict(exercise_variants={label:copy.deepcopy(variants[label]) for label in labels}, source_id=sid, week=w, day=day, mode=mode,
                                  source_kind='review_only_unpublished', provenance=source_pins,
                                  shared_policy_refs=list(spec['policies']), shared_policies=spec['policies'],
                                  preparation=prep, blocks=blocks, cooldown=cooldown, timing=timing,
@@ -208,11 +220,11 @@ def compile_sources(spec, root):
                                  canonical_source=None, exact_exercise_versions=None,
                                  content_decisions=sorted(set(decisions)), technical_blockers=['T1','B3']+gaps,
                                  status='awaiting_specific_content_decision' if decisions else 'technically_blocked',
-                                 source_status='working_prescription_complete',
-                                 preparation_gaps=['P1'] if mode.startswith('gym') else ['P2'] if mode == 'quality' else [],
+                                 source_status='prescription_content_complete',
+                                 preparation_gaps=[],
                                  capture_gaps=['C1'] if mode.startswith('gym') else [],
                                  binding_readiness='unresolved_published_versions',
-                                 supporting_content_approval='prescription approved 2026-10-24; no unseen capture approval'))
+                                 supporting_content_approval='prescriptions, variants and preparation approved 2026-10-25; no canonical publication/version authority or new mandatory capture fields'))
     return dict(format=FORMAT, authority=spec['authority'], source_pins=source_pins,
                 policies=spec['policies'], sessions=sessions, schedule=schedule)
 
@@ -225,7 +237,7 @@ def identities(bundle):
                 result.add(v['exercise'])
             # Preparation movement tuples are explicitly authored labels, not IDs.
             for key, child in v.items():
-                if key == 'movements':
+                if key in ['movements','dynamic_movements']:
                     result.update(x[0] for x in child)
                 walk(child)
         elif isinstance(v, list):
@@ -244,6 +256,9 @@ def compact(value):
                 continue
             if k == 'transition_rest_seconds' and v is None:
                 parts.append('transition rest: not separately prescribed')
+                continue
+            if k == 'effort' and v is None:
+                parts.append('effort: established dedicated-row binding; unavailable input remains unavailable')
                 continue
             if k == 'steps':
                 continue  # Repeated interval steps are described by reps/work/recovery above.
@@ -264,11 +279,11 @@ def compact(value):
 
 def render_master(spec, bundle):
     lines = ['# HYROX Base master source specification', '',
-             '2026-10-24. Working prescriptions approved with explicit corrections. Binding readiness, preparation detail and commercial publication remain separate.', '',
-             '[Exact transfer](TRANSFER_BRIEF.txt) · [Progression input](PROGRESSION.json) · '
+             '2026-10-25. All 48 prescriptions, exercise variants and preparation sequences are content-approved; eight rest entries are complete. Canonical binding/publication authority remains separate.', '',
+             '[Current approval](APPROVAL_2026_10_25.txt) · [Approved content packet](FOUNDER_DECISION_PACKET.md) · [Producer review bundle](PRODUCER_REVIEW_BUNDLE.json) · [Exact transfer](TRANSFER_BRIEF.txt) · [Progression input](PROGRESSION.json) · '
              '[Decisions and provenance](DECISIONS.md) · [Coverage](COVERAGE.md) · [Technical contract](CONTRACT.md) · [Capture/preparation audit](CAPTURE_AND_PREPARATION.md) · [Exercise candidates](EXERCISE_CANDIDATES.md)', '',
              'This document expands every authored day, including preparation and cooldown. '
-             'W1 row/plank, long preparation and squat rest follow the new explicit decisions; source labels are not canonical identities. '
+             'Barbell front-rack reverse lunges and split-stance cable Pallof presses follow the explicit correction. Circuit race-weight wording is advisory, with no numerical load/height or division lookup. Source labels are not canonical identities. '
              'No Test Week, invented fixed loads, automatic increases or filler is added.', '']
     for k,v in spec['policies'].items():
         lines += [f'**{k.replace("_", " ").capitalize()}.** {v}', '']
@@ -277,7 +292,7 @@ def render_master(spec, bundle):
               '|---|---|---|---|---|---|']
     for a in spec['approved_weeks']:
         lines.append(f'| {a["week"]} | {compact(a["easy_minutes"])} | {a["quality"][0]} × {a["quality"][1]} | {compact(a["long_minutes"])} | {a["row"][0]} × {a["row"][1]} / {a["row"][2]} | {a["squat"][0]} × {a["squat"][1]} / {a["squat"][2]} / {a["squat"][3]} |')
-    lines += ['', '## Supporting progression transferred for review', '',
+    lines += ['', '## Approved supporting progression', '',
               'Supporting exercise doses/core/finishers are prescription-approved, with W1 single-arm cable row 3 × 10/side at 2 RIR and plank 3 × 20 s. Earlier alternatives remain in the provenance register.', '',
               '| Week | RDL sets/reps/RIR | Lunge sets/reps per leg/RIR | Upper | Carry sets/m per side | Plank sets/s | Pallof sets/reps per side | Bike min/s/movement/reps/RPE | Ski rounds/s/WB reps |',
               '|---|---|---|---|---|---|---|---|---|---|']
@@ -339,11 +354,11 @@ def build_outputs(root):
     bundle = compile_sources(spec, root)
     ids = identities(bundle)
     summary = dict(training_sessions=len(bundle['sessions']), rest_days=sum(d['type']=='rest' for d in bundle['schedule']),
-                   review_sources=len(bundle['sessions']), authoritative_binding_ready=0, canonical_lowering_implemented=True,
+                   review_sources=len(bundle['sessions']), prescription_sources_complete=len(bundle['sessions']), authoritative_binding_ready=0, canonical_lowering_implemented=True,
                    binding_blockers_by_code={code:sum(code in s['technical_blockers'] for s in bundle['sessions']) for code in ['T1','B3','B2']},
                    capture_limit_sessions=sum(bool(s['capture_gaps']) for s in bundle['sessions']),
-                   working_prescription_complete=sum(s['source_status']=='working_prescription_complete' for s in bundle['sessions']),
-                   full_quantified_preparation_available=sum(not s['preparation_gaps'] for s in bundle['sessions']),
+                   working_prescription_complete=sum(s['source_status']=='prescription_content_complete' for s in bundle['sessions']),
+                   preparation_content_complete=sum(not s['preparation_gaps'] for s in bundle['sessions']),
                    preparation_detail_gaps=sum(bool(s['preparation_gaps']) for s in bundle['sessions']),
                    all_sessions_have_T1=all('T1' in s['technical_blockers'] for s in bundle['sessions']))
     audit = dict(summary=summary, canonical_compilation=canonical_compilation(bundle),
@@ -352,18 +367,19 @@ def build_outputs(root):
                  sessions=[{k:s[k] for k in ['source_id','status','source_status','content_decisions','preparation_gaps','capture_gaps','technical_blockers','binding_readiness','timing']} for s in bundle['sessions']])
     coverage = ['# 48-session completeness and timing audit', '', compact(summary), '',
                 'Every training day has an independent, fully retained review source in [SESSIONS.json](SESSIONS.json) '
-                'and a readable expansion in [MASTER.md](MASTER.md). All 48 main working prescriptions are source-complete and lower through the new canonical model adapter; full quantified preparation is separately incomplete on 32. '
+                'and a readable expansion in [MASTER.md](MASTER.md). All 48 complete prescriptions include approved preparation and exact variant content and lower through the canonical model adapter. Circuit race-weight guidance is advisory; obsolete B2/D4 mapping requirements are removed only for these circuits. '
                 'All 48 lack exact published definition/version/event resolution (T1). The table reports every category independently; '
-                'all categories remain visible. Working exercise prescriptions are approved; preparation gaps and capture limits confer no new prescription or result authority.', '',
+                'all categories remain visible. All prescription content is approved; capture limits do not create new mandatory results or canonical authority.', '',
                 '| Source | Source status | Content/preparation gaps | Binding blockers | Capture limits | Timing |', '|---|---|---|---|---|---|']
     for s in bundle['sessions']:
         coverage.append('| '+' | '.join([s['source_id'],s['source_status'],compact(list(dict.fromkeys(s['content_decisions']+s['preparation_gaps']))),compact(s['technical_blockers']),compact(s['capture_gaps']),compact(s['timing'])])+' |')
     coverage += ['', 'Eight Sunday rest entries are in the 56-entry schedule. Test Week has no entries.', '',
-                 'Long-run timing correction: every long run uses 5 minutes gentle walking/jogging and 5 minutes walking cooldown; an 80-minute main run totals 90 minutes. W6/W7 main remains 65–80. Quality totals exclude unquantified dynamic work; gym totals are partial. Source completeness, binding readiness and capture limits are independent categories.', '',
+                 'Long-run timing correction: every long run uses 5 minutes gentle walking/jogging and 5 minutes walking cooldown; an 80-minute main run totals 90 minutes. W6/W7 main remains 65–80. Quality totals include the approved dynamic circuit/transition allowance; gym totals remain timing estimates without invented rep tempos. Source completeness, binding readiness and capture limits are independent categories.', '',
                  f'{len(ids)} distinct authored movement labels (including preparation) need exact resolution; see [AUDIT.json](AUDIT.json). '
                  'No claim that all labels need distinct new canonical identities is made.']
-    candidates = exercise_candidates(bundle)
-    outputs = {'EXERCISE_CANDIDATES.json':encoded(candidates), 'SESSIONS.json':encoded(bundle), 'AUDIT.json':encoded(audit),
+    candidates = exercise_candidates(bundle,root)
+    producer = producer_review_bundle(root, bundle)
+    outputs = {'PRODUCER_REVIEW_BUNDLE.json':encoded(producer), 'EXERCISE_CANDIDATES.json':encoded(candidates), 'SESSIONS.json':encoded(bundle), 'AUDIT.json':encoded(audit),
                'MASTER.md':render_master(spec,bundle), 'COVERAGE.md':('\n'.join(coverage)+'\n').encode(),
                'REVIEW_EXPORT.json':export_review(bundle)}
     if import_review(outputs['REVIEW_EXPORT.json']) != bundle:
@@ -374,82 +390,41 @@ def build_outputs(root):
 
 
 
-def exercise_candidates(bundle):
-    known = {'back_squat':('EX-073','cohort.exercise.back_squat'),
-      'rdl':('EX-078','cohort.exercise.romanian_deadlift'),
-      'strict_overhead_press':('EX-088','cohort.exercise.strict_press'),
-      'strict_pull_up':('EX-053','cohort.exercise.pull_up'),
-      'running':('EX-129','cohort.exercise.running'),
-      'rowing':('EX-049','cohort.exercise.rowing'),
-      'ski_erg':('EX-050','cohort.exercise.ski_erg'),
-      'wall_ball':('EX-052','cohort.exercise.wall_ball'),
-      'dead_bug':('EX-022','cohort.exercise.dead_bug')}
-    def dimensions(label):
-        if label in {'running','rowing','ski_erg','assault_bike','easy_bike'}:
-            return ['duration','distance','rpe']
-        if label=='suitcase_carry': return ['load','distance','unilateral_side']
-        if label=='long_lever_plank': return ['duration']
-        if label=='wall_ball': return ['repetitions','load','height_or_target']
-        return ['repetitions','load','rir']
-    rows=[]
-    for label in identities(bundle):
-        ex, transitional=known.get(label,(None,None))
-        variants={'front_rack_reverse_lunge':'Front-rack reverse lunge; front-rack implement/variant not selected by name similarity.',
-          'split_stance_single_arm_cable_row':'Split-stance, single-arm cable row; per-side prescription.',
-          'two_dumbbell_devils_press':"Two-dumbbell devil's press; no single-dumbbell substitution.",
-          'long_lever_plank':'Long-lever plank; optional longer lever W5, not generic-plank authority.',
-          'suitcase_carry':'Unilateral suitcase carry; not farmer carry.',
-          'light_row':'Preparation row variant unspecified; do not infer cable/dumbbell or chest support.',
-          'light_scapular_row':'Preparation scapular-row variant unspecified.',
-          'reverse_lunge':'Preparation reverse lunge; do not map to walking lunge.',
-          'wall_ball':'Wall ball at selected race weight/standard target; division mapping unresolved.'}
-        erg = label in {'rowing','ski_erg','assault_bike','easy_bike'}
-        bodyweight = label in {'bodyweight_squat','glute_bridge','dead_bug','long_lever_plank','wall_slide','strict_pull_up','unloaded_hip_hinge'}
-        proposed_modality = 'erg' if erg else 'locomotion' if label=='running' else 'bodyweight' if bodyweight else 'strength'
-        equipment_notes = {
-          'back_squat':'Barbell/rack; no total-load increment is guessed.',
-          'strict_overhead_press':'Barbell strict press is the existing EX-088 candidate; exact Base binding requires review.',
-          'strict_pull_up':'Strict pull-up facility; no assisted or weighted substitution inferred.',
-          'rdl':'Barbell EX-078 is an existing candidate; exact implement/variant still needs binding review.',
-          'incline_dumbbell_press':'Dumbbells and incline bench.',
-          'chest_supported_row':'Chest support; rowing implement is not selected by name similarity.',
-          'front_rack_reverse_lunge':'Front-rack implement remains an explicit variant input.',
-          'dumbbell_shoulder_press':'Dumbbells; no unprovided seated/standing restriction is added.',
-          'split_stance_single_arm_cable_row':'Cable station; split stance and single arm are explicit.',
-          'suitcase_carry':'Unilateral external load and measured carry space; no fixed kg.',
-          'long_lever_plank':'Bodyweight long-lever position; no compulsory leverage change.',
-          'pallof_press':'Resistance implement must be reviewed; cable/band equivalence is not granted.',
-          'rowing':'Row erg; device/protocol semantics stay separate.',
-          'ski_erg':'SkiErg device; banded patterns remain separate.',
-          'assault_bike':'Authored assault bike; no equivalence to other bikes inferred.',
-          'easy_bike':'Preparation bike variant requires review.',
-          'kettlebell_swing':'Kettlebell; effort/technique-selected load.',
-          'two_dumbbell_devils_press':'Two dumbbells; effort/technique-selected load.',
-          'wall_ball':'Wall ball plus standard target; load/height await authoritative selected-division mapping.',
-          'light_band_pull_apart':'Light band; no fixed resistance.',
-          'light_row':'Exact preparation row/implement remains unspecified.',
-          'light_scapular_row':'Exact scapular-row preparation variant remains unspecified.'
-        }.get(label,'Exact authored preparation movement; no extra equipment or coaching standard invented.')
-        rows.append(dict(candidate_key='base-candidate-'+label,authored_label=label,
-          proposed_existing_canonical_id=ex,established_transitional_mapping=transitional,
-          candidate_definition=dict(canonical_name=label.replace('_',' '),id=ex,
-            version=None,lifecycle_status='draft',published_at=None,
-            modality=proposed_modality,valid_prescription_dimensions=dimensions(label),
-            valid_completed_performance_dimensions=[],
-            variant=variants.get(label,'Exact authored variant; equipment/classification/valid dimensions require definition review.')),
-          approval_required=['exact source-to-definition variant binding','complete definition/classification/equipment review',
-            'producer-assigned current version and verified approval/publication event'],
-          proposed_equipment_notes=equipment_notes, classification_status='PROPOSED_FOR_DEFINITION_REVIEW_NOT_APPROVED',
-          publication_event=None,retained_digest=None,
-          evidence='docs/architecture/Phase_3_1F_Part2_Founder_Approved_Canonical_Mappings_v1.md' if ex else 'No explicit accepted mapping supplied for this authored label.',
-          meaning='Candidate only; neither an EX reservation nor published/historical definition authority.'))
-    return dict(format='hyrox-base-exercise-candidates-v1',status='REQUIRES_EXISTING_TRUSTED_PRODUCER_REVIEW',
-      local_authority_audit=dict(authoritative_real_exact_version_bundles=0,
-        excluded_sources=['Historical 132-row catalogue export: identity/lifecycle only.',
-          'Phase 3.2D movement-knowledge draft derivatives: no retained publication event.',
-          'EX-900x/EX-900900 synthetic fixtures: software simulations only.'],
-        boundary='PublishedExerciseVersionRetention and existing configured trusted event producer; never a new publication service.'),
-      candidates=rows)
+def exercise_candidates(bundle, root):
+    approved = json.loads((root / REL / 'EXERCISE_DEFINITION_PROPOSALS.json').read_bytes())
+    labels = identities(bundle)
+    rows = [r for r in approved['records'] if r['authored_label'] in labels]
+    if sorted(r['authored_label'] for r in rows) != labels:
+        raise ValueError('Every source label requires explicit approved variant content')
+    return dict(format='hyrox-base-exercise-candidates-v1', status='CONTENT_APPROVED_BINDINGS_PENDING',
+                local_authority_audit=dict(authoritative_real_exact_version_bundles=0,
+                    boundary='Existing PublishedExerciseVersionRetention and configured trusted event producer; catalogue, local content approval and hashes are not version authority.'),
+                candidates=rows)
+
+
+def producer_review_bundle(root, bundle):
+    rows = exercise_candidates(bundle,root)['candidates']
+    definitions = []
+    for r in rows:
+        if r['same_proposed_definition_as']: continue
+        definitions.append(dict(definition_key=r['proposal_key'], authored_label=r['authored_label'],
+             identity_candidate=r['existing_identity_candidate'], definition_content=r['definition_template'],
+             movement_content=r['movement_standard_template'], content_approval=r['content_approval'],
+             source_evidence=r['source_evidence'], version=None, verified_publication_event=None,
+             retention_digest=None, required_binding_kinds={'back_squat':['backSquat'],
+                'rowing':['dedicatedRowIntervals'], 'running':['runningIntervals']}.get(r['authored_label'],[])))
+    by_label={r['authored_label']:r for r in rows}
+    return dict(format='hyrox-base-trusted-producer-review-v1',
+        status='BLOCKED_BEFORE_TRUSTED_PUBLICATION', content_approved=True, publication_authority=False,
+        boundary='Existing trusted producer verifies/deduplicates, assigns current identity/version and resolves its own verified publication event before retention. This is not an admissible event or a publication command.',
+        source_pins=bundle['source_pins'],
+        bindings=[dict(authored_label=r['authored_label'], definition_key=by_label[r['same_proposed_definition_as'] or r['authored_label']]['proposal_key']) for r in rows],
+        definitions=definitions, missing_authority=['Exact authoritative definition/variant and producer identity decisions',
+           'Producer-assigned current versions and verified approval/publication events; no fabricated history',
+           'Complete immutable physical protocol/session/block/step revisions and approved programme artifact'],
+        explicit_race_or_assessment_requirements_unchanged=True,
+        circuit_race_guidance='Advisory only; not a division lookup, exact load/height or verified race prescription.')
+
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)

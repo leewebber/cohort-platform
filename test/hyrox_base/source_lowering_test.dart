@@ -1,3 +1,4 @@
+import 'package:cohort_platform/features/performance/models/performance_result_data.dart';
 import 'package:cohort_platform/models/strength_exercise_prescription.dart';
 import 'dart:convert';
 import 'dart:io';
@@ -235,9 +236,19 @@ void main() {
       final finisherCopy = c.blocks
           .singleWhere((b) => b.title == 'Gym finisher')
           .content;
-      expect(finisherCopy, contains('selected race weight'));
-      expect(finisherCopy, contains('race-standard target'));
-      expect(finisherCopy, contains('race-division mapping unresolved'));
+      expect(finisherCopy, contains('Use your race weight'));
+      expect(finisherCopy, contains('advisory only'));
+      expect(finisherCopy, isNot(contains('race-division mapping unresolved')));
+      expect(
+        c.blocks
+            .firstWhere((b) => b.title == 'front_rack_reverse_lunge')
+            .content,
+        contains('barbell'),
+      );
+      expect(
+        c.blocks.firstWhere((b) => b.title == 'pallof_press').content,
+        contains('split stance'),
+      );
       expect(finisherCopy, contains('including the last round'));
       expect(pallof.holdSeconds, 2);
       expect(pallof.restSecondsRange!.toJson(), [45, 60]);
@@ -255,6 +266,23 @@ void main() {
       );
     },
   );
+
+  test('advisory guidance cannot hide an explicit load or height', () async {
+    final s =
+        jsonDecode(jsonEncode(source(1, 'gym_c'))) as Map<String, dynamic>;
+    final station = s['blocks'].last['stations'][1] as Map;
+    station['height'] = 3;
+    await expectLater(
+      compiler.compile(personalisationCanonicalJson(s)),
+      throwsFormatException,
+    );
+    station.remove('height');
+    station['guidance_semantics'] = 'verified_race_standard';
+    await expectLater(
+      compiler.compile(personalisationCanonicalJson(s)),
+      throwsFormatException,
+    );
+  });
 
   test(
     'duration choice is explicit, source-bound, immutable and survives started/performance restore',
@@ -376,6 +404,50 @@ void main() {
           }
         }
       }
+    },
+  );
+
+  test(
+    'optional actual-load note stays separate from advisory prescription',
+    () async {
+      final compiled = await compiler.compile(
+        personalisationCanonicalJson(source(1, 'gym_c')),
+      );
+      final original = compiled.exportSource();
+      final controller =
+          PerformanceCaptureController.initializeFromExecutionPlan(
+            plan: compiled.execution,
+            athleteId: 'synthetic-only',
+            trainingSessionId: 1,
+          );
+      final finisherId = compiled.execution.blocks
+          .singleWhere((b) => b.title == 'Gym finisher')
+          .blockId;
+      final block = controller.draft.blockDrafts.singleWhere(
+        (b) => b.sourceBlockId == finisherId,
+      );
+      expect(block.resultData, isA<CompletionResultData>());
+      controller.updateBlockResultData(
+        block.sourceBlockId,
+        const CompletionResultData(note: 'Actual wall-ball load used: 6 kg'),
+      );
+      final restored =
+          PerformanceResultData.fromJson(
+                controller.draft.blockDrafts
+                    .singleWhere((b) => b.sourceBlockId == block.sourceBlockId)
+                    .resultData
+                    .toJson(),
+              )
+              as CompletionResultData;
+      expect(restored.note, 'Actual wall-ball load used: 6 kg');
+      expect(compiled.exportSource(), original);
+      final station = compiled.execution.blocks
+          .singleWhere((b) => b.title == 'Gym finisher')
+          .timerConfiguration!
+          .stations[1];
+      expect(station.authoredDetails!['guidance_semantics'], 'advisory_only');
+      expect(station.authoredDetails!.containsKey('load'), false);
+      expect(station.authoredDetails!.containsKey('height'), false);
     },
   );
 

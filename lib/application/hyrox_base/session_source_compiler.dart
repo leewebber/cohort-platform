@@ -141,9 +141,11 @@ class CanonicalSessionSourceCompiler {
         if (value['exercise'] is String) {
           labels.add(value['exercise'] as String);
         }
-        if (value['movements'] is List) {
-          for (final item in value['movements'] as List) {
-            labels.add((item as List).first as String);
+        for (final key in ['movements', 'dynamic_movements']) {
+          if (value[key] is List) {
+            for (final item in value[key] as List) {
+              labels.add((item as List).first as String);
+            }
           }
         }
         for (final child in value.values) {
@@ -202,11 +204,12 @@ class CanonicalSessionSourceCompiler {
     final blocks = <SessionBlock>[];
     final id = source['source_id'] as String;
     // Preparation stays a complete instruction plus its authored circuit links.
-    // Ramps/dynamic work remain qualitative; they are not working sets or timed guesses.
+    // Approved ramps stay separate from working sets; only the supplied dynamic budget is timed.
     final prep = Map<String, dynamic>.from(source['preparation'] as Map);
     final prepLinks = <SessionBlockExerciseLink>[];
-    if (prep['movements'] is List) {
-      for (final raw in prep['movements'] as List) {
+    final movements = prep['movements'] ?? prep['dynamic_movements'];
+    if (movements is List) {
+      for (final raw in movements) {
         final m = raw as List;
         prepLinks.add(
           SessionBlockExerciseLink(
@@ -215,7 +218,7 @@ class CanonicalSessionSourceCompiler {
             position: prepLinks.length + 1,
             displayLabelOverride: m[0] as String,
             prescription: StrengthExercisePrescription(
-              sets: prep['rounds'] as int,
+              sets: (prep['rounds'] as int?) ?? 1,
               reps: StrengthRepPrescription.exact(m[1] as int),
               perSide: m[2] as bool,
             ),
@@ -241,7 +244,8 @@ class CanonicalSessionSourceCompiler {
           persistedId: null,
           blockType: type,
           title: title,
-          content: _sourceDescription(original),
+          content:
+              '${_sourceDescription(original)}${_variantDescription(original)}',
           workoutFormat: format,
           position: n,
           timerConfiguration: timer == null
@@ -284,7 +288,8 @@ class CanonicalSessionSourceCompiler {
       add(
         SessionBlockType.warmUp,
         'Preparation circuit and ramps',
-        {...prep}..remove('easy'),
+        {...prep, 'movement_variants': source['exercise_variants']}
+          ..remove('easy'),
         links: prepLinks,
       );
     } else if (prep['easy_run_seconds'] is int) {
@@ -297,9 +302,23 @@ class CanonicalSessionSourceCompiler {
           durationSeconds: prep['easy_run_seconds'] as int,
         ),
       );
-      add(SessionBlockType.warmUp, 'Dynamic preparation', {
-        'instruction': prep['dynamic_preparation'],
-      });
+      add(
+        SessionBlockType.warmUp,
+        'Dynamic preparation',
+        {
+          'instruction': prep['dynamic_preparation'],
+          'movement_variants': source['exercise_variants'],
+        },
+        format: prep['dynamic_seconds'] == null
+            ? WorkoutFormat.none
+            : WorkoutFormat.steadyState,
+        timer: prep['dynamic_seconds'] == null
+            ? null
+            : TimerConfiguration(
+                durationSeconds: prep['dynamic_seconds'] as int,
+              ),
+        links: prepLinks,
+      );
       final accel = Map<String, dynamic>.from(prep['accelerations'] as Map);
       add(
         SessionBlockType.warmUp,
@@ -558,6 +577,8 @@ String _sourceDescription(Map<String, dynamic> source) {
               ? "${station['work_seconds']} s"
               : "${station['reps']} reps";
           final details = [
+            if (station['guidance_semantics'] == 'advisory_only')
+              'Guidance: ${station['guidance']}',
             for (final key in ['load_direction', 'load', 'height'])
               if (station[key] != null) station[key].toString(),
             if (station.containsKey('race_mapping') &&
@@ -567,7 +588,13 @@ String _sourceDescription(Map<String, dynamic> source) {
           return '${name(station['exercise'])}: $dose${details.isEmpty ? '' : '; ${details.join('; ')}'}';
         })
         .join(' → ');
-    return '${source['minutes']} min, alternating minute stations: $stations. Recover within each work minute. ${kind == 'three_minute_cycle' ? 'Every third minute is a full rest, including the last round.' : ''} ${source['rpe_approximate'] == true ? 'About ' : ''}RPE ${(source['rpe'] as List).join('–')}. ${source['load'] ?? ''} Record scaling in the existing block note.';
+    final hasApprovedVariant = (source['stations'] as List).any(
+      (st) =>
+          st is Map &&
+          (st['variant'] != null ||
+              st['guidance_semantics'] == 'advisory_only'),
+    );
+    return '${source['minutes']} min, alternating minute stations: $stations. Recover within each work minute. ${kind == 'three_minute_cycle' ? 'Every third minute is a full rest, including the last round.' : ''} ${source['rpe_approximate'] == true ? 'About ' : ''}RPE ${(source['rpe'] as List).join('–')}. ${source['load'] ?? ''} ${hasApprovedVariant ? 'Optionally record actual load/scaling in existing supported logging or the block note.' : 'Record scaling in the existing block note.'}';
   }
   if (kind == 'intervals') {
     return '${source['repetitions']} × ${source['work_seconds']} s; ${source['recovery_seconds']} s ${source['recovery_effort']} between repetitions only.${source['effort'] == null ? '' : ' ${source['effort']}.'}';
@@ -591,8 +618,34 @@ String _sourceDescription(Map<String, dynamic> source) {
   return 'About ${source['minutes']} min easy movement';
 }
 
+String _variantDescription(Map<String, dynamic> source) {
+  String describe(Object? raw) {
+    if (raw is! Map) return '';
+    final equipment =
+        (raw['equipment'] as List?)?.join(', ').replaceAll('_', ' ') ?? '';
+    return '${raw['name']}: $equipment. ${raw['position']} ${raw['grip']} ${(raw['execution_sequence'] as List).join(' ')}';
+  }
+
+  final variants = <String>[];
+  if (source['variant'] != null) variants.add(describe(source['variant']));
+  if (source['exercises'] is List) {
+    for (final e in source['exercises'] as List) {
+      if (e['variant'] != null) variants.add(describe(e['variant']));
+    }
+  }
+  if (source['movement_variants'] is Map) {
+    final labels = source['movements'] is List
+        ? (source['movements'] as List).map((m) => m[0]).toSet()
+        : (source['movement_variants'] as Map).keys.toSet();
+    for (final label in labels) {
+      variants.add(describe(source['movement_variants'][label]));
+    }
+  }
+  return variants.isEmpty ? '' : '\n${variants.join('\n')}';
+}
+
 void _validateSourceBlock(Map<String, dynamic> b) {
-  const common = {'kind', 'provenance'};
+  const common = {'kind', 'provenance', 'variant'};
   final fields = switch (b['kind']) {
     'strength' => {
       'exercise',
@@ -724,11 +777,25 @@ void _validateSourceBlock(Map<String, dynamic> b) {
           'load',
           'height',
           'race_mapping',
+          'variant',
+          'guidance',
+          'guidance_semantics',
         };
         if (st.keys.any((k) => !allowed.contains(k)) ||
             st['exercise'] is! String ||
             ((st['work_seconds'] != null) == (st['reps'] != null))) {
           throw const FormatException('Unsupported work station.');
+        }
+        if (st.containsKey('guidance') ||
+            st.containsKey('guidance_semantics')) {
+          if (st['guidance'] is! String ||
+              (st['guidance'] as String).trim().isEmpty ||
+              st['guidance_semantics'] != 'advisory_only' ||
+              ['load', 'height', 'race_mapping'].any(st.containsKey)) {
+            throw const FormatException(
+              'Advisory guidance cannot replace or claim an explicit load/standard.',
+            );
+          }
         }
         if (st['work_seconds'] != null &&
             (st['work_seconds'] is! int ||

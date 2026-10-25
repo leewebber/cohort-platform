@@ -1,3 +1,4 @@
+import 'package:cohort_platform/application/hyrox_base/duration_choice.dart';
 // Actual local authenticated repository → canonical server → runner → save/completion/history.
 // Opt in only through the disposable loopback gate; no hosted URL is accepted.
 import 'dart:convert';
@@ -162,10 +163,38 @@ void main() {
       );
       expect((state['benchmarks'] as List).length, greaterThanOrEqualTo(3));
       final exact = c.copyWith(boundConsentId: consent['consent_id'] as String);
+      final windows = authoredDurationWindows(prepared.package!.plan);
+      if (Platform.environment['COHORT_LOCAL_V3_EXPECT_DURATION'] == '1') {
+        expect(
+          windows,
+          isNotEmpty,
+          reason:
+              'This task-owned fixture must exercise the three-argument duration RPC.',
+        );
+      }
+      if (windows.isNotEmpty) {
+        await expectLater(
+          launcher.createOrResumeLaunchResult(
+            athleteId: actor,
+            programmeContext: exact,
+            package: prepared.package!,
+          ),
+          throwsA(
+            isA<ProgrammeSessionExecutionException>().having(
+              (e) => e.code,
+              'code',
+              ProgrammeSessionExecutionFailureCode.durationChoiceRequired,
+            ),
+          ),
+        );
+      }
       final started = await launcher.createOrResumeLaunchResult(
         athleteId: actor,
         programmeContext: exact,
         package: prepared.package!,
+        durationChoices: windows.isEmpty
+            ? null
+            : {for (final e in windows.entries) e.key: e.value.last},
       );
       expect(started.wasResumed, false);
       final duplicate = await Future.wait(
@@ -225,12 +254,26 @@ void main() {
         resumed.boundPrescriptionSnapshot,
         started.boundPrescriptionSnapshot,
       );
-      final plan = bindProgrammePrescription(
+      var plan = bindProgrammePrescription(
         plan: prepared.package!.plan,
         prescription: ProgrammePrescription(resumed.boundPrescriptionSnapshot!),
         protocolId: c.effectiveProtocolId,
         slotKey: c.packageSlotKey!,
       );
+      if (windows.isNotEmpty) {
+        expect(resumed.durationChoiceSnapshot, started.durationChoiceSnapshot);
+        plan = applyFrozenDurationChoices(
+          plan,
+          resumed.durationChoiceSnapshot!,
+        );
+        for (final e in windows.entries) {
+          final timer = plan.blocks
+              .singleWhere((b) => b.blockId == e.key)
+              .timerConfiguration!;
+          expect(timer.durationSeconds, e.value.last);
+          expect(timer.durationSecondsRange!.toJson(), e.value);
+        }
+      }
       expect(plan.blocks[0].boundTarget!.targetLabel, '5:00.0–5:15.0 /km');
       expect(plan.blocks[2].linkedExercises.single.prescription!.load!.kg, 80);
       final capture = PerformanceCaptureController.initializeFromExecutionPlan(
@@ -314,6 +357,10 @@ void main() {
         saved.sessionSnapshot.boundPrescription!.json,
         started.boundPrescriptionSnapshot,
       );
+      expect(
+        saved.sessionSnapshot.durationChoiceSnapshot,
+        started.durationChoiceSnapshot,
+      );
       final restored = await coordinator.loadInProgressDraftAsRecord(
         athleteId: actor,
         trainingSessionId: started.trainingSession.id,
@@ -321,6 +368,10 @@ void main() {
       expect(
         restored!.sessionSnapshot.boundPrescription!.json,
         started.boundPrescriptionSnapshot,
+      );
+      expect(
+        restored.sessionSnapshot.durationChoiceSnapshot,
+        started.durationChoiceSnapshot,
       );
       final finished = await coordinator.completeSession(
         controller: capture,
@@ -339,6 +390,10 @@ void main() {
       expect(
         history.blockResults[2].exerciseResults.single.setResults.first.load,
         77.5,
+      );
+      expect(
+        history.sessionSnapshot.durationChoiceSnapshot,
+        started.durationChoiceSnapshot,
       );
       final correction = PerformanceCorrectionDraft(history);
       final rowBlock = correction.blockResults[1];
@@ -369,6 +424,10 @@ void main() {
       );
       final corrected = await SupabasePerformanceRecordStore().correctCompleted(
         correction,
+      );
+      expect(
+        corrected.sessionSnapshot.durationChoiceSnapshot,
+        started.durationChoiceSnapshot,
       );
       expect(
         (corrected.blockResults[1].resultData as IntervalResultData)

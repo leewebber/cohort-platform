@@ -250,11 +250,9 @@
         "C1"
       ],
       "content_decisions": [],
-      "preparation_gaps": [
-        "P1"
-      ],
+      "preparation_gaps": [],
       "source_id": "BASE-W01-GYM_A",
-      "source_status": "working_prescription_complete",
+      "source_status": "prescription_content_complete",
       "status": "technically_blocked",
       "technical_blockers": [
         "T1",
@@ -273,7 +271,7 @@
           12,
           15
         ],
-        "unknown": "rep/transition durations, ramp-ups, core rest placement"
+        "unknown": "rep/transition durations are not fixed tempo prescriptions; approved ramp guidance and core rest ranges remain intact"
       }
     },
     {
@@ -282,7 +280,7 @@
       "content_decisions": [],
       "preparation_gaps": [],
       "source_id": "BASE-W01-EASY",
-      "source_status": "working_prescription_complete",
+      "source_status": "prescription_content_complete",
       "status": "technically_blocked",
       "technical_blockers": [
         "T1",
@@ -302,11 +300,9 @@
         "C1"
       ],
       "content_decisions": [],
-      "preparation_gaps": [
-        "P1"
-      ],
+      "preparation_gaps": [],
       "source_id": "BASE-W01-GYM_B",
-      "source_status": "working_prescription_complete",
+      "source_status": "prescription_content_complete",
       "status": "technically_blocked",
       "technical_blockers": [
         "T1",
@@ -325,33 +321,35 @@
           12,
           15
         ],
-        "unknown": "rep/transition durations, ramp-ups, core rest placement"
+        "unknown": "rep/transition durations are not fixed tempo prescriptions; approved ramp guidance and core rest ranges remain intact"
       }
     },
     {
       "binding_readiness": "unresolved_published_versions",
       "capture_gaps": [],
-      "content_decisions": [
-        "P2"
-      ],
-      "preparation_gaps": [
-        "P2"
-      ],
+      "content_decisions": [],
+      "preparation_gaps": [],
       "source_id": "BASE-W01-QUALITY",
-      "source_status": "working_prescription_complete",
-      "status": "awaiting_specific_content_decision",
+      "source_status": "prescription_content_complete",
+      "status": "technically_blocked",
       "technical_blockers": [
         "T1",
         "B3"
       ],
       "timing": {
-        "full_seconds": null,
-        "kind": "partial",
-        "known_seconds": [
-          3260,
-          3560
+        "full_seconds": [
+          3420,
+          3840
         ],
-        "unknown": "dynamic preparation duration and transitions"
+        "kind": "bounded",
+        "preparation_seconds": [
+          900,
+          1020
+        ],
+        "transition_allowance_seconds": [
+          40,
+          160
+        ]
       }
     },
     {
@@ -359,19 +357,14 @@
       "capture_gaps": [
         "C1"
       ],
-      "content_decisions": [
-        "D4"
-      ],
-      "preparation_gaps": [
-        "P1"
-      ],
+      "content_decisions": [],
+      "preparation_gaps": [],
       "source_id": "BASE-W01-GYM_C",
-      "source_status": "working_prescription_complete",
-      "status": "awaiting_specific_content_decision",
+      "source_status": "prescription_content_complete",
+      "status": "technically_blocked",
       "technical_blockers": [
         "T1",
-        "B3",
-        "B2"
+        "B3"
       ],
       "timing": {
         "cooldown_approximate": true,
@@ -386,7 +379,7 @@
           12,
           15
         ],
-        "unknown": "rep/transition durations, ramp-ups, core rest placement"
+        "unknown": "rep/transition durations are not fixed tempo prescriptions; approved ramp guidance and core rest ranges remain intact"
       }
     },
     {
@@ -395,7 +388,7 @@
       "content_decisions": [],
       "preparation_gaps": [],
       "source_id": "BASE-W01-LONG",
-      "source_status": "working_prescription_complete",
+      "source_status": "prescription_content_complete",
       "status": "technically_blocked",
       "technical_blockers": [
         "T1",
@@ -415,11 +408,9 @@
         "C1"
       ],
       "content_decisions": [],
-      "preparation_gaps": [
-        "P1"
-      ],
+      "preparation_gaps": [],
       "source_id": "BASE-W02-GYM_A",
-      "source_status": "working_prescription_complete",
+      "source_status": "prescription_content_complete",
       "status": "technically_blocked",
       "technical_blockers": [
         "T1",
@@ -438,7 +429,7 @@
           12,
           15
         ],
-        "unknown": "rep/transition durations, ramp-ups, core rest placement"
+        "unknown": "rep/transition durations are not fixed tempo prescriptions; approved ramp guidance and core rest ranges remain intact"
       }
     },
     {
@@ -447,7 +438,7 @@
       "content_decisions": [],
       "preparation_gaps": [],
       "source_id": "BASE-W02-EASY",
-      "source_status": "working_prescription_complete",
+      "source_status": "prescription_content_complete",
       "status": "technically_blocked",
       "technical_blockers": [
         "T1",
@@ -467,11 +458,9 @@
         "C1"
       ],
       "content_decisions": [],
-      "preparation_gaps": [
-        "P1"
-      ],
+      "preparation_gaps": [],
       "source_id": "BASE-W02-GYM_B",
-      "source_status": "working_prescription_complete",
+      "source_status": "prescription_content_complete",
       "status": "technically_blocked",
       "technical_blockers": [
         "T1",
@@ -490,33 +479,35 @@
           12,
           15
         ],
-        "unknown": "rep/transition durations, ramp-ups, core rest placement"
+        "unknown": "rep/transition durations are not fixed tempo prescriptions; approved ramp guidance and core rest ranges remain intact"
       }
     },
     {
       "binding_readiness": "unresolved_published_versions",
       "capture_gaps": [],
-      "content_decisions": [
-        "P2"
-      ],
-      "preparation_gaps": [
-        "P2"
-      ],
+      "content_decisions": [],
+      "preparation_gaps": [],
       "source_id": "BASE-W02-QUALITY",
-      "source_status": "working_prescription_complete",
-      "status": "awaiting_specific_content_decision",
+      "source_status": "prescription_content_complete",
+      "status": "technically_blocked",
       "technical_blockers": [
         "T1",
         "B3"
       ],
       "timing": {
-        "full_seconds": null,
-        "kind": "partial",
-        "known_seconds": [
-          3620,
-          3920
+        "full_seconds": [
+          3780,
+          4200
         ],
-        "unknown": "dynamic preparation duration and transitions"
+        "kind": "bounded",
+        "preparation_seconds": [
+          900,
+          1020
+        ],
+        "transition_allowance_seconds": [
+          40,
+          160
+        ]
       }
     },
     {
@@ -524,19 +515,14 @@
       "capture_gaps": [
         "C1"
       ],
-      "content_decisions": [
-        "D4"
-      ],
-      "preparation_gaps": [
-        "P1"
-      ],
+      "content_decisions": [],
+      "preparation_gaps": [],
       "source_id": "BASE-W02-GYM_C",
-      "source_status": "working_prescription_complete",
-      "status": "awaiting_specific_content_decision",
+      "source_status": "prescription_content_complete",
+      "status": "technically_blocked",
       "technical_blockers": [
         "T1",
-        "B3",
-        "B2"
+        "B3"
       ],
       "timing": {
         "cooldown_approximate": true,
@@ -551,7 +537,7 @@
           12,
           15
         ],
-        "unknown": "rep/transition durations, ramp-ups, core rest placement"
+        "unknown": "rep/transition durations are not fixed tempo prescriptions; approved ramp guidance and core rest ranges remain intact"
       }
     },
     {
@@ -560,7 +546,7 @@
       "content_decisions": [],
       "preparation_gaps": [],
       "source_id": "BASE-W02-LONG",
-      "source_status": "working_prescription_complete",
+      "source_status": "prescription_content_complete",
       "status": "technically_blocked",
       "technical_blockers": [
         "T1",
@@ -580,11 +566,9 @@
         "C1"
       ],
       "content_decisions": [],
-      "preparation_gaps": [
-        "P1"
-      ],
+      "preparation_gaps": [],
       "source_id": "BASE-W03-GYM_A",
-      "source_status": "working_prescription_complete",
+      "source_status": "prescription_content_complete",
       "status": "technically_blocked",
       "technical_blockers": [
         "T1",
@@ -603,7 +587,7 @@
           12,
           15
         ],
-        "unknown": "rep/transition durations, ramp-ups, core rest placement"
+        "unknown": "rep/transition durations are not fixed tempo prescriptions; approved ramp guidance and core rest ranges remain intact"
       }
     },
     {
@@ -612,7 +596,7 @@
       "content_decisions": [],
       "preparation_gaps": [],
       "source_id": "BASE-W03-EASY",
-      "source_status": "working_prescription_complete",
+      "source_status": "prescription_content_complete",
       "status": "technically_blocked",
       "technical_blockers": [
         "T1",
@@ -632,11 +616,9 @@
         "C1"
       ],
       "content_decisions": [],
-      "preparation_gaps": [
-        "P1"
-      ],
+      "preparation_gaps": [],
       "source_id": "BASE-W03-GYM_B",
-      "source_status": "working_prescription_complete",
+      "source_status": "prescription_content_complete",
       "status": "technically_blocked",
       "technical_blockers": [
         "T1",
@@ -655,33 +637,35 @@
           12,
           15
         ],
-        "unknown": "rep/transition durations, ramp-ups, core rest placement"
+        "unknown": "rep/transition durations are not fixed tempo prescriptions; approved ramp guidance and core rest ranges remain intact"
       }
     },
     {
       "binding_readiness": "unresolved_published_versions",
       "capture_gaps": [],
-      "content_decisions": [
-        "P2"
-      ],
-      "preparation_gaps": [
-        "P2"
-      ],
+      "content_decisions": [],
+      "preparation_gaps": [],
       "source_id": "BASE-W03-QUALITY",
-      "source_status": "working_prescription_complete",
-      "status": "awaiting_specific_content_decision",
+      "source_status": "prescription_content_complete",
+      "status": "technically_blocked",
       "technical_blockers": [
         "T1",
         "B3"
       ],
       "timing": {
-        "full_seconds": null,
-        "kind": "partial",
-        "known_seconds": [
-          3740,
-          4040
+        "full_seconds": [
+          3900,
+          4320
         ],
-        "unknown": "dynamic preparation duration and transitions"
+        "kind": "bounded",
+        "preparation_seconds": [
+          900,
+          1020
+        ],
+        "transition_allowance_seconds": [
+          40,
+          160
+        ]
       }
     },
     {
@@ -689,19 +673,14 @@
       "capture_gaps": [
         "C1"
       ],
-      "content_decisions": [
-        "D4"
-      ],
-      "preparation_gaps": [
-        "P1"
-      ],
+      "content_decisions": [],
+      "preparation_gaps": [],
       "source_id": "BASE-W03-GYM_C",
-      "source_status": "working_prescription_complete",
-      "status": "awaiting_specific_content_decision",
+      "source_status": "prescription_content_complete",
+      "status": "technically_blocked",
       "technical_blockers": [
         "T1",
-        "B3",
-        "B2"
+        "B3"
       ],
       "timing": {
         "cooldown_approximate": true,
@@ -716,7 +695,7 @@
           12,
           15
         ],
-        "unknown": "rep/transition durations, ramp-ups, core rest placement"
+        "unknown": "rep/transition durations are not fixed tempo prescriptions; approved ramp guidance and core rest ranges remain intact"
       }
     },
     {
@@ -725,7 +704,7 @@
       "content_decisions": [],
       "preparation_gaps": [],
       "source_id": "BASE-W03-LONG",
-      "source_status": "working_prescription_complete",
+      "source_status": "prescription_content_complete",
       "status": "technically_blocked",
       "technical_blockers": [
         "T1",
@@ -745,11 +724,9 @@
         "C1"
       ],
       "content_decisions": [],
-      "preparation_gaps": [
-        "P1"
-      ],
+      "preparation_gaps": [],
       "source_id": "BASE-W04-GYM_A",
-      "source_status": "working_prescription_complete",
+      "source_status": "prescription_content_complete",
       "status": "technically_blocked",
       "technical_blockers": [
         "T1",
@@ -768,7 +745,7 @@
           12,
           15
         ],
-        "unknown": "rep/transition durations, ramp-ups, core rest placement"
+        "unknown": "rep/transition durations are not fixed tempo prescriptions; approved ramp guidance and core rest ranges remain intact"
       }
     },
     {
@@ -777,7 +754,7 @@
       "content_decisions": [],
       "preparation_gaps": [],
       "source_id": "BASE-W04-EASY",
-      "source_status": "working_prescription_complete",
+      "source_status": "prescription_content_complete",
       "status": "technically_blocked",
       "technical_blockers": [
         "T1",
@@ -797,11 +774,9 @@
         "C1"
       ],
       "content_decisions": [],
-      "preparation_gaps": [
-        "P1"
-      ],
+      "preparation_gaps": [],
       "source_id": "BASE-W04-GYM_B",
-      "source_status": "working_prescription_complete",
+      "source_status": "prescription_content_complete",
       "status": "technically_blocked",
       "technical_blockers": [
         "T1",
@@ -820,33 +795,35 @@
           12,
           15
         ],
-        "unknown": "rep/transition durations, ramp-ups, core rest placement"
+        "unknown": "rep/transition durations are not fixed tempo prescriptions; approved ramp guidance and core rest ranges remain intact"
       }
     },
     {
       "binding_readiness": "unresolved_published_versions",
       "capture_gaps": [],
-      "content_decisions": [
-        "P2"
-      ],
-      "preparation_gaps": [
-        "P2"
-      ],
+      "content_decisions": [],
+      "preparation_gaps": [],
       "source_id": "BASE-W04-QUALITY",
-      "source_status": "working_prescription_complete",
-      "status": "awaiting_specific_content_decision",
+      "source_status": "prescription_content_complete",
+      "status": "technically_blocked",
       "technical_blockers": [
         "T1",
         "B3"
       ],
       "timing": {
-        "full_seconds": null,
-        "kind": "partial",
-        "known_seconds": [
-          3260,
-          3560
+        "full_seconds": [
+          3420,
+          3840
         ],
-        "unknown": "dynamic preparation duration and transitions"
+        "kind": "bounded",
+        "preparation_seconds": [
+          900,
+          1020
+        ],
+        "transition_allowance_seconds": [
+          40,
+          160
+        ]
       }
     },
     {
@@ -854,19 +831,14 @@
       "capture_gaps": [
         "C1"
       ],
-      "content_decisions": [
-        "D4"
-      ],
-      "preparation_gaps": [
-        "P1"
-      ],
+      "content_decisions": [],
+      "preparation_gaps": [],
       "source_id": "BASE-W04-GYM_C",
-      "source_status": "working_prescription_complete",
-      "status": "awaiting_specific_content_decision",
+      "source_status": "prescription_content_complete",
+      "status": "technically_blocked",
       "technical_blockers": [
         "T1",
-        "B3",
-        "B2"
+        "B3"
       ],
       "timing": {
         "cooldown_approximate": true,
@@ -881,7 +853,7 @@
           12,
           15
         ],
-        "unknown": "rep/transition durations, ramp-ups, core rest placement"
+        "unknown": "rep/transition durations are not fixed tempo prescriptions; approved ramp guidance and core rest ranges remain intact"
       }
     },
     {
@@ -890,7 +862,7 @@
       "content_decisions": [],
       "preparation_gaps": [],
       "source_id": "BASE-W04-LONG",
-      "source_status": "working_prescription_complete",
+      "source_status": "prescription_content_complete",
       "status": "technically_blocked",
       "technical_blockers": [
         "T1",
@@ -910,11 +882,9 @@
         "C1"
       ],
       "content_decisions": [],
-      "preparation_gaps": [
-        "P1"
-      ],
+      "preparation_gaps": [],
       "source_id": "BASE-W05-GYM_A",
-      "source_status": "working_prescription_complete",
+      "source_status": "prescription_content_complete",
       "status": "technically_blocked",
       "technical_blockers": [
         "T1",
@@ -933,7 +903,7 @@
           12,
           15
         ],
-        "unknown": "rep/transition durations, ramp-ups, core rest placement"
+        "unknown": "rep/transition durations are not fixed tempo prescriptions; approved ramp guidance and core rest ranges remain intact"
       }
     },
     {
@@ -942,7 +912,7 @@
       "content_decisions": [],
       "preparation_gaps": [],
       "source_id": "BASE-W05-EASY",
-      "source_status": "working_prescription_complete",
+      "source_status": "prescription_content_complete",
       "status": "technically_blocked",
       "technical_blockers": [
         "T1",
@@ -962,11 +932,9 @@
         "C1"
       ],
       "content_decisions": [],
-      "preparation_gaps": [
-        "P1"
-      ],
+      "preparation_gaps": [],
       "source_id": "BASE-W05-GYM_B",
-      "source_status": "working_prescription_complete",
+      "source_status": "prescription_content_complete",
       "status": "technically_blocked",
       "technical_blockers": [
         "T1",
@@ -985,33 +953,35 @@
           12,
           15
         ],
-        "unknown": "rep/transition durations, ramp-ups, core rest placement"
+        "unknown": "rep/transition durations are not fixed tempo prescriptions; approved ramp guidance and core rest ranges remain intact"
       }
     },
     {
       "binding_readiness": "unresolved_published_versions",
       "capture_gaps": [],
-      "content_decisions": [
-        "P2"
-      ],
-      "preparation_gaps": [
-        "P2"
-      ],
+      "content_decisions": [],
+      "preparation_gaps": [],
       "source_id": "BASE-W05-QUALITY",
-      "source_status": "working_prescription_complete",
-      "status": "awaiting_specific_content_decision",
+      "source_status": "prescription_content_complete",
+      "status": "technically_blocked",
       "technical_blockers": [
         "T1",
         "B3"
       ],
       "timing": {
-        "full_seconds": null,
-        "kind": "partial",
-        "known_seconds": [
-          3920,
-          4220
+        "full_seconds": [
+          4080,
+          4500
         ],
-        "unknown": "dynamic preparation duration and transitions"
+        "kind": "bounded",
+        "preparation_seconds": [
+          900,
+          1020
+        ],
+        "transition_allowance_seconds": [
+          40,
+          160
+        ]
       }
     },
     {
@@ -1019,19 +989,14 @@
       "capture_gaps": [
         "C1"
       ],
-      "content_decisions": [
-        "D4"
-      ],
-      "preparation_gaps": [
-        "P1"
-      ],
+      "content_decisions": [],
+      "preparation_gaps": [],
       "source_id": "BASE-W05-GYM_C",
-      "source_status": "working_prescription_complete",
-      "status": "awaiting_specific_content_decision",
+      "source_status": "prescription_content_complete",
+      "status": "technically_blocked",
       "technical_blockers": [
         "T1",
-        "B3",
-        "B2"
+        "B3"
       ],
       "timing": {
         "cooldown_approximate": true,
@@ -1046,7 +1011,7 @@
           12,
           15
         ],
-        "unknown": "rep/transition durations, ramp-ups, core rest placement"
+        "unknown": "rep/transition durations are not fixed tempo prescriptions; approved ramp guidance and core rest ranges remain intact"
       }
     },
     {
@@ -1055,7 +1020,7 @@
       "content_decisions": [],
       "preparation_gaps": [],
       "source_id": "BASE-W05-LONG",
-      "source_status": "working_prescription_complete",
+      "source_status": "prescription_content_complete",
       "status": "technically_blocked",
       "technical_blockers": [
         "T1",
@@ -1075,11 +1040,9 @@
         "C1"
       ],
       "content_decisions": [],
-      "preparation_gaps": [
-        "P1"
-      ],
+      "preparation_gaps": [],
       "source_id": "BASE-W06-GYM_A",
-      "source_status": "working_prescription_complete",
+      "source_status": "prescription_content_complete",
       "status": "technically_blocked",
       "technical_blockers": [
         "T1",
@@ -1098,7 +1061,7 @@
           12,
           15
         ],
-        "unknown": "rep/transition durations, ramp-ups, core rest placement"
+        "unknown": "rep/transition durations are not fixed tempo prescriptions; approved ramp guidance and core rest ranges remain intact"
       }
     },
     {
@@ -1107,7 +1070,7 @@
       "content_decisions": [],
       "preparation_gaps": [],
       "source_id": "BASE-W06-EASY",
-      "source_status": "working_prescription_complete",
+      "source_status": "prescription_content_complete",
       "status": "technically_blocked",
       "technical_blockers": [
         "T1",
@@ -1127,11 +1090,9 @@
         "C1"
       ],
       "content_decisions": [],
-      "preparation_gaps": [
-        "P1"
-      ],
+      "preparation_gaps": [],
       "source_id": "BASE-W06-GYM_B",
-      "source_status": "working_prescription_complete",
+      "source_status": "prescription_content_complete",
       "status": "technically_blocked",
       "technical_blockers": [
         "T1",
@@ -1150,33 +1111,35 @@
           12,
           15
         ],
-        "unknown": "rep/transition durations, ramp-ups, core rest placement"
+        "unknown": "rep/transition durations are not fixed tempo prescriptions; approved ramp guidance and core rest ranges remain intact"
       }
     },
     {
       "binding_readiness": "unresolved_published_versions",
       "capture_gaps": [],
-      "content_decisions": [
-        "P2"
-      ],
-      "preparation_gaps": [
-        "P2"
-      ],
+      "content_decisions": [],
+      "preparation_gaps": [],
       "source_id": "BASE-W06-QUALITY",
-      "source_status": "working_prescription_complete",
-      "status": "awaiting_specific_content_decision",
+      "source_status": "prescription_content_complete",
+      "status": "technically_blocked",
       "technical_blockers": [
         "T1",
         "B3"
       ],
       "timing": {
-        "full_seconds": null,
-        "kind": "partial",
-        "known_seconds": [
-          3980,
-          4280
+        "full_seconds": [
+          4140,
+          4560
         ],
-        "unknown": "dynamic preparation duration and transitions"
+        "kind": "bounded",
+        "preparation_seconds": [
+          900,
+          1020
+        ],
+        "transition_allowance_seconds": [
+          40,
+          160
+        ]
       }
     },
     {
@@ -1184,19 +1147,14 @@
       "capture_gaps": [
         "C1"
       ],
-      "content_decisions": [
-        "D4"
-      ],
-      "preparation_gaps": [
-        "P1"
-      ],
+      "content_decisions": [],
+      "preparation_gaps": [],
       "source_id": "BASE-W06-GYM_C",
-      "source_status": "working_prescription_complete",
-      "status": "awaiting_specific_content_decision",
+      "source_status": "prescription_content_complete",
+      "status": "technically_blocked",
       "technical_blockers": [
         "T1",
-        "B3",
-        "B2"
+        "B3"
       ],
       "timing": {
         "cooldown_approximate": true,
@@ -1211,7 +1169,7 @@
           12,
           15
         ],
-        "unknown": "rep/transition durations, ramp-ups, core rest placement"
+        "unknown": "rep/transition durations are not fixed tempo prescriptions; approved ramp guidance and core rest ranges remain intact"
       }
     },
     {
@@ -1220,7 +1178,7 @@
       "content_decisions": [],
       "preparation_gaps": [],
       "source_id": "BASE-W06-LONG",
-      "source_status": "working_prescription_complete",
+      "source_status": "prescription_content_complete",
       "status": "technically_blocked",
       "technical_blockers": [
         "T1",
@@ -1240,11 +1198,9 @@
         "C1"
       ],
       "content_decisions": [],
-      "preparation_gaps": [
-        "P1"
-      ],
+      "preparation_gaps": [],
       "source_id": "BASE-W07-GYM_A",
-      "source_status": "working_prescription_complete",
+      "source_status": "prescription_content_complete",
       "status": "technically_blocked",
       "technical_blockers": [
         "T1",
@@ -1263,7 +1219,7 @@
           12,
           15
         ],
-        "unknown": "rep/transition durations, ramp-ups, core rest placement"
+        "unknown": "rep/transition durations are not fixed tempo prescriptions; approved ramp guidance and core rest ranges remain intact"
       }
     },
     {
@@ -1272,7 +1228,7 @@
       "content_decisions": [],
       "preparation_gaps": [],
       "source_id": "BASE-W07-EASY",
-      "source_status": "working_prescription_complete",
+      "source_status": "prescription_content_complete",
       "status": "technically_blocked",
       "technical_blockers": [
         "T1",
@@ -1292,11 +1248,9 @@
         "C1"
       ],
       "content_decisions": [],
-      "preparation_gaps": [
-        "P1"
-      ],
+      "preparation_gaps": [],
       "source_id": "BASE-W07-GYM_B",
-      "source_status": "working_prescription_complete",
+      "source_status": "prescription_content_complete",
       "status": "technically_blocked",
       "technical_blockers": [
         "T1",
@@ -1315,33 +1269,35 @@
           12,
           15
         ],
-        "unknown": "rep/transition durations, ramp-ups, core rest placement"
+        "unknown": "rep/transition durations are not fixed tempo prescriptions; approved ramp guidance and core rest ranges remain intact"
       }
     },
     {
       "binding_readiness": "unresolved_published_versions",
       "capture_gaps": [],
-      "content_decisions": [
-        "P2"
-      ],
-      "preparation_gaps": [
-        "P2"
-      ],
+      "content_decisions": [],
+      "preparation_gaps": [],
       "source_id": "BASE-W07-QUALITY",
-      "source_status": "working_prescription_complete",
-      "status": "awaiting_specific_content_decision",
+      "source_status": "prescription_content_complete",
+      "status": "technically_blocked",
       "technical_blockers": [
         "T1",
         "B3"
       ],
       "timing": {
-        "full_seconds": null,
-        "kind": "partial",
-        "known_seconds": [
-          3980,
-          4280
+        "full_seconds": [
+          4140,
+          4560
         ],
-        "unknown": "dynamic preparation duration and transitions"
+        "kind": "bounded",
+        "preparation_seconds": [
+          900,
+          1020
+        ],
+        "transition_allowance_seconds": [
+          40,
+          160
+        ]
       }
     },
     {
@@ -1349,19 +1305,14 @@
       "capture_gaps": [
         "C1"
       ],
-      "content_decisions": [
-        "D4"
-      ],
-      "preparation_gaps": [
-        "P1"
-      ],
+      "content_decisions": [],
+      "preparation_gaps": [],
       "source_id": "BASE-W07-GYM_C",
-      "source_status": "working_prescription_complete",
-      "status": "awaiting_specific_content_decision",
+      "source_status": "prescription_content_complete",
+      "status": "technically_blocked",
       "technical_blockers": [
         "T1",
-        "B3",
-        "B2"
+        "B3"
       ],
       "timing": {
         "cooldown_approximate": true,
@@ -1376,7 +1327,7 @@
           12,
           15
         ],
-        "unknown": "rep/transition durations, ramp-ups, core rest placement"
+        "unknown": "rep/transition durations are not fixed tempo prescriptions; approved ramp guidance and core rest ranges remain intact"
       }
     },
     {
@@ -1385,7 +1336,7 @@
       "content_decisions": [],
       "preparation_gaps": [],
       "source_id": "BASE-W07-LONG",
-      "source_status": "working_prescription_complete",
+      "source_status": "prescription_content_complete",
       "status": "technically_blocked",
       "technical_blockers": [
         "T1",
@@ -1405,11 +1356,9 @@
         "C1"
       ],
       "content_decisions": [],
-      "preparation_gaps": [
-        "P1"
-      ],
+      "preparation_gaps": [],
       "source_id": "BASE-W08-GYM_A",
-      "source_status": "working_prescription_complete",
+      "source_status": "prescription_content_complete",
       "status": "technically_blocked",
       "technical_blockers": [
         "T1",
@@ -1428,7 +1377,7 @@
           12,
           15
         ],
-        "unknown": "rep/transition durations, ramp-ups, core rest placement"
+        "unknown": "rep/transition durations are not fixed tempo prescriptions; approved ramp guidance and core rest ranges remain intact"
       }
     },
     {
@@ -1437,7 +1386,7 @@
       "content_decisions": [],
       "preparation_gaps": [],
       "source_id": "BASE-W08-EASY",
-      "source_status": "working_prescription_complete",
+      "source_status": "prescription_content_complete",
       "status": "technically_blocked",
       "technical_blockers": [
         "T1",
@@ -1457,11 +1406,9 @@
         "C1"
       ],
       "content_decisions": [],
-      "preparation_gaps": [
-        "P1"
-      ],
+      "preparation_gaps": [],
       "source_id": "BASE-W08-GYM_B",
-      "source_status": "working_prescription_complete",
+      "source_status": "prescription_content_complete",
       "status": "technically_blocked",
       "technical_blockers": [
         "T1",
@@ -1480,33 +1427,35 @@
           12,
           15
         ],
-        "unknown": "rep/transition durations, ramp-ups, core rest placement"
+        "unknown": "rep/transition durations are not fixed tempo prescriptions; approved ramp guidance and core rest ranges remain intact"
       }
     },
     {
       "binding_readiness": "unresolved_published_versions",
       "capture_gaps": [],
-      "content_decisions": [
-        "P2"
-      ],
-      "preparation_gaps": [
-        "P2"
-      ],
+      "content_decisions": [],
+      "preparation_gaps": [],
       "source_id": "BASE-W08-QUALITY",
-      "source_status": "working_prescription_complete",
-      "status": "awaiting_specific_content_decision",
+      "source_status": "prescription_content_complete",
+      "status": "technically_blocked",
       "technical_blockers": [
         "T1",
         "B3"
       ],
       "timing": {
-        "full_seconds": null,
-        "kind": "partial",
-        "known_seconds": [
-          3500,
-          3800
+        "full_seconds": [
+          3660,
+          4080
         ],
-        "unknown": "dynamic preparation duration and transitions"
+        "kind": "bounded",
+        "preparation_seconds": [
+          900,
+          1020
+        ],
+        "transition_allowance_seconds": [
+          40,
+          160
+        ]
       }
     },
     {
@@ -1514,19 +1463,14 @@
       "capture_gaps": [
         "C1"
       ],
-      "content_decisions": [
-        "D4"
-      ],
-      "preparation_gaps": [
-        "P1"
-      ],
+      "content_decisions": [],
+      "preparation_gaps": [],
       "source_id": "BASE-W08-GYM_C",
-      "source_status": "working_prescription_complete",
-      "status": "awaiting_specific_content_decision",
+      "source_status": "prescription_content_complete",
+      "status": "technically_blocked",
       "technical_blockers": [
         "T1",
-        "B3",
-        "B2"
+        "B3"
       ],
       "timing": {
         "cooldown_approximate": true,
@@ -1541,7 +1485,7 @@
           12,
           15
         ],
-        "unknown": "rep/transition durations, ramp-ups, core rest placement"
+        "unknown": "rep/transition durations are not fixed tempo prescriptions; approved ramp guidance and core rest ranges remain intact"
       }
     },
     {
@@ -1550,7 +1494,7 @@
       "content_decisions": [],
       "preparation_gaps": [],
       "source_id": "BASE-W08-LONG",
-      "source_status": "working_prescription_complete",
+      "source_status": "prescription_content_complete",
       "status": "technically_blocked",
       "technical_blockers": [
         "T1",
@@ -1569,14 +1513,15 @@
     "all_sessions_have_T1": true,
     "authoritative_binding_ready": 0,
     "binding_blockers_by_code": {
-      "B2": 8,
+      "B2": 0,
       "B3": 48,
       "T1": 48
     },
     "canonical_lowering_implemented": true,
     "capture_limit_sessions": 24,
-    "full_quantified_preparation_available": 16,
-    "preparation_detail_gaps": 32,
+    "preparation_content_complete": 48,
+    "preparation_detail_gaps": 0,
+    "prescription_sources_complete": 48,
     "rest_days": 8,
     "review_sources": 48,
     "training_sessions": 48,

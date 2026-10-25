@@ -1,12 +1,11 @@
 # Canonical source lowering and duration-choice contract
 
-2026-10-24. Source-preserving local implementation, not hosted deployment or commercial
+2026-10-25. Source-preserving local implementation, not hosted deployment or commercial
 publication. The existing authoritative publication/event boundary is unchanged.
 
 `PROGRESSION.json`, exact transfer/approval records and approved Base rules generate
-48 independent complete main working sources, eight rest entries, readable coverage,
-an all-category audit and an explicit candidate-definition register. Main prescription
-completeness is separate from quantitative preparation and authoritative binding readiness.
+48 independent complete prescription sources, including approved preparation/variants, eight rest entries, readable coverage,
+an all-category audit and an explicit candidate-definition register. Prescription content completeness is separate from authoritative binding readiness.
 No routine presentation change invents a prescription or a required actual-result field.
 
 `CanonicalSessionSourceCompiler` takes canonical JSON source bytes, explicit exact
@@ -51,8 +50,7 @@ started/performance snapshot paths. Restore compares original source, frozen cho
 bound prescription before accepting saved actuals. Timed EMOM stations change work/recovery
 phase at the authored second while retaining the complete minute clock; rep stations have
 no invented completion time. Full third-minute rest includes the final round. Dedicated
-intervals/accelerations omit final recovery. Unspecified ramp/dynamic instructions stay
-visible; no quantitative preparation is invented.
+intervals/accelerations omit final recovery. Approved ramp guidance and the two-minute dynamic circuit stay visible and retain their budgets; no unapproved tempo or benchmark-derived supporting load is invented.
 
 Two distinct local transports remain explicit:
 
@@ -80,7 +78,16 @@ bash supabase/tests/run_source_duration_choice_gate.sh
 ```
 
 The new SQL gate uses only a unique disposable local project and Docker/psql stdin.
-It never runs Python HTTP probes or borrows hosted configuration. The existing authenticated
-HTTP test remains explicitly skipped without its task-owned config; that limit is reported
-rather than bypassed. No hosted operation, producer provisioning, real publication/assignment,
+It never runs Python HTTP probes or borrows hosted configuration. The existing authenticated Flutter test is run by the source gate using that same disposable project’s generated config; ordinary unconfigured runs still skip. The gate does not invoke Python HTTP probes. No hosted operation, producer provisioning, real publication/assignment,
 athlete write, browser/app control or device distribution occurs here.
+
+## 2026-10-25 content approval and advisory scope
+
+All variants/preparation are content-approved; current sources include barbell front rack
+and split-stance Pallof details and a retained approval hash. Both source JSON exports and
+runner/save/reopen preserve them. The compiler retains earlier export receipts unchanged.
+The producer review bundle deduplicates content only, leaving unknown IDs/versions/events
+null and the existing trusted publication/retention boundary intact. Base circuit race
+weight is `guidance` with `guidance_semantics: advisory_only`; it is not an explicit load,
+height or race mapping. Contradictory advisory/explicit fields refuse. No new mandatory
+actual field is introduced, and explicit prescriptions/formal assessments are unchanged.

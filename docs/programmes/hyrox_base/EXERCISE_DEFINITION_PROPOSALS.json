@@ -1,15 +1,20 @@
 {
-  "approval_status": "PROPOSED_NOT_APPROVED",
+  "approval_status": "FOUNDER_CONTENT_APPROVED_2026_10_25",
   "format": "hyrox-base-definition-proposals-v1",
-  "meaning": "Content/variant proposals only. Candidate IDs are review leads, not canonical version authority. Definition capability dimensions do not add result fields or claim existing runner capture.",
+  "meaning": "Founder-approved content only, including explicit barbell front rack and split-stance Pallof corrections. No canonical ID/version/event authority is created.",
   "publication_status": "UNPUBLISHED_NOT_ADMISSIBLE",
   "records": [
     {
-      "approved": false,
+      "approved": true,
       "authored_label": "assault_bike",
       "completion_criteria": [
         "Arms and legs power the fan bike throughout the timed work."
       ],
+      "content_approval": {
+        "canonical_publication_authority": false,
+        "scope": "exercise variant and definition content only",
+        "source": "docs/programmes/hyrox_base/APPROVAL_2026_10_25.txt"
+      },
       "definition_template": {
         "aliases": [],
         "canonical_name": "Fan-resistance air bike",
@@ -87,7 +92,7 @@
         "language": "en",
         "lifecycle_status": "draft",
         "provenance": {
-          "notes": "Proposed variant text, not a verified publication event.",
+          "notes": "Content approval retained in APPROVAL_2026_10_25.txt. This template remains unpublished and has no assigned canonical version or verified publication event.",
           "source_reference": "docs/programmes/hyrox_base/FOUNDER_DECISION_PACKET.md",
           "source_type": "unapproved_local_proposal"
         },
@@ -99,7 +104,7 @@
         "safety_notes": [],
         "schema_version": 1,
         "start_position": "Seated on a fan bike; feet on pedals; use both moving handles. Closed neutral grip on moving handles.",
-        "title": "Fan-resistance air bike \u2014 proposed variant",
+        "title": "Fan-resistance air bike — content approved, unpublished",
         "version": null
       },
       "notes": "Null identity/version/reference slots are intentional; not parseable admission or a published/history record. Never pass a null version through a decoder that defaults to 1. Producer assigns identity/version only after deduplication and review.",
@@ -107,7 +112,7 @@
       "position": "Seated on a fan bike; feet on pedals; use both moving handles.",
       "proposal_key": "base-review-assault_bike",
       "publication_event": null,
-      "recommendation": "Use this proposed variant; retain all approved main doses.",
+      "recommendation": "Founder approved this variant, subject to the retained 2026-10-25 corrections.",
       "required_capture_fields": [],
       "retained_digest": null,
       "retained_version": null,
@@ -115,15 +120,20 @@
       "source_evidence": [
         "docs/programmes/hyrox_base/TRANSFER_BRIEF.txt"
       ],
-      "status": "UNAPPROVED_UNPUBLISHED",
-      "unresolved_distinction": "A fan air bike is specified; a leg-only stationary bike is not the same proposed variant."
+      "status": "FOUNDER_CONTENT_APPROVED_UNPUBLISHED",
+      "unresolved_distinction": "Content choice resolved; exact canonical identity/version/event binding remains pending."
     },
     {
-      "approved": false,
+      "approved": true,
       "authored_label": "back_squat",
       "completion_criteria": [
         "Return to standing with control after the squat."
       ],
+      "content_approval": {
+        "canonical_publication_authority": false,
+        "scope": "exercise variant and definition content only",
+        "source": "docs/programmes/hyrox_base/APPROVAL_2026_10_25.txt"
+      },
       "definition_template": {
         "aliases": [],
         "canonical_name": "Back Squat",
@@ -203,7 +213,7 @@
         "language": "en",
         "lifecycle_status": "draft",
         "provenance": {
-          "notes": "Proposed variant text, not a verified publication event.",
+          "notes": "Content approval retained in APPROVAL_2026_10_25.txt. This template remains unpublished and has no assigned canonical version or verified publication event.",
           "source_reference": "docs/programmes/hyrox_base/FOUNDER_DECISION_PACKET.md",
           "source_type": "unapproved_local_proposal"
         },
@@ -215,7 +225,7 @@
         "safety_notes": [],
         "schema_version": 1,
         "start_position": "Standing; bar high across the upper back; feet about shoulder-width, toes slightly out. Closed overhand grip at a comfortable width that stabilises the bar.",
-        "title": "Barbell back squat \u2014 proposed variant",
+        "title": "Barbell back squat — content approved, unpublished",
         "version": null
       },
       "notes": "Null identity/version/reference slots are intentional; not parseable admission or a published/history record. Never pass a null version through a decoder that defaults to 1. Producer assigns identity/version only after deduplication and review.",
@@ -223,7 +233,7 @@
       "position": "Standing; bar high across the upper back; feet about shoulder-width, toes slightly out.",
       "proposal_key": "base-review-back_squat",
       "publication_event": null,
-      "recommendation": "Use this proposed variant; retain all approved main doses.",
+      "recommendation": "Founder approved this variant, subject to the retained 2026-10-25 corrections.",
       "required_capture_fields": [],
       "retained_digest": null,
       "retained_version": null,
@@ -235,15 +245,20 @@
         "docs/architecture/Phase_3_1F_Part1_Founder_Identity_Mapping_Review_v1.md",
         "supabase/migrations/20260724140000_founder_exercise_library_wave1.sql"
       ],
-      "status": "UNAPPROVED_UNPUBLISHED",
-      "unresolved_distinction": "High-bar is the recommended clarification; the brief did not select high versus low bar."
+      "status": "FOUNDER_CONTENT_APPROVED_UNPUBLISHED",
+      "unresolved_distinction": "Content choice resolved; exact canonical identity/version/event binding remains pending."
     },
     {
-      "approved": false,
+      "approved": true,
       "authored_label": "bodyweight_squat",
       "completion_criteria": [
         "Complete a controlled squat and return to standing."
       ],
+      "content_approval": {
+        "canonical_publication_authority": false,
+        "scope": "exercise variant and definition content only",
+        "source": "docs/programmes/hyrox_base/APPROVAL_2026_10_25.txt"
+      },
       "definition_template": {
         "aliases": [],
         "canonical_name": "Bodyweight squat",
@@ -318,7 +333,7 @@
         "language": "en",
         "lifecycle_status": "draft",
         "provenance": {
-          "notes": "Proposed variant text, not a verified publication event.",
+          "notes": "Content approval retained in APPROVAL_2026_10_25.txt. This template remains unpublished and has no assigned canonical version or verified publication event.",
           "source_reference": "docs/programmes/hyrox_base/FOUNDER_DECISION_PACKET.md",
           "source_type": "unapproved_local_proposal"
         },
@@ -330,7 +345,7 @@
         "safety_notes": [],
         "schema_version": 1,
         "start_position": "Standing, feet about shoulder-width, hands in front for balance. No implement.",
-        "title": "Bodyweight squat \u2014 proposed variant",
+        "title": "Bodyweight squat — content approved, unpublished",
         "version": null
       },
       "notes": "Null identity/version/reference slots are intentional; not parseable admission or a published/history record. Never pass a null version through a decoder that defaults to 1. Producer assigns identity/version only after deduplication and review.",
@@ -338,7 +353,7 @@
       "position": "Standing, feet about shoulder-width, hands in front for balance.",
       "proposal_key": "base-review-bodyweight_squat",
       "publication_event": null,
-      "recommendation": "Use this proposed variant; retain all approved main doses.",
+      "recommendation": "Founder approved this variant, subject to the retained 2026-10-25 corrections.",
       "required_capture_fields": [],
       "retained_digest": null,
       "retained_version": null,
@@ -346,15 +361,20 @@
       "source_evidence": [
         "docs/programmes/hyrox_base/TRANSFER_BRIEF.txt"
       ],
-      "status": "UNAPPROVED_UNPUBLISHED",
-      "unresolved_distinction": "No exact retained identity for this warm-up variant; do not use a loaded goblet squat."
+      "status": "FOUNDER_CONTENT_APPROVED_UNPUBLISHED",
+      "unresolved_distinction": "Content choice resolved; exact canonical identity/version/event binding remains pending."
     },
     {
-      "approved": false,
+      "approved": true,
       "authored_label": "chest_supported_row",
       "completion_criteria": [
         "Both arms row and return while the chest stays supported."
       ],
+      "content_approval": {
+        "canonical_publication_authority": false,
+        "scope": "exercise variant and definition content only",
+        "source": "docs/programmes/hyrox_base/APPROVAL_2026_10_25.txt"
+      },
       "definition_template": {
         "aliases": [],
         "canonical_name": "Chest Supported Row",
@@ -434,7 +454,7 @@
         "language": "en",
         "lifecycle_status": "draft",
         "provenance": {
-          "notes": "Proposed variant text, not a verified publication event.",
+          "notes": "Content approval retained in APPROVAL_2026_10_25.txt. This template remains unpublished and has no assigned canonical version or verified publication event.",
           "source_reference": "docs/programmes/hyrox_base/FOUNDER_DECISION_PACKET.md",
           "source_type": "unapproved_local_proposal"
         },
@@ -446,7 +466,7 @@
         "safety_notes": [],
         "schema_version": 1,
         "start_position": "Prone on a bench set about 30 degrees; chest supported, feet planted, arms hanging. Neutral grip, palms facing each other.",
-        "title": "Chest-supported dumbbell row \u2014 proposed variant",
+        "title": "Chest-supported dumbbell row — content approved, unpublished",
         "version": null
       },
       "notes": "Null identity/version/reference slots are intentional; not parseable admission or a published/history record. Never pass a null version through a decoder that defaults to 1. Producer assigns identity/version only after deduplication and review.",
@@ -454,7 +474,7 @@
       "position": "Prone on a bench set about 30 degrees; chest supported, feet planted, arms hanging.",
       "proposal_key": "base-review-chest_supported_row",
       "publication_event": null,
-      "recommendation": "Use this proposed variant; retain all approved main doses.",
+      "recommendation": "Founder approved this variant, subject to the retained 2026-10-25 corrections.",
       "required_capture_fields": [],
       "retained_digest": null,
       "retained_version": null,
@@ -463,15 +483,20 @@
         "docs/programmes/hyrox_base/TRANSFER_BRIEF.txt",
         "supabase/migrations/20260724140000_founder_exercise_library_wave1.sql"
       ],
-      "status": "UNAPPROVED_UNPUBLISHED",
-      "unresolved_distinction": "The catalogue permits machine or bench; recommend dumbbells on a bench, not a machine."
+      "status": "FOUNDER_CONTENT_APPROVED_UNPUBLISHED",
+      "unresolved_distinction": "Content choice resolved; exact canonical identity/version/event binding remains pending."
     },
     {
-      "approved": false,
+      "approved": true,
       "authored_label": "dead_bug",
       "completion_criteria": [
         "Each arm/leg pair extends and returns without losing trunk control."
       ],
+      "content_approval": {
+        "canonical_publication_authority": false,
+        "scope": "exercise variant and definition content only",
+        "source": "docs/programmes/hyrox_base/APPROVAL_2026_10_25.txt"
+      },
       "definition_template": {
         "aliases": [],
         "canonical_name": "Dead Bug",
@@ -547,7 +572,7 @@
         "language": "en",
         "lifecycle_status": "draft",
         "provenance": {
-          "notes": "Proposed variant text, not a verified publication event.",
+          "notes": "Content approval retained in APPROVAL_2026_10_25.txt. This template remains unpublished and has no assigned canonical version or verified publication event.",
           "source_reference": "docs/programmes/hyrox_base/FOUNDER_DECISION_PACKET.md",
           "source_type": "unapproved_local_proposal"
         },
@@ -559,7 +584,7 @@
         "safety_notes": [],
         "schema_version": 1,
         "start_position": "Supine; hips and knees bent about 90 degrees, arms pointing upwards. No implement.",
-        "title": "Alternating dead bug \u2014 proposed variant",
+        "title": "Alternating dead bug — content approved, unpublished",
         "version": null
       },
       "notes": "Null identity/version/reference slots are intentional; not parseable admission or a published/history record. Never pass a null version through a decoder that defaults to 1. Producer assigns identity/version only after deduplication and review.",
@@ -567,7 +592,7 @@
       "position": "Supine; hips and knees bent about 90 degrees, arms pointing upwards.",
       "proposal_key": "base-review-dead_bug",
       "publication_event": null,
-      "recommendation": "Use this proposed variant; retain all approved main doses.",
+      "recommendation": "Founder approved this variant, subject to the retained 2026-10-25 corrections.",
       "required_capture_fields": [],
       "retained_digest": null,
       "retained_version": null,
@@ -576,15 +601,20 @@
         "docs/programmes/hyrox_base/TRANSFER_BRIEF.txt",
         "docs/architecture/Phase_3_1F_Part2_Founder_Approved_Canonical_Mappings_v1.md"
       ],
-      "status": "UNAPPROVED_UNPUBLISHED",
-      "unresolved_distinction": "No new loaded or banded variant."
+      "status": "FOUNDER_CONTENT_APPROVED_UNPUBLISHED",
+      "unresolved_distinction": "Content choice resolved; exact canonical identity/version/event binding remains pending."
     },
     {
-      "approved": false,
+      "approved": true,
       "authored_label": "dumbbell_shoulder_press",
       "completion_criteria": [
         "Both arms press overhead and return with trunk supported."
       ],
+      "content_approval": {
+        "canonical_publication_authority": false,
+        "scope": "exercise variant and definition content only",
+        "source": "docs/programmes/hyrox_base/APPROVAL_2026_10_25.txt"
+      },
       "definition_template": {
         "aliases": [],
         "canonical_name": "Dumbbell Strict Press",
@@ -664,7 +694,7 @@
         "language": "en",
         "lifecycle_status": "draft",
         "provenance": {
-          "notes": "Proposed variant text, not a verified publication event.",
+          "notes": "Content approval retained in APPROVAL_2026_10_25.txt. This template remains unpublished and has no assigned canonical version or verified publication event.",
           "source_reference": "docs/programmes/hyrox_base/FOUNDER_DECISION_PACKET.md",
           "source_type": "unapproved_local_proposal"
         },
@@ -676,7 +706,7 @@
         "safety_notes": [],
         "schema_version": 1,
         "start_position": "Seated against a near-upright backrest; feet supported, dumbbells at shoulder level. Neutral grip, palms facing inward.",
-        "title": "Seated dumbbell shoulder press \u2014 proposed variant",
+        "title": "Seated dumbbell shoulder press — content approved, unpublished",
         "version": null
       },
       "notes": "Null identity/version/reference slots are intentional; not parseable admission or a published/history record. Never pass a null version through a decoder that defaults to 1. Producer assigns identity/version only after deduplication and review.",
@@ -684,7 +714,7 @@
       "position": "Seated against a near-upright backrest; feet supported, dumbbells at shoulder level.",
       "proposal_key": "base-review-dumbbell_shoulder_press",
       "publication_event": null,
-      "recommendation": "Use this proposed variant; retain all approved main doses.",
+      "recommendation": "Founder approved this variant, subject to the retained 2026-10-25 corrections.",
       "required_capture_fields": [],
       "retained_digest": null,
       "retained_version": null,
@@ -693,15 +723,20 @@
         "docs/programmes/hyrox_base/TRANSFER_BRIEF.txt",
         "docs/architecture/Phase_3_1F_Part1_Founder_Identity_Mapping_Review_v1.md"
       ],
-      "status": "UNAPPROVED_UNPUBLISHED",
-      "unresolved_distinction": "Seated neutral-grip is proposed; standing/pronated setup was not selected in the brief."
+      "status": "FOUNDER_CONTENT_APPROVED_UNPUBLISHED",
+      "unresolved_distinction": "Content choice resolved; exact canonical identity/version/event binding remains pending."
     },
     {
-      "approved": false,
+      "approved": true,
       "authored_label": "easy_bike",
       "completion_criteria": [
         "Use the same fan bike at easy preparation effort."
       ],
+      "content_approval": {
+        "canonical_publication_authority": false,
+        "scope": "exercise variant and definition content only",
+        "source": "docs/programmes/hyrox_base/APPROVAL_2026_10_25.txt"
+      },
       "definition_template": {
         "aliases": [],
         "canonical_name": "Fan-resistance air bike",
@@ -712,7 +747,7 @@
           "unsuitable": []
         },
         "equipment": {
-          "notes": "Seated on a fan bike; feet on pedals; use both moving handles. Closed neutral grip on moving handles.",
+          "notes": "Same seated fan-bike setup as the main fan-bike movement. Closed neutral grip on moving handles.",
           "one_of_groups": [],
           "optional_tokens": [],
           "required_tokens": [
@@ -767,7 +802,7 @@
       "position": "Same seated fan-bike setup as the main fan-bike movement.",
       "proposal_key": "base-review-easy_bike",
       "publication_event": null,
-      "recommendation": "Use this proposed variant; retain all approved main doses.",
+      "recommendation": "Founder approved this variant, subject to the retained 2026-10-25 corrections.",
       "required_capture_fields": [],
       "retained_digest": null,
       "retained_version": null,
@@ -775,18 +810,23 @@
       "source_evidence": [
         "docs/programmes/hyrox_base/TRANSFER_BRIEF.txt"
       ],
-      "status": "UNAPPROVED_UNPUBLISHED",
-      "unresolved_distinction": "Share the air-bike definition; easy intensity does not create another exercise."
+      "status": "FOUNDER_CONTENT_APPROVED_UNPUBLISHED",
+      "unresolved_distinction": "Content choice resolved; exact canonical identity/version/event binding remains pending."
     },
     {
-      "approved": false,
+      "approved": true,
       "authored_label": "front_rack_reverse_lunge",
       "completion_criteria": [
-        "Return to standing while retaining the front-rack load position."
+        "Return to standing with control while retaining the barbell front rack."
       ],
+      "content_approval": {
+        "canonical_publication_authority": false,
+        "scope": "exercise variant and definition content only",
+        "source": "docs/programmes/hyrox_base/APPROVAL_2026_10_25.txt"
+      },
       "definition_template": {
         "aliases": [],
-        "canonical_name": "Two-dumbbell front-rack reverse lunge",
+        "canonical_name": "Barbell Front-Rack Reverse Lunge",
         "coaching_content_refs": [],
         "environments": {
           "notes": "Equipment availability must be checked; no substitution or environment guarantee.",
@@ -794,11 +834,12 @@
           "unsuitable": []
         },
         "equipment": {
-          "notes": "Standing with two dumbbells held at the fronts of the shoulders. Neutral grip; handles held securely, elbows comfortably forward.",
+          "notes": "Standing with the barbell supported across the front of the shoulders in a front rack. Front-rack grip with fingers under the bar and elbows forwards to support the rack.",
           "one_of_groups": [],
           "optional_tokens": [],
           "required_tokens": [
-            "dumbbell"
+            "barbell",
+            "rack"
           ],
           "supports_external_load": true
         },
@@ -829,14 +870,15 @@
         "version": null
       },
       "equipment": [
-        "dumbbell"
+        "barbell",
+        "rack"
       ],
       "execution_sequence": [
-        "Step one leg backwards and lower into a lunge.",
-        "Drive through the front foot to return; repeat on the prescribed side."
+        "Step one leg backwards and lower into a lunge while retaining the barbell front rack.",
+        "Drive through the front foot to return; complete the prescribed reps per leg."
       ],
       "existing_identity_candidate": null,
-      "grip": "Neutral grip; handles held securely, elbows comfortably forward.",
+      "grip": "Front-rack grip with fingers under the bar and elbows forwards to support the rack.",
       "identity_action": "propose_new_exact_definition_subject_to_producer_deduplication",
       "identity_candidate_name": null,
       "laterality": "unilateral",
@@ -850,11 +892,11 @@
         },
         "authored_at": "2026-10-25T03:02:23Z",
         "completion_criteria": [
-          "Return to standing while retaining the front-rack load position."
+          "Return to standing with control while retaining the barbell front rack."
         ],
         "execution_sequence": [
-          "Step one leg backwards and lower into a lunge.",
-          "Drive through the front foot to return; repeat on the prescribed side."
+          "Step one leg backwards and lower into a lunge while retaining the barbell front rack.",
+          "Drive through the front foot to return; complete the prescribed reps per leg."
         ],
         "exercise_id": null,
         "id": null,
@@ -862,7 +904,7 @@
         "language": "en",
         "lifecycle_status": "draft",
         "provenance": {
-          "notes": "Proposed variant text, not a verified publication event.",
+          "notes": "Content approval retained in APPROVAL_2026_10_25.txt. This template remains unpublished and has no assigned canonical version or verified publication event.",
           "source_reference": "docs/programmes/hyrox_base/FOUNDER_DECISION_PACKET.md",
           "source_type": "unapproved_local_proposal"
         },
@@ -873,16 +915,16 @@
         "safety_boundary_refs": [],
         "safety_notes": [],
         "schema_version": 1,
-        "start_position": "Standing with two dumbbells held at the fronts of the shoulders. Neutral grip; handles held securely, elbows comfortably forward.",
-        "title": "Two-dumbbell front-rack reverse lunge \u2014 proposed variant",
+        "start_position": "Standing with the barbell supported across the front of the shoulders in a front rack. Front-rack grip with fingers under the bar and elbows forwards to support the rack.",
+        "title": "Barbell front-rack reverse lunge — content approved, unpublished",
         "version": null
       },
       "notes": "Null identity/version/reference slots are intentional; not parseable admission or a published/history record. Never pass a null version through a decoder that defaults to 1. Producer assigns identity/version only after deduplication and review.",
-      "plain_english_name": "Two-dumbbell front-rack reverse lunge",
-      "position": "Standing with two dumbbells held at the fronts of the shoulders.",
+      "plain_english_name": "Barbell front-rack reverse lunge",
+      "position": "Standing with the barbell supported across the front of the shoulders in a front rack.",
       "proposal_key": "base-review-front_rack_reverse_lunge",
       "publication_event": null,
-      "recommendation": "Use this proposed variant; retain all approved main doses.",
+      "recommendation": "Founder approved this variant, subject to the retained 2026-10-25 corrections.",
       "required_capture_fields": [],
       "retained_digest": null,
       "retained_version": null,
@@ -891,15 +933,20 @@
         "docs/programmes/hyrox_base/TRANSFER_BRIEF.txt",
         "docs/checkpoints/hyrox_base_personalisation/FOUNDER_BRIEF.txt"
       ],
-      "status": "UNAPPROVED_UNPUBLISHED",
-      "unresolved_distinction": "Recommend two dumbbells rather than a barbell, kettlebells or goblet hold; exact front-rack variant needs a new-definition review."
+      "status": "FOUNDER_CONTENT_APPROVED_UNPUBLISHED",
+      "unresolved_distinction": "Content choice resolved; exact canonical identity/version/event binding remains pending."
     },
     {
-      "approved": false,
+      "approved": true,
       "authored_label": "glute_bridge",
       "completion_criteria": [
         "Hips lift and return while feet stay planted."
       ],
+      "content_approval": {
+        "canonical_publication_authority": false,
+        "scope": "exercise variant and definition content only",
+        "source": "docs/programmes/hyrox_base/APPROVAL_2026_10_25.txt"
+      },
       "definition_template": {
         "aliases": [],
         "canonical_name": "Bodyweight floor glute bridge",
@@ -974,7 +1021,7 @@
         "language": "en",
         "lifecycle_status": "draft",
         "provenance": {
-          "notes": "Proposed variant text, not a verified publication event.",
+          "notes": "Content approval retained in APPROVAL_2026_10_25.txt. This template remains unpublished and has no assigned canonical version or verified publication event.",
           "source_reference": "docs/programmes/hyrox_base/FOUNDER_DECISION_PACKET.md",
           "source_type": "unapproved_local_proposal"
         },
@@ -986,7 +1033,7 @@
         "safety_notes": [],
         "schema_version": 1,
         "start_position": "Supine on floor, knees bent, feet flat about hip-width. No implement; arms rest beside the body.",
-        "title": "Bodyweight floor glute bridge \u2014 proposed variant",
+        "title": "Bodyweight floor glute bridge — content approved, unpublished",
         "version": null
       },
       "notes": "Null identity/version/reference slots are intentional; not parseable admission or a published/history record. Never pass a null version through a decoder that defaults to 1. Producer assigns identity/version only after deduplication and review.",
@@ -994,7 +1041,7 @@
       "position": "Supine on floor, knees bent, feet flat about hip-width.",
       "proposal_key": "base-review-glute_bridge",
       "publication_event": null,
-      "recommendation": "Use this proposed variant; retain all approved main doses.",
+      "recommendation": "Founder approved this variant, subject to the retained 2026-10-25 corrections.",
       "required_capture_fields": [],
       "retained_digest": null,
       "retained_version": null,
@@ -1002,15 +1049,20 @@
       "source_evidence": [
         "docs/programmes/hyrox_base/TRANSFER_BRIEF.txt"
       ],
-      "status": "UNAPPROVED_UNPUBLISHED",
-      "unresolved_distinction": "Floor/bodyweight variant; a bench hip thrust is different."
+      "status": "FOUNDER_CONTENT_APPROVED_UNPUBLISHED",
+      "unresolved_distinction": "Content choice resolved; exact canonical identity/version/event binding remains pending."
     },
     {
-      "approved": false,
+      "approved": true,
       "authored_label": "incline_dumbbell_press",
       "completion_criteria": [
         "Both arms press and return with the torso supported."
       ],
+      "content_approval": {
+        "canonical_publication_authority": false,
+        "scope": "exercise variant and definition content only",
+        "source": "docs/programmes/hyrox_base/APPROVAL_2026_10_25.txt"
+      },
       "definition_template": {
         "aliases": [],
         "canonical_name": "Incline Dumbbell Press",
@@ -1090,7 +1142,7 @@
         "language": "en",
         "lifecycle_status": "draft",
         "provenance": {
-          "notes": "Proposed variant text, not a verified publication event.",
+          "notes": "Content approval retained in APPROVAL_2026_10_25.txt. This template remains unpublished and has no assigned canonical version or verified publication event.",
           "source_reference": "docs/programmes/hyrox_base/FOUNDER_DECISION_PACKET.md",
           "source_type": "unapproved_local_proposal"
         },
@@ -1102,7 +1154,7 @@
         "safety_notes": [],
         "schema_version": 1,
         "start_position": "Supine on a bench set about 30 degrees; feet planted, dumbbells by the upper chest. Overhand grip, palms facing forwards.",
-        "title": "Incline dumbbell bench press \u2014 proposed variant",
+        "title": "Incline dumbbell bench press — content approved, unpublished",
         "version": null
       },
       "notes": "Null identity/version/reference slots are intentional; not parseable admission or a published/history record. Never pass a null version through a decoder that defaults to 1. Producer assigns identity/version only after deduplication and review.",
@@ -1110,7 +1162,7 @@
       "position": "Supine on a bench set about 30 degrees; feet planted, dumbbells by the upper chest.",
       "proposal_key": "base-review-incline_dumbbell_press",
       "publication_event": null,
-      "recommendation": "Use this proposed variant; retain all approved main doses.",
+      "recommendation": "Founder approved this variant, subject to the retained 2026-10-25 corrections.",
       "required_capture_fields": [],
       "retained_digest": null,
       "retained_version": null,
@@ -1119,15 +1171,20 @@
         "docs/programmes/hyrox_base/TRANSFER_BRIEF.txt",
         "supabase/migrations/20260724140000_founder_exercise_library_wave1.sql"
       ],
-      "status": "UNAPPROVED_UNPUBLISHED",
-      "unresolved_distinction": "Recommend a low incline; angle/grip are new clarifications, not a dose change."
+      "status": "FOUNDER_CONTENT_APPROVED_UNPUBLISHED",
+      "unresolved_distinction": "Content choice resolved; exact canonical identity/version/event binding remains pending."
     },
     {
-      "approved": false,
+      "approved": true,
       "authored_label": "kettlebell_swing",
       "completion_criteria": [
         "A controlled hinge/hip drive and return; no intentional overhead finish."
       ],
+      "content_approval": {
+        "canonical_publication_authority": false,
+        "scope": "exercise variant and definition content only",
+        "source": "docs/programmes/hyrox_base/APPROVAL_2026_10_25.txt"
+      },
       "definition_template": {
         "aliases": [],
         "canonical_name": "Kettlebell Swing",
@@ -1207,7 +1264,7 @@
         "language": "en",
         "lifecycle_status": "draft",
         "provenance": {
-          "notes": "Proposed variant text, not a verified publication event.",
+          "notes": "Content approval retained in APPROVAL_2026_10_25.txt. This template remains unpublished and has no assigned canonical version or verified publication event.",
           "source_reference": "docs/programmes/hyrox_base/FOUNDER_DECISION_PACKET.md",
           "source_type": "unapproved_local_proposal"
         },
@@ -1219,7 +1276,7 @@
         "safety_notes": [],
         "schema_version": 1,
         "start_position": "Standing hinge stance with one kettlebell between the legs. Two hands on one handle with an overhand grip.",
-        "title": "Russian kettlebell swing \u2014 proposed variant",
+        "title": "Russian kettlebell swing — content approved, unpublished",
         "version": null
       },
       "notes": "Null identity/version/reference slots are intentional; not parseable admission or a published/history record. Never pass a null version through a decoder that defaults to 1. Producer assigns identity/version only after deduplication and review.",
@@ -1227,7 +1284,7 @@
       "position": "Standing hinge stance with one kettlebell between the legs.",
       "proposal_key": "base-review-kettlebell_swing",
       "publication_event": null,
-      "recommendation": "Use this proposed variant; retain all approved main doses.",
+      "recommendation": "Founder approved this variant, subject to the retained 2026-10-25 corrections.",
       "required_capture_fields": [],
       "retained_digest": null,
       "retained_version": null,
@@ -1236,15 +1293,20 @@
         "docs/programmes/hyrox_base/TRANSFER_BRIEF.txt",
         "docs/architecture/Phase_3_2D_Approved_Movement_Knowledge_Pilot_v1.md"
       ],
-      "status": "UNAPPROVED_UNPUBLISHED",
-      "unresolved_distinction": "Accepted pilot explicitly selects Russian/chest-height; overhead American swing is outside that identity."
+      "status": "FOUNDER_CONTENT_APPROVED_UNPUBLISHED",
+      "unresolved_distinction": "Content choice resolved; exact canonical identity/version/event binding remains pending."
     },
     {
-      "approved": false,
+      "approved": true,
       "authored_label": "light_band_pull_apart",
       "completion_criteria": [
         "Band opens and returns under control."
       ],
+      "content_approval": {
+        "canonical_publication_authority": false,
+        "scope": "exercise variant and definition content only",
+        "source": "docs/programmes/hyrox_base/APPROVAL_2026_10_25.txt"
+      },
       "definition_template": {
         "aliases": [],
         "canonical_name": "Light band pull-apart",
@@ -1319,7 +1381,7 @@
         "language": "en",
         "lifecycle_status": "draft",
         "provenance": {
-          "notes": "Proposed variant text, not a verified publication event.",
+          "notes": "Content approval retained in APPROVAL_2026_10_25.txt. This template remains unpublished and has no assigned canonical version or verified publication event.",
           "source_reference": "docs/programmes/hyrox_base/FOUNDER_DECISION_PACKET.md",
           "source_type": "unapproved_local_proposal"
         },
@@ -1331,7 +1393,7 @@
         "safety_notes": [],
         "schema_version": 1,
         "start_position": "Standing with arms reaching forwards at about chest height. Overhand grip on a light band, hands about shoulder-width apart.",
-        "title": "Light band pull-apart \u2014 proposed variant",
+        "title": "Light band pull-apart — content approved, unpublished",
         "version": null
       },
       "notes": "Null identity/version/reference slots are intentional; not parseable admission or a published/history record. Never pass a null version through a decoder that defaults to 1. Producer assigns identity/version only after deduplication and review.",
@@ -1339,7 +1401,7 @@
       "position": "Standing with arms reaching forwards at about chest height.",
       "proposal_key": "base-review-light_band_pull_apart",
       "publication_event": null,
-      "recommendation": "Use this proposed variant; retain all approved main doses.",
+      "recommendation": "Founder approved this variant, subject to the retained 2026-10-25 corrections.",
       "required_capture_fields": [],
       "retained_digest": null,
       "retained_version": null,
@@ -1347,15 +1409,20 @@
       "source_evidence": [
         "docs/programmes/hyrox_base/TRANSFER_BRIEF.txt"
       ],
-      "status": "UNAPPROVED_UNPUBLISHED",
-      "unresolved_distinction": "Use a straight pull-apart, not a face pull or overhead dislocate."
+      "status": "FOUNDER_CONTENT_APPROVED_UNPUBLISHED",
+      "unresolved_distinction": "Content choice resolved; exact canonical identity/version/event binding remains pending."
     },
     {
-      "approved": false,
+      "approved": true,
       "authored_label": "light_row",
       "completion_criteria": [
         "Chest remains supported through each light row."
       ],
+      "content_approval": {
+        "canonical_publication_authority": false,
+        "scope": "exercise variant and definition content only",
+        "source": "docs/programmes/hyrox_base/APPROVAL_2026_10_25.txt"
+      },
       "definition_template": {
         "aliases": [],
         "canonical_name": "Chest Supported Row",
@@ -1366,7 +1433,7 @@
           "unsuitable": []
         },
         "equipment": {
-          "notes": "Prone on a bench set about 30 degrees; chest supported, feet planted, arms hanging. Neutral grip, palms facing each other.",
+          "notes": "Same supported 30-degree bench position as the working chest-supported row. Neutral grip.",
           "one_of_groups": [],
           "optional_tokens": [],
           "required_tokens": [
@@ -1421,7 +1488,7 @@
       "position": "Same supported 30-degree bench position as the working chest-supported row.",
       "proposal_key": "base-review-light_row",
       "publication_event": null,
-      "recommendation": "Use this proposed variant; retain all approved main doses.",
+      "recommendation": "Founder approved this variant, subject to the retained 2026-10-25 corrections.",
       "required_capture_fields": [],
       "retained_digest": null,
       "retained_version": null,
@@ -1430,15 +1497,20 @@
         "docs/programmes/hyrox_base/TRANSFER_BRIEF.txt",
         "supabase/migrations/20260724140000_founder_exercise_library_wave1.sql"
       ],
-      "status": "UNAPPROVED_UNPUBLISHED",
-      "unresolved_distinction": "Light is preparation intensity; share the working-row identity."
+      "status": "FOUNDER_CONTENT_APPROVED_UNPUBLISHED",
+      "unresolved_distinction": "Content choice resolved; exact canonical identity/version/event binding remains pending."
     },
     {
-      "approved": false,
+      "approved": true,
       "authored_label": "light_scapular_row",
       "completion_criteria": [
         "Complete the full light row without torso swing."
       ],
+      "content_approval": {
+        "canonical_publication_authority": false,
+        "scope": "exercise variant and definition content only",
+        "source": "docs/programmes/hyrox_base/APPROVAL_2026_10_25.txt"
+      },
       "definition_template": {
         "aliases": [],
         "canonical_name": "Cable Row",
@@ -1518,7 +1590,7 @@
         "language": "en",
         "lifecycle_status": "draft",
         "provenance": {
-          "notes": "Proposed variant text, not a verified publication event.",
+          "notes": "Content approval retained in APPROVAL_2026_10_25.txt. This template remains unpublished and has no assigned canonical version or verified publication event.",
           "source_reference": "docs/programmes/hyrox_base/FOUNDER_DECISION_PACKET.md",
           "source_type": "unapproved_local_proposal"
         },
@@ -1530,7 +1602,7 @@
         "safety_notes": [],
         "schema_version": 1,
         "start_position": "Standing facing a chest-height cable; stable parallel stance, torso upright. Two-handed neutral grip on a short row handle.",
-        "title": "Light bilateral cable row with scapular control \u2014 proposed variant",
+        "title": "Light bilateral cable row with scapular control — content approved, unpublished",
         "version": null
       },
       "notes": "Null identity/version/reference slots are intentional; not parseable admission or a published/history record. Never pass a null version through a decoder that defaults to 1. Producer assigns identity/version only after deduplication and review.",
@@ -1538,7 +1610,7 @@
       "position": "Standing facing a chest-height cable; stable parallel stance, torso upright.",
       "proposal_key": "base-review-light_scapular_row",
       "publication_event": null,
-      "recommendation": "Use this proposed variant; retain all approved main doses.",
+      "recommendation": "Founder approved this variant, subject to the retained 2026-10-25 corrections.",
       "required_capture_fields": [],
       "retained_digest": null,
       "retained_version": null,
@@ -1547,15 +1619,20 @@
         "docs/programmes/hyrox_base/TRANSFER_BRIEF.txt",
         "supabase/migrations/20260724140000_founder_exercise_library_wave1.sql"
       ],
-      "status": "UNAPPROVED_UNPUBLISHED",
-      "unresolved_distinction": "Recommend a full cable row with scapular emphasis, not an elbows-straight scapular-only drill."
+      "status": "FOUNDER_CONTENT_APPROVED_UNPUBLISHED",
+      "unresolved_distinction": "Content choice resolved; exact canonical identity/version/event binding remains pending."
     },
     {
-      "approved": false,
+      "approved": true,
       "authored_label": "long_lever_plank",
       "completion_criteria": [
         "Maintain the long-lever support position for the prescribed hold."
       ],
+      "content_approval": {
+        "canonical_publication_authority": false,
+        "scope": "exercise variant and definition content only",
+        "source": "docs/programmes/hyrox_base/APPROVAL_2026_10_25.txt"
+      },
       "definition_template": {
         "aliases": [],
         "canonical_name": "Long-lever forearm plank",
@@ -1630,7 +1707,7 @@
         "language": "en",
         "lifecycle_status": "draft",
         "provenance": {
-          "notes": "Proposed variant text, not a verified publication event.",
+          "notes": "Content approval retained in APPROVAL_2026_10_25.txt. This template remains unpublished and has no assigned canonical version or verified publication event.",
           "source_reference": "docs/programmes/hyrox_base/FOUNDER_DECISION_PACKET.md",
           "source_type": "unapproved_local_proposal"
         },
@@ -1642,7 +1719,7 @@
         "safety_notes": [],
         "schema_version": 1,
         "start_position": "Prone forearm support with elbows slightly ahead of shoulders; feet on floor. Forearms/hands supported; no implement.",
-        "title": "Long-lever forearm plank \u2014 proposed variant",
+        "title": "Long-lever forearm plank — content approved, unpublished",
         "version": null
       },
       "notes": "Null identity/version/reference slots are intentional; not parseable admission or a published/history record. Never pass a null version through a decoder that defaults to 1. Producer assigns identity/version only after deduplication and review.",
@@ -1650,7 +1727,7 @@
       "position": "Prone forearm support with elbows slightly ahead of shoulders; feet on floor.",
       "proposal_key": "base-review-long_lever_plank",
       "publication_event": null,
-      "recommendation": "Use this proposed variant; retain all approved main doses.",
+      "recommendation": "Founder approved this variant, subject to the retained 2026-10-25 corrections.",
       "required_capture_fields": [],
       "retained_digest": null,
       "retained_version": null,
@@ -1659,18 +1736,23 @@
         "docs/programmes/hyrox_base/TRANSFER_BRIEF.txt",
         "docs/architecture/Phase_3_2D_Approved_Movement_Knowledge_Pilot_v1.md"
       ],
-      "status": "UNAPPROVED_UNPUBLISHED",
-      "unresolved_distinction": "EX-021 pilot requires elbows approximately beneath shoulders; do not silently bind the forward-elbow variant to it."
+      "status": "FOUNDER_CONTENT_APPROVED_UNPUBLISHED",
+      "unresolved_distinction": "Content choice resolved; exact canonical identity/version/event binding remains pending."
     },
     {
-      "approved": false,
+      "approved": true,
       "authored_label": "pallof_press",
       "completion_criteria": [
         "Arms extend and return while the torso resists rotation."
       ],
+      "content_approval": {
+        "canonical_publication_authority": false,
+        "scope": "exercise variant and definition content only",
+        "source": "docs/programmes/hyrox_base/APPROVAL_2026_10_25.txt"
+      },
       "definition_template": {
         "aliases": [],
-        "canonical_name": "Pallof Press",
+        "canonical_name": "Split-Stance Cable Pallof Press",
         "coaching_content_refs": [],
         "environments": {
           "notes": "Equipment availability must be checked; no substitution or environment guarantee.",
@@ -1678,7 +1760,7 @@
           "unsuitable": []
         },
         "equipment": {
-          "notes": "Standing side-on to a chest-height cable, feet about shoulder-width; handle at sternum. Both hands clasp the single handle.",
+          "notes": "Standing side-on to a chest-height cable in a stable split stance, one foot forwards and one back; handle at sternum. Both hands clasp the single cable handle.",
           "one_of_groups": [],
           "optional_tokens": [],
           "required_tokens": [
@@ -1722,7 +1804,7 @@
         "Retain the authored extended hold, then return to the sternum."
       ],
       "existing_identity_candidate": "EX-114",
-      "grip": "Both hands clasp the single handle.",
+      "grip": "Both hands clasp the single cable handle.",
       "identity_action": "reuse_exact_definition_candidate_after_review",
       "identity_candidate_name": "Pallof Press",
       "laterality": "unilateral",
@@ -1748,7 +1830,7 @@
         "language": "en",
         "lifecycle_status": "draft",
         "provenance": {
-          "notes": "Proposed variant text, not a verified publication event.",
+          "notes": "Content approval retained in APPROVAL_2026_10_25.txt. This template remains unpublished and has no assigned canonical version or verified publication event.",
           "source_reference": "docs/programmes/hyrox_base/FOUNDER_DECISION_PACKET.md",
           "source_type": "unapproved_local_proposal"
         },
@@ -1759,16 +1841,16 @@
         "safety_boundary_refs": [],
         "safety_notes": [],
         "schema_version": 1,
-        "start_position": "Standing side-on to a chest-height cable, feet about shoulder-width; handle at sternum. Both hands clasp the single handle.",
-        "title": "Standing cable Pallof press \u2014 proposed variant",
+        "start_position": "Standing side-on to a chest-height cable in a stable split stance, one foot forwards and one back; handle at sternum. Both hands clasp the single cable handle.",
+        "title": "Split-stance cable Pallof press — content approved, unpublished",
         "version": null
       },
       "notes": "Null identity/version/reference slots are intentional; not parseable admission or a published/history record. Never pass a null version through a decoder that defaults to 1. Producer assigns identity/version only after deduplication and review.",
-      "plain_english_name": "Standing cable Pallof press",
-      "position": "Standing side-on to a chest-height cable, feet about shoulder-width; handle at sternum.",
+      "plain_english_name": "Split-stance cable Pallof press",
+      "position": "Standing side-on to a chest-height cable in a stable split stance, one foot forwards and one back; handle at sternum.",
       "proposal_key": "base-review-pallof_press",
       "publication_event": null,
-      "recommendation": "Use this proposed variant; retain all approved main doses.",
+      "recommendation": "Founder approved this variant, subject to the retained 2026-10-25 corrections.",
       "required_capture_fields": [],
       "retained_digest": null,
       "retained_version": null,
@@ -1777,15 +1859,20 @@
         "docs/programmes/hyrox_base/TRANSFER_BRIEF.txt",
         "supabase/migrations/20260724140000_founder_exercise_library_wave1.sql"
       ],
-      "status": "UNAPPROVED_UNPUBLISHED",
-      "unresolved_distinction": "Recommend a cable rather than a band; two-second extended hold remains the existing prescription."
+      "status": "FOUNDER_CONTENT_APPROVED_UNPUBLISHED",
+      "unresolved_distinction": "Content choice resolved; exact canonical identity/version/event binding remains pending."
     },
     {
-      "approved": false,
+      "approved": true,
       "authored_label": "rdl",
       "completion_criteria": [
         "Complete a hip hinge and stand without turning the lift into a floor deadlift."
       ],
+      "content_approval": {
+        "canonical_publication_authority": false,
+        "scope": "exercise variant and definition content only",
+        "source": "docs/programmes/hyrox_base/APPROVAL_2026_10_25.txt"
+      },
       "definition_template": {
         "aliases": [],
         "canonical_name": "Romanian Deadlift",
@@ -1863,7 +1950,7 @@
         "language": "en",
         "lifecycle_status": "draft",
         "provenance": {
-          "notes": "Proposed variant text, not a verified publication event.",
+          "notes": "Content approval retained in APPROVAL_2026_10_25.txt. This template remains unpublished and has no assigned canonical version or verified publication event.",
           "source_reference": "docs/programmes/hyrox_base/FOUNDER_DECISION_PACKET.md",
           "source_type": "unapproved_local_proposal"
         },
@@ -1875,7 +1962,7 @@
         "safety_notes": [],
         "schema_version": 1,
         "start_position": "Standing with bar in front of thighs, feet about hip-width, knees softly bent. Double-overhand grip just outside the legs.",
-        "title": "Barbell Romanian deadlift \u2014 proposed variant",
+        "title": "Barbell Romanian deadlift — content approved, unpublished",
         "version": null
       },
       "notes": "Null identity/version/reference slots are intentional; not parseable admission or a published/history record. Never pass a null version through a decoder that defaults to 1. Producer assigns identity/version only after deduplication and review.",
@@ -1883,7 +1970,7 @@
       "position": "Standing with bar in front of thighs, feet about hip-width, knees softly bent.",
       "proposal_key": "base-review-rdl",
       "publication_event": null,
-      "recommendation": "Use this proposed variant; retain all approved main doses.",
+      "recommendation": "Founder approved this variant, subject to the retained 2026-10-25 corrections.",
       "required_capture_fields": [],
       "retained_digest": null,
       "retained_version": null,
@@ -1895,15 +1982,20 @@
         "docs/architecture/Phase_3_1F_Part1_Founder_Identity_Mapping_Review_v1.md",
         "supabase/migrations/20260724140000_founder_exercise_library_wave1.sql"
       ],
-      "status": "UNAPPROVED_UNPUBLISHED",
-      "unresolved_distinction": "Accepted mapping selects barbell, not the separate dumbbell RDL. Loads stay effort-selected, never squat-benchmark-derived."
+      "status": "FOUNDER_CONTENT_APPROVED_UNPUBLISHED",
+      "unresolved_distinction": "Content choice resolved; exact canonical identity/version/event binding remains pending."
     },
     {
-      "approved": false,
+      "approved": true,
       "authored_label": "reverse_lunge",
       "completion_criteria": [
         "The athlete steps back and returns, rather than travelling forwards."
       ],
+      "content_approval": {
+        "canonical_publication_authority": false,
+        "scope": "exercise variant and definition content only",
+        "source": "docs/programmes/hyrox_base/APPROVAL_2026_10_25.txt"
+      },
       "definition_template": {
         "aliases": [],
         "canonical_name": "Bodyweight reverse lunge",
@@ -1979,7 +2071,7 @@
         "language": "en",
         "lifecycle_status": "draft",
         "provenance": {
-          "notes": "Proposed variant text, not a verified publication event.",
+          "notes": "Content approval retained in APPROVAL_2026_10_25.txt. This template remains unpublished and has no assigned canonical version or verified publication event.",
           "source_reference": "docs/programmes/hyrox_base/FOUNDER_DECISION_PACKET.md",
           "source_type": "unapproved_local_proposal"
         },
@@ -1991,7 +2083,7 @@
         "safety_notes": [],
         "schema_version": 1,
         "start_position": "Standing upright with space to step backwards. No implement; hands free for balance.",
-        "title": "Bodyweight reverse lunge \u2014 proposed variant",
+        "title": "Bodyweight reverse lunge — content approved, unpublished",
         "version": null
       },
       "notes": "Null identity/version/reference slots are intentional; not parseable admission or a published/history record. Never pass a null version through a decoder that defaults to 1. Producer assigns identity/version only after deduplication and review.",
@@ -1999,7 +2091,7 @@
       "position": "Standing upright with space to step backwards.",
       "proposal_key": "base-review-reverse_lunge",
       "publication_event": null,
-      "recommendation": "Use this proposed variant; retain all approved main doses.",
+      "recommendation": "Founder approved this variant, subject to the retained 2026-10-25 corrections.",
       "required_capture_fields": [],
       "retained_digest": null,
       "retained_version": null,
@@ -2007,15 +2099,20 @@
       "source_evidence": [
         "docs/programmes/hyrox_base/TRANSFER_BRIEF.txt"
       ],
-      "status": "UNAPPROVED_UNPUBLISHED",
-      "unresolved_distinction": "A reverse lunge is not the accepted walking-lunge identity EX-025."
+      "status": "FOUNDER_CONTENT_APPROVED_UNPUBLISHED",
+      "unresolved_distinction": "Content choice resolved; exact canonical identity/version/event binding remains pending."
     },
     {
-      "approved": false,
+      "approved": true,
       "authored_label": "rowing",
       "completion_criteria": [
         "Repeated complete controlled strokes on the rowing erg."
       ],
+      "content_approval": {
+        "canonical_publication_authority": false,
+        "scope": "exercise variant and definition content only",
+        "source": "docs/programmes/hyrox_base/APPROVAL_2026_10_25.txt"
+      },
       "definition_template": {
         "aliases": [],
         "canonical_name": "Row Erg",
@@ -2095,7 +2192,7 @@
         "language": "en",
         "lifecycle_status": "draft",
         "provenance": {
-          "notes": "Proposed variant text, not a verified publication event.",
+          "notes": "Content approval retained in APPROVAL_2026_10_25.txt. This template remains unpublished and has no assigned canonical version or verified publication event.",
           "source_reference": "docs/programmes/hyrox_base/FOUNDER_DECISION_PACKET.md",
           "source_type": "unapproved_local_proposal"
         },
@@ -2107,7 +2204,7 @@
         "safety_notes": [],
         "schema_version": 1,
         "start_position": "Seated sliding-seat rowing erg, feet strapped, knees flexed at the catch. Two-handed overhand grip on the handle.",
-        "title": "Seated rowing ergometer \u2014 proposed variant",
+        "title": "Seated rowing ergometer — content approved, unpublished",
         "version": null
       },
       "notes": "Null identity/version/reference slots are intentional; not parseable admission or a published/history record. Never pass a null version through a decoder that defaults to 1. Producer assigns identity/version only after deduplication and review.",
@@ -2115,7 +2212,7 @@
       "position": "Seated sliding-seat rowing erg, feet strapped, knees flexed at the catch.",
       "proposal_key": "base-review-rowing",
       "publication_event": null,
-      "recommendation": "Use this proposed variant; retain all approved main doses.",
+      "recommendation": "Founder approved this variant, subject to the retained 2026-10-25 corrections.",
       "required_capture_fields": [],
       "retained_digest": null,
       "retained_version": null,
@@ -2126,15 +2223,20 @@
         "docs/architecture/Phase_3_1F_Part2_Founder_Approved_Canonical_Mappings_v1.md",
         "docs/architecture/Phase_3_2D_Approved_Movement_Knowledge_Pilot_v1.md"
       ],
-      "status": "UNAPPROVED_UNPUBLISHED",
-      "unresolved_distinction": "No brand, damper or race calibration is inferred; a cable row is different."
+      "status": "FOUNDER_CONTENT_APPROVED_UNPUBLISHED",
+      "unresolved_distinction": "Content choice resolved; exact canonical identity/version/event binding remains pending."
     },
     {
-      "approved": false,
+      "approved": true,
       "authored_label": "running",
       "completion_criteria": [
         "Continuous running or authored work/recovery running as prescribed."
       ],
+      "content_approval": {
+        "canonical_publication_authority": false,
+        "scope": "exercise variant and definition content only",
+        "source": "docs/programmes/hyrox_base/APPROVAL_2026_10_25.txt"
+      },
       "definition_template": {
         "aliases": [],
         "canonical_name": "Running",
@@ -2212,7 +2314,7 @@
         "language": "en",
         "lifecycle_status": "draft",
         "provenance": {
-          "notes": "Proposed variant text, not a verified publication event.",
+          "notes": "Content approval retained in APPROVAL_2026_10_25.txt. This template remains unpublished and has no assigned canonical version or verified publication event.",
           "source_reference": "docs/programmes/hyrox_base/FOUNDER_DECISION_PACKET.md",
           "source_type": "unapproved_local_proposal"
         },
@@ -2224,7 +2326,7 @@
         "safety_notes": [],
         "schema_version": 1,
         "start_position": "Upright running on a suitable outdoor path or track. No implement.",
-        "title": "Outdoor running \u2014 proposed variant",
+        "title": "Outdoor running — content approved, unpublished",
         "version": null
       },
       "notes": "Null identity/version/reference slots are intentional; not parseable admission or a published/history record. Never pass a null version through a decoder that defaults to 1. Producer assigns identity/version only after deduplication and review.",
@@ -2232,7 +2334,7 @@
       "position": "Upright running on a suitable outdoor path or track.",
       "proposal_key": "base-review-running",
       "publication_event": null,
-      "recommendation": "Use this proposed variant; retain all approved main doses.",
+      "recommendation": "Founder approved this variant, subject to the retained 2026-10-25 corrections.",
       "required_capture_fields": [],
       "retained_digest": null,
       "retained_version": null,
@@ -2242,15 +2344,20 @@
         "docs/checkpoints/hyrox_base_personalisation/FOUNDER_BRIEF.txt",
         "docs/architecture/Phase_3_1F_Part2_Founder_Approved_Canonical_Mappings_v1.md"
       ],
-      "status": "UNAPPROVED_UNPUBLISHED",
-      "unresolved_distinction": "Generic outdoor/track identity; intensity stays in the session, treadmill substitution is not newly authorised."
+      "status": "FOUNDER_CONTENT_APPROVED_UNPUBLISHED",
+      "unresolved_distinction": "Content choice resolved; exact canonical identity/version/event binding remains pending."
     },
     {
-      "approved": false,
+      "approved": true,
       "authored_label": "ski_erg",
       "completion_criteria": [
         "Both handles complete a downward drive and controlled recovery."
       ],
+      "content_approval": {
+        "canonical_publication_authority": false,
+        "scope": "exercise variant and definition content only",
+        "source": "docs/programmes/hyrox_base/APPROVAL_2026_10_25.txt"
+      },
       "definition_template": {
         "aliases": [],
         "canonical_name": "Ski Erg",
@@ -2330,7 +2437,7 @@
         "language": "en",
         "lifecycle_status": "draft",
         "provenance": {
-          "notes": "Proposed variant text, not a verified publication event.",
+          "notes": "Content approval retained in APPROVAL_2026_10_25.txt. This template remains unpublished and has no assigned canonical version or verified publication event.",
           "source_reference": "docs/programmes/hyrox_base/FOUNDER_DECISION_PACKET.md",
           "source_type": "unapproved_local_proposal"
         },
@@ -2342,7 +2449,7 @@
         "safety_notes": [],
         "schema_version": 1,
         "start_position": "Standing facing a two-handle SkiErg with arms raised under control. One handle in each hand, closed grip.",
-        "title": "Standing double-pole SkiErg \u2014 proposed variant",
+        "title": "Standing double-pole SkiErg — content approved, unpublished",
         "version": null
       },
       "notes": "Null identity/version/reference slots are intentional; not parseable admission or a published/history record. Never pass a null version through a decoder that defaults to 1. Producer assigns identity/version only after deduplication and review.",
@@ -2350,7 +2457,7 @@
       "position": "Standing facing a two-handle SkiErg with arms raised under control.",
       "proposal_key": "base-review-ski_erg",
       "publication_event": null,
-      "recommendation": "Use this proposed variant; retain all approved main doses.",
+      "recommendation": "Founder approved this variant, subject to the retained 2026-10-25 corrections.",
       "required_capture_fields": [],
       "retained_digest": null,
       "retained_version": null,
@@ -2361,15 +2468,20 @@
         "docs/architecture/Phase_3_1F_Part2_Founder_Approved_Canonical_Mappings_v1.md",
         "docs/architecture/Phase_3_2D_Approved_Movement_Knowledge_Pilot_v1.md"
       ],
-      "status": "UNAPPROVED_UNPUBLISHED",
-      "unresolved_distinction": "Not a seated/adaptive or banded ski movement; no damper setting inferred."
+      "status": "FOUNDER_CONTENT_APPROVED_UNPUBLISHED",
+      "unresolved_distinction": "Content choice resolved; exact canonical identity/version/event binding remains pending."
     },
     {
-      "approved": false,
+      "approved": true,
       "authored_label": "split_stance_single_arm_cable_row",
       "completion_criteria": [
         "A controlled single-arm row with stable split stance and torso."
       ],
+      "content_approval": {
+        "canonical_publication_authority": false,
+        "scope": "exercise variant and definition content only",
+        "source": "docs/programmes/hyrox_base/APPROVAL_2026_10_25.txt"
+      },
       "definition_template": {
         "aliases": [],
         "canonical_name": "One-Arm Cable Row",
@@ -2450,7 +2562,7 @@
         "language": "en",
         "lifecycle_status": "draft",
         "provenance": {
-          "notes": "Proposed variant text, not a verified publication event.",
+          "notes": "Content approval retained in APPROVAL_2026_10_25.txt. This template remains unpublished and has no assigned canonical version or verified publication event.",
           "source_reference": "docs/programmes/hyrox_base/FOUNDER_DECISION_PACKET.md",
           "source_type": "unapproved_local_proposal"
         },
@@ -2462,7 +2574,7 @@
         "safety_notes": [],
         "schema_version": 1,
         "start_position": "Standing facing a cable at lower-chest height, one foot forward, torso square. One hand on a D-handle with a neutral grip.",
-        "title": "Split-stance single-arm cable row \u2014 proposed variant",
+        "title": "Split-stance single-arm cable row — content approved, unpublished",
         "version": null
       },
       "notes": "Null identity/version/reference slots are intentional; not parseable admission or a published/history record. Never pass a null version through a decoder that defaults to 1. Producer assigns identity/version only after deduplication and review.",
@@ -2470,7 +2582,7 @@
       "position": "Standing facing a cable at lower-chest height, one foot forward, torso square.",
       "proposal_key": "base-review-split_stance_single_arm_cable_row",
       "publication_event": null,
-      "recommendation": "Use this proposed variant; retain all approved main doses.",
+      "recommendation": "Founder approved this variant, subject to the retained 2026-10-25 corrections.",
       "required_capture_fields": [],
       "retained_digest": null,
       "retained_version": null,
@@ -2480,15 +2592,20 @@
         "docs/checkpoints/hyrox_base_personalisation/FOUNDER_BRIEF.txt",
         "supabase/migrations/20260821120000_apollo_build_week1_executable_protocols.sql"
       ],
-      "status": "UNAPPROVED_UNPUBLISHED",
-      "unresolved_distinction": "Apollo source names a one-arm cable row but does not establish this standing split stance; verify the exact variant before reusing the identity."
+      "status": "FOUNDER_CONTENT_APPROVED_UNPUBLISHED",
+      "unresolved_distinction": "Content choice resolved; exact canonical identity/version/event binding remains pending."
     },
     {
-      "approved": false,
+      "approved": true,
       "authored_label": "strict_overhead_press",
       "completion_criteria": [
         "Reach overhead with control without converting it to a push press."
       ],
+      "content_approval": {
+        "canonical_publication_authority": false,
+        "scope": "exercise variant and definition content only",
+        "source": "docs/programmes/hyrox_base/APPROVAL_2026_10_25.txt"
+      },
       "definition_template": {
         "aliases": [],
         "canonical_name": "Strict Press",
@@ -2568,7 +2685,7 @@
         "language": "en",
         "lifecycle_status": "draft",
         "provenance": {
-          "notes": "Proposed variant text, not a verified publication event.",
+          "notes": "Content approval retained in APPROVAL_2026_10_25.txt. This template remains unpublished and has no assigned canonical version or verified publication event.",
           "source_reference": "docs/programmes/hyrox_base/FOUNDER_DECISION_PACKET.md",
           "source_type": "unapproved_local_proposal"
         },
@@ -2580,7 +2697,7 @@
         "safety_notes": [],
         "schema_version": 1,
         "start_position": "Standing with bar at upper chest, feet about hip-width, trunk braced. Closed overhand grip just outside shoulder-width.",
-        "title": "Standing strict barbell press \u2014 proposed variant",
+        "title": "Standing strict barbell press — content approved, unpublished",
         "version": null
       },
       "notes": "Null identity/version/reference slots are intentional; not parseable admission or a published/history record. Never pass a null version through a decoder that defaults to 1. Producer assigns identity/version only after deduplication and review.",
@@ -2588,7 +2705,7 @@
       "position": "Standing with bar at upper chest, feet about hip-width, trunk braced.",
       "proposal_key": "base-review-strict_overhead_press",
       "publication_event": null,
-      "recommendation": "Use this proposed variant; retain all approved main doses.",
+      "recommendation": "Founder approved this variant, subject to the retained 2026-10-25 corrections.",
       "required_capture_fields": [],
       "retained_digest": null,
       "retained_version": null,
@@ -2600,15 +2717,20 @@
         "docs/architecture/Phase_3_1F_Part1_Founder_Identity_Mapping_Review_v1.md",
         "supabase/migrations/20260724140000_founder_exercise_library_wave1.sql"
       ],
-      "status": "UNAPPROVED_UNPUBLISHED",
-      "unresolved_distinction": "Barbell strict press, not dumbbell press or push press."
+      "status": "FOUNDER_CONTENT_APPROVED_UNPUBLISHED",
+      "unresolved_distinction": "Content choice resolved; exact canonical identity/version/event binding remains pending."
     },
     {
-      "approved": false,
+      "approved": true,
       "authored_label": "strict_pull_up",
       "completion_criteria": [
         "Complete the pull and controlled return without momentum-driven kipping."
       ],
+      "content_approval": {
+        "canonical_publication_authority": false,
+        "scope": "exercise variant and definition content only",
+        "source": "docs/programmes/hyrox_base/APPROVAL_2026_10_25.txt"
+      },
       "definition_template": {
         "aliases": [],
         "canonical_name": "Pull Up",
@@ -2683,7 +2805,7 @@
         "language": "en",
         "lifecycle_status": "draft",
         "provenance": {
-          "notes": "Proposed variant text, not a verified publication event.",
+          "notes": "Content approval retained in APPROVAL_2026_10_25.txt. This template remains unpublished and has no assigned canonical version or verified publication event.",
           "source_reference": "docs/programmes/hyrox_base/FOUNDER_DECISION_PACKET.md",
           "source_type": "unapproved_local_proposal"
         },
@@ -2695,7 +2817,7 @@
         "safety_notes": [],
         "schema_version": 1,
         "start_position": "Hanging from a fixed overhead bar, body controlled. Overhand grip about shoulder-width.",
-        "title": "Strict overhand pull-up \u2014 proposed variant",
+        "title": "Strict overhand pull-up — content approved, unpublished",
         "version": null
       },
       "notes": "Null identity/version/reference slots are intentional; not parseable admission or a published/history record. Never pass a null version through a decoder that defaults to 1. Producer assigns identity/version only after deduplication and review.",
@@ -2703,7 +2825,7 @@
       "position": "Hanging from a fixed overhead bar, body controlled.",
       "proposal_key": "base-review-strict_pull_up",
       "publication_event": null,
-      "recommendation": "Use this proposed variant; retain all approved main doses.",
+      "recommendation": "Founder approved this variant, subject to the retained 2026-10-25 corrections.",
       "required_capture_fields": [],
       "retained_digest": null,
       "retained_version": null,
@@ -2713,15 +2835,20 @@
         "docs/architecture/Phase_3_1F_Part2_Founder_Approved_Canonical_Mappings_v1.md",
         "docs/architecture/Phase_3_1F_Part1_Founder_Identity_Mapping_Review_v1.md"
       ],
-      "status": "UNAPPROVED_UNPUBLISHED",
-      "unresolved_distinction": "Not a chin-up, neutral-grip pull-up or automatically weighted variant."
+      "status": "FOUNDER_CONTENT_APPROVED_UNPUBLISHED",
+      "unresolved_distinction": "Content choice resolved; exact canonical identity/version/event binding remains pending."
     },
     {
-      "approved": false,
+      "approved": true,
       "authored_label": "suitcase_carry",
       "completion_criteria": [
         "Carry the load while walking on each prescribed side."
       ],
+      "content_approval": {
+        "canonical_publication_authority": false,
+        "scope": "exercise variant and definition content only",
+        "source": "docs/programmes/hyrox_base/APPROVAL_2026_10_25.txt"
+      },
       "definition_template": {
         "aliases": [],
         "canonical_name": "Suitcase Carry",
@@ -2801,7 +2928,7 @@
         "language": "en",
         "lifecycle_status": "draft",
         "provenance": {
-          "notes": "Proposed variant text, not a verified publication event.",
+          "notes": "Content approval retained in APPROVAL_2026_10_25.txt. This template remains unpublished and has no assigned canonical version or verified publication event.",
           "source_reference": "docs/programmes/hyrox_base/FOUNDER_DECISION_PACKET.md",
           "source_type": "unapproved_local_proposal"
         },
@@ -2813,7 +2940,7 @@
         "safety_notes": [],
         "schema_version": 1,
         "start_position": "Standing tall with one dumbbell beside one thigh; walk on clear level space. One-hand neutral grip with arm down at the side.",
-        "title": "Single-dumbbell suitcase carry \u2014 proposed variant",
+        "title": "Single-dumbbell suitcase carry — content approved, unpublished",
         "version": null
       },
       "notes": "Null identity/version/reference slots are intentional; not parseable admission or a published/history record. Never pass a null version through a decoder that defaults to 1. Producer assigns identity/version only after deduplication and review.",
@@ -2821,7 +2948,7 @@
       "position": "Standing tall with one dumbbell beside one thigh; walk on clear level space.",
       "proposal_key": "base-review-suitcase_carry",
       "publication_event": null,
-      "recommendation": "Use this proposed variant; retain all approved main doses.",
+      "recommendation": "Founder approved this variant, subject to the retained 2026-10-25 corrections.",
       "required_capture_fields": [],
       "retained_digest": null,
       "retained_version": null,
@@ -2830,18 +2957,23 @@
         "docs/programmes/hyrox_base/TRANSFER_BRIEF.txt",
         "supabase/migrations/20260724140000_founder_exercise_library_wave1.sql"
       ],
-      "status": "UNAPPROVED_UNPUBLISHED",
-      "unresolved_distinction": "Recommend a dumbbell; unilateral suitcase carry must not become bilateral farmer carry."
+      "status": "FOUNDER_CONTENT_APPROVED_UNPUBLISHED",
+      "unresolved_distinction": "Content choice resolved; exact canonical identity/version/event binding remains pending."
     },
     {
-      "approved": false,
+      "approved": true,
       "authored_label": "two_dumbbell_devils_press",
       "completion_criteria": [
         "Complete the floor burpee and two-dumbbell overhead finish; both dumbbells stay part of the rep."
       ],
+      "content_approval": {
+        "canonical_publication_authority": false,
+        "scope": "exercise variant and definition content only",
+        "source": "docs/programmes/hyrox_base/APPROVAL_2026_10_25.txt"
+      },
       "definition_template": {
         "aliases": [],
-        "canonical_name": "Two-dumbbell devil\u2019s press",
+        "canonical_name": "Two-dumbbell devil’s press",
         "coaching_content_refs": [],
         "environments": {
           "notes": "Equipment availability must be checked; no substitution or environment guarantee.",
@@ -2918,7 +3050,7 @@
         "language": "en",
         "lifecycle_status": "draft",
         "provenance": {
-          "notes": "Proposed variant text, not a verified publication event.",
+          "notes": "Content approval retained in APPROVAL_2026_10_25.txt. This template remains unpublished and has no assigned canonical version or verified publication event.",
           "source_reference": "docs/programmes/hyrox_base/FOUNDER_DECISION_PACKET.md",
           "source_type": "unapproved_local_proposal"
         },
@@ -2930,15 +3062,15 @@
         "safety_notes": [],
         "schema_version": 1,
         "start_position": "Standing with two dumbbells at the sides; clear floor space. Neutral grip on both dumbbell handles.",
-        "title": "Two-dumbbell devil\u2019s press \u2014 proposed variant",
+        "title": "Two-dumbbell devil’s press — content approved, unpublished",
         "version": null
       },
       "notes": "Null identity/version/reference slots are intentional; not parseable admission or a published/history record. Never pass a null version through a decoder that defaults to 1. Producer assigns identity/version only after deduplication and review.",
-      "plain_english_name": "Two-dumbbell devil\u2019s press",
+      "plain_english_name": "Two-dumbbell devil’s press",
       "position": "Standing with two dumbbells at the sides; clear floor space.",
       "proposal_key": "base-review-two_dumbbell_devils_press",
       "publication_event": null,
-      "recommendation": "Use this proposed variant; retain all approved main doses.",
+      "recommendation": "Founder approved this variant, subject to the retained 2026-10-25 corrections.",
       "required_capture_fields": [],
       "retained_digest": null,
       "retained_version": null,
@@ -2946,15 +3078,20 @@
       "source_evidence": [
         "docs/programmes/hyrox_base/TRANSFER_BRIEF.txt"
       ],
-      "status": "UNAPPROVED_UNPUBLISHED",
-      "unresolved_distinction": "Recommend floor chest contact and a continuous double-dumbbell overhead finish, not a single-dumbbell or clean-and-press substitute."
+      "status": "FOUNDER_CONTENT_APPROVED_UNPUBLISHED",
+      "unresolved_distinction": "Content choice resolved; exact canonical identity/version/event binding remains pending."
     },
     {
-      "approved": false,
+      "approved": true,
       "authored_label": "unloaded_hip_hinge",
       "completion_criteria": [
         "Practise a controlled hinge without external load."
       ],
+      "content_approval": {
+        "canonical_publication_authority": false,
+        "scope": "exercise variant and definition content only",
+        "source": "docs/programmes/hyrox_base/APPROVAL_2026_10_25.txt"
+      },
       "definition_template": {
         "aliases": [],
         "canonical_name": "Unloaded standing hip hinge",
@@ -3029,7 +3166,7 @@
         "language": "en",
         "lifecycle_status": "draft",
         "provenance": {
-          "notes": "Proposed variant text, not a verified publication event.",
+          "notes": "Content approval retained in APPROVAL_2026_10_25.txt. This template remains unpublished and has no assigned canonical version or verified publication event.",
           "source_reference": "docs/programmes/hyrox_base/FOUNDER_DECISION_PACKET.md",
           "source_type": "unapproved_local_proposal"
         },
@@ -3041,7 +3178,7 @@
         "safety_notes": [],
         "schema_version": 1,
         "start_position": "Standing about hip-width, knees softly bent. Hands rest across the chest or on hips; no load.",
-        "title": "Unloaded standing hip hinge \u2014 proposed variant",
+        "title": "Unloaded standing hip hinge — content approved, unpublished",
         "version": null
       },
       "notes": "Null identity/version/reference slots are intentional; not parseable admission or a published/history record. Never pass a null version through a decoder that defaults to 1. Producer assigns identity/version only after deduplication and review.",
@@ -3049,7 +3186,7 @@
       "position": "Standing about hip-width, knees softly bent.",
       "proposal_key": "base-review-unloaded_hip_hinge",
       "publication_event": null,
-      "recommendation": "Use this proposed variant; retain all approved main doses.",
+      "recommendation": "Founder approved this variant, subject to the retained 2026-10-25 corrections.",
       "required_capture_fields": [],
       "retained_digest": null,
       "retained_version": null,
@@ -3057,15 +3194,20 @@
       "source_evidence": [
         "docs/programmes/hyrox_base/TRANSFER_BRIEF.txt"
       ],
-      "status": "UNAPPROVED_UNPUBLISHED",
-      "unresolved_distinction": "Unloaded preparation movement, not another working RDL set."
+      "status": "FOUNDER_CONTENT_APPROVED_UNPUBLISHED",
+      "unresolved_distinction": "Content choice resolved; exact canonical identity/version/event binding remains pending."
     },
     {
-      "approved": false,
+      "approved": true,
       "authored_label": "wall_ball",
       "completion_criteria": [
-        "Generic squat/throw/catch sequence; race-valid completion remains unverified."
+        "The movement includes a squat, an upward throw towards the wall target, and a controlled catch."
       ],
+      "content_approval": {
+        "canonical_publication_authority": false,
+        "scope": "exercise variant and definition content only",
+        "source": "docs/programmes/hyrox_base/APPROVAL_2026_10_25.txt"
+      },
       "definition_template": {
         "aliases": [],
         "canonical_name": "Wall Ball",
@@ -3116,9 +3258,8 @@
         "wall_ball_target"
       ],
       "execution_sequence": [
-        "Squat, rise and throw upwards to the target.",
-        "Receive the rebound with both hands and regain control.",
-        "Apply the selected race weight/target and judging standard only after the official reference resolves."
+        "Squat, rise and throw upwards towards the wall target.",
+        "Receive the rebound with both hands and regain control."
       ],
       "existing_identity_candidate": "EX-052",
       "grip": "Both hands support the ball.",
@@ -3135,12 +3276,11 @@
         },
         "authored_at": "2026-10-25T03:02:23Z",
         "completion_criteria": [
-          "Generic squat/throw/catch sequence; race-valid completion remains unverified."
+          "The movement includes a squat, an upward throw towards the wall target, and a controlled catch."
         ],
         "execution_sequence": [
-          "Squat, rise and throw upwards to the target.",
-          "Receive the rebound with both hands and regain control.",
-          "Apply the selected race weight/target and judging standard only after the official reference resolves."
+          "Squat, rise and throw upwards towards the wall target.",
+          "Receive the rebound with both hands and regain control."
         ],
         "exercise_id": "EX-052",
         "id": null,
@@ -3148,7 +3288,7 @@
         "language": "en",
         "lifecycle_status": "draft",
         "provenance": {
-          "notes": "Proposed variant text, not a verified publication event.",
+          "notes": "Content approval retained in APPROVAL_2026_10_25.txt. This template remains unpublished and has no assigned canonical version or verified publication event.",
           "source_reference": "docs/programmes/hyrox_base/FOUNDER_DECISION_PACKET.md",
           "source_type": "unapproved_local_proposal"
         },
@@ -3160,7 +3300,7 @@
         "safety_notes": [],
         "schema_version": 1,
         "start_position": "Standing facing a clear wall target, ball held in front of the chest. Both hands support the ball.",
-        "title": "Two-handed wall-ball squat and throw \u2014 proposed variant",
+        "title": "Two-handed wall-ball squat and throw — content approved, unpublished",
         "version": null
       },
       "notes": "Null identity/version/reference slots are intentional; not parseable admission or a published/history record. Never pass a null version through a decoder that defaults to 1. Producer assigns identity/version only after deduplication and review.",
@@ -3168,7 +3308,7 @@
       "position": "Standing facing a clear wall target, ball held in front of the chest.",
       "proposal_key": "base-review-wall_ball",
       "publication_event": null,
-      "recommendation": "Use this proposed variant; retain all approved main doses.",
+      "recommendation": "Founder approved this variant, subject to the retained 2026-10-25 corrections.",
       "required_capture_fields": [],
       "retained_digest": null,
       "retained_version": null,
@@ -3179,15 +3319,20 @@
         "docs/architecture/Phase_3_1F_Part2_Founder_Approved_Canonical_Mappings_v1.md",
         "docs/architecture/Phase_3_2D_Approved_Movement_Knowledge_Pilot_v1.md"
       ],
-      "status": "UNAPPROVED_UNPUBLISHED",
-      "unresolved_distinction": "Race load, target height, applicable division and official judging criteria remain unresolved; no numeric defaults."
+      "status": "FOUNDER_CONTENT_APPROVED_UNPUBLISHED",
+      "unresolved_distinction": "No Base circuit division lookup or exact race load/height is required. Explicit standards and formal assessments remain separate."
     },
     {
-      "approved": false,
+      "approved": true,
       "authored_label": "wall_slide",
       "completion_criteria": [
         "Both arms slide up and return without forcing range or arching the torso."
       ],
+      "content_approval": {
+        "canonical_publication_authority": false,
+        "scope": "exercise variant and definition content only",
+        "source": "docs/programmes/hyrox_base/APPROVAL_2026_10_25.txt"
+      },
       "definition_template": {
         "aliases": [],
         "canonical_name": "Standing forearm wall slide",
@@ -3262,7 +3407,7 @@
         "language": "en",
         "lifecycle_status": "draft",
         "provenance": {
-          "notes": "Proposed variant text, not a verified publication event.",
+          "notes": "Content approval retained in APPROVAL_2026_10_25.txt. This template remains unpublished and has no assigned canonical version or verified publication event.",
           "source_reference": "docs/programmes/hyrox_base/FOUNDER_DECISION_PACKET.md",
           "source_type": "unapproved_local_proposal"
         },
@@ -3274,7 +3419,7 @@
         "safety_notes": [],
         "schema_version": 1,
         "start_position": "Standing facing a wall, forearms supported vertically against it, elbows bent. No implement.",
-        "title": "Standing forearm wall slide \u2014 proposed variant",
+        "title": "Standing forearm wall slide — content approved, unpublished",
         "version": null
       },
       "notes": "Null identity/version/reference slots are intentional; not parseable admission or a published/history record. Never pass a null version through a decoder that defaults to 1. Producer assigns identity/version only after deduplication and review.",
@@ -3282,7 +3427,7 @@
       "position": "Standing facing a wall, forearms supported vertically against it, elbows bent.",
       "proposal_key": "base-review-wall_slide",
       "publication_event": null,
-      "recommendation": "Use this proposed variant; retain all approved main doses.",
+      "recommendation": "Founder approved this variant, subject to the retained 2026-10-25 corrections.",
       "required_capture_fields": [],
       "retained_digest": null,
       "retained_version": null,
@@ -3290,9 +3435,9 @@
       "source_evidence": [
         "docs/programmes/hyrox_base/TRANSFER_BRIEF.txt"
       ],
-      "status": "UNAPPROVED_UNPUBLISHED",
-      "unresolved_distinction": "Recommend facing-wall forearm slides, not back-to-wall angels."
+      "status": "FOUNDER_CONTENT_APPROVED_UNPUBLISHED",
+      "unresolved_distinction": "Content choice resolved; exact canonical identity/version/event binding remains pending."
     }
   ],
-  "source_base": "97db4f6ce62da26309f934b0c7e652fb6d454780"
+  "source_base": "0d8e04efac9e9468339cb1ef47664ea90e485ee9"
 }

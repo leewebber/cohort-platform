@@ -1,6 +1,7 @@
 {
-  "applied_to_sessions": false,
-  "approved": false,
+  "applied_to_sessions": true,
+  "approval_source": "APPROVAL_2026_10_25.txt",
+  "approved": true,
   "format": "hyrox-base-preparation-proposals-v1",
   "preparations": [
     {
@@ -16,7 +17,7 @@
         3,
         5
       ],
-      "ramp_guidance": "After the circuit, perform 2\u20133 short squat ramp sets: empty bar or very light \u00d7 8; add load \u00d7 5; if useful, a final heavier \u00d7 2\u20133. Work towards, never above, the planned first working load; each ramp feels comfortable with several reps spare. Use about 30\u201360 s to change load/recover, then 60\u201390 s before the first working set. If the working load is light, omit the unnecessary heavier ramp. Working sets still rest 150\u2013180 s.",
+      "ramp_guidance": "After the circuit, perform 2–3 short squat ramp sets: empty bar or very light × 8; add load × 5; if useful, a final heavier × 2–3. Work towards, never above, the planned first working load; each ramp feels comfortable with several reps spare. Use about 30–60 s to change load/recover, then 60–90 s before the first working set. If the working load is light, omit the unnecessary heavier ramp. Working sets still rest 150–180 s.",
       "retained_circuit_movements": [
         [
           "bodyweight_squat",
@@ -44,7 +45,7 @@
         "exercise": "rowing",
         "seconds": 300
       },
-      "status": "NEW_PROPOSAL_NOT_APPROVED",
+      "status": "FOUNDER_CONTENT_APPROVED_2026_10_25",
       "total_budget_minutes": [
         12,
         15
@@ -64,7 +65,7 @@
         3,
         5
       ],
-      "ramp_guidance": "Perform two RDL ramp sets: very light \u00d7 8, then a moderate load \u00d7 5, both comfortably short of fatigue; rest about 30\u201360 s while changing load. Choose by feel and hinge control, not a squat benchmark. Before the first press/row pair, take one brief easy rehearsal of each if needed; this is preparation, not another working pair.",
+      "ramp_guidance": "Perform two RDL ramp sets: very light × 8, then a moderate load × 5, both comfortably short of fatigue; rest about 30–60 s while changing load. Choose by feel and hinge control, not a squat benchmark. Before the first press/row pair, take one brief easy rehearsal of each if needed; this is preparation, not another working pair.",
       "retained_circuit_movements": [
         [
           "unloaded_hip_hinge",
@@ -87,7 +88,7 @@
         "exercise": "easy_bike",
         "seconds": 300
       },
-      "status": "NEW_PROPOSAL_NOT_APPROVED",
+      "status": "FOUNDER_CONTENT_APPROVED_2026_10_25",
       "total_budget_minutes": [
         12,
         15
@@ -107,7 +108,7 @@
         3,
         5
       ],
-      "ramp_guidance": "Perform two front-rack reverse-lunge ramp sets: light dumbbells \u00d7 4 per leg, then a moderate pair \u00d7 2 per leg, with about 30\u201360 s to recover/change load. Keep balance and the front rack comfortable. Choose loads by feel, never a squat benchmark. Before the first press/row pair, take one brief easy rehearsal if needed.",
+      "ramp_guidance": "Perform two front-rack reverse-lunge ramp sets: a light barbell front rack × 4 per leg, then a moderate barbell front rack × 2 per leg, with about 30–60 s to recover/change load. Keep balance and the front rack comfortable. Choose loads by feel, never a squat benchmark. Before the first press/row pair, take one brief easy rehearsal if needed.",
       "retained_circuit_movements": [
         [
           "reverse_lunge",
@@ -130,7 +131,7 @@
         "exercise": "ski_erg",
         "seconds": 300
       },
-      "status": "NEW_PROPOSAL_NOT_APPROVED",
+      "status": "FOUNDER_CONTENT_APPROVED_2026_10_25",
       "total_budget_minutes": [
         12,
         15
@@ -140,7 +141,7 @@
     {
       "cooldown_changes": false,
       "day": "quality",
-      "execution_note": "Ten-minute easy run + two-minute dynamic circuit + 2 min 20 s accelerations = 14 min 20 s, plus 40\u2013160 s transitions. Main work and authored 15\u201320 min easy cooldown plus 5 min walking remain unchanged.",
+      "execution_note": "Ten-minute easy run + two-minute dynamic circuit + 2 min 20 s accelerations = 14 min 20 s, plus 40–160 s transitions. Main work and authored 15–20 min easy cooldown plus 5 min walking remain unchanged.",
       "fixed_component_seconds": 860,
       "main_prescription_changes": false,
       "new_dynamic_budget_seconds": 120,
@@ -154,7 +155,7 @@
         "work_seconds": 20
       },
       "retained_easy_run_seconds": 600,
-      "status": "NEW_PROPOSAL_NOT_APPROVED",
+      "status": "FOUNDER_CONTENT_APPROVED_2026_10_25",
       "total_budget_minutes": [
         15,
         17
@@ -165,5 +166,5 @@
       ]
     }
   ],
-  "source_base": "97db4f6ce62da26309f934b0c7e652fb6d454780"
+  "source_base": "0d8e04efac9e9468339cb1ef47664ea90e485ee9"
 }

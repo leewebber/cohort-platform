@@ -56,10 +56,11 @@ class ContentSourcesTest(unittest.TestCase):
                 self.assertEqual(len({s['id'] for s in steps}),len(steps))
         self.assertEqual(self.sessions[1,'gym_a']['timing']['finisher_seconds'],1170)
 
-    def test_accelerations_and_unknown_dynamic_prep(self):
+    def test_approved_accelerations_dynamic_prep_and_budget(self):
         quality = self.sessions[1,'quality']
-        self.assertEqual(quality['timing']['known_seconds'],[3260,3560])
-        self.assertIsNone(quality['timing']['full_seconds'])
+        self.assertEqual(quality['timing']['full_seconds'],[3420,3840])
+        self.assertEqual(quality['preparation']['dynamic_seconds'],120)
+        self.assertEqual(quality['preparation_gaps'],[])
         self.assertEqual(quality['preparation']['accelerations']['recovery_placement'],'between_only')
 
     def test_mixed_finishers_are_separate_from_bound_row(self):
@@ -70,7 +71,11 @@ class ContentSourcesTest(unittest.TestCase):
             g = self.sessions[w,'gym_c']['blocks'][-1]
             self.assertEqual(g['stations'][-1],dict(kind='rest',seconds=60))
             self.assertEqual(g['minutes'],3*g['rounds'])
-            self.assertIsNone(g['stations'][1]['race_mapping'])
+            self.assertEqual(g['stations'][1]['guidance_semantics'],'advisory_only')
+            self.assertNotIn('race_mapping',g['stations'][1])
+            self.assertNotIn('height',g['stations'][1])
+            self.assertNotIn('load',g['stations'][1])
+            self.assertNotIn('B2',self.sessions[w,'gym_c']['technical_blockers'])
             self.assertEqual(self.sessions[w,'gym_c']['binding_intents'],[])
         self.assertEqual(self.sessions[4,'gym_b']['blocks'][-1],self.sessions[8,'gym_b']['blocks'][-1])
 
@@ -83,6 +88,25 @@ class ContentSourcesTest(unittest.TestCase):
         self.assertEqual(g[2]['resistance_direction'],'optional increase')
         self.assertEqual(self.sessions[5,'gym_b']['blocks'][2]['lever_direction'],'optional longer lever')
         self.assertEqual(self.sessions[4,'gym_a']['blocks'][2]['load_direction'],'lighter')
+
+    def test_all_approved_content_and_variant_corrections_survive(self):
+        for session in self.bundle['sessions']:
+            self.assertEqual(session['source_status'],'prescription_content_complete')
+            self.assertEqual(session['content_decisions'],[])
+            self.assertEqual(session['preparation_gaps'],[])
+            self.assertEqual(session['technical_blockers'],['T1','B3'])
+            if session['mode']=='gym_c':
+                self.assertEqual(session['blocks'][0]['variant']['equipment'],['barbell','rack'])
+                self.assertIn('split stance',session['blocks'][2]['variant']['position'])
+                self.assertIn('barbell front rack',session['preparation']['ramp_up'])
+        producer=json.loads(c.build_outputs(c.ROOT)['PRODUCER_REVIEW_BUNDLE.json'])
+        self.assertEqual(len(producer['definitions']),27)
+        self.assertEqual(len(producer['bindings']),29)
+        self.assertFalse(producer['publication_authority'])
+        for definition in producer['definitions']:
+            self.assertIsNone(definition['version'])
+            self.assertIsNone(definition['verified_publication_event'])
+            self.assertIsNone(definition['definition_content']['version'])
 
     def test_no_canonical_identity_or_approval_is_fabricated(self):
         for s in self.bundle['sessions']:

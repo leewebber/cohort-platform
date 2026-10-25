@@ -1,0 +1,2723 @@
+{
+  "bindings": [
+    {
+      "authored_label": "assault_bike",
+      "definition_key": "base-review-assault_bike"
+    },
+    {
+      "authored_label": "back_squat",
+      "definition_key": "base-review-back_squat"
+    },
+    {
+      "authored_label": "bodyweight_squat",
+      "definition_key": "base-review-bodyweight_squat"
+    },
+    {
+      "authored_label": "chest_supported_row",
+      "definition_key": "base-review-chest_supported_row"
+    },
+    {
+      "authored_label": "dead_bug",
+      "definition_key": "base-review-dead_bug"
+    },
+    {
+      "authored_label": "dumbbell_shoulder_press",
+      "definition_key": "base-review-dumbbell_shoulder_press"
+    },
+    {
+      "authored_label": "easy_bike",
+      "definition_key": "base-review-assault_bike"
+    },
+    {
+      "authored_label": "front_rack_reverse_lunge",
+      "definition_key": "base-review-front_rack_reverse_lunge"
+    },
+    {
+      "authored_label": "glute_bridge",
+      "definition_key": "base-review-glute_bridge"
+    },
+    {
+      "authored_label": "incline_dumbbell_press",
+      "definition_key": "base-review-incline_dumbbell_press"
+    },
+    {
+      "authored_label": "kettlebell_swing",
+      "definition_key": "base-review-kettlebell_swing"
+    },
+    {
+      "authored_label": "light_band_pull_apart",
+      "definition_key": "base-review-light_band_pull_apart"
+    },
+    {
+      "authored_label": "light_row",
+      "definition_key": "base-review-chest_supported_row"
+    },
+    {
+      "authored_label": "light_scapular_row",
+      "definition_key": "base-review-light_scapular_row"
+    },
+    {
+      "authored_label": "long_lever_plank",
+      "definition_key": "base-review-long_lever_plank"
+    },
+    {
+      "authored_label": "pallof_press",
+      "definition_key": "base-review-pallof_press"
+    },
+    {
+      "authored_label": "rdl",
+      "definition_key": "base-review-rdl"
+    },
+    {
+      "authored_label": "reverse_lunge",
+      "definition_key": "base-review-reverse_lunge"
+    },
+    {
+      "authored_label": "rowing",
+      "definition_key": "base-review-rowing"
+    },
+    {
+      "authored_label": "running",
+      "definition_key": "base-review-running"
+    },
+    {
+      "authored_label": "ski_erg",
+      "definition_key": "base-review-ski_erg"
+    },
+    {
+      "authored_label": "split_stance_single_arm_cable_row",
+      "definition_key": "base-review-split_stance_single_arm_cable_row"
+    },
+    {
+      "authored_label": "strict_overhead_press",
+      "definition_key": "base-review-strict_overhead_press"
+    },
+    {
+      "authored_label": "strict_pull_up",
+      "definition_key": "base-review-strict_pull_up"
+    },
+    {
+      "authored_label": "suitcase_carry",
+      "definition_key": "base-review-suitcase_carry"
+    },
+    {
+      "authored_label": "two_dumbbell_devils_press",
+      "definition_key": "base-review-two_dumbbell_devils_press"
+    },
+    {
+      "authored_label": "unloaded_hip_hinge",
+      "definition_key": "base-review-unloaded_hip_hinge"
+    },
+    {
+      "authored_label": "wall_ball",
+      "definition_key": "base-review-wall_ball"
+    },
+    {
+      "authored_label": "wall_slide",
+      "definition_key": "base-review-wall_slide"
+    }
+  ],
+  "boundary": "Existing trusted producer verifies/deduplicates, assigns current identity/version and resolves its own verified publication event before retention. This is not an admissible event or a publication command.",
+  "circuit_race_guidance": "Advisory only; not a division lookup, exact load/height or verified race prescription.",
+  "content_approved": true,
+  "definitions": [
+    {
+      "authored_label": "assault_bike",
+      "content_approval": {
+        "canonical_publication_authority": false,
+        "scope": "exercise variant and definition content only",
+        "source": "docs/programmes/hyrox_base/APPROVAL_2026_10_25.txt"
+      },
+      "definition_content": {
+        "aliases": [],
+        "canonical_name": "Fan-resistance air bike",
+        "coaching_content_refs": [],
+        "environments": {
+          "notes": "Equipment availability must be checked; no substitution or environment guarantee.",
+          "suitable": [],
+          "unsuitable": []
+        },
+        "equipment": {
+          "notes": "Seated on a fan bike; feet on pedals; use both moving handles. Closed neutral grip on moving handles.",
+          "one_of_groups": [],
+          "optional_tokens": [],
+          "required_tokens": [
+            "air_bike"
+          ],
+          "supports_external_load": false
+        },
+        "id": null,
+        "impact_level": "unknown",
+        "laterality": "bilateral",
+        "lifecycle_status": "draft",
+        "media_refs": [],
+        "modality": "erg",
+        "movement_patterns": [
+          "cyclical"
+        ],
+        "movement_standard_refs": [],
+        "owner": "founder",
+        "sport_standard_refs": [],
+        "technical_complexity": "unknown",
+        "transitional_alias_ids": [],
+        "valid_completed_performance_dimensions": [
+          "duration",
+          "distance",
+          "pace"
+        ],
+        "valid_prescription_dimensions": [
+          "duration",
+          "distance",
+          "pace",
+          "rpe"
+        ],
+        "version": null
+      },
+      "definition_key": "base-review-assault_bike",
+      "identity_candidate": null,
+      "movement_content": {
+        "applicability_key": "hyrox_base_assault_bike",
+        "author": {
+          "id": "codex.proposal"
+        },
+        "authored_at": "2026-10-25T03:02:23Z",
+        "completion_criteria": [
+          "Arms and legs power the fan bike throughout the timed work."
+        ],
+        "execution_sequence": [
+          "Pedal and push/pull both handles together at the authored effort."
+        ],
+        "exercise_id": null,
+        "id": null,
+        "invalid_repetition_criteria": [],
+        "language": "en",
+        "lifecycle_status": "draft",
+        "provenance": {
+          "notes": "Content approval retained in APPROVAL_2026_10_25.txt. This template remains unpublished and has no assigned canonical version or verified publication event.",
+          "source_reference": "docs/programmes/hyrox_base/FOUNDER_DECISION_PACKET.md",
+          "source_type": "unapproved_local_proposal"
+        },
+        "published_at": null,
+        "replacement_id": null,
+        "reviewed_at": null,
+        "reviewer": null,
+        "safety_boundary_refs": [],
+        "safety_notes": [],
+        "schema_version": 1,
+        "start_position": "Seated on a fan bike; feet on pedals; use both moving handles. Closed neutral grip on moving handles.",
+        "title": "Fan-resistance air bike — content approved, unpublished",
+        "version": null
+      },
+      "required_binding_kinds": [],
+      "retention_digest": null,
+      "source_evidence": [
+        "docs/programmes/hyrox_base/TRANSFER_BRIEF.txt"
+      ],
+      "verified_publication_event": null,
+      "version": null
+    },
+    {
+      "authored_label": "back_squat",
+      "content_approval": {
+        "canonical_publication_authority": false,
+        "scope": "exercise variant and definition content only",
+        "source": "docs/programmes/hyrox_base/APPROVAL_2026_10_25.txt"
+      },
+      "definition_content": {
+        "aliases": [],
+        "canonical_name": "Back Squat",
+        "coaching_content_refs": [],
+        "environments": {
+          "notes": "Equipment availability must be checked; no substitution or environment guarantee.",
+          "suitable": [],
+          "unsuitable": []
+        },
+        "equipment": {
+          "notes": "Standing; bar high across the upper back; feet about shoulder-width, toes slightly out. Closed overhand grip at a comfortable width that stabilises the bar.",
+          "one_of_groups": [],
+          "optional_tokens": [],
+          "required_tokens": [
+            "barbell",
+            "rack"
+          ],
+          "supports_external_load": true
+        },
+        "id": "EX-073",
+        "impact_level": "unknown",
+        "laterality": "bilateral",
+        "lifecycle_status": "draft",
+        "media_refs": [],
+        "modality": "strength",
+        "movement_patterns": [
+          "squat"
+        ],
+        "movement_standard_refs": [],
+        "owner": "founder",
+        "sport_standard_refs": [],
+        "technical_complexity": "unknown",
+        "transitional_alias_ids": [],
+        "valid_completed_performance_dimensions": [
+          "repetitions",
+          "load"
+        ],
+        "valid_prescription_dimensions": [
+          "repetitions",
+          "load",
+          "rir"
+        ],
+        "version": null
+      },
+      "definition_key": "base-review-back_squat",
+      "identity_candidate": "EX-073",
+      "movement_content": {
+        "applicability_key": "hyrox_base_back_squat",
+        "author": {
+          "id": "codex.proposal"
+        },
+        "authored_at": "2026-10-25T03:02:23Z",
+        "completion_criteria": [
+          "Return to standing with control after the squat."
+        ],
+        "execution_sequence": [
+          "Lower through a controlled squat with heels supported.",
+          "Stand back to the starting position."
+        ],
+        "exercise_id": "EX-073",
+        "id": null,
+        "invalid_repetition_criteria": [],
+        "language": "en",
+        "lifecycle_status": "draft",
+        "provenance": {
+          "notes": "Content approval retained in APPROVAL_2026_10_25.txt. This template remains unpublished and has no assigned canonical version or verified publication event.",
+          "source_reference": "docs/programmes/hyrox_base/FOUNDER_DECISION_PACKET.md",
+          "source_type": "unapproved_local_proposal"
+        },
+        "published_at": null,
+        "replacement_id": null,
+        "reviewed_at": null,
+        "reviewer": null,
+        "safety_boundary_refs": [],
+        "safety_notes": [],
+        "schema_version": 1,
+        "start_position": "Standing; bar high across the upper back; feet about shoulder-width, toes slightly out. Closed overhand grip at a comfortable width that stabilises the bar.",
+        "title": "Barbell back squat — content approved, unpublished",
+        "version": null
+      },
+      "required_binding_kinds": [
+        "backSquat"
+      ],
+      "retention_digest": null,
+      "source_evidence": [
+        "docs/programmes/hyrox_base/TRANSFER_BRIEF.txt",
+        "docs/checkpoints/hyrox_base_personalisation/FOUNDER_BRIEF.txt",
+        "docs/architecture/Phase_3_1F_Part2_Founder_Approved_Canonical_Mappings_v1.md",
+        "docs/architecture/Phase_3_1F_Part1_Founder_Identity_Mapping_Review_v1.md",
+        "supabase/migrations/20260724140000_founder_exercise_library_wave1.sql"
+      ],
+      "verified_publication_event": null,
+      "version": null
+    },
+    {
+      "authored_label": "bodyweight_squat",
+      "content_approval": {
+        "canonical_publication_authority": false,
+        "scope": "exercise variant and definition content only",
+        "source": "docs/programmes/hyrox_base/APPROVAL_2026_10_25.txt"
+      },
+      "definition_content": {
+        "aliases": [],
+        "canonical_name": "Bodyweight squat",
+        "coaching_content_refs": [],
+        "environments": {
+          "notes": "Equipment availability must be checked; no substitution or environment guarantee.",
+          "suitable": [],
+          "unsuitable": []
+        },
+        "equipment": {
+          "notes": "Standing, feet about shoulder-width, hands in front for balance. No implement.",
+          "one_of_groups": [],
+          "optional_tokens": [],
+          "required_tokens": [
+            "bodyweight"
+          ],
+          "supports_external_load": false
+        },
+        "id": null,
+        "impact_level": "unknown",
+        "laterality": "bilateral",
+        "lifecycle_status": "draft",
+        "media_refs": [],
+        "modality": "bodyweight",
+        "movement_patterns": [
+          "squat"
+        ],
+        "movement_standard_refs": [],
+        "owner": "founder",
+        "sport_standard_refs": [],
+        "technical_complexity": "unknown",
+        "transitional_alias_ids": [],
+        "valid_completed_performance_dimensions": [
+          "repetitions"
+        ],
+        "valid_prescription_dimensions": [
+          "repetitions"
+        ],
+        "version": null
+      },
+      "definition_key": "base-review-bodyweight_squat",
+      "identity_candidate": null,
+      "movement_content": {
+        "applicability_key": "hyrox_base_bodyweight_squat",
+        "author": {
+          "id": "codex.proposal"
+        },
+        "authored_at": "2026-10-25T03:02:23Z",
+        "completion_criteria": [
+          "Complete a controlled squat and return to standing."
+        ],
+        "execution_sequence": [
+          "Sit down between the hips with heels supported.",
+          "Stand upright under control."
+        ],
+        "exercise_id": null,
+        "id": null,
+        "invalid_repetition_criteria": [],
+        "language": "en",
+        "lifecycle_status": "draft",
+        "provenance": {
+          "notes": "Content approval retained in APPROVAL_2026_10_25.txt. This template remains unpublished and has no assigned canonical version or verified publication event.",
+          "source_reference": "docs/programmes/hyrox_base/FOUNDER_DECISION_PACKET.md",
+          "source_type": "unapproved_local_proposal"
+        },
+        "published_at": null,
+        "replacement_id": null,
+        "reviewed_at": null,
+        "reviewer": null,
+        "safety_boundary_refs": [],
+        "safety_notes": [],
+        "schema_version": 1,
+        "start_position": "Standing, feet about shoulder-width, hands in front for balance. No implement.",
+        "title": "Bodyweight squat — content approved, unpublished",
+        "version": null
+      },
+      "required_binding_kinds": [],
+      "retention_digest": null,
+      "source_evidence": [
+        "docs/programmes/hyrox_base/TRANSFER_BRIEF.txt"
+      ],
+      "verified_publication_event": null,
+      "version": null
+    },
+    {
+      "authored_label": "chest_supported_row",
+      "content_approval": {
+        "canonical_publication_authority": false,
+        "scope": "exercise variant and definition content only",
+        "source": "docs/programmes/hyrox_base/APPROVAL_2026_10_25.txt"
+      },
+      "definition_content": {
+        "aliases": [],
+        "canonical_name": "Chest Supported Row",
+        "coaching_content_refs": [],
+        "environments": {
+          "notes": "Equipment availability must be checked; no substitution or environment guarantee.",
+          "suitable": [],
+          "unsuitable": []
+        },
+        "equipment": {
+          "notes": "Prone on a bench set about 30 degrees; chest supported, feet planted, arms hanging. Neutral grip, palms facing each other.",
+          "one_of_groups": [],
+          "optional_tokens": [],
+          "required_tokens": [
+            "dumbbell",
+            "adjustable_bench"
+          ],
+          "supports_external_load": true
+        },
+        "id": "EX-090",
+        "impact_level": "unknown",
+        "laterality": "bilateral",
+        "lifecycle_status": "draft",
+        "media_refs": [],
+        "modality": "strength",
+        "movement_patterns": [
+          "horizontal_pull"
+        ],
+        "movement_standard_refs": [],
+        "owner": "founder",
+        "sport_standard_refs": [],
+        "technical_complexity": "unknown",
+        "transitional_alias_ids": [],
+        "valid_completed_performance_dimensions": [
+          "repetitions",
+          "load"
+        ],
+        "valid_prescription_dimensions": [
+          "repetitions",
+          "load",
+          "rir"
+        ],
+        "version": null
+      },
+      "definition_key": "base-review-chest_supported_row",
+      "identity_candidate": "EX-090",
+      "movement_content": {
+        "applicability_key": "hyrox_base_chest_supported_row",
+        "author": {
+          "id": "codex.proposal"
+        },
+        "authored_at": "2026-10-25T03:02:23Z",
+        "completion_criteria": [
+          "Both arms row and return while the chest stays supported."
+        ],
+        "execution_sequence": [
+          "Draw both dumbbells towards the lower ribs without lifting the chest.",
+          "Lower both under control."
+        ],
+        "exercise_id": "EX-090",
+        "id": null,
+        "invalid_repetition_criteria": [],
+        "language": "en",
+        "lifecycle_status": "draft",
+        "provenance": {
+          "notes": "Content approval retained in APPROVAL_2026_10_25.txt. This template remains unpublished and has no assigned canonical version or verified publication event.",
+          "source_reference": "docs/programmes/hyrox_base/FOUNDER_DECISION_PACKET.md",
+          "source_type": "unapproved_local_proposal"
+        },
+        "published_at": null,
+        "replacement_id": null,
+        "reviewed_at": null,
+        "reviewer": null,
+        "safety_boundary_refs": [],
+        "safety_notes": [],
+        "schema_version": 1,
+        "start_position": "Prone on a bench set about 30 degrees; chest supported, feet planted, arms hanging. Neutral grip, palms facing each other.",
+        "title": "Chest-supported dumbbell row — content approved, unpublished",
+        "version": null
+      },
+      "required_binding_kinds": [],
+      "retention_digest": null,
+      "source_evidence": [
+        "docs/programmes/hyrox_base/TRANSFER_BRIEF.txt",
+        "supabase/migrations/20260724140000_founder_exercise_library_wave1.sql"
+      ],
+      "verified_publication_event": null,
+      "version": null
+    },
+    {
+      "authored_label": "dead_bug",
+      "content_approval": {
+        "canonical_publication_authority": false,
+        "scope": "exercise variant and definition content only",
+        "source": "docs/programmes/hyrox_base/APPROVAL_2026_10_25.txt"
+      },
+      "definition_content": {
+        "aliases": [],
+        "canonical_name": "Dead Bug",
+        "coaching_content_refs": [],
+        "environments": {
+          "notes": "Equipment availability must be checked; no substitution or environment guarantee.",
+          "suitable": [],
+          "unsuitable": []
+        },
+        "equipment": {
+          "notes": "Supine; hips and knees bent about 90 degrees, arms pointing upwards. No implement.",
+          "one_of_groups": [],
+          "optional_tokens": [],
+          "required_tokens": [
+            "bodyweight"
+          ],
+          "supports_external_load": false
+        },
+        "id": "EX-022",
+        "impact_level": "unknown",
+        "laterality": "unilateral",
+        "lifecycle_status": "draft",
+        "media_refs": [],
+        "modality": "bodyweight",
+        "movement_patterns": [
+          "core"
+        ],
+        "movement_standard_refs": [],
+        "owner": "founder",
+        "sport_standard_refs": [],
+        "technical_complexity": "unknown",
+        "transitional_alias_ids": [],
+        "valid_completed_performance_dimensions": [
+          "repetitions"
+        ],
+        "valid_prescription_dimensions": [
+          "repetitions",
+          "unilateral_side"
+        ],
+        "version": null
+      },
+      "definition_key": "base-review-dead_bug",
+      "identity_candidate": "EX-022",
+      "movement_content": {
+        "applicability_key": "hyrox_base_dead_bug",
+        "author": {
+          "id": "codex.proposal"
+        },
+        "authored_at": "2026-10-25T03:02:23Z",
+        "completion_criteria": [
+          "Each arm/leg pair extends and returns without losing trunk control."
+        ],
+        "execution_sequence": [
+          "Extend opposite arm and leg while keeping trunk position controlled.",
+          "Return and alternate sides."
+        ],
+        "exercise_id": "EX-022",
+        "id": null,
+        "invalid_repetition_criteria": [],
+        "language": "en",
+        "lifecycle_status": "draft",
+        "provenance": {
+          "notes": "Content approval retained in APPROVAL_2026_10_25.txt. This template remains unpublished and has no assigned canonical version or verified publication event.",
+          "source_reference": "docs/programmes/hyrox_base/FOUNDER_DECISION_PACKET.md",
+          "source_type": "unapproved_local_proposal"
+        },
+        "published_at": null,
+        "replacement_id": null,
+        "reviewed_at": null,
+        "reviewer": null,
+        "safety_boundary_refs": [],
+        "safety_notes": [],
+        "schema_version": 1,
+        "start_position": "Supine; hips and knees bent about 90 degrees, arms pointing upwards. No implement.",
+        "title": "Alternating dead bug — content approved, unpublished",
+        "version": null
+      },
+      "required_binding_kinds": [],
+      "retention_digest": null,
+      "source_evidence": [
+        "docs/programmes/hyrox_base/TRANSFER_BRIEF.txt",
+        "docs/architecture/Phase_3_1F_Part2_Founder_Approved_Canonical_Mappings_v1.md"
+      ],
+      "verified_publication_event": null,
+      "version": null
+    },
+    {
+      "authored_label": "dumbbell_shoulder_press",
+      "content_approval": {
+        "canonical_publication_authority": false,
+        "scope": "exercise variant and definition content only",
+        "source": "docs/programmes/hyrox_base/APPROVAL_2026_10_25.txt"
+      },
+      "definition_content": {
+        "aliases": [],
+        "canonical_name": "Dumbbell Strict Press",
+        "coaching_content_refs": [],
+        "environments": {
+          "notes": "Equipment availability must be checked; no substitution or environment guarantee.",
+          "suitable": [],
+          "unsuitable": []
+        },
+        "equipment": {
+          "notes": "Seated against a near-upright backrest; feet supported, dumbbells at shoulder level. Neutral grip, palms facing inward.",
+          "one_of_groups": [],
+          "optional_tokens": [],
+          "required_tokens": [
+            "dumbbell",
+            "adjustable_bench"
+          ],
+          "supports_external_load": true
+        },
+        "id": "EX-037",
+        "impact_level": "unknown",
+        "laterality": "bilateral",
+        "lifecycle_status": "draft",
+        "media_refs": [],
+        "modality": "strength",
+        "movement_patterns": [
+          "vertical_push"
+        ],
+        "movement_standard_refs": [],
+        "owner": "founder",
+        "sport_standard_refs": [],
+        "technical_complexity": "unknown",
+        "transitional_alias_ids": [],
+        "valid_completed_performance_dimensions": [
+          "repetitions",
+          "load"
+        ],
+        "valid_prescription_dimensions": [
+          "repetitions",
+          "load",
+          "rir"
+        ],
+        "version": null
+      },
+      "definition_key": "base-review-dumbbell_shoulder_press",
+      "identity_candidate": "EX-037",
+      "movement_content": {
+        "applicability_key": "hyrox_base_dumbbell_shoulder_press",
+        "author": {
+          "id": "codex.proposal"
+        },
+        "authored_at": "2026-10-25T03:02:23Z",
+        "completion_criteria": [
+          "Both arms press overhead and return with trunk supported."
+        ],
+        "execution_sequence": [
+          "Press both dumbbells overhead without leg drive.",
+          "Lower to shoulder level under control."
+        ],
+        "exercise_id": "EX-037",
+        "id": null,
+        "invalid_repetition_criteria": [],
+        "language": "en",
+        "lifecycle_status": "draft",
+        "provenance": {
+          "notes": "Content approval retained in APPROVAL_2026_10_25.txt. This template remains unpublished and has no assigned canonical version or verified publication event.",
+          "source_reference": "docs/programmes/hyrox_base/FOUNDER_DECISION_PACKET.md",
+          "source_type": "unapproved_local_proposal"
+        },
+        "published_at": null,
+        "replacement_id": null,
+        "reviewed_at": null,
+        "reviewer": null,
+        "safety_boundary_refs": [],
+        "safety_notes": [],
+        "schema_version": 1,
+        "start_position": "Seated against a near-upright backrest; feet supported, dumbbells at shoulder level. Neutral grip, palms facing inward.",
+        "title": "Seated dumbbell shoulder press — content approved, unpublished",
+        "version": null
+      },
+      "required_binding_kinds": [],
+      "retention_digest": null,
+      "source_evidence": [
+        "docs/programmes/hyrox_base/TRANSFER_BRIEF.txt",
+        "docs/architecture/Phase_3_1F_Part1_Founder_Identity_Mapping_Review_v1.md"
+      ],
+      "verified_publication_event": null,
+      "version": null
+    },
+    {
+      "authored_label": "front_rack_reverse_lunge",
+      "content_approval": {
+        "canonical_publication_authority": false,
+        "scope": "exercise variant and definition content only",
+        "source": "docs/programmes/hyrox_base/APPROVAL_2026_10_25.txt"
+      },
+      "definition_content": {
+        "aliases": [],
+        "canonical_name": "Barbell Front-Rack Reverse Lunge",
+        "coaching_content_refs": [],
+        "environments": {
+          "notes": "Equipment availability must be checked; no substitution or environment guarantee.",
+          "suitable": [],
+          "unsuitable": []
+        },
+        "equipment": {
+          "notes": "Standing with the barbell supported across the front of the shoulders in a front rack. Front-rack grip with fingers under the bar and elbows forwards to support the rack.",
+          "one_of_groups": [],
+          "optional_tokens": [],
+          "required_tokens": [
+            "barbell",
+            "rack"
+          ],
+          "supports_external_load": true
+        },
+        "id": null,
+        "impact_level": "unknown",
+        "laterality": "unilateral",
+        "lifecycle_status": "draft",
+        "media_refs": [],
+        "modality": "strength",
+        "movement_patterns": [
+          "lunge"
+        ],
+        "movement_standard_refs": [],
+        "owner": "founder",
+        "sport_standard_refs": [],
+        "technical_complexity": "unknown",
+        "transitional_alias_ids": [],
+        "valid_completed_performance_dimensions": [
+          "repetitions",
+          "load"
+        ],
+        "valid_prescription_dimensions": [
+          "repetitions",
+          "load",
+          "rir",
+          "unilateral_side"
+        ],
+        "version": null
+      },
+      "definition_key": "base-review-front_rack_reverse_lunge",
+      "identity_candidate": null,
+      "movement_content": {
+        "applicability_key": "hyrox_base_front_rack_reverse_lunge",
+        "author": {
+          "id": "codex.proposal"
+        },
+        "authored_at": "2026-10-25T03:02:23Z",
+        "completion_criteria": [
+          "Return to standing with control while retaining the barbell front rack."
+        ],
+        "execution_sequence": [
+          "Step one leg backwards and lower into a lunge while retaining the barbell front rack.",
+          "Drive through the front foot to return; complete the prescribed reps per leg."
+        ],
+        "exercise_id": null,
+        "id": null,
+        "invalid_repetition_criteria": [],
+        "language": "en",
+        "lifecycle_status": "draft",
+        "provenance": {
+          "notes": "Content approval retained in APPROVAL_2026_10_25.txt. This template remains unpublished and has no assigned canonical version or verified publication event.",
+          "source_reference": "docs/programmes/hyrox_base/FOUNDER_DECISION_PACKET.md",
+          "source_type": "unapproved_local_proposal"
+        },
+        "published_at": null,
+        "replacement_id": null,
+        "reviewed_at": null,
+        "reviewer": null,
+        "safety_boundary_refs": [],
+        "safety_notes": [],
+        "schema_version": 1,
+        "start_position": "Standing with the barbell supported across the front of the shoulders in a front rack. Front-rack grip with fingers under the bar and elbows forwards to support the rack.",
+        "title": "Barbell front-rack reverse lunge — content approved, unpublished",
+        "version": null
+      },
+      "required_binding_kinds": [],
+      "retention_digest": null,
+      "source_evidence": [
+        "docs/programmes/hyrox_base/TRANSFER_BRIEF.txt",
+        "docs/checkpoints/hyrox_base_personalisation/FOUNDER_BRIEF.txt"
+      ],
+      "verified_publication_event": null,
+      "version": null
+    },
+    {
+      "authored_label": "glute_bridge",
+      "content_approval": {
+        "canonical_publication_authority": false,
+        "scope": "exercise variant and definition content only",
+        "source": "docs/programmes/hyrox_base/APPROVAL_2026_10_25.txt"
+      },
+      "definition_content": {
+        "aliases": [],
+        "canonical_name": "Bodyweight floor glute bridge",
+        "coaching_content_refs": [],
+        "environments": {
+          "notes": "Equipment availability must be checked; no substitution or environment guarantee.",
+          "suitable": [],
+          "unsuitable": []
+        },
+        "equipment": {
+          "notes": "Supine on floor, knees bent, feet flat about hip-width. No implement; arms rest beside the body.",
+          "one_of_groups": [],
+          "optional_tokens": [],
+          "required_tokens": [
+            "bodyweight"
+          ],
+          "supports_external_load": false
+        },
+        "id": null,
+        "impact_level": "unknown",
+        "laterality": "bilateral",
+        "lifecycle_status": "draft",
+        "media_refs": [],
+        "modality": "bodyweight",
+        "movement_patterns": [
+          "hinge"
+        ],
+        "movement_standard_refs": [],
+        "owner": "founder",
+        "sport_standard_refs": [],
+        "technical_complexity": "unknown",
+        "transitional_alias_ids": [],
+        "valid_completed_performance_dimensions": [
+          "repetitions"
+        ],
+        "valid_prescription_dimensions": [
+          "repetitions"
+        ],
+        "version": null
+      },
+      "definition_key": "base-review-glute_bridge",
+      "identity_candidate": null,
+      "movement_content": {
+        "applicability_key": "hyrox_base_glute_bridge",
+        "author": {
+          "id": "codex.proposal"
+        },
+        "authored_at": "2026-10-25T03:02:23Z",
+        "completion_criteria": [
+          "Hips lift and return while feet stay planted."
+        ],
+        "execution_sequence": [
+          "Raise the hips until trunk and thighs align without excessive back arch.",
+          "Lower under control."
+        ],
+        "exercise_id": null,
+        "id": null,
+        "invalid_repetition_criteria": [],
+        "language": "en",
+        "lifecycle_status": "draft",
+        "provenance": {
+          "notes": "Content approval retained in APPROVAL_2026_10_25.txt. This template remains unpublished and has no assigned canonical version or verified publication event.",
+          "source_reference": "docs/programmes/hyrox_base/FOUNDER_DECISION_PACKET.md",
+          "source_type": "unapproved_local_proposal"
+        },
+        "published_at": null,
+        "replacement_id": null,
+        "reviewed_at": null,
+        "reviewer": null,
+        "safety_boundary_refs": [],
+        "safety_notes": [],
+        "schema_version": 1,
+        "start_position": "Supine on floor, knees bent, feet flat about hip-width. No implement; arms rest beside the body.",
+        "title": "Bodyweight floor glute bridge — content approved, unpublished",
+        "version": null
+      },
+      "required_binding_kinds": [],
+      "retention_digest": null,
+      "source_evidence": [
+        "docs/programmes/hyrox_base/TRANSFER_BRIEF.txt"
+      ],
+      "verified_publication_event": null,
+      "version": null
+    },
+    {
+      "authored_label": "incline_dumbbell_press",
+      "content_approval": {
+        "canonical_publication_authority": false,
+        "scope": "exercise variant and definition content only",
+        "source": "docs/programmes/hyrox_base/APPROVAL_2026_10_25.txt"
+      },
+      "definition_content": {
+        "aliases": [],
+        "canonical_name": "Incline Dumbbell Press",
+        "coaching_content_refs": [],
+        "environments": {
+          "notes": "Equipment availability must be checked; no substitution or environment guarantee.",
+          "suitable": [],
+          "unsuitable": []
+        },
+        "equipment": {
+          "notes": "Supine on a bench set about 30 degrees; feet planted, dumbbells by the upper chest. Overhand grip, palms facing forwards.",
+          "one_of_groups": [],
+          "optional_tokens": [],
+          "required_tokens": [
+            "dumbbell",
+            "adjustable_bench"
+          ],
+          "supports_external_load": true
+        },
+        "id": "EX-084",
+        "impact_level": "unknown",
+        "laterality": "bilateral",
+        "lifecycle_status": "draft",
+        "media_refs": [],
+        "modality": "strength",
+        "movement_patterns": [
+          "horizontal_push"
+        ],
+        "movement_standard_refs": [],
+        "owner": "founder",
+        "sport_standard_refs": [],
+        "technical_complexity": "unknown",
+        "transitional_alias_ids": [],
+        "valid_completed_performance_dimensions": [
+          "repetitions",
+          "load"
+        ],
+        "valid_prescription_dimensions": [
+          "repetitions",
+          "load",
+          "rir"
+        ],
+        "version": null
+      },
+      "definition_key": "base-review-incline_dumbbell_press",
+      "identity_candidate": "EX-084",
+      "movement_content": {
+        "applicability_key": "hyrox_base_incline_dumbbell_press",
+        "author": {
+          "id": "codex.proposal"
+        },
+        "authored_at": "2026-10-25T03:02:23Z",
+        "completion_criteria": [
+          "Both arms press and return with the torso supported."
+        ],
+        "execution_sequence": [
+          "Press both dumbbells upwards.",
+          "Lower under control to the starting depth."
+        ],
+        "exercise_id": "EX-084",
+        "id": null,
+        "invalid_repetition_criteria": [],
+        "language": "en",
+        "lifecycle_status": "draft",
+        "provenance": {
+          "notes": "Content approval retained in APPROVAL_2026_10_25.txt. This template remains unpublished and has no assigned canonical version or verified publication event.",
+          "source_reference": "docs/programmes/hyrox_base/FOUNDER_DECISION_PACKET.md",
+          "source_type": "unapproved_local_proposal"
+        },
+        "published_at": null,
+        "replacement_id": null,
+        "reviewed_at": null,
+        "reviewer": null,
+        "safety_boundary_refs": [],
+        "safety_notes": [],
+        "schema_version": 1,
+        "start_position": "Supine on a bench set about 30 degrees; feet planted, dumbbells by the upper chest. Overhand grip, palms facing forwards.",
+        "title": "Incline dumbbell bench press — content approved, unpublished",
+        "version": null
+      },
+      "required_binding_kinds": [],
+      "retention_digest": null,
+      "source_evidence": [
+        "docs/programmes/hyrox_base/TRANSFER_BRIEF.txt",
+        "supabase/migrations/20260724140000_founder_exercise_library_wave1.sql"
+      ],
+      "verified_publication_event": null,
+      "version": null
+    },
+    {
+      "authored_label": "kettlebell_swing",
+      "content_approval": {
+        "canonical_publication_authority": false,
+        "scope": "exercise variant and definition content only",
+        "source": "docs/programmes/hyrox_base/APPROVAL_2026_10_25.txt"
+      },
+      "definition_content": {
+        "aliases": [],
+        "canonical_name": "Kettlebell Swing",
+        "coaching_content_refs": [],
+        "environments": {
+          "notes": "Equipment availability must be checked; no substitution or environment guarantee.",
+          "suitable": [],
+          "unsuitable": []
+        },
+        "equipment": {
+          "notes": "Standing hinge stance with one kettlebell between the legs. Two hands on one handle with an overhand grip.",
+          "one_of_groups": [],
+          "optional_tokens": [],
+          "required_tokens": [
+            "kettlebell"
+          ],
+          "supports_external_load": true
+        },
+        "id": "EX-057",
+        "impact_level": "unknown",
+        "laterality": "bilateral",
+        "lifecycle_status": "draft",
+        "media_refs": [],
+        "modality": "strength",
+        "movement_patterns": [
+          "hinge"
+        ],
+        "movement_standard_refs": [],
+        "owner": "founder",
+        "sport_standard_refs": [],
+        "technical_complexity": "unknown",
+        "transitional_alias_ids": [],
+        "valid_completed_performance_dimensions": [
+          "repetitions",
+          "load"
+        ],
+        "valid_prescription_dimensions": [
+          "repetitions",
+          "load",
+          "rir"
+        ],
+        "version": null
+      },
+      "definition_key": "base-review-kettlebell_swing",
+      "identity_candidate": "EX-057",
+      "movement_content": {
+        "applicability_key": "hyrox_base_kettlebell_swing",
+        "author": {
+          "id": "codex.proposal"
+        },
+        "authored_at": "2026-10-25T03:02:23Z",
+        "completion_criteria": [
+          "A controlled hinge/hip drive and return; no intentional overhead finish."
+        ],
+        "execution_sequence": [
+          "Hinge to receive the bell between the legs.",
+          "Extend the hips so the bell floats to approximately chest height.",
+          "Receive the backswing under control."
+        ],
+        "exercise_id": "EX-057",
+        "id": null,
+        "invalid_repetition_criteria": [],
+        "language": "en",
+        "lifecycle_status": "draft",
+        "provenance": {
+          "notes": "Content approval retained in APPROVAL_2026_10_25.txt. This template remains unpublished and has no assigned canonical version or verified publication event.",
+          "source_reference": "docs/programmes/hyrox_base/FOUNDER_DECISION_PACKET.md",
+          "source_type": "unapproved_local_proposal"
+        },
+        "published_at": null,
+        "replacement_id": null,
+        "reviewed_at": null,
+        "reviewer": null,
+        "safety_boundary_refs": [],
+        "safety_notes": [],
+        "schema_version": 1,
+        "start_position": "Standing hinge stance with one kettlebell between the legs. Two hands on one handle with an overhand grip.",
+        "title": "Russian kettlebell swing — content approved, unpublished",
+        "version": null
+      },
+      "required_binding_kinds": [],
+      "retention_digest": null,
+      "source_evidence": [
+        "docs/programmes/hyrox_base/TRANSFER_BRIEF.txt",
+        "docs/architecture/Phase_3_2D_Approved_Movement_Knowledge_Pilot_v1.md"
+      ],
+      "verified_publication_event": null,
+      "version": null
+    },
+    {
+      "authored_label": "light_band_pull_apart",
+      "content_approval": {
+        "canonical_publication_authority": false,
+        "scope": "exercise variant and definition content only",
+        "source": "docs/programmes/hyrox_base/APPROVAL_2026_10_25.txt"
+      },
+      "definition_content": {
+        "aliases": [],
+        "canonical_name": "Light band pull-apart",
+        "coaching_content_refs": [],
+        "environments": {
+          "notes": "Equipment availability must be checked; no substitution or environment guarantee.",
+          "suitable": [],
+          "unsuitable": []
+        },
+        "equipment": {
+          "notes": "Standing with arms reaching forwards at about chest height. Overhand grip on a light band, hands about shoulder-width apart.",
+          "one_of_groups": [],
+          "optional_tokens": [],
+          "required_tokens": [
+            "resistance_band"
+          ],
+          "supports_external_load": false
+        },
+        "id": null,
+        "impact_level": "unknown",
+        "laterality": "bilateral",
+        "lifecycle_status": "draft",
+        "media_refs": [],
+        "modality": "mobility",
+        "movement_patterns": [
+          "horizontal_pull"
+        ],
+        "movement_standard_refs": [],
+        "owner": "founder",
+        "sport_standard_refs": [],
+        "technical_complexity": "unknown",
+        "transitional_alias_ids": [],
+        "valid_completed_performance_dimensions": [
+          "repetitions"
+        ],
+        "valid_prescription_dimensions": [
+          "repetitions"
+        ],
+        "version": null
+      },
+      "definition_key": "base-review-light_band_pull_apart",
+      "identity_candidate": null,
+      "movement_content": {
+        "applicability_key": "hyrox_base_light_band_pull_apart",
+        "author": {
+          "id": "codex.proposal"
+        },
+        "authored_at": "2026-10-25T03:02:23Z",
+        "completion_criteria": [
+          "Band opens and returns under control."
+        ],
+        "execution_sequence": [
+          "Pull the band apart with soft elbows until arms open to the sides.",
+          "Return slowly without leaning back."
+        ],
+        "exercise_id": null,
+        "id": null,
+        "invalid_repetition_criteria": [],
+        "language": "en",
+        "lifecycle_status": "draft",
+        "provenance": {
+          "notes": "Content approval retained in APPROVAL_2026_10_25.txt. This template remains unpublished and has no assigned canonical version or verified publication event.",
+          "source_reference": "docs/programmes/hyrox_base/FOUNDER_DECISION_PACKET.md",
+          "source_type": "unapproved_local_proposal"
+        },
+        "published_at": null,
+        "replacement_id": null,
+        "reviewed_at": null,
+        "reviewer": null,
+        "safety_boundary_refs": [],
+        "safety_notes": [],
+        "schema_version": 1,
+        "start_position": "Standing with arms reaching forwards at about chest height. Overhand grip on a light band, hands about shoulder-width apart.",
+        "title": "Light band pull-apart — content approved, unpublished",
+        "version": null
+      },
+      "required_binding_kinds": [],
+      "retention_digest": null,
+      "source_evidence": [
+        "docs/programmes/hyrox_base/TRANSFER_BRIEF.txt"
+      ],
+      "verified_publication_event": null,
+      "version": null
+    },
+    {
+      "authored_label": "light_scapular_row",
+      "content_approval": {
+        "canonical_publication_authority": false,
+        "scope": "exercise variant and definition content only",
+        "source": "docs/programmes/hyrox_base/APPROVAL_2026_10_25.txt"
+      },
+      "definition_content": {
+        "aliases": [],
+        "canonical_name": "Cable Row",
+        "coaching_content_refs": [],
+        "environments": {
+          "notes": "Equipment availability must be checked; no substitution or environment guarantee.",
+          "suitable": [],
+          "unsuitable": []
+        },
+        "equipment": {
+          "notes": "Standing facing a chest-height cable; stable parallel stance, torso upright. Two-handed neutral grip on a short row handle.",
+          "one_of_groups": [],
+          "optional_tokens": [],
+          "required_tokens": [
+            "cable_machine",
+            "neutral_row_handle"
+          ],
+          "supports_external_load": true
+        },
+        "id": "EX-092",
+        "impact_level": "unknown",
+        "laterality": "bilateral",
+        "lifecycle_status": "draft",
+        "media_refs": [],
+        "modality": "strength",
+        "movement_patterns": [
+          "horizontal_pull"
+        ],
+        "movement_standard_refs": [],
+        "owner": "founder",
+        "sport_standard_refs": [],
+        "technical_complexity": "unknown",
+        "transitional_alias_ids": [],
+        "valid_completed_performance_dimensions": [
+          "repetitions",
+          "load"
+        ],
+        "valid_prescription_dimensions": [
+          "repetitions",
+          "load",
+          "rir"
+        ],
+        "version": null
+      },
+      "definition_key": "base-review-light_scapular_row",
+      "identity_candidate": "EX-092",
+      "movement_content": {
+        "applicability_key": "hyrox_base_light_scapular_row",
+        "author": {
+          "id": "codex.proposal"
+        },
+        "authored_at": "2026-10-25T03:02:23Z",
+        "completion_criteria": [
+          "Complete the full light row without torso swing."
+        ],
+        "execution_sequence": [
+          "Draw shoulder blades back as elbows bend and handle approaches the lower chest.",
+          "Reach forwards under control."
+        ],
+        "exercise_id": "EX-092",
+        "id": null,
+        "invalid_repetition_criteria": [],
+        "language": "en",
+        "lifecycle_status": "draft",
+        "provenance": {
+          "notes": "Content approval retained in APPROVAL_2026_10_25.txt. This template remains unpublished and has no assigned canonical version or verified publication event.",
+          "source_reference": "docs/programmes/hyrox_base/FOUNDER_DECISION_PACKET.md",
+          "source_type": "unapproved_local_proposal"
+        },
+        "published_at": null,
+        "replacement_id": null,
+        "reviewed_at": null,
+        "reviewer": null,
+        "safety_boundary_refs": [],
+        "safety_notes": [],
+        "schema_version": 1,
+        "start_position": "Standing facing a chest-height cable; stable parallel stance, torso upright. Two-handed neutral grip on a short row handle.",
+        "title": "Light bilateral cable row with scapular control — content approved, unpublished",
+        "version": null
+      },
+      "required_binding_kinds": [],
+      "retention_digest": null,
+      "source_evidence": [
+        "docs/programmes/hyrox_base/TRANSFER_BRIEF.txt",
+        "supabase/migrations/20260724140000_founder_exercise_library_wave1.sql"
+      ],
+      "verified_publication_event": null,
+      "version": null
+    },
+    {
+      "authored_label": "long_lever_plank",
+      "content_approval": {
+        "canonical_publication_authority": false,
+        "scope": "exercise variant and definition content only",
+        "source": "docs/programmes/hyrox_base/APPROVAL_2026_10_25.txt"
+      },
+      "definition_content": {
+        "aliases": [],
+        "canonical_name": "Long-lever forearm plank",
+        "coaching_content_refs": [],
+        "environments": {
+          "notes": "Equipment availability must be checked; no substitution or environment guarantee.",
+          "suitable": [],
+          "unsuitable": []
+        },
+        "equipment": {
+          "notes": "Prone forearm support with elbows slightly ahead of shoulders; feet on floor. Forearms/hands supported; no implement.",
+          "one_of_groups": [],
+          "optional_tokens": [],
+          "required_tokens": [
+            "bodyweight"
+          ],
+          "supports_external_load": false
+        },
+        "id": null,
+        "impact_level": "unknown",
+        "laterality": "bilateral",
+        "lifecycle_status": "draft",
+        "media_refs": [],
+        "modality": "bodyweight",
+        "movement_patterns": [
+          "core"
+        ],
+        "movement_standard_refs": [],
+        "owner": "founder",
+        "sport_standard_refs": [],
+        "technical_complexity": "unknown",
+        "transitional_alias_ids": [],
+        "valid_completed_performance_dimensions": [
+          "duration"
+        ],
+        "valid_prescription_dimensions": [
+          "duration"
+        ],
+        "version": null
+      },
+      "definition_key": "base-review-long_lever_plank",
+      "identity_candidate": null,
+      "movement_content": {
+        "applicability_key": "hyrox_base_long_lever_plank",
+        "author": {
+          "id": "codex.proposal"
+        },
+        "authored_at": "2026-10-25T03:02:23Z",
+        "completion_criteria": [
+          "Maintain the long-lever support position for the prescribed hold."
+        ],
+        "execution_sequence": [
+          "Brace and hold an approximately straight trunk and pelvis.",
+          "Use the authored hold and only the already-approved optional lever progression."
+        ],
+        "exercise_id": null,
+        "id": null,
+        "invalid_repetition_criteria": [],
+        "language": "en",
+        "lifecycle_status": "draft",
+        "provenance": {
+          "notes": "Content approval retained in APPROVAL_2026_10_25.txt. This template remains unpublished and has no assigned canonical version or verified publication event.",
+          "source_reference": "docs/programmes/hyrox_base/FOUNDER_DECISION_PACKET.md",
+          "source_type": "unapproved_local_proposal"
+        },
+        "published_at": null,
+        "replacement_id": null,
+        "reviewed_at": null,
+        "reviewer": null,
+        "safety_boundary_refs": [],
+        "safety_notes": [],
+        "schema_version": 1,
+        "start_position": "Prone forearm support with elbows slightly ahead of shoulders; feet on floor. Forearms/hands supported; no implement.",
+        "title": "Long-lever forearm plank — content approved, unpublished",
+        "version": null
+      },
+      "required_binding_kinds": [],
+      "retention_digest": null,
+      "source_evidence": [
+        "docs/programmes/hyrox_base/TRANSFER_BRIEF.txt",
+        "docs/architecture/Phase_3_2D_Approved_Movement_Knowledge_Pilot_v1.md"
+      ],
+      "verified_publication_event": null,
+      "version": null
+    },
+    {
+      "authored_label": "pallof_press",
+      "content_approval": {
+        "canonical_publication_authority": false,
+        "scope": "exercise variant and definition content only",
+        "source": "docs/programmes/hyrox_base/APPROVAL_2026_10_25.txt"
+      },
+      "definition_content": {
+        "aliases": [],
+        "canonical_name": "Split-Stance Cable Pallof Press",
+        "coaching_content_refs": [],
+        "environments": {
+          "notes": "Equipment availability must be checked; no substitution or environment guarantee.",
+          "suitable": [],
+          "unsuitable": []
+        },
+        "equipment": {
+          "notes": "Standing side-on to a chest-height cable in a stable split stance, one foot forwards and one back; handle at sternum. Both hands clasp the single cable handle.",
+          "one_of_groups": [],
+          "optional_tokens": [],
+          "required_tokens": [
+            "cable_machine",
+            "single_cable_handle"
+          ],
+          "supports_external_load": true
+        },
+        "id": "EX-114",
+        "impact_level": "unknown",
+        "laterality": "unilateral",
+        "lifecycle_status": "draft",
+        "media_refs": [],
+        "modality": "strength",
+        "movement_patterns": [
+          "core"
+        ],
+        "movement_standard_refs": [],
+        "owner": "founder",
+        "sport_standard_refs": [],
+        "technical_complexity": "unknown",
+        "transitional_alias_ids": [],
+        "valid_completed_performance_dimensions": [
+          "repetitions",
+          "load"
+        ],
+        "valid_prescription_dimensions": [
+          "repetitions",
+          "load",
+          "rir",
+          "unilateral_side"
+        ],
+        "version": null
+      },
+      "definition_key": "base-review-pallof_press",
+      "identity_candidate": "EX-114",
+      "movement_content": {
+        "applicability_key": "hyrox_base_pallof_press",
+        "author": {
+          "id": "codex.proposal"
+        },
+        "authored_at": "2026-10-25T03:02:23Z",
+        "completion_criteria": [
+          "Arms extend and return while the torso resists rotation."
+        ],
+        "execution_sequence": [
+          "Press hands straight forwards without rotating the torso.",
+          "Retain the authored extended hold, then return to the sternum."
+        ],
+        "exercise_id": "EX-114",
+        "id": null,
+        "invalid_repetition_criteria": [],
+        "language": "en",
+        "lifecycle_status": "draft",
+        "provenance": {
+          "notes": "Content approval retained in APPROVAL_2026_10_25.txt. This template remains unpublished and has no assigned canonical version or verified publication event.",
+          "source_reference": "docs/programmes/hyrox_base/FOUNDER_DECISION_PACKET.md",
+          "source_type": "unapproved_local_proposal"
+        },
+        "published_at": null,
+        "replacement_id": null,
+        "reviewed_at": null,
+        "reviewer": null,
+        "safety_boundary_refs": [],
+        "safety_notes": [],
+        "schema_version": 1,
+        "start_position": "Standing side-on to a chest-height cable in a stable split stance, one foot forwards and one back; handle at sternum. Both hands clasp the single cable handle.",
+        "title": "Split-stance cable Pallof press — content approved, unpublished",
+        "version": null
+      },
+      "required_binding_kinds": [],
+      "retention_digest": null,
+      "source_evidence": [
+        "docs/programmes/hyrox_base/TRANSFER_BRIEF.txt",
+        "supabase/migrations/20260724140000_founder_exercise_library_wave1.sql"
+      ],
+      "verified_publication_event": null,
+      "version": null
+    },
+    {
+      "authored_label": "rdl",
+      "content_approval": {
+        "canonical_publication_authority": false,
+        "scope": "exercise variant and definition content only",
+        "source": "docs/programmes/hyrox_base/APPROVAL_2026_10_25.txt"
+      },
+      "definition_content": {
+        "aliases": [],
+        "canonical_name": "Romanian Deadlift",
+        "coaching_content_refs": [],
+        "environments": {
+          "notes": "Equipment availability must be checked; no substitution or environment guarantee.",
+          "suitable": [],
+          "unsuitable": []
+        },
+        "equipment": {
+          "notes": "Standing with bar in front of thighs, feet about hip-width, knees softly bent. Double-overhand grip just outside the legs.",
+          "one_of_groups": [],
+          "optional_tokens": [],
+          "required_tokens": [
+            "barbell"
+          ],
+          "supports_external_load": true
+        },
+        "id": "EX-078",
+        "impact_level": "unknown",
+        "laterality": "bilateral",
+        "lifecycle_status": "draft",
+        "media_refs": [],
+        "modality": "strength",
+        "movement_patterns": [
+          "hinge"
+        ],
+        "movement_standard_refs": [],
+        "owner": "founder",
+        "sport_standard_refs": [],
+        "technical_complexity": "unknown",
+        "transitional_alias_ids": [],
+        "valid_completed_performance_dimensions": [
+          "repetitions",
+          "load"
+        ],
+        "valid_prescription_dimensions": [
+          "repetitions",
+          "load",
+          "rir"
+        ],
+        "version": null
+      },
+      "definition_key": "base-review-rdl",
+      "identity_candidate": "EX-078",
+      "movement_content": {
+        "applicability_key": "hyrox_base_rdl",
+        "author": {
+          "id": "codex.proposal"
+        },
+        "authored_at": "2026-10-25T03:02:23Z",
+        "completion_criteria": [
+          "Complete a hip hinge and stand without turning the lift into a floor deadlift."
+        ],
+        "execution_sequence": [
+          "Push hips backwards while keeping the bar close.",
+          "Stop the descent before losing trunk control; extend the hips to stand."
+        ],
+        "exercise_id": "EX-078",
+        "id": null,
+        "invalid_repetition_criteria": [],
+        "language": "en",
+        "lifecycle_status": "draft",
+        "provenance": {
+          "notes": "Content approval retained in APPROVAL_2026_10_25.txt. This template remains unpublished and has no assigned canonical version or verified publication event.",
+          "source_reference": "docs/programmes/hyrox_base/FOUNDER_DECISION_PACKET.md",
+          "source_type": "unapproved_local_proposal"
+        },
+        "published_at": null,
+        "replacement_id": null,
+        "reviewed_at": null,
+        "reviewer": null,
+        "safety_boundary_refs": [],
+        "safety_notes": [],
+        "schema_version": 1,
+        "start_position": "Standing with bar in front of thighs, feet about hip-width, knees softly bent. Double-overhand grip just outside the legs.",
+        "title": "Barbell Romanian deadlift — content approved, unpublished",
+        "version": null
+      },
+      "required_binding_kinds": [],
+      "retention_digest": null,
+      "source_evidence": [
+        "docs/programmes/hyrox_base/TRANSFER_BRIEF.txt",
+        "docs/checkpoints/hyrox_base_personalisation/FOUNDER_BRIEF.txt",
+        "docs/architecture/Phase_3_1F_Part2_Founder_Approved_Canonical_Mappings_v1.md",
+        "docs/architecture/Phase_3_1F_Part1_Founder_Identity_Mapping_Review_v1.md",
+        "supabase/migrations/20260724140000_founder_exercise_library_wave1.sql"
+      ],
+      "verified_publication_event": null,
+      "version": null
+    },
+    {
+      "authored_label": "reverse_lunge",
+      "content_approval": {
+        "canonical_publication_authority": false,
+        "scope": "exercise variant and definition content only",
+        "source": "docs/programmes/hyrox_base/APPROVAL_2026_10_25.txt"
+      },
+      "definition_content": {
+        "aliases": [],
+        "canonical_name": "Bodyweight reverse lunge",
+        "coaching_content_refs": [],
+        "environments": {
+          "notes": "Equipment availability must be checked; no substitution or environment guarantee.",
+          "suitable": [],
+          "unsuitable": []
+        },
+        "equipment": {
+          "notes": "Standing upright with space to step backwards. No implement; hands free for balance.",
+          "one_of_groups": [],
+          "optional_tokens": [],
+          "required_tokens": [
+            "bodyweight"
+          ],
+          "supports_external_load": false
+        },
+        "id": null,
+        "impact_level": "unknown",
+        "laterality": "unilateral",
+        "lifecycle_status": "draft",
+        "media_refs": [],
+        "modality": "bodyweight",
+        "movement_patterns": [
+          "lunge"
+        ],
+        "movement_standard_refs": [],
+        "owner": "founder",
+        "sport_standard_refs": [],
+        "technical_complexity": "unknown",
+        "transitional_alias_ids": [],
+        "valid_completed_performance_dimensions": [
+          "repetitions"
+        ],
+        "valid_prescription_dimensions": [
+          "repetitions",
+          "unilateral_side"
+        ],
+        "version": null
+      },
+      "definition_key": "base-review-reverse_lunge",
+      "identity_candidate": null,
+      "movement_content": {
+        "applicability_key": "hyrox_base_reverse_lunge",
+        "author": {
+          "id": "codex.proposal"
+        },
+        "authored_at": "2026-10-25T03:02:23Z",
+        "completion_criteria": [
+          "The athlete steps back and returns, rather than travelling forwards."
+        ],
+        "execution_sequence": [
+          "Step one foot backwards and lower under control.",
+          "Return to the original standing position before the next rep."
+        ],
+        "exercise_id": null,
+        "id": null,
+        "invalid_repetition_criteria": [],
+        "language": "en",
+        "lifecycle_status": "draft",
+        "provenance": {
+          "notes": "Content approval retained in APPROVAL_2026_10_25.txt. This template remains unpublished and has no assigned canonical version or verified publication event.",
+          "source_reference": "docs/programmes/hyrox_base/FOUNDER_DECISION_PACKET.md",
+          "source_type": "unapproved_local_proposal"
+        },
+        "published_at": null,
+        "replacement_id": null,
+        "reviewed_at": null,
+        "reviewer": null,
+        "safety_boundary_refs": [],
+        "safety_notes": [],
+        "schema_version": 1,
+        "start_position": "Standing upright with space to step backwards. No implement; hands free for balance.",
+        "title": "Bodyweight reverse lunge — content approved, unpublished",
+        "version": null
+      },
+      "required_binding_kinds": [],
+      "retention_digest": null,
+      "source_evidence": [
+        "docs/programmes/hyrox_base/TRANSFER_BRIEF.txt"
+      ],
+      "verified_publication_event": null,
+      "version": null
+    },
+    {
+      "authored_label": "rowing",
+      "content_approval": {
+        "canonical_publication_authority": false,
+        "scope": "exercise variant and definition content only",
+        "source": "docs/programmes/hyrox_base/APPROVAL_2026_10_25.txt"
+      },
+      "definition_content": {
+        "aliases": [],
+        "canonical_name": "Row Erg",
+        "coaching_content_refs": [],
+        "environments": {
+          "notes": "Equipment availability must be checked; no substitution or environment guarantee.",
+          "suitable": [],
+          "unsuitable": []
+        },
+        "equipment": {
+          "notes": "Seated sliding-seat rowing erg, feet strapped, knees flexed at the catch. Two-handed overhand grip on the handle.",
+          "one_of_groups": [],
+          "optional_tokens": [],
+          "required_tokens": [
+            "rower"
+          ],
+          "supports_external_load": false
+        },
+        "id": "EX-049",
+        "impact_level": "unknown",
+        "laterality": "bilateral",
+        "lifecycle_status": "draft",
+        "media_refs": [],
+        "modality": "erg",
+        "movement_patterns": [
+          "cyclical"
+        ],
+        "movement_standard_refs": [],
+        "owner": "founder",
+        "sport_standard_refs": [],
+        "technical_complexity": "unknown",
+        "transitional_alias_ids": [],
+        "valid_completed_performance_dimensions": [
+          "duration",
+          "distance",
+          "pace"
+        ],
+        "valid_prescription_dimensions": [
+          "duration",
+          "distance",
+          "pace",
+          "rpe"
+        ],
+        "version": null
+      },
+      "definition_key": "base-review-rowing",
+      "identity_candidate": "EX-049",
+      "movement_content": {
+        "applicability_key": "hyrox_base_rowing",
+        "author": {
+          "id": "codex.proposal"
+        },
+        "authored_at": "2026-10-25T03:02:23Z",
+        "completion_criteria": [
+          "Repeated complete controlled strokes on the rowing erg."
+        ],
+        "execution_sequence": [
+          "Drive with the legs, then trunk and arms.",
+          "Recover arms, trunk and legs to the catch."
+        ],
+        "exercise_id": "EX-049",
+        "id": null,
+        "invalid_repetition_criteria": [],
+        "language": "en",
+        "lifecycle_status": "draft",
+        "provenance": {
+          "notes": "Content approval retained in APPROVAL_2026_10_25.txt. This template remains unpublished and has no assigned canonical version or verified publication event.",
+          "source_reference": "docs/programmes/hyrox_base/FOUNDER_DECISION_PACKET.md",
+          "source_type": "unapproved_local_proposal"
+        },
+        "published_at": null,
+        "replacement_id": null,
+        "reviewed_at": null,
+        "reviewer": null,
+        "safety_boundary_refs": [],
+        "safety_notes": [],
+        "schema_version": 1,
+        "start_position": "Seated sliding-seat rowing erg, feet strapped, knees flexed at the catch. Two-handed overhand grip on the handle.",
+        "title": "Seated rowing ergometer — content approved, unpublished",
+        "version": null
+      },
+      "required_binding_kinds": [
+        "dedicatedRowIntervals"
+      ],
+      "retention_digest": null,
+      "source_evidence": [
+        "docs/programmes/hyrox_base/TRANSFER_BRIEF.txt",
+        "docs/checkpoints/hyrox_base_personalisation/FOUNDER_BRIEF.txt",
+        "docs/architecture/Phase_3_1F_Part2_Founder_Approved_Canonical_Mappings_v1.md",
+        "docs/architecture/Phase_3_2D_Approved_Movement_Knowledge_Pilot_v1.md"
+      ],
+      "verified_publication_event": null,
+      "version": null
+    },
+    {
+      "authored_label": "running",
+      "content_approval": {
+        "canonical_publication_authority": false,
+        "scope": "exercise variant and definition content only",
+        "source": "docs/programmes/hyrox_base/APPROVAL_2026_10_25.txt"
+      },
+      "definition_content": {
+        "aliases": [],
+        "canonical_name": "Running",
+        "coaching_content_refs": [],
+        "environments": {
+          "notes": "Equipment availability must be checked; no substitution or environment guarantee.",
+          "suitable": [],
+          "unsuitable": []
+        },
+        "equipment": {
+          "notes": "Upright running on a suitable outdoor path or track. No implement.",
+          "one_of_groups": [],
+          "optional_tokens": [],
+          "required_tokens": [
+            "bodyweight"
+          ],
+          "supports_external_load": false
+        },
+        "id": "EX-129",
+        "impact_level": "unknown",
+        "laterality": "not_applicable",
+        "lifecycle_status": "draft",
+        "media_refs": [],
+        "modality": "locomotion",
+        "movement_patterns": [
+          "locomotion"
+        ],
+        "movement_standard_refs": [],
+        "owner": "founder",
+        "sport_standard_refs": [],
+        "technical_complexity": "unknown",
+        "transitional_alias_ids": [],
+        "valid_completed_performance_dimensions": [
+          "duration",
+          "distance",
+          "pace"
+        ],
+        "valid_prescription_dimensions": [
+          "duration",
+          "distance",
+          "pace",
+          "rpe"
+        ],
+        "version": null
+      },
+      "definition_key": "base-review-running",
+      "identity_candidate": "EX-129",
+      "movement_content": {
+        "applicability_key": "hyrox_base_running",
+        "author": {
+          "id": "codex.proposal"
+        },
+        "authored_at": "2026-10-25T03:02:23Z",
+        "completion_criteria": [
+          "Continuous running or authored work/recovery running as prescribed."
+        ],
+        "execution_sequence": [
+          "Run with a normal alternating gait at the authored effort."
+        ],
+        "exercise_id": "EX-129",
+        "id": null,
+        "invalid_repetition_criteria": [],
+        "language": "en",
+        "lifecycle_status": "draft",
+        "provenance": {
+          "notes": "Content approval retained in APPROVAL_2026_10_25.txt. This template remains unpublished and has no assigned canonical version or verified publication event.",
+          "source_reference": "docs/programmes/hyrox_base/FOUNDER_DECISION_PACKET.md",
+          "source_type": "unapproved_local_proposal"
+        },
+        "published_at": null,
+        "replacement_id": null,
+        "reviewed_at": null,
+        "reviewer": null,
+        "safety_boundary_refs": [],
+        "safety_notes": [],
+        "schema_version": 1,
+        "start_position": "Upright running on a suitable outdoor path or track. No implement.",
+        "title": "Outdoor running — content approved, unpublished",
+        "version": null
+      },
+      "required_binding_kinds": [
+        "runningIntervals"
+      ],
+      "retention_digest": null,
+      "source_evidence": [
+        "docs/programmes/hyrox_base/TRANSFER_BRIEF.txt",
+        "docs/checkpoints/hyrox_base_personalisation/FOUNDER_BRIEF.txt",
+        "docs/architecture/Phase_3_1F_Part2_Founder_Approved_Canonical_Mappings_v1.md"
+      ],
+      "verified_publication_event": null,
+      "version": null
+    },
+    {
+      "authored_label": "ski_erg",
+      "content_approval": {
+        "canonical_publication_authority": false,
+        "scope": "exercise variant and definition content only",
+        "source": "docs/programmes/hyrox_base/APPROVAL_2026_10_25.txt"
+      },
+      "definition_content": {
+        "aliases": [],
+        "canonical_name": "Ski Erg",
+        "coaching_content_refs": [],
+        "environments": {
+          "notes": "Equipment availability must be checked; no substitution or environment guarantee.",
+          "suitable": [],
+          "unsuitable": []
+        },
+        "equipment": {
+          "notes": "Standing facing a two-handle SkiErg with arms raised under control. One handle in each hand, closed grip.",
+          "one_of_groups": [],
+          "optional_tokens": [],
+          "required_tokens": [
+            "ski_erg"
+          ],
+          "supports_external_load": false
+        },
+        "id": "EX-050",
+        "impact_level": "unknown",
+        "laterality": "bilateral",
+        "lifecycle_status": "draft",
+        "media_refs": [],
+        "modality": "erg",
+        "movement_patterns": [
+          "cyclical"
+        ],
+        "movement_standard_refs": [],
+        "owner": "founder",
+        "sport_standard_refs": [],
+        "technical_complexity": "unknown",
+        "transitional_alias_ids": [],
+        "valid_completed_performance_dimensions": [
+          "duration",
+          "distance",
+          "pace"
+        ],
+        "valid_prescription_dimensions": [
+          "duration",
+          "distance",
+          "pace",
+          "rpe"
+        ],
+        "version": null
+      },
+      "definition_key": "base-review-ski_erg",
+      "identity_candidate": "EX-050",
+      "movement_content": {
+        "applicability_key": "hyrox_base_ski_erg",
+        "author": {
+          "id": "codex.proposal"
+        },
+        "authored_at": "2026-10-25T03:02:23Z",
+        "completion_criteria": [
+          "Both handles complete a downward drive and controlled recovery."
+        ],
+        "execution_sequence": [
+          "Drive both handles down with coordinated arms/trunk and knee flexion.",
+          "Recover upwards under control."
+        ],
+        "exercise_id": "EX-050",
+        "id": null,
+        "invalid_repetition_criteria": [],
+        "language": "en",
+        "lifecycle_status": "draft",
+        "provenance": {
+          "notes": "Content approval retained in APPROVAL_2026_10_25.txt. This template remains unpublished and has no assigned canonical version or verified publication event.",
+          "source_reference": "docs/programmes/hyrox_base/FOUNDER_DECISION_PACKET.md",
+          "source_type": "unapproved_local_proposal"
+        },
+        "published_at": null,
+        "replacement_id": null,
+        "reviewed_at": null,
+        "reviewer": null,
+        "safety_boundary_refs": [],
+        "safety_notes": [],
+        "schema_version": 1,
+        "start_position": "Standing facing a two-handle SkiErg with arms raised under control. One handle in each hand, closed grip.",
+        "title": "Standing double-pole SkiErg — content approved, unpublished",
+        "version": null
+      },
+      "required_binding_kinds": [],
+      "retention_digest": null,
+      "source_evidence": [
+        "docs/programmes/hyrox_base/TRANSFER_BRIEF.txt",
+        "docs/checkpoints/hyrox_base_personalisation/FOUNDER_BRIEF.txt",
+        "docs/architecture/Phase_3_1F_Part2_Founder_Approved_Canonical_Mappings_v1.md",
+        "docs/architecture/Phase_3_2D_Approved_Movement_Knowledge_Pilot_v1.md"
+      ],
+      "verified_publication_event": null,
+      "version": null
+    },
+    {
+      "authored_label": "split_stance_single_arm_cable_row",
+      "content_approval": {
+        "canonical_publication_authority": false,
+        "scope": "exercise variant and definition content only",
+        "source": "docs/programmes/hyrox_base/APPROVAL_2026_10_25.txt"
+      },
+      "definition_content": {
+        "aliases": [],
+        "canonical_name": "One-Arm Cable Row",
+        "coaching_content_refs": [],
+        "environments": {
+          "notes": "Equipment availability must be checked; no substitution or environment guarantee.",
+          "suitable": [],
+          "unsuitable": []
+        },
+        "equipment": {
+          "notes": "Standing facing a cable at lower-chest height, one foot forward, torso square. One hand on a D-handle with a neutral grip.",
+          "one_of_groups": [],
+          "optional_tokens": [],
+          "required_tokens": [
+            "cable_machine",
+            "single_cable_handle"
+          ],
+          "supports_external_load": true
+        },
+        "id": "EX-142",
+        "impact_level": "unknown",
+        "laterality": "unilateral",
+        "lifecycle_status": "draft",
+        "media_refs": [],
+        "modality": "strength",
+        "movement_patterns": [
+          "horizontal_pull"
+        ],
+        "movement_standard_refs": [],
+        "owner": "founder",
+        "sport_standard_refs": [],
+        "technical_complexity": "unknown",
+        "transitional_alias_ids": [],
+        "valid_completed_performance_dimensions": [
+          "repetitions",
+          "load"
+        ],
+        "valid_prescription_dimensions": [
+          "repetitions",
+          "load",
+          "rir",
+          "unilateral_side"
+        ],
+        "version": null
+      },
+      "definition_key": "base-review-split_stance_single_arm_cable_row",
+      "identity_candidate": "EX-142",
+      "movement_content": {
+        "applicability_key": "hyrox_base_split_stance_single_arm_cable_row",
+        "author": {
+          "id": "codex.proposal"
+        },
+        "authored_at": "2026-10-25T03:02:23Z",
+        "completion_criteria": [
+          "A controlled single-arm row with stable split stance and torso."
+        ],
+        "execution_sequence": [
+          "Row towards the same-side lower ribs without rotating the torso.",
+          "Reach forwards under control; complete the prescribed side."
+        ],
+        "exercise_id": "EX-142",
+        "id": null,
+        "invalid_repetition_criteria": [],
+        "language": "en",
+        "lifecycle_status": "draft",
+        "provenance": {
+          "notes": "Content approval retained in APPROVAL_2026_10_25.txt. This template remains unpublished and has no assigned canonical version or verified publication event.",
+          "source_reference": "docs/programmes/hyrox_base/FOUNDER_DECISION_PACKET.md",
+          "source_type": "unapproved_local_proposal"
+        },
+        "published_at": null,
+        "replacement_id": null,
+        "reviewed_at": null,
+        "reviewer": null,
+        "safety_boundary_refs": [],
+        "safety_notes": [],
+        "schema_version": 1,
+        "start_position": "Standing facing a cable at lower-chest height, one foot forward, torso square. One hand on a D-handle with a neutral grip.",
+        "title": "Split-stance single-arm cable row — content approved, unpublished",
+        "version": null
+      },
+      "required_binding_kinds": [],
+      "retention_digest": null,
+      "source_evidence": [
+        "docs/programmes/hyrox_base/TRANSFER_BRIEF.txt",
+        "docs/checkpoints/hyrox_base_personalisation/FOUNDER_BRIEF.txt",
+        "supabase/migrations/20260821120000_apollo_build_week1_executable_protocols.sql"
+      ],
+      "verified_publication_event": null,
+      "version": null
+    },
+    {
+      "authored_label": "strict_overhead_press",
+      "content_approval": {
+        "canonical_publication_authority": false,
+        "scope": "exercise variant and definition content only",
+        "source": "docs/programmes/hyrox_base/APPROVAL_2026_10_25.txt"
+      },
+      "definition_content": {
+        "aliases": [],
+        "canonical_name": "Strict Press",
+        "coaching_content_refs": [],
+        "environments": {
+          "notes": "Equipment availability must be checked; no substitution or environment guarantee.",
+          "suitable": [],
+          "unsuitable": []
+        },
+        "equipment": {
+          "notes": "Standing with bar at upper chest, feet about hip-width, trunk braced. Closed overhand grip just outside shoulder-width.",
+          "one_of_groups": [],
+          "optional_tokens": [],
+          "required_tokens": [
+            "barbell",
+            "rack"
+          ],
+          "supports_external_load": true
+        },
+        "id": "EX-088",
+        "impact_level": "unknown",
+        "laterality": "bilateral",
+        "lifecycle_status": "draft",
+        "media_refs": [],
+        "modality": "strength",
+        "movement_patterns": [
+          "vertical_push"
+        ],
+        "movement_standard_refs": [],
+        "owner": "founder",
+        "sport_standard_refs": [],
+        "technical_complexity": "unknown",
+        "transitional_alias_ids": [],
+        "valid_completed_performance_dimensions": [
+          "repetitions",
+          "load"
+        ],
+        "valid_prescription_dimensions": [
+          "repetitions",
+          "load",
+          "rir"
+        ],
+        "version": null
+      },
+      "definition_key": "base-review-strict_overhead_press",
+      "identity_candidate": "EX-088",
+      "movement_content": {
+        "applicability_key": "hyrox_base_strict_overhead_press",
+        "author": {
+          "id": "codex.proposal"
+        },
+        "authored_at": "2026-10-25T03:02:23Z",
+        "completion_criteria": [
+          "Reach overhead with control without converting it to a push press."
+        ],
+        "execution_sequence": [
+          "Press overhead without leg dip or drive.",
+          "Lower under control to the upper chest."
+        ],
+        "exercise_id": "EX-088",
+        "id": null,
+        "invalid_repetition_criteria": [],
+        "language": "en",
+        "lifecycle_status": "draft",
+        "provenance": {
+          "notes": "Content approval retained in APPROVAL_2026_10_25.txt. This template remains unpublished and has no assigned canonical version or verified publication event.",
+          "source_reference": "docs/programmes/hyrox_base/FOUNDER_DECISION_PACKET.md",
+          "source_type": "unapproved_local_proposal"
+        },
+        "published_at": null,
+        "replacement_id": null,
+        "reviewed_at": null,
+        "reviewer": null,
+        "safety_boundary_refs": [],
+        "safety_notes": [],
+        "schema_version": 1,
+        "start_position": "Standing with bar at upper chest, feet about hip-width, trunk braced. Closed overhand grip just outside shoulder-width.",
+        "title": "Standing strict barbell press — content approved, unpublished",
+        "version": null
+      },
+      "required_binding_kinds": [],
+      "retention_digest": null,
+      "source_evidence": [
+        "docs/programmes/hyrox_base/TRANSFER_BRIEF.txt",
+        "docs/checkpoints/hyrox_base_personalisation/FOUNDER_BRIEF.txt",
+        "docs/architecture/Phase_3_1F_Part2_Founder_Approved_Canonical_Mappings_v1.md",
+        "docs/architecture/Phase_3_1F_Part1_Founder_Identity_Mapping_Review_v1.md",
+        "supabase/migrations/20260724140000_founder_exercise_library_wave1.sql"
+      ],
+      "verified_publication_event": null,
+      "version": null
+    },
+    {
+      "authored_label": "strict_pull_up",
+      "content_approval": {
+        "canonical_publication_authority": false,
+        "scope": "exercise variant and definition content only",
+        "source": "docs/programmes/hyrox_base/APPROVAL_2026_10_25.txt"
+      },
+      "definition_content": {
+        "aliases": [],
+        "canonical_name": "Pull Up",
+        "coaching_content_refs": [],
+        "environments": {
+          "notes": "Equipment availability must be checked; no substitution or environment guarantee.",
+          "suitable": [],
+          "unsuitable": []
+        },
+        "equipment": {
+          "notes": "Hanging from a fixed overhead bar, body controlled. Overhand grip about shoulder-width.",
+          "one_of_groups": [],
+          "optional_tokens": [],
+          "required_tokens": [
+            "pull_up_bar"
+          ],
+          "supports_external_load": false
+        },
+        "id": "EX-053",
+        "impact_level": "unknown",
+        "laterality": "bilateral",
+        "lifecycle_status": "draft",
+        "media_refs": [],
+        "modality": "bodyweight",
+        "movement_patterns": [
+          "vertical_pull"
+        ],
+        "movement_standard_refs": [],
+        "owner": "founder",
+        "sport_standard_refs": [],
+        "technical_complexity": "unknown",
+        "transitional_alias_ids": [],
+        "valid_completed_performance_dimensions": [
+          "repetitions"
+        ],
+        "valid_prescription_dimensions": [
+          "repetitions"
+        ],
+        "version": null
+      },
+      "definition_key": "base-review-strict_pull_up",
+      "identity_candidate": "EX-053",
+      "movement_content": {
+        "applicability_key": "hyrox_base_strict_pull_up",
+        "author": {
+          "id": "codex.proposal"
+        },
+        "authored_at": "2026-10-25T03:02:23Z",
+        "completion_criteria": [
+          "Complete the pull and controlled return without momentum-driven kipping."
+        ],
+        "execution_sequence": [
+          "Pull until the chin clears the bar without kipping.",
+          "Lower under control to extended arms."
+        ],
+        "exercise_id": "EX-053",
+        "id": null,
+        "invalid_repetition_criteria": [],
+        "language": "en",
+        "lifecycle_status": "draft",
+        "provenance": {
+          "notes": "Content approval retained in APPROVAL_2026_10_25.txt. This template remains unpublished and has no assigned canonical version or verified publication event.",
+          "source_reference": "docs/programmes/hyrox_base/FOUNDER_DECISION_PACKET.md",
+          "source_type": "unapproved_local_proposal"
+        },
+        "published_at": null,
+        "replacement_id": null,
+        "reviewed_at": null,
+        "reviewer": null,
+        "safety_boundary_refs": [],
+        "safety_notes": [],
+        "schema_version": 1,
+        "start_position": "Hanging from a fixed overhead bar, body controlled. Overhand grip about shoulder-width.",
+        "title": "Strict overhand pull-up — content approved, unpublished",
+        "version": null
+      },
+      "required_binding_kinds": [],
+      "retention_digest": null,
+      "source_evidence": [
+        "docs/programmes/hyrox_base/TRANSFER_BRIEF.txt",
+        "docs/architecture/Phase_3_1F_Part2_Founder_Approved_Canonical_Mappings_v1.md",
+        "docs/architecture/Phase_3_1F_Part1_Founder_Identity_Mapping_Review_v1.md"
+      ],
+      "verified_publication_event": null,
+      "version": null
+    },
+    {
+      "authored_label": "suitcase_carry",
+      "content_approval": {
+        "canonical_publication_authority": false,
+        "scope": "exercise variant and definition content only",
+        "source": "docs/programmes/hyrox_base/APPROVAL_2026_10_25.txt"
+      },
+      "definition_content": {
+        "aliases": [],
+        "canonical_name": "Suitcase Carry",
+        "coaching_content_refs": [],
+        "environments": {
+          "notes": "Equipment availability must be checked; no substitution or environment guarantee.",
+          "suitable": [],
+          "unsuitable": []
+        },
+        "equipment": {
+          "notes": "Standing tall with one dumbbell beside one thigh; walk on clear level space. One-hand neutral grip with arm down at the side.",
+          "one_of_groups": [],
+          "optional_tokens": [],
+          "required_tokens": [
+            "dumbbell"
+          ],
+          "supports_external_load": true
+        },
+        "id": "EX-102",
+        "impact_level": "unknown",
+        "laterality": "unilateral",
+        "lifecycle_status": "draft",
+        "media_refs": [],
+        "modality": "strength",
+        "movement_patterns": [
+          "carry"
+        ],
+        "movement_standard_refs": [],
+        "owner": "founder",
+        "sport_standard_refs": [],
+        "technical_complexity": "unknown",
+        "transitional_alias_ids": [],
+        "valid_completed_performance_dimensions": [
+          "load",
+          "distance",
+          "duration"
+        ],
+        "valid_prescription_dimensions": [
+          "load",
+          "distance",
+          "duration",
+          "unilateral_side"
+        ],
+        "version": null
+      },
+      "definition_key": "base-review-suitcase_carry",
+      "identity_candidate": "EX-102",
+      "movement_content": {
+        "applicability_key": "hyrox_base_suitcase_carry",
+        "author": {
+          "id": "codex.proposal"
+        },
+        "authored_at": "2026-10-25T03:02:23Z",
+        "completion_criteria": [
+          "Carry the load while walking on each prescribed side."
+        ],
+        "execution_sequence": [
+          "Walk without deliberately leaning or rotating.",
+          "Complete the authored distance per side and change hands."
+        ],
+        "exercise_id": "EX-102",
+        "id": null,
+        "invalid_repetition_criteria": [],
+        "language": "en",
+        "lifecycle_status": "draft",
+        "provenance": {
+          "notes": "Content approval retained in APPROVAL_2026_10_25.txt. This template remains unpublished and has no assigned canonical version or verified publication event.",
+          "source_reference": "docs/programmes/hyrox_base/FOUNDER_DECISION_PACKET.md",
+          "source_type": "unapproved_local_proposal"
+        },
+        "published_at": null,
+        "replacement_id": null,
+        "reviewed_at": null,
+        "reviewer": null,
+        "safety_boundary_refs": [],
+        "safety_notes": [],
+        "schema_version": 1,
+        "start_position": "Standing tall with one dumbbell beside one thigh; walk on clear level space. One-hand neutral grip with arm down at the side.",
+        "title": "Single-dumbbell suitcase carry — content approved, unpublished",
+        "version": null
+      },
+      "required_binding_kinds": [],
+      "retention_digest": null,
+      "source_evidence": [
+        "docs/programmes/hyrox_base/TRANSFER_BRIEF.txt",
+        "supabase/migrations/20260724140000_founder_exercise_library_wave1.sql"
+      ],
+      "verified_publication_event": null,
+      "version": null
+    },
+    {
+      "authored_label": "two_dumbbell_devils_press",
+      "content_approval": {
+        "canonical_publication_authority": false,
+        "scope": "exercise variant and definition content only",
+        "source": "docs/programmes/hyrox_base/APPROVAL_2026_10_25.txt"
+      },
+      "definition_content": {
+        "aliases": [],
+        "canonical_name": "Two-dumbbell devil’s press",
+        "coaching_content_refs": [],
+        "environments": {
+          "notes": "Equipment availability must be checked; no substitution or environment guarantee.",
+          "suitable": [],
+          "unsuitable": []
+        },
+        "equipment": {
+          "notes": "Standing with two dumbbells at the sides; clear floor space. Neutral grip on both dumbbell handles.",
+          "one_of_groups": [],
+          "optional_tokens": [],
+          "required_tokens": [
+            "dumbbell"
+          ],
+          "supports_external_load": true
+        },
+        "id": null,
+        "impact_level": "unknown",
+        "laterality": "bilateral",
+        "lifecycle_status": "draft",
+        "media_refs": [],
+        "modality": "strength",
+        "movement_patterns": [
+          "hinge"
+        ],
+        "movement_standard_refs": [],
+        "owner": "founder",
+        "sport_standard_refs": [],
+        "technical_complexity": "unknown",
+        "transitional_alias_ids": [],
+        "valid_completed_performance_dimensions": [
+          "repetitions",
+          "load"
+        ],
+        "valid_prescription_dimensions": [
+          "repetitions",
+          "load",
+          "rir"
+        ],
+        "version": null
+      },
+      "definition_key": "base-review-two_dumbbell_devils_press",
+      "identity_candidate": null,
+      "movement_content": {
+        "applicability_key": "hyrox_base_two_dumbbell_devils_press",
+        "author": {
+          "id": "codex.proposal"
+        },
+        "authored_at": "2026-10-25T03:02:23Z",
+        "completion_criteria": [
+          "Complete the floor burpee and two-dumbbell overhead finish; both dumbbells stay part of the rep."
+        ],
+        "execution_sequence": [
+          "Place dumbbells on the floor and move feet back into a burpee; chest lowers to the floor between the dumbbells.",
+          "Return feet beneath the body, then drive both dumbbells overhead in one continuous hinge/swing action.",
+          "Lower under control and repeat; step or hop feet without adding a separate jump."
+        ],
+        "exercise_id": null,
+        "id": null,
+        "invalid_repetition_criteria": [],
+        "language": "en",
+        "lifecycle_status": "draft",
+        "provenance": {
+          "notes": "Content approval retained in APPROVAL_2026_10_25.txt. This template remains unpublished and has no assigned canonical version or verified publication event.",
+          "source_reference": "docs/programmes/hyrox_base/FOUNDER_DECISION_PACKET.md",
+          "source_type": "unapproved_local_proposal"
+        },
+        "published_at": null,
+        "replacement_id": null,
+        "reviewed_at": null,
+        "reviewer": null,
+        "safety_boundary_refs": [],
+        "safety_notes": [],
+        "schema_version": 1,
+        "start_position": "Standing with two dumbbells at the sides; clear floor space. Neutral grip on both dumbbell handles.",
+        "title": "Two-dumbbell devil’s press — content approved, unpublished",
+        "version": null
+      },
+      "required_binding_kinds": [],
+      "retention_digest": null,
+      "source_evidence": [
+        "docs/programmes/hyrox_base/TRANSFER_BRIEF.txt"
+      ],
+      "verified_publication_event": null,
+      "version": null
+    },
+    {
+      "authored_label": "unloaded_hip_hinge",
+      "content_approval": {
+        "canonical_publication_authority": false,
+        "scope": "exercise variant and definition content only",
+        "source": "docs/programmes/hyrox_base/APPROVAL_2026_10_25.txt"
+      },
+      "definition_content": {
+        "aliases": [],
+        "canonical_name": "Unloaded standing hip hinge",
+        "coaching_content_refs": [],
+        "environments": {
+          "notes": "Equipment availability must be checked; no substitution or environment guarantee.",
+          "suitable": [],
+          "unsuitable": []
+        },
+        "equipment": {
+          "notes": "Standing about hip-width, knees softly bent. Hands rest across the chest or on hips; no load.",
+          "one_of_groups": [],
+          "optional_tokens": [],
+          "required_tokens": [
+            "bodyweight"
+          ],
+          "supports_external_load": false
+        },
+        "id": null,
+        "impact_level": "unknown",
+        "laterality": "bilateral",
+        "lifecycle_status": "draft",
+        "media_refs": [],
+        "modality": "mobility",
+        "movement_patterns": [
+          "hinge"
+        ],
+        "movement_standard_refs": [],
+        "owner": "founder",
+        "sport_standard_refs": [],
+        "technical_complexity": "unknown",
+        "transitional_alias_ids": [],
+        "valid_completed_performance_dimensions": [
+          "repetitions"
+        ],
+        "valid_prescription_dimensions": [
+          "repetitions"
+        ],
+        "version": null
+      },
+      "definition_key": "base-review-unloaded_hip_hinge",
+      "identity_candidate": null,
+      "movement_content": {
+        "applicability_key": "hyrox_base_unloaded_hip_hinge",
+        "author": {
+          "id": "codex.proposal"
+        },
+        "authored_at": "2026-10-25T03:02:23Z",
+        "completion_criteria": [
+          "Practise a controlled hinge without external load."
+        ],
+        "execution_sequence": [
+          "Move hips backwards while the torso tips forwards.",
+          "Stand by extending the hips without leaning back."
+        ],
+        "exercise_id": null,
+        "id": null,
+        "invalid_repetition_criteria": [],
+        "language": "en",
+        "lifecycle_status": "draft",
+        "provenance": {
+          "notes": "Content approval retained in APPROVAL_2026_10_25.txt. This template remains unpublished and has no assigned canonical version or verified publication event.",
+          "source_reference": "docs/programmes/hyrox_base/FOUNDER_DECISION_PACKET.md",
+          "source_type": "unapproved_local_proposal"
+        },
+        "published_at": null,
+        "replacement_id": null,
+        "reviewed_at": null,
+        "reviewer": null,
+        "safety_boundary_refs": [],
+        "safety_notes": [],
+        "schema_version": 1,
+        "start_position": "Standing about hip-width, knees softly bent. Hands rest across the chest or on hips; no load.",
+        "title": "Unloaded standing hip hinge — content approved, unpublished",
+        "version": null
+      },
+      "required_binding_kinds": [],
+      "retention_digest": null,
+      "source_evidence": [
+        "docs/programmes/hyrox_base/TRANSFER_BRIEF.txt"
+      ],
+      "verified_publication_event": null,
+      "version": null
+    },
+    {
+      "authored_label": "wall_ball",
+      "content_approval": {
+        "canonical_publication_authority": false,
+        "scope": "exercise variant and definition content only",
+        "source": "docs/programmes/hyrox_base/APPROVAL_2026_10_25.txt"
+      },
+      "definition_content": {
+        "aliases": [],
+        "canonical_name": "Wall Ball",
+        "coaching_content_refs": [],
+        "environments": {
+          "notes": "Equipment availability must be checked; no substitution or environment guarantee.",
+          "suitable": [],
+          "unsuitable": []
+        },
+        "equipment": {
+          "notes": "Standing facing a clear wall target, ball held in front of the chest. Both hands support the ball.",
+          "one_of_groups": [],
+          "optional_tokens": [],
+          "required_tokens": [
+            "wall_ball",
+            "wall_ball_target"
+          ],
+          "supports_external_load": true
+        },
+        "id": "EX-052",
+        "impact_level": "unknown",
+        "laterality": "bilateral",
+        "lifecycle_status": "draft",
+        "media_refs": [],
+        "modality": "sport_specific",
+        "movement_patterns": [
+          "ball_throw"
+        ],
+        "movement_standard_refs": [],
+        "owner": "founder",
+        "sport_standard_refs": [],
+        "technical_complexity": "unknown",
+        "transitional_alias_ids": [],
+        "valid_completed_performance_dimensions": [
+          "repetitions",
+          "load"
+        ],
+        "valid_prescription_dimensions": [
+          "repetitions",
+          "load",
+          "height_or_target",
+          "rpe"
+        ],
+        "version": null
+      },
+      "definition_key": "base-review-wall_ball",
+      "identity_candidate": "EX-052",
+      "movement_content": {
+        "applicability_key": "hyrox_base_wall_ball",
+        "author": {
+          "id": "codex.proposal"
+        },
+        "authored_at": "2026-10-25T03:02:23Z",
+        "completion_criteria": [
+          "The movement includes a squat, an upward throw towards the wall target, and a controlled catch."
+        ],
+        "execution_sequence": [
+          "Squat, rise and throw upwards towards the wall target.",
+          "Receive the rebound with both hands and regain control."
+        ],
+        "exercise_id": "EX-052",
+        "id": null,
+        "invalid_repetition_criteria": [],
+        "language": "en",
+        "lifecycle_status": "draft",
+        "provenance": {
+          "notes": "Content approval retained in APPROVAL_2026_10_25.txt. This template remains unpublished and has no assigned canonical version or verified publication event.",
+          "source_reference": "docs/programmes/hyrox_base/FOUNDER_DECISION_PACKET.md",
+          "source_type": "unapproved_local_proposal"
+        },
+        "published_at": null,
+        "replacement_id": null,
+        "reviewed_at": null,
+        "reviewer": null,
+        "safety_boundary_refs": [],
+        "safety_notes": [],
+        "schema_version": 1,
+        "start_position": "Standing facing a clear wall target, ball held in front of the chest. Both hands support the ball.",
+        "title": "Two-handed wall-ball squat and throw — content approved, unpublished",
+        "version": null
+      },
+      "required_binding_kinds": [],
+      "retention_digest": null,
+      "source_evidence": [
+        "docs/programmes/hyrox_base/TRANSFER_BRIEF.txt",
+        "docs/checkpoints/hyrox_base_personalisation/FOUNDER_BRIEF.txt",
+        "docs/architecture/Phase_3_1F_Part2_Founder_Approved_Canonical_Mappings_v1.md",
+        "docs/architecture/Phase_3_2D_Approved_Movement_Knowledge_Pilot_v1.md"
+      ],
+      "verified_publication_event": null,
+      "version": null
+    },
+    {
+      "authored_label": "wall_slide",
+      "content_approval": {
+        "canonical_publication_authority": false,
+        "scope": "exercise variant and definition content only",
+        "source": "docs/programmes/hyrox_base/APPROVAL_2026_10_25.txt"
+      },
+      "definition_content": {
+        "aliases": [],
+        "canonical_name": "Standing forearm wall slide",
+        "coaching_content_refs": [],
+        "environments": {
+          "notes": "Equipment availability must be checked; no substitution or environment guarantee.",
+          "suitable": [],
+          "unsuitable": []
+        },
+        "equipment": {
+          "notes": "Standing facing a wall, forearms supported vertically against it, elbows bent. No implement.",
+          "one_of_groups": [],
+          "optional_tokens": [],
+          "required_tokens": [
+            "wall"
+          ],
+          "supports_external_load": false
+        },
+        "id": null,
+        "impact_level": "unknown",
+        "laterality": "bilateral",
+        "lifecycle_status": "draft",
+        "media_refs": [],
+        "modality": "mobility",
+        "movement_patterns": [
+          "vertical_push"
+        ],
+        "movement_standard_refs": [],
+        "owner": "founder",
+        "sport_standard_refs": [],
+        "technical_complexity": "unknown",
+        "transitional_alias_ids": [],
+        "valid_completed_performance_dimensions": [
+          "repetitions"
+        ],
+        "valid_prescription_dimensions": [
+          "repetitions"
+        ],
+        "version": null
+      },
+      "definition_key": "base-review-wall_slide",
+      "identity_candidate": null,
+      "movement_content": {
+        "applicability_key": "hyrox_base_wall_slide",
+        "author": {
+          "id": "codex.proposal"
+        },
+        "authored_at": "2026-10-25T03:02:23Z",
+        "completion_criteria": [
+          "Both arms slide up and return without forcing range or arching the torso."
+        ],
+        "execution_sequence": [
+          "Slide both forearms upwards while keeping the trunk controlled.",
+          "Slide back down within the available controlled range."
+        ],
+        "exercise_id": null,
+        "id": null,
+        "invalid_repetition_criteria": [],
+        "language": "en",
+        "lifecycle_status": "draft",
+        "provenance": {
+          "notes": "Content approval retained in APPROVAL_2026_10_25.txt. This template remains unpublished and has no assigned canonical version or verified publication event.",
+          "source_reference": "docs/programmes/hyrox_base/FOUNDER_DECISION_PACKET.md",
+          "source_type": "unapproved_local_proposal"
+        },
+        "published_at": null,
+        "replacement_id": null,
+        "reviewed_at": null,
+        "reviewer": null,
+        "safety_boundary_refs": [],
+        "safety_notes": [],
+        "schema_version": 1,
+        "start_position": "Standing facing a wall, forearms supported vertically against it, elbows bent. No implement.",
+        "title": "Standing forearm wall slide — content approved, unpublished",
+        "version": null
+      },
+      "required_binding_kinds": [],
+      "retention_digest": null,
+      "source_evidence": [
+        "docs/programmes/hyrox_base/TRANSFER_BRIEF.txt"
+      ],
+      "verified_publication_event": null,
+      "version": null
+    }
+  ],
+  "explicit_race_or_assessment_requirements_unchanged": true,
+  "format": "hyrox-base-trusted-producer-review-v1",
+  "missing_authority": [
+    "Exact authoritative definition/variant and producer identity decisions",
+    "Producer-assigned current versions and verified approval/publication events; no fabricated history",
+    "Complete immutable physical protocol/session/block/step revisions and approved programme artifact"
+  ],
+  "publication_authority": false,
+  "source_pins": {
+    "APPROVAL_2026_10_24.txt": "85cb3915a22d27fe09437bd59317c5c10c5449eb19713e4599c2451cac3c5fd4",
+    "APPROVAL_2026_10_25.txt": "fcf0937115b988f356ee860d3ee8cca472781e9b1dc897056c4e2e73b35696c9",
+    "EXERCISE_DEFINITION_PROPOSALS.json": "1012e323ffd7839e53298eb75265ad025f473c9ece3e855fa51411910d08c438",
+    "PREPARATION_PROPOSALS.json": "46638b63c213a48088c5d33d0eecdf6cd1e7b369d01a035a60590c030866a0bd",
+    "PROGRESSION.json": "4c0281b9c6b6cbb0d43211ebe0b6be30bb2d1c0c518624de62693c78975bfa46",
+    "TRANSFER_BRIEF.txt": "21344747b34909af82073f669865fdc1d23b37d00339c0d8a1b4b3b8375bbe0e",
+    "approved_brief": "5ae2ebcc020883ce2f496b457296d349ee1793c513818501d616238341d32056"
+  },
+  "status": "BLOCKED_BEFORE_TRUSTED_PUBLICATION"
+}

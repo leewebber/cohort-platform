@@ -1,0 +1,12 @@
+Continue from published main: 0d8e04efac9e9468339cb1ef47664ea90e485ee9
+
+Founder decisions, 2026-10-25:
+1. Approve the proposed exercise variants and preparation sequences, with two corrections:
+- Main front-rack reverse lunge uses a BARBELL front rack, not two dumbbells.
+- Cable Pallof press uses the previously agreed SPLIT STANCE.
+2. For wall balls and other stations within circuits, “use your race weight” is advisory text unless an exact load/standard is explicitly prescribed.
+3. Athletes may enter actual load used through existing supported logging. Do not invent a mandatory result field.
+4. Advisory race-weight text does not require a division lookup or constitute a verified race-standard prescription.
+
+This supersedes the earlier requirement for a resolved wall-ball division weight/height mapping for these Base circuits. Do not silently supply a numerical load or target height. Explicit prescriptions and formal assessments retain their own requirements.
+Approval of definition content does not establish canonical published identity/version authority.

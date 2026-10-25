@@ -43,5 +43,12 @@ for pass in fresh repeat; do
  dart --packages="$REPO_ROOT/server/trusted_plan_package_import/.dart_tool/package_config.json" "$REPO_ROOT/server/trusted_plan_package_import/tool/source_duration_fixture.dart" "$SPRINT12_WORKDIR/inputs-duration.json" "$SPRINT12_WORKDIR/payload-duration.sql"
  psql_file "$SPRINT12_WORKDIR/payload-duration.sql"
  psql_file "$TESTS_DIR/sql/gate_source_duration_choice.sql"
+ # Task-owned authenticated Flutter proof; no Python HTTP probes are invoked.
+ psql_file "$TESTS_DIR/sql/hyrox_athlete_app_fixture.sql"
+ supabase status -o json --workdir "$SPRINT12_WORKDIR" 2>/dev/null > "$SPRINT12_WORKDIR/app-local.json"
+ chmod 600 "$SPRINT12_WORKDIR/app-local.json"
+ COHORT_LOCAL_V3_EXPECT_DURATION=1 COHORT_LOCAL_V3_CONFIG="$SPRINT12_WORKDIR/app-local.json" flutter test --no-pub "$REPO_ROOT/test/hyrox_base/athlete_authoritative_local_test.dart"
+ rm "$SPRINT12_WORKDIR/app-local.json"
+ echo "SOURCE_DURATION_AUTHENTICATED_${pass}=PASS"
  echo "SOURCE_DURATION_${pass}=PASS"
 done

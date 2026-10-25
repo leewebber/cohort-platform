@@ -1,69 +1,48 @@
-# Capture and preparation audit
+# Capture and approved preparation
 
-2026-10-24. This audit was made before selecting capture modes or adding source
-lowering. MASTER previously proposed no concrete new result fields: D5 was a broad
-unresolved request to review capture/scoring, not a visible capture specification.
-The founder's dose approval does not approve unseen capture requirements.
+2026-10-25. [Exact approval](APPROVAL_2026_10_25.txt) · [Master](MASTER.md) ·
+[Current content packet](FOUNDER_DECISION_PACKET.md).
 
-## Established capture reused
+All preparation sequences and exercise variants are approved, with barbell front rack for
+main reverse lunges and split stance for cable Pallof. All 48 prescriptions and eight rest
+entries are complete. Approved ramps remain separate from working sets; RDL/lunge loads
+are chosen by feel, never from a squat benchmark. Gym preparation budgets are 12–15 min;
+quality preparation is 15–17 min including the approved dynamic circuit and transitions.
+Open-ended rep tempos and optional ramp choices do not require invented clocks or more
+content decisions. Gym elapsed totals remain estimates, while main timed work is exact.
 
-| Category / affected sessions | Existing contract and delivered use | Exact remaining limit |
+| Scope | Existing capture retained | Limit/consequence |
 |---|---|---|
-| Main strength and upper pairs — 24 gym sessions | Existing strength result/set rows and actual reps/load. Superset identity/order survives prepare/save/reopen. Prescription RIR/rest ranges and percentage intent stay in prescription metadata. | No compulsory actual RIR, rest, pair-transition or benchmark-derived upper-body load. Existing strength completion requires a performed set with actual reps; this requirement is inherited, not newly inferred from a target. |
-| Suitcase carries — 8 Gym A | Prescribed distance and per-side meaning stay typed. Established completion mode and optional block note are used. New canonical source metadata prevents legacy distance decoding from silently enabling load/distance capture requirements. | C1: no new mandatory carry-load/distance rows or separate left/right result identity. Existing generic carry capture elsewhere is unchanged; activating it for Base would require explicit capture scope. |
-| Plank / Pallof — 8 Gym B and 8 Gym C | Typed hold duration, reps/side and two-second extended hold are retained; established completion mode plus optional note. | C1: no mandatory actual hold quality, per-side rows, actual lever/resistance/extended-hold measurement or RIR fields. |
-| Mixed finishers — 8 Gym B and 8 Gym C | Existing minute timer shows timed work/recovery and full rest stations. Completion mode plus existing optional block note records scaling; prescribed station targets remain separate. | C1: no new station-output, every-minute completion, load, wall-ball height/standard attestation or scoring requirements. No prescribed target is marked performed automatically. |
-| Quality / dedicated row — 8 quality and 8 Gym A | Existing interval capture and explicit pace-unavailable path remain unchanged. No final recovery is added. Preparation accelerations use completion capture, not benchmark pace capture. | A timed prescription is not an observed performance; no row fallback, new actual field or measurement verification is invented. |
-| Easy / long runs — 16 sessions | Existing endurance capture remains; deliberate main-duration choice is separately frozen by the canonical v3 start. Existing performed distance/duration requirements are unchanged. | Chosen prescribed duration is never copied to performed duration or used as evidence that the run occurred. |
+| Main strength/pairs — 24 gym | Actual sets/reps/load; existing completion rules. | No new mandatory RIR/rest/transition field. |
+| Carries — eight Gym A | Completion plus optional load/scaling note. | No separately measured left/right carry rows; optional detail/comparison limit. |
+| Plank/Pallof — eight Gym B/eight Gym C | Completion and optional note; authored holds/per-side targets retained. | No mandatory measured hold quality, per-side resistance or actual hold field. |
+| Mixed finishers — eight Gym B/eight Gym C | Existing timers/targets/full rest and completion/optional notes. | Actual load can be noted; no newly required station output, race-height attestation or scoring. Existing structured circuit/strength logging elsewhere remains unchanged. |
+| Quality/dedicated rowing | Existing interval actuals and explicit pace-unavailable path. | Targets are not performed measurements; no final recovery or invented fallback. |
+| Easy/long runs | Existing endurance actuals; separate frozen main-duration choice and original range. | A chosen target is never copied to performed duration. |
 
-C1 is a capture capability limit, not a new required result or a blocker to rendering
-and executing the prescription with existing completion/notes. All result values
-initialise as missing. RPE display, per-side targets and rest/hold timings create no
-new required results. Global dose approval does not grant new scoring or comparison
-eligibility. Session snapshots retain the original source and chosen prescription;
-actuals remain in their existing separate fields.
+C1 identifies optional evidence limitations on the 24 gym sessions, not a blocker to
+faithful execution or completion. Initial actuals remain missing. Existing supported
+actual-load fields and optional notes are available; this milestone adds no mandatory
+result field or typed station form. Prescription metadata, advisory text and actuals
+stay separate through save/reopen/export.
 
-Binding source paths:
-`lib/features/performance/models/block_capture_mode_resolver.dart`,
-`lib/features/performance/services/performance_snapshot_builder.dart`,
-`lib/features/performance/services/performance_validation_service.dart`,
-`lib/features/session/models/session_execution_plan.dart` and
-`lib/core/persistence/session_execution_plan_codec.dart`.
+## Advisory circuit race weight
 
-## Preparation and timing
+“Use your race weight” for Base wall balls is advice only. No exact kilograms, target
+height, division lookup or verified race standard is implied. All eight current Gym C
+sources therefore lose the obsolete B2/D4 dependency. Explicit load/height prescriptions,
+formal assessments and their rule requirements remain untouched. An advisory station
+cannot silently carry an explicit load/height/race mapping under the same advisory flag;
+contradictory source shapes refuse. A completion tick is not race-valid measurement.
 
-- **P1 — all 24 gym sessions:** five-minute easy start, the supplied two-round
-  movement doses, named ramp-up exercise and total 12–15 minute budget are retained.
-  Easy starts have their existing timers; circuit prescriptions retain reps/side.
-  Ramp-set counts, loads, reps and rest were not supplied and are never guessed.
-  Warm-up sets remain separate from working sets. Repetition and transition durations
-  and exact placement of optional core rest remain unquantified. Full gym timing
-  is therefore partial, not a fabricated 60–90 minute sum.
-- **P2 — eight quality runs:** 10 minutes easy plus 3×20-second relaxed accelerations
-  with two 40-second easy recoveries are structured. Dynamic preparation is a retained
-  instruction with no invented movements/duration. The post-work 15–20-minute easy
-  range and five-minute walk remain authored instructions, not fixed or auto-selected
-  durations. The main work/recovery timer is exact; full timing remains partial.
-- **Easy runs:** retain the transferred 5–8 minute walk/jog preparation and five-minute
-  walk afterward. No additional compulsory preparation choice or result field is created.
-- **Long runs:** current explicit correction is exactly five minutes gentle walking/
-  jogging plus five minutes walking afterward. Main windows are unchanged; every
-  80-minute maximum totals 90 minutes. Prior 95-minute conflict is resolved.
+## Authenticated local proof
 
-P1/P2 distinguish incomplete quantitative preparation from complete main working
-prescriptions. Open-ended preparation instructions remain visible and do not prevent
-source compilation. Their future quantitative authoring is a content decision; the
-implementation does not claim that such details were approved or supplied.
-
-## Skipped authenticated test
-
-`test/hyrox_base/athlete_authoritative_local_test.dart` checks
-`COHORT_LOCAL_V3_CONFIG`; when absent, it explicitly skips with
-“Requires task-owned disposable authenticated local gate.” That file is normally
-created by `run_hyrox_authoritative_start_gate.sh`, which also runs Python HTTP probes.
-No configuration from a different project is borrowed, no fake passing opt-in is set,
-and no denied Python networking is retried or replaced. The existing authenticated
-HTTP test remains skipped. The new separate SQL-only gate uses a uniquely named local
-Docker project and `docker exec ... psql` over stdin; it proves actual SQL roles and
-transactions, not GoTrue/HTTP/application transport. Ordinary compiler/runner/export
-and existing trusted-server unit regressions are separate local tests.
+The established source-duration disposable gate now creates its own `app-local.json`
+using `supabase status -o json`, restricts it to the task, and runs the existing Flutter
+authenticated repository/start/save/completion/correction/History test. The task-owned
+`COHORT_LOCAL_V3_EXPECT_DURATION=1` assertion requires a real authored window, exercising
+the three-argument RPC and frozen original-range/selected-duration packet. Fresh/repeat
+results and exact limits are recorded in the current handoff. No other project's config,
+production secrets, Python HTTP probes or permission bypass is used. Ordinary broad test
+runs still explicitly skip this test without `COHORT_LOCAL_V3_CONFIG`; dedicated configured
+proof is separate. GoTrue login/native/device proof is not implied by local fixture JWTs.
