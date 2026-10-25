@@ -1,0 +1,47 @@
+{
+  "asar_sha256": "130145706a912db74e4d260ad7538f10f1e05e88af955f9afba42cdf01e64606",
+  "build": "21828",
+  "bundle": "/Applications/ChatGPT.app",
+  "bundle_id": "com.openai.codex",
+  "cleanup_log_path": "/Users/leewebber/Library/Logs/com.openai.codex/2026/10/24/codex-desktop-b155aafb-5bb6-4827-b6a2-d72c5d242e92-81401-t0-i1-104955-0.log",
+  "cleanup_log_sha256": "ef3d15f7858c479b90ad17f8bc01b338662180886e88bfc4c59d16497dfaeafd",
+  "conclusion": "Automatic keep-15 retention is queued by connection/startup lifecycle as well as create/attach/archive paths. Avoiding managed creation alone is insufficient. The log does not record the exact enqueue callback stack.",
+  "config_file_sha256_before": "92ab0f1a9e9b7368243eb87bbfb336b6f30ba70dcacd4b83d456bd16ae930d05",
+  "config_key": "desktop.worktree-auto-cleanup-enabled",
+  "default_keep_count": 15,
+  "default_value": true,
+  "desktop_worktree_overrides_present": false,
+  "excerpts": {
+    "main-0FVbxCQU.js": {
+      "reason:`startup-cleanup`": "try{if(await this.hasOtherAttachmentOwner(s,r.ownerThreadId)===!0)continue;if(e.throwIfAborted(),n!==this.attachmentGeneration)break;if(!(await this.requestGitWorker({method:`delete-worktree`,params:{worktree:s,force:!0,reason:`startup-cleanup`,hostConfig:this.options.hostConfig,operationSource:`worktree_auto_cleanup`},signal:e})).success)continue;this.options.windowManager.sendMessageToAllWindows({type:`worktrees-reload-requested`,hostId:this.options.hostId})}catch(t){e.throwIfAborted(),T.push(t)}finally{this.cleanupWorktreeRoots.delete(i.oi(s))}}}if(T.length>0)throw AggregateError(T,`Automatic worktree cleanup failed`)}async handleCreateWorktreePath(e){if(e.hostId===this.options.hostId){if(this.cancelledWorkt",
+      "requestCleanup()}prepareThreadArchive": "on(e).registerUnarchiveThread(t)}archiveViewReady=()=>this.#n.kick();stopArchives=()=>this.#n.stop();#a(e){!i.Mi(e)&&this.connections.getMaybeConnection(e)?.getConnectionState()===`connected`&&this.getWorktreeService(e).requestCleanup()}prepareThreadArchive=async(e,t)=>{if(i.Mi(e))return;let n=await this.#c()??(e!==`local`&&this.connections.getMaybeConnection(`local`)?.getConnectionState()!==`connected`?this.#r:null);if(n==null)throw Error(`Could not determine the account for worktree cleanup.`);await this.#n.prepareThread(n,e,t.conversationId,t.cwd,t.silent)};pauseThreadArchive=async(e,t)=>{let n=this.#n.threadOwner(e,t);n!=null&&this.#n.pauseThread(e,t,n)};resumeThreadArchive=async(e,t)=>{let n=this.#n.thread",
+      "runAutomaticArchive(e,t)": "),ownerThreadId:t},sensitive:{}}),this.forgetNewbornWorktreeRoot(e)}requestCleanup(){this.options.enqueueAutomaticArchive().catch(e=>{gJ().warning(`[worktree-cleanup] queue-failed`,{safe:{},sensitive:{error:e}})})}async runAutomaticArchive(e,t){let n=this.attachmentGeneration,{autoCleanupEnabled:r,keepCount:a,worktreesRoot:o}=await this.options.getHostWorktreeSettings();if(!r)return;let c=this.options.executionHost;await s.it(c,o);let{worktrees:l}=await this.requestGitWorker({method:`codex-worktrees`,params:{hostConfig:this.options.hostConfig,operationSource:`worktree_auto_cleanup`,worktreesRoot:o}});if(l.length<=a)return;let d=y5e({globalState:this.options.globalState,hostId:this.options.hostId,worktrees:l}),f"
+    },
+    "src-CTNXdakG.js": {
+      "keepCount:": "rktree-auto-cleanup-enabled`,schema:J}),confirmBeforeDelete:X({agentAccess:`hidden`,default:!0,description:`Whether to ask before manually deleting a worktree in settings`,key:m.WORKTREE_CONFIRM_BEFORE_DELETE,schema:J}),keepCount:X({agentAccess:`read-write`,default:15,description:`How many recent worktrees Codex keeps`,key:`worktree-keep-count`,schema:t.O().int().min(1)})};function $c(e){let t=Zc.worktreeRoot.schema.safeParse(e?.[Zc.worktreeRoot.key]),n=Q.autoCleanupEnabled.schema.safeParse(e?.[Q.autoCleanupEnabled.key]),r=Q.keepCount.schema.safeParse(e?.[Q.keepCount.key]);return{worktreesRoot:t.success?t.data:Zc.worktreeRoot.default,autoCleanupEnabled:n.success?n.data:Q.autoCleanupEnabled.default,keepCount:r.s",
+      "key:`worktree-auto-cleanup-enabled`": " creating worktrees`,key:m.WORKTREE_UPSTREAM_REFRESH_MODE,schema:t.f([`never`,`best-effort`])}),autoCleanupEnabled:X({agentAccess:`read-write`,default:!0,description:`Whether Codex automatically cleans up old worktrees`,key:`worktree-auto-cleanup-enabled`,schema:J}),confirmBeforeDelete:X({agentAccess:`hidden`,default:!0,description:`Whether to ask before manually deleting a worktree in settings`,key:m.WORKTREE_CONFIRM_BEFORE_DELETE,schema:J}),keepCount:X({agentAccess:`read-write`,default:15,description:`How many recent worktrees Codex keeps`,key:`worktree-keep-count`,schema:t.O().int().min(1)})};function $c(e){let t=Zc.worktreeRoot.schema.safeParse(e?.[Zc.worktreeRoot.key]),n=Q.autoCleanupEnabled.schema.safePar"
+    },
+    "worktrees-settings-page-cdb785e54e3a.js": {
+      "Automatically delete old worktrees": "ending,onChange:e=>{g.mutate(e?`best-effort`:`never`)}})}),t[38]=g,t[39]=c,t[40]=R):R=t[40];let z;t[41]===Symbol.for(`react.memo_cache_sentinel`)?(z=(0,Y.jsx)(K,{id:`settings.worktrees.autoCleanup.label`,defaultMessage:`Automatically delete old worktrees`,description:`Label for the automatic worktree deletion toggle`}),t[41]=z):z=t[41];let B;t[42]===Symbol.for(`react.memo_cache_sentinel`)?(B=(0,Y.jsx)(K,{id:`settings.worktrees.autoCleanup.snapshot`,defaultMessage:`Saves a recovery snapshot first`,description:`Short help under the automatic worktree deletion toggle. The adjacent info button explains which files and commits the snapshot preserves.`}),t[42]=B):B=t[42];let V;t[43]===Symbol.for(`react.memo_cache_sen"
+    }
+  },
+  "founder_action": "Settings \u2192 Worktrees \u2192 turn OFF Automatically delete old worktrees for the local host. No setting was changed.",
+  "keep_count_key": "desktop.worktree-keep-count",
+  "previous_bundle_scheduler": {
+    "excerpt": "start=()=>{let e=new Map,t=this.connections.subscribe(({type:t,hostId:n,connection:r})=>{if(e.get(n)?.forEach(e=>e()),e.delete(n),t===`added`){let t=[r.registerInternalConnectionStateHandler(t=>{if(n===`local`&&t!==`connected`&&this.#t.abortActive(),this.#t.kick(),n===`local`&&t===`connected`)for(let t of e.keys())this.#i(t);else this.#i(n)})];n===`local`&&t.push(r.registerInternalAuthenticatedPrincipalChangeHandler(({current:t})=>{t==null?r.getConnectionState()===`connected`&&(this.#n=null):this.#n=JSON.stringify([t.accountId,t.userId]),this.#t.abortActive(),this.#t.kick();for(let t of e.keys())this.#i(t)})),e.set(n,t),this.#t.kick(),this.#i(n)}});return this.#t.start(),()=>{this.#t.stop(),t();for(let t of e.values())t.forEach(e=>e())}};async registerThreadArchive({hostId:e,threadId:t,cwd:n,cleanupWorktree:r}){await this.connections.getConnection(e).registerArchiveThread(t,{cwd:n,cleanupWorktree:r})}async registerThreadUnarchive({hostId:e,threadId:t}){await this.connections.getConnection(e).registerUnarchiveThread(t)}",
+    "file": "/private/tmp/cohort-hyrox-readiness-20261024/main-JI9qDiXp.js",
+    "sha256": "b8c5d07cc3c30fbf0abe729b05434e7d1ffa19ee6c4daa818ae8f855be66d1e1"
+  },
+  "selected_cleanup_lines": [
+    "2026-10-24T10:50:59.910Z info [worktree-service] [worktree-cleanup] plan-summary candidatesCount=5 deletesPlanned=5 keepCount=15 ownerlessCount=4 protectedNewbornCount=0 protectedPendingCount=0 protectedPinnedThreadCount=0 protectedWorkspaceRootCount=0 totalWorktrees=20",
+    "2026-10-24T10:50:59.915Z info [worktree-service] [worktree-cleanup] delete-candidate createdAtMs=1792209690431.1064 isProtected=false ownerReadFailed=false ownerThreadId=01a13528-9404-7183-a049-f1d9aa5c8db6 ownerThreadInProgress=false ownerThreadUpdatedAtMs=1792297792088.2654 reason=owned worktreeId=48f089d023de56f9fef95ac342c1d415248dbf62"
+  ],
+  "selected_members": {
+    ".vite/build/main-0FVbxCQU.js": "fad45aa7d81de6fe166704e8879e3b7cbfc85151e72df7946853336c7cbc5a3c",
+    "webview/assets/_virtual_settings-search-documents-2d2cdaca4aee.js": "fe798494e59528714f385a1df158b8f23fe41ed7cbc3ba8c2b539ad9a754245d",
+    "webview/assets/worktrees-settings-page-cdb785e54e3a.js": "35f1a3f77aca7ba7831f12c5adf912ea72b0656bc242171c579ff3bb00d40558"
+  },
+  "settings_changed": false,
+  "source_module_sha256": "8bef484d79c728e944bf1ee5bc9d91e135864363ad449a3c182f0d888a991660",
+  "version": "26.1021.31345"
+}

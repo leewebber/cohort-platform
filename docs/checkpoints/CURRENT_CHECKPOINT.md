@@ -1,5 +1,22 @@
 # Current repository checkpoint
 
+> **HYROX founder decision packet — proposed, 2026-10-25:**
+> [Decision packet](../programmes/hyrox_base/FOUNDER_DECISION_PACKET.md) and [handoff](./hyrox_founder_decisions/HANDOFF.md) propose exact equipment/position/grip/
+> execution for all 29 labels, 27 definition templates and four reusable preparations.
+> Main prescriptions/source bytes remain unchanged. No proposal is approved or published;
+> exact definition/version/event and physical-source authority remain missing. Wall-ball
+> authoring retains an unresolved race reference; final publication stays held, and generic
+> v3 checks are not claimed to enforce a dedicated race-null-reference gate. No official
+> division table is retained. C1 limits optional evidence, not ordinary completion.
+> Cleanup is automatic retention on startup/connection as well as creation; avoiding new
+> worktrees alone is insufficient. Exact founder action: Settings → Worktrees → turn OFF
+> “Automatically delete old worktrees”. No setting/control/index/worktree change here.
+> Historical five regenerated indices remain restoration exceptions. Current-task inventories
+> and original 95 outstanding paths are separately checked. Prior 364→362 diagnostics and
+> authenticated-test config/coverage are explained exactly; valid unchanged gates are reused.
+> Only local proposals/docs and normal main publication are authorised; Test Week, hosted,
+> producer provisioning, real publication/athlete/device work and broader closure remain open.
+
 > **HYROX source lowering/duration choice — locally verified, 2026-10-24:**
 > [Master](../programmes/hyrox_base/MASTER.md), [all-category audit](../programmes/hyrox_base/COVERAGE.md) and
 > [handoff](./hyrox_source_lowering/HANDOFF.md) record 48 complete main prescriptions, separate preparation gaps

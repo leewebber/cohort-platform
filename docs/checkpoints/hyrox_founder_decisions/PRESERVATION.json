@@ -1,0 +1,24 @@
+{
+  "after_older_sha256": "bdf22687a1eb0876398e377bcdd3a8de3ce6fd05313a6d54f9a23a4b4b011274",
+  "before_sha256": "36b103c55ff59912f6e3dfdad549e9aae1f7f6e7c8dcd31173961ad791b0e295",
+  "compared_older_checkouts": 20,
+  "current_task_all_recorded_files_indices_heads_branches_status_temp_exact": true,
+  "desktop_browser_control": false,
+  "differences": [],
+  "global_config_byte_exact": true,
+  "global_settings_changed": false,
+  "historical_original_index_losses": {
+    "first_incident": 4,
+    "meaning": "Restored recorded content/refs/temp with logically clean regenerated indices; not original index-byte preservation. Current-task equality is measured against these already-restored starting resources.",
+    "second_incident": 1,
+    "total": 5
+  },
+  "indices_regenerated_this_task": 0,
+  "new_git_locks_this_task": 0,
+  "original_head": "a331f52967e1887c4435cccc8f1ecfa192028cd6",
+  "original_outstanding_paths": 95,
+  "python_network_used": false,
+  "raw_evidence_directory": "/private/tmp/cohort-hyrox-decisions",
+  "unmeasured": "Ignored build artifacts outside recorded inventory are not claimed restored or byte-identical.",
+  "worktrees_created_removed_or_restored_this_task": 0
+}

@@ -1,0 +1,38 @@
+{
+  "actual_version_bindings": 0,
+  "definition_templates": 27,
+  "files": {
+    "docs/architecture/Phase_3_1F_Part1_Founder_Identity_Mapping_Review_v1.md": "ad93f69176d74f8f321df65bf535c30c8f69e06f95a95b028daf9d6ab5dfee51",
+    "docs/architecture/Phase_3_1F_Part2_Founder_Approved_Canonical_Mappings_v1.md": "26c7261e2180c291bb9d4d7055f0113d364ebd97d5e20bbf6559bb7170e031d1",
+    "docs/architecture/Phase_3_2D_Approved_Movement_Knowledge_Pilot_v1.md": "848b54be7431c0990c251a0dcf4a30645241e13d4c66957444ce13e179d34fd4",
+    "docs/checkpoints/hyrox_base_personalisation/FOUNDER_BRIEF.txt": "5ae2ebcc020883ce2f496b457296d349ee1793c513818501d616238341d32056",
+    "docs/programmes/hyrox_base/APPROVAL_2026_10_24.txt": "85cb3915a22d27fe09437bd59317c5c10c5449eb19713e4599c2451cac3c5fd4",
+    "docs/programmes/hyrox_base/SESSIONS.json": "b6cfb93024ecbfcb02346bf17455d78b94a3dbca7272de4af7f9bf5a83174f8b",
+    "docs/programmes/hyrox_base/TRANSFER_BRIEF.txt": "21344747b34909af82073f669865fdc1d23b37d00339c0d8a1b4b3b8375bbe0e",
+    "lib/domain/exercise_knowledge/models/exercise_definition.dart": "4d959bd7a2994c3ce25eb767c8e33ba62446ff98b28013103d0859ceea4db0b5",
+    "lib/domain/exercise_knowledge/models/movement_standard.dart": "1446593e36085d0b7707ccd8d7f7c22d0b3e45c4d54e827cb4e1097e224879d6",
+    "lib/domain/exercise_knowledge/seed/founder_approved_movement_knowledge_phase_3_2d.dart": "0e8750688ac4b81a9c922be82ece91572df3eb35bd32d42184db22a2094287f1",
+    "supabase/migrations/20260724140000_founder_exercise_library_wave1.sql": "22a2683b81d09e071b99adda3c120dff06cb6410fcc4a2b53029beffca73d0c8",
+    "supabase/migrations/20260821120000_apollo_build_week1_executable_protocols.sql": "181f9ee733babaa20c9f24c7ef9ceb8d492ca780cb1d7b3711f6fd3c320014b4"
+  },
+  "known_identity_candidate_bindings": 18,
+  "labels": 29,
+  "material_choice_labels": [
+    "back_squat",
+    "chest_supported_row",
+    "dumbbell_shoulder_press",
+    "front_rack_reverse_lunge",
+    "incline_dumbbell_press",
+    "light_scapular_row",
+    "long_lever_plank",
+    "pallof_press",
+    "split_stance_single_arm_cable_row",
+    "two_dumbbell_devils_press",
+    "wall_ball"
+  ],
+  "proposals": {
+    "docs/programmes/hyrox_base/EXERCISE_DEFINITION_PROPOSALS.json": "6cfc5342595dfdf1a23626dac95ec0eeae9bb3551697581a70b00c93556f24cd",
+    "docs/programmes/hyrox_base/FOUNDER_DECISION_PACKET.md": "f861ce83d0ee027ee0bbf808dd70c4bae75addc0fdd4a2569769ffa8ac6da9bb",
+    "docs/programmes/hyrox_base/PREPARATION_PROPOSALS.json": "5e3e081dd05e2ba877de0865bc28aa42eefc091f0693bc76d1238b20da9a1ff2"
+  }
+}
