@@ -1,0 +1,2916 @@
+{
+  "corrected_policy": {
+    "data": [
+      {
+        "all_other_policies_unchanged": true
+      }
+    ],
+    "http_status": 201,
+    "observed_at_utc": "2026-10-25T07:21:29Z"
+  },
+  "link_health": {
+    "data": [
+      {
+        "independent_parent_free": 3,
+        "known_protocol_mismatch": 0,
+        "missing_parent": 0,
+        "owner_mismatch": 0,
+        "records": 24
+      }
+    ],
+    "http_status": 201,
+    "observed_at_utc": "2026-10-25T07:18:51Z"
+  },
+  "original_policy_failure_preserved": true,
+  "retained_checks": [
+    {
+      "boolean_checks": 10,
+      "false_checks": [],
+      "name": "security-postcheck-backfill-exact-acl",
+      "result": {
+        "data": [
+          {
+            "row_count": 1,
+            "rows": [
+              {
+                "anon_effectively_denied": true,
+                "authenticated_execute": true,
+                "exact_single_overload": true,
+                "expected_owner": true,
+                "only_owner_authenticated_no_public_or_grant_options": true,
+                "present": true,
+                "security_definer": true,
+                "service_role_effectively_denied": true,
+                "unchanged_public_wrapper_body": true,
+                "unchanged_search_path": true
+              }
+            ]
+          }
+        ],
+        "http_status": 201,
+        "observed_at_utc": "2026-10-25T07:18:25Z"
+      },
+      "rows": 1
+    },
+    {
+      "boolean_checks": 36,
+      "false_checks": [],
+      "name": "security-postcheck-function-security",
+      "result": {
+        "data": [
+          {
+            "row_count": 18,
+            "rows": [
+              {
+                "exact_execution_context": true,
+                "exact_search_path": true,
+                "name": "cohort_assert_completion_request_v1"
+              },
+              {
+                "exact_execution_context": true,
+                "exact_search_path": true,
+                "name": "cohort_assert_record_parent_v1"
+              },
+              {
+                "exact_execution_context": true,
+                "exact_search_path": true,
+                "name": "cohort_complete_backfilled_fixed_occurrence_at"
+              },
+              {
+                "exact_execution_context": true,
+                "exact_search_path": true,
+                "name": "cohort_completion_backfill_body_v1"
+              },
+              {
+                "exact_execution_context": true,
+                "exact_search_path": true,
+                "name": "cohort_completion_correction_body_v1"
+              },
+              {
+                "exact_execution_context": true,
+                "exact_search_path": true,
+                "name": "cohort_completion_fixed_body_v1"
+              },
+              {
+                "exact_execution_context": true,
+                "exact_search_path": true,
+                "name": "cohort_completion_programme_body_v1"
+              },
+              {
+                "exact_execution_context": true,
+                "exact_search_path": true,
+                "name": "cohort_completion_standalone_body_v1"
+              },
+              {
+                "exact_execution_context": true,
+                "exact_search_path": true,
+                "name": "cohort_guard_completion_record_identity_v1"
+              },
+              {
+                "exact_execution_context": true,
+                "exact_search_path": true,
+                "name": "cohort_guard_direct_result_write_v1"
+              },
+              {
+                "exact_execution_context": true,
+                "exact_search_path": true,
+                "name": "cohort_guard_result_identity_v1"
+              },
+              {
+                "exact_execution_context": true,
+                "exact_search_path": true,
+                "name": "cohort_insert_training_session_result_tree"
+              },
+              {
+                "exact_execution_context": true,
+                "exact_search_path": true,
+                "name": "cohort_sync_training_session_from_terminal_record"
+              },
+              {
+                "exact_execution_context": true,
+                "exact_search_path": true,
+                "name": "complete_backfilled_fixed_programme_occurrence"
+              },
+              {
+                "exact_execution_context": true,
+                "exact_search_path": true,
+                "name": "complete_fixed_programme_occurrence_and_advance"
+              },
+              {
+                "exact_execution_context": true,
+                "exact_search_path": true,
+                "name": "complete_programme_session_and_advance"
+              },
+              {
+                "exact_execution_context": true,
+                "exact_search_path": true,
+                "name": "complete_training_session_record"
+              },
+              {
+                "exact_execution_context": true,
+                "exact_search_path": true,
+                "name": "correct_completed_performance_record"
+              }
+            ]
+          }
+        ],
+        "http_status": 201,
+        "observed_at_utc": "2026-10-25T07:18:27Z"
+      },
+      "rows": 18
+    },
+    {
+      "boolean_checks": 54,
+      "false_checks": [],
+      "name": "security-postcheck-function-sources",
+      "result": {
+        "data": [
+          {
+            "row_count": 18,
+            "rows": [
+              {
+                "exact_final_body": true,
+                "exactly_one_signature": true,
+                "expected_owner": true,
+                "name": "cohort_assert_completion_request_v1"
+              },
+              {
+                "exact_final_body": true,
+                "exactly_one_signature": true,
+                "expected_owner": true,
+                "name": "cohort_assert_record_parent_v1"
+              },
+              {
+                "exact_final_body": true,
+                "exactly_one_signature": true,
+                "expected_owner": true,
+                "name": "cohort_complete_backfilled_fixed_occurrence_at"
+              },
+              {
+                "exact_final_body": true,
+                "exactly_one_signature": true,
+                "expected_owner": true,
+                "name": "cohort_completion_backfill_body_v1"
+              },
+              {
+                "exact_final_body": true,
+                "exactly_one_signature": true,
+                "expected_owner": true,
+                "name": "cohort_completion_correction_body_v1"
+              },
+              {
+                "exact_final_body": true,
+                "exactly_one_signature": true,
+                "expected_owner": true,
+                "name": "cohort_completion_fixed_body_v1"
+              },
+              {
+                "exact_final_body": true,
+                "exactly_one_signature": true,
+                "expected_owner": true,
+                "name": "cohort_completion_programme_body_v1"
+              },
+              {
+                "exact_final_body": true,
+                "exactly_one_signature": true,
+                "expected_owner": true,
+                "name": "cohort_completion_standalone_body_v1"
+              },
+              {
+                "exact_final_body": true,
+                "exactly_one_signature": true,
+                "expected_owner": true,
+                "name": "cohort_guard_completion_record_identity_v1"
+              },
+              {
+                "exact_final_body": true,
+                "exactly_one_signature": true,
+                "expected_owner": true,
+                "name": "cohort_guard_direct_result_write_v1"
+              },
+              {
+                "exact_final_body": true,
+                "exactly_one_signature": true,
+                "expected_owner": true,
+                "name": "cohort_guard_result_identity_v1"
+              },
+              {
+                "exact_final_body": true,
+                "exactly_one_signature": true,
+                "expected_owner": true,
+                "name": "cohort_insert_training_session_result_tree"
+              },
+              {
+                "exact_final_body": true,
+                "exactly_one_signature": true,
+                "expected_owner": true,
+                "name": "cohort_sync_training_session_from_terminal_record"
+              },
+              {
+                "exact_final_body": true,
+                "exactly_one_signature": true,
+                "expected_owner": true,
+                "name": "complete_backfilled_fixed_programme_occurrence"
+              },
+              {
+                "exact_final_body": true,
+                "exactly_one_signature": true,
+                "expected_owner": true,
+                "name": "complete_fixed_programme_occurrence_and_advance"
+              },
+              {
+                "exact_final_body": true,
+                "exactly_one_signature": true,
+                "expected_owner": true,
+                "name": "complete_programme_session_and_advance"
+              },
+              {
+                "exact_final_body": true,
+                "exactly_one_signature": true,
+                "expected_owner": true,
+                "name": "complete_training_session_record"
+              },
+              {
+                "exact_final_body": true,
+                "exactly_one_signature": true,
+                "expected_owner": true,
+                "name": "correct_completed_performance_record"
+              }
+            ]
+          }
+        ],
+        "http_status": 201,
+        "observed_at_utc": "2026-10-25T07:18:29Z"
+      },
+      "rows": 18
+    },
+    {
+      "boolean_checks": 3,
+      "false_checks": [],
+      "name": "security-postcheck-ledger",
+      "result": {
+        "data": [
+          {
+            "row_count": 1,
+            "rows": [
+              {
+                "all_five_applied": true,
+                "expected_latest": true,
+                "expected_ledger_count": true
+              }
+            ]
+          }
+        ],
+        "http_status": 201,
+        "observed_at_utc": "2026-10-25T07:18:31Z"
+      },
+      "rows": 1
+    },
+    {
+      "boolean_checks": 16,
+      "false_checks": [],
+      "name": "security-postcheck-new-triggers",
+      "result": {
+        "data": [
+          {
+            "row_count": 8,
+            "rows": [
+              {
+                "expected_function": true,
+                "inspect_exact_event_and_column_set": "CREATE TRIGGER guard_direct_result_write_v1 BEFORE INSERT OR UPDATE ON training_block_results FOR EACH ROW EXECUTE FUNCTION cohort_guard_direct_result_write_v1()",
+                "present_enabled": true,
+                "relation": "training_block_results",
+                "trigger": "guard_direct_result_write_v1"
+              },
+              {
+                "expected_function": true,
+                "inspect_exact_event_and_column_set": "CREATE TRIGGER guard_result_identity_v1 BEFORE INSERT OR UPDATE ON training_block_results FOR EACH ROW EXECUTE FUNCTION cohort_guard_result_identity_v1()",
+                "present_enabled": true,
+                "relation": "training_block_results",
+                "trigger": "guard_result_identity_v1"
+              },
+              {
+                "expected_function": true,
+                "inspect_exact_event_and_column_set": "CREATE TRIGGER guard_direct_result_write_v1 BEFORE INSERT OR UPDATE ON training_exercise_results FOR EACH ROW EXECUTE FUNCTION cohort_guard_direct_result_write_v1()",
+                "present_enabled": true,
+                "relation": "training_exercise_results",
+                "trigger": "guard_direct_result_write_v1"
+              },
+              {
+                "expected_function": true,
+                "inspect_exact_event_and_column_set": "CREATE TRIGGER guard_result_identity_v1 BEFORE INSERT OR UPDATE ON training_exercise_results FOR EACH ROW EXECUTE FUNCTION cohort_guard_result_identity_v1()",
+                "present_enabled": true,
+                "relation": "training_exercise_results",
+                "trigger": "guard_result_identity_v1"
+              },
+              {
+                "expected_function": true,
+                "inspect_exact_event_and_column_set": "CREATE TRIGGER guard_completion_record_identity_v1 BEFORE INSERT OR UPDATE OF record_id, athlete_id, training_session_id, programme_id, assignment_id, programme_session_id, source_protocol_id, status ON training_session_records FOR EACH ROW EXECUTE FUNCTION cohort_guard_completion_record_identity_v1()",
+                "present_enabled": true,
+                "relation": "training_session_records",
+                "trigger": "guard_completion_record_identity_v1"
+              },
+              {
+                "expected_function": true,
+                "inspect_exact_event_and_column_set": "CREATE TRIGGER trg_sync_training_session_from_terminal_record AFTER INSERT OR UPDATE OF status ON training_session_records FOR EACH ROW EXECUTE FUNCTION cohort_sync_training_session_from_terminal_record()",
+                "present_enabled": true,
+                "relation": "training_session_records",
+                "trigger": "trg_sync_training_session_from_terminal_record"
+              },
+              {
+                "expected_function": true,
+                "inspect_exact_event_and_column_set": "CREATE TRIGGER guard_direct_result_write_v1 BEFORE INSERT OR UPDATE ON training_set_results FOR EACH ROW EXECUTE FUNCTION cohort_guard_direct_result_write_v1()",
+                "present_enabled": true,
+                "relation": "training_set_results",
+                "trigger": "guard_direct_result_write_v1"
+              },
+              {
+                "expected_function": true,
+                "inspect_exact_event_and_column_set": "CREATE TRIGGER guard_result_identity_v1 BEFORE INSERT OR UPDATE ON training_set_results FOR EACH ROW EXECUTE FUNCTION cohort_guard_result_identity_v1()",
+                "present_enabled": true,
+                "relation": "training_set_results",
+                "trigger": "guard_result_identity_v1"
+              }
+            ]
+          }
+        ],
+        "http_status": 201,
+        "observed_at_utc": "2026-10-25T07:18:32Z"
+      },
+      "rows": 8
+    },
+    {
+      "boolean_checks": 1,
+      "false_checks": [
+        {
+          "field": "all_other_policies_unchanged",
+          "row": 0
+        }
+      ],
+      "name": "security-postcheck-preserved-policies",
+      "result": {
+        "data": [
+          {
+            "row_count": 1,
+            "rows": [
+              {
+                "all_other_policies_unchanged": false
+              }
+            ]
+          }
+        ],
+        "http_status": 201,
+        "observed_at_utc": "2026-10-25T07:18:34Z"
+      },
+      "rows": 1
+    },
+    {
+      "boolean_checks": 128,
+      "false_checks": [],
+      "name": "security-postcheck-preserved-server-table-grants",
+      "result": {
+        "data": [
+          {
+            "row_count": 128,
+            "rows": [
+              {
+                "privilege": "DELETE",
+                "relation": "coach_athlete_relationships",
+                "role": "postgres",
+                "unchanged": true
+              },
+              {
+                "privilege": "INSERT",
+                "relation": "coach_athlete_relationships",
+                "role": "postgres",
+                "unchanged": true
+              },
+              {
+                "privilege": "MAINTAIN",
+                "relation": "coach_athlete_relationships",
+                "role": "postgres",
+                "unchanged": true
+              },
+              {
+                "privilege": "REFERENCES",
+                "relation": "coach_athlete_relationships",
+                "role": "postgres",
+                "unchanged": true
+              },
+              {
+                "privilege": "SELECT",
+                "relation": "coach_athlete_relationships",
+                "role": "postgres",
+                "unchanged": true
+              },
+              {
+                "privilege": "TRIGGER",
+                "relation": "coach_athlete_relationships",
+                "role": "postgres",
+                "unchanged": true
+              },
+              {
+                "privilege": "TRUNCATE",
+                "relation": "coach_athlete_relationships",
+                "role": "postgres",
+                "unchanged": true
+              },
+              {
+                "privilege": "UPDATE",
+                "relation": "coach_athlete_relationships",
+                "role": "postgres",
+                "unchanged": true
+              },
+              {
+                "privilege": "DELETE",
+                "relation": "coach_athlete_relationships",
+                "role": "service_role",
+                "unchanged": true
+              },
+              {
+                "privilege": "INSERT",
+                "relation": "coach_athlete_relationships",
+                "role": "service_role",
+                "unchanged": true
+              },
+              {
+                "privilege": "MAINTAIN",
+                "relation": "coach_athlete_relationships",
+                "role": "service_role",
+                "unchanged": true
+              },
+              {
+                "privilege": "REFERENCES",
+                "relation": "coach_athlete_relationships",
+                "role": "service_role",
+                "unchanged": true
+              },
+              {
+                "privilege": "SELECT",
+                "relation": "coach_athlete_relationships",
+                "role": "service_role",
+                "unchanged": true
+              },
+              {
+                "privilege": "TRIGGER",
+                "relation": "coach_athlete_relationships",
+                "role": "service_role",
+                "unchanged": true
+              },
+              {
+                "privilege": "TRUNCATE",
+                "relation": "coach_athlete_relationships",
+                "role": "service_role",
+                "unchanged": true
+              },
+              {
+                "privilege": "UPDATE",
+                "relation": "coach_athlete_relationships",
+                "role": "service_role",
+                "unchanged": true
+              },
+              {
+                "privilege": "DELETE",
+                "relation": "performance_result_corrections",
+                "role": "postgres",
+                "unchanged": true
+              },
+              {
+                "privilege": "INSERT",
+                "relation": "performance_result_corrections",
+                "role": "postgres",
+                "unchanged": true
+              },
+              {
+                "privilege": "MAINTAIN",
+                "relation": "performance_result_corrections",
+                "role": "postgres",
+                "unchanged": true
+              },
+              {
+                "privilege": "REFERENCES",
+                "relation": "performance_result_corrections",
+                "role": "postgres",
+                "unchanged": true
+              },
+              {
+                "privilege": "SELECT",
+                "relation": "performance_result_corrections",
+                "role": "postgres",
+                "unchanged": true
+              },
+              {
+                "privilege": "TRIGGER",
+                "relation": "performance_result_corrections",
+                "role": "postgres",
+                "unchanged": true
+              },
+              {
+                "privilege": "TRUNCATE",
+                "relation": "performance_result_corrections",
+                "role": "postgres",
+                "unchanged": true
+              },
+              {
+                "privilege": "UPDATE",
+                "relation": "performance_result_corrections",
+                "role": "postgres",
+                "unchanged": true
+              },
+              {
+                "privilege": "DELETE",
+                "relation": "performance_result_corrections",
+                "role": "service_role",
+                "unchanged": true
+              },
+              {
+                "privilege": "INSERT",
+                "relation": "performance_result_corrections",
+                "role": "service_role",
+                "unchanged": true
+              },
+              {
+                "privilege": "MAINTAIN",
+                "relation": "performance_result_corrections",
+                "role": "service_role",
+                "unchanged": true
+              },
+              {
+                "privilege": "REFERENCES",
+                "relation": "performance_result_corrections",
+                "role": "service_role",
+                "unchanged": true
+              },
+              {
+                "privilege": "SELECT",
+                "relation": "performance_result_corrections",
+                "role": "service_role",
+                "unchanged": true
+              },
+              {
+                "privilege": "TRIGGER",
+                "relation": "performance_result_corrections",
+                "role": "service_role",
+                "unchanged": true
+              },
+              {
+                "privilege": "TRUNCATE",
+                "relation": "performance_result_corrections",
+                "role": "service_role",
+                "unchanged": true
+              },
+              {
+                "privilege": "UPDATE",
+                "relation": "performance_result_corrections",
+                "role": "service_role",
+                "unchanged": true
+              },
+              {
+                "privilege": "DELETE",
+                "relation": "profiles",
+                "role": "postgres",
+                "unchanged": true
+              },
+              {
+                "privilege": "INSERT",
+                "relation": "profiles",
+                "role": "postgres",
+                "unchanged": true
+              },
+              {
+                "privilege": "MAINTAIN",
+                "relation": "profiles",
+                "role": "postgres",
+                "unchanged": true
+              },
+              {
+                "privilege": "REFERENCES",
+                "relation": "profiles",
+                "role": "postgres",
+                "unchanged": true
+              },
+              {
+                "privilege": "SELECT",
+                "relation": "profiles",
+                "role": "postgres",
+                "unchanged": true
+              },
+              {
+                "privilege": "TRIGGER",
+                "relation": "profiles",
+                "role": "postgres",
+                "unchanged": true
+              },
+              {
+                "privilege": "TRUNCATE",
+                "relation": "profiles",
+                "role": "postgres",
+                "unchanged": true
+              },
+              {
+                "privilege": "UPDATE",
+                "relation": "profiles",
+                "role": "postgres",
+                "unchanged": true
+              },
+              {
+                "privilege": "DELETE",
+                "relation": "profiles",
+                "role": "service_role",
+                "unchanged": true
+              },
+              {
+                "privilege": "INSERT",
+                "relation": "profiles",
+                "role": "service_role",
+                "unchanged": true
+              },
+              {
+                "privilege": "MAINTAIN",
+                "relation": "profiles",
+                "role": "service_role",
+                "unchanged": true
+              },
+              {
+                "privilege": "REFERENCES",
+                "relation": "profiles",
+                "role": "service_role",
+                "unchanged": true
+              },
+              {
+                "privilege": "SELECT",
+                "relation": "profiles",
+                "role": "service_role",
+                "unchanged": true
+              },
+              {
+                "privilege": "TRIGGER",
+                "relation": "profiles",
+                "role": "service_role",
+                "unchanged": true
+              },
+              {
+                "privilege": "TRUNCATE",
+                "relation": "profiles",
+                "role": "service_role",
+                "unchanged": true
+              },
+              {
+                "privilege": "UPDATE",
+                "relation": "profiles",
+                "role": "service_role",
+                "unchanged": true
+              },
+              {
+                "privilege": "DELETE",
+                "relation": "training_block_results",
+                "role": "postgres",
+                "unchanged": true
+              },
+              {
+                "privilege": "INSERT",
+                "relation": "training_block_results",
+                "role": "postgres",
+                "unchanged": true
+              },
+              {
+                "privilege": "MAINTAIN",
+                "relation": "training_block_results",
+                "role": "postgres",
+                "unchanged": true
+              },
+              {
+                "privilege": "REFERENCES",
+                "relation": "training_block_results",
+                "role": "postgres",
+                "unchanged": true
+              },
+              {
+                "privilege": "SELECT",
+                "relation": "training_block_results",
+                "role": "postgres",
+                "unchanged": true
+              },
+              {
+                "privilege": "TRIGGER",
+                "relation": "training_block_results",
+                "role": "postgres",
+                "unchanged": true
+              },
+              {
+                "privilege": "TRUNCATE",
+                "relation": "training_block_results",
+                "role": "postgres",
+                "unchanged": true
+              },
+              {
+                "privilege": "UPDATE",
+                "relation": "training_block_results",
+                "role": "postgres",
+                "unchanged": true
+              },
+              {
+                "privilege": "DELETE",
+                "relation": "training_block_results",
+                "role": "service_role",
+                "unchanged": true
+              },
+              {
+                "privilege": "INSERT",
+                "relation": "training_block_results",
+                "role": "service_role",
+                "unchanged": true
+              },
+              {
+                "privilege": "MAINTAIN",
+                "relation": "training_block_results",
+                "role": "service_role",
+                "unchanged": true
+              },
+              {
+                "privilege": "REFERENCES",
+                "relation": "training_block_results",
+                "role": "service_role",
+                "unchanged": true
+              },
+              {
+                "privilege": "SELECT",
+                "relation": "training_block_results",
+                "role": "service_role",
+                "unchanged": true
+              },
+              {
+                "privilege": "TRIGGER",
+                "relation": "training_block_results",
+                "role": "service_role",
+                "unchanged": true
+              },
+              {
+                "privilege": "TRUNCATE",
+                "relation": "training_block_results",
+                "role": "service_role",
+                "unchanged": true
+              },
+              {
+                "privilege": "UPDATE",
+                "relation": "training_block_results",
+                "role": "service_role",
+                "unchanged": true
+              },
+              {
+                "privilege": "DELETE",
+                "relation": "training_exercise_results",
+                "role": "postgres",
+                "unchanged": true
+              },
+              {
+                "privilege": "INSERT",
+                "relation": "training_exercise_results",
+                "role": "postgres",
+                "unchanged": true
+              },
+              {
+                "privilege": "MAINTAIN",
+                "relation": "training_exercise_results",
+                "role": "postgres",
+                "unchanged": true
+              },
+              {
+                "privilege": "REFERENCES",
+                "relation": "training_exercise_results",
+                "role": "postgres",
+                "unchanged": true
+              },
+              {
+                "privilege": "SELECT",
+                "relation": "training_exercise_results",
+                "role": "postgres",
+                "unchanged": true
+              },
+              {
+                "privilege": "TRIGGER",
+                "relation": "training_exercise_results",
+                "role": "postgres",
+                "unchanged": true
+              },
+              {
+                "privilege": "TRUNCATE",
+                "relation": "training_exercise_results",
+                "role": "postgres",
+                "unchanged": true
+              },
+              {
+                "privilege": "UPDATE",
+                "relation": "training_exercise_results",
+                "role": "postgres",
+                "unchanged": true
+              },
+              {
+                "privilege": "DELETE",
+                "relation": "training_exercise_results",
+                "role": "service_role",
+                "unchanged": true
+              },
+              {
+                "privilege": "INSERT",
+                "relation": "training_exercise_results",
+                "role": "service_role",
+                "unchanged": true
+              },
+              {
+                "privilege": "MAINTAIN",
+                "relation": "training_exercise_results",
+                "role": "service_role",
+                "unchanged": true
+              },
+              {
+                "privilege": "REFERENCES",
+                "relation": "training_exercise_results",
+                "role": "service_role",
+                "unchanged": true
+              },
+              {
+                "privilege": "SELECT",
+                "relation": "training_exercise_results",
+                "role": "service_role",
+                "unchanged": true
+              },
+              {
+                "privilege": "TRIGGER",
+                "relation": "training_exercise_results",
+                "role": "service_role",
+                "unchanged": true
+              },
+              {
+                "privilege": "TRUNCATE",
+                "relation": "training_exercise_results",
+                "role": "service_role",
+                "unchanged": true
+              },
+              {
+                "privilege": "UPDATE",
+                "relation": "training_exercise_results",
+                "role": "service_role",
+                "unchanged": true
+              },
+              {
+                "privilege": "DELETE",
+                "relation": "training_session_records",
+                "role": "postgres",
+                "unchanged": true
+              },
+              {
+                "privilege": "INSERT",
+                "relation": "training_session_records",
+                "role": "postgres",
+                "unchanged": true
+              },
+              {
+                "privilege": "MAINTAIN",
+                "relation": "training_session_records",
+                "role": "postgres",
+                "unchanged": true
+              },
+              {
+                "privilege": "REFERENCES",
+                "relation": "training_session_records",
+                "role": "postgres",
+                "unchanged": true
+              },
+              {
+                "privilege": "SELECT",
+                "relation": "training_session_records",
+                "role": "postgres",
+                "unchanged": true
+              },
+              {
+                "privilege": "TRIGGER",
+                "relation": "training_session_records",
+                "role": "postgres",
+                "unchanged": true
+              },
+              {
+                "privilege": "TRUNCATE",
+                "relation": "training_session_records",
+                "role": "postgres",
+                "unchanged": true
+              },
+              {
+                "privilege": "UPDATE",
+                "relation": "training_session_records",
+                "role": "postgres",
+                "unchanged": true
+              },
+              {
+                "privilege": "DELETE",
+                "relation": "training_session_records",
+                "role": "service_role",
+                "unchanged": true
+              },
+              {
+                "privilege": "INSERT",
+                "relation": "training_session_records",
+                "role": "service_role",
+                "unchanged": true
+              },
+              {
+                "privilege": "MAINTAIN",
+                "relation": "training_session_records",
+                "role": "service_role",
+                "unchanged": true
+              },
+              {
+                "privilege": "REFERENCES",
+                "relation": "training_session_records",
+                "role": "service_role",
+                "unchanged": true
+              },
+              {
+                "privilege": "SELECT",
+                "relation": "training_session_records",
+                "role": "service_role",
+                "unchanged": true
+              },
+              {
+                "privilege": "TRIGGER",
+                "relation": "training_session_records",
+                "role": "service_role",
+                "unchanged": true
+              },
+              {
+                "privilege": "TRUNCATE",
+                "relation": "training_session_records",
+                "role": "service_role",
+                "unchanged": true
+              },
+              {
+                "privilege": "UPDATE",
+                "relation": "training_session_records",
+                "role": "service_role",
+                "unchanged": true
+              },
+              {
+                "privilege": "DELETE",
+                "relation": "training_sessions",
+                "role": "postgres",
+                "unchanged": true
+              },
+              {
+                "privilege": "INSERT",
+                "relation": "training_sessions",
+                "role": "postgres",
+                "unchanged": true
+              },
+              {
+                "privilege": "MAINTAIN",
+                "relation": "training_sessions",
+                "role": "postgres",
+                "unchanged": true
+              },
+              {
+                "privilege": "REFERENCES",
+                "relation": "training_sessions",
+                "role": "postgres",
+                "unchanged": true
+              },
+              {
+                "privilege": "SELECT",
+                "relation": "training_sessions",
+                "role": "postgres",
+                "unchanged": true
+              },
+              {
+                "privilege": "TRIGGER",
+                "relation": "training_sessions",
+                "role": "postgres",
+                "unchanged": true
+              },
+              {
+                "privilege": "TRUNCATE",
+                "relation": "training_sessions",
+                "role": "postgres",
+                "unchanged": true
+              },
+              {
+                "privilege": "UPDATE",
+                "relation": "training_sessions",
+                "role": "postgres",
+                "unchanged": true
+              },
+              {
+                "privilege": "DELETE",
+                "relation": "training_sessions",
+                "role": "service_role",
+                "unchanged": true
+              },
+              {
+                "privilege": "INSERT",
+                "relation": "training_sessions",
+                "role": "service_role",
+                "unchanged": true
+              },
+              {
+                "privilege": "MAINTAIN",
+                "relation": "training_sessions",
+                "role": "service_role",
+                "unchanged": true
+              },
+              {
+                "privilege": "REFERENCES",
+                "relation": "training_sessions",
+                "role": "service_role",
+                "unchanged": true
+              },
+              {
+                "privilege": "SELECT",
+                "relation": "training_sessions",
+                "role": "service_role",
+                "unchanged": true
+              },
+              {
+                "privilege": "TRIGGER",
+                "relation": "training_sessions",
+                "role": "service_role",
+                "unchanged": true
+              },
+              {
+                "privilege": "TRUNCATE",
+                "relation": "training_sessions",
+                "role": "service_role",
+                "unchanged": true
+              },
+              {
+                "privilege": "UPDATE",
+                "relation": "training_sessions",
+                "role": "service_role",
+                "unchanged": true
+              },
+              {
+                "privilege": "DELETE",
+                "relation": "training_set_results",
+                "role": "postgres",
+                "unchanged": true
+              },
+              {
+                "privilege": "INSERT",
+                "relation": "training_set_results",
+                "role": "postgres",
+                "unchanged": true
+              },
+              {
+                "privilege": "MAINTAIN",
+                "relation": "training_set_results",
+                "role": "postgres",
+                "unchanged": true
+              },
+              {
+                "privilege": "REFERENCES",
+                "relation": "training_set_results",
+                "role": "postgres",
+                "unchanged": true
+              },
+              {
+                "privilege": "SELECT",
+                "relation": "training_set_results",
+                "role": "postgres",
+                "unchanged": true
+              },
+              {
+                "privilege": "TRIGGER",
+                "relation": "training_set_results",
+                "role": "postgres",
+                "unchanged": true
+              },
+              {
+                "privilege": "TRUNCATE",
+                "relation": "training_set_results",
+                "role": "postgres",
+                "unchanged": true
+              },
+              {
+                "privilege": "UPDATE",
+                "relation": "training_set_results",
+                "role": "postgres",
+                "unchanged": true
+              },
+              {
+                "privilege": "DELETE",
+                "relation": "training_set_results",
+                "role": "service_role",
+                "unchanged": true
+              },
+              {
+                "privilege": "INSERT",
+                "relation": "training_set_results",
+                "role": "service_role",
+                "unchanged": true
+              },
+              {
+                "privilege": "MAINTAIN",
+                "relation": "training_set_results",
+                "role": "service_role",
+                "unchanged": true
+              },
+              {
+                "privilege": "REFERENCES",
+                "relation": "training_set_results",
+                "role": "service_role",
+                "unchanged": true
+              },
+              {
+                "privilege": "SELECT",
+                "relation": "training_set_results",
+                "role": "service_role",
+                "unchanged": true
+              },
+              {
+                "privilege": "TRIGGER",
+                "relation": "training_set_results",
+                "role": "service_role",
+                "unchanged": true
+              },
+              {
+                "privilege": "TRUNCATE",
+                "relation": "training_set_results",
+                "role": "service_role",
+                "unchanged": true
+              },
+              {
+                "privilege": "UPDATE",
+                "relation": "training_set_results",
+                "role": "service_role",
+                "unchanged": true
+              }
+            ]
+          }
+        ],
+        "http_status": 201,
+        "observed_at_utc": "2026-10-25T07:18:36Z"
+      },
+      "rows": 128
+    },
+    {
+      "boolean_checks": 39,
+      "false_checks": [],
+      "name": "security-postcheck-private-function-acls",
+      "result": {
+        "data": [
+          {
+            "row_count": 13,
+            "rows": [
+              {
+                "denied_to_all_client_server_roles": true,
+                "name": "cohort_assert_completion_request_v1",
+                "owner_only": true,
+                "present": true
+              },
+              {
+                "denied_to_all_client_server_roles": true,
+                "name": "cohort_assert_record_parent_v1",
+                "owner_only": true,
+                "present": true
+              },
+              {
+                "denied_to_all_client_server_roles": true,
+                "name": "cohort_complete_backfilled_fixed_occurrence_at",
+                "owner_only": true,
+                "present": true
+              },
+              {
+                "denied_to_all_client_server_roles": true,
+                "name": "cohort_completion_backfill_body_v1",
+                "owner_only": true,
+                "present": true
+              },
+              {
+                "denied_to_all_client_server_roles": true,
+                "name": "cohort_completion_correction_body_v1",
+                "owner_only": true,
+                "present": true
+              },
+              {
+                "denied_to_all_client_server_roles": true,
+                "name": "cohort_completion_fixed_body_v1",
+                "owner_only": true,
+                "present": true
+              },
+              {
+                "denied_to_all_client_server_roles": true,
+                "name": "cohort_completion_programme_body_v1",
+                "owner_only": true,
+                "present": true
+              },
+              {
+                "denied_to_all_client_server_roles": true,
+                "name": "cohort_completion_standalone_body_v1",
+                "owner_only": true,
+                "present": true
+              },
+              {
+                "denied_to_all_client_server_roles": true,
+                "name": "cohort_guard_completion_record_identity_v1",
+                "owner_only": true,
+                "present": true
+              },
+              {
+                "denied_to_all_client_server_roles": true,
+                "name": "cohort_guard_direct_result_write_v1",
+                "owner_only": true,
+                "present": true
+              },
+              {
+                "denied_to_all_client_server_roles": true,
+                "name": "cohort_guard_result_identity_v1",
+                "owner_only": true,
+                "present": true
+              },
+              {
+                "denied_to_all_client_server_roles": true,
+                "name": "cohort_insert_training_session_result_tree",
+                "owner_only": true,
+                "present": true
+              },
+              {
+                "denied_to_all_client_server_roles": true,
+                "name": "cohort_sync_training_session_from_terminal_record",
+                "owner_only": true,
+                "present": true
+              }
+            ]
+          }
+        ],
+        "http_status": 201,
+        "observed_at_utc": "2026-10-25T07:18:38Z"
+      },
+      "rows": 13
+    },
+    {
+      "boolean_checks": 30,
+      "false_checks": [],
+      "name": "security-postcheck-public-function-acls",
+      "result": {
+        "data": [
+          {
+            "row_count": 5,
+            "rows": [
+              {
+                "anon_denied": true,
+                "authenticated_execute": true,
+                "definer": true,
+                "exact_service_role_access": true,
+                "name": "complete_backfilled_fixed_programme_occurrence",
+                "no_other_principal": true,
+                "present": true
+              },
+              {
+                "anon_denied": true,
+                "authenticated_execute": true,
+                "definer": true,
+                "exact_service_role_access": true,
+                "name": "complete_fixed_programme_occurrence_and_advance",
+                "no_other_principal": true,
+                "present": true
+              },
+              {
+                "anon_denied": true,
+                "authenticated_execute": true,
+                "definer": true,
+                "exact_service_role_access": true,
+                "name": "complete_programme_session_and_advance",
+                "no_other_principal": true,
+                "present": true
+              },
+              {
+                "anon_denied": true,
+                "authenticated_execute": true,
+                "definer": true,
+                "exact_service_role_access": true,
+                "name": "complete_training_session_record",
+                "no_other_principal": true,
+                "present": true
+              },
+              {
+                "anon_denied": true,
+                "authenticated_execute": true,
+                "definer": true,
+                "exact_service_role_access": true,
+                "name": "correct_completed_performance_record",
+                "no_other_principal": true,
+                "present": true
+              }
+            ]
+          }
+        ],
+        "http_status": 201,
+        "observed_at_utc": "2026-10-25T07:18:40Z"
+      },
+      "rows": 5
+    },
+    {
+      "boolean_checks": 12,
+      "false_checks": [],
+      "name": "security-postcheck-sequence-acls",
+      "result": {
+        "data": [
+          {
+            "row_count": 6,
+            "rows": [
+              {
+                "denied": true,
+                "privilege": "SELECT",
+                "public_absent": true,
+                "rolname": "anon"
+              },
+              {
+                "denied": true,
+                "privilege": "UPDATE",
+                "public_absent": true,
+                "rolname": "anon"
+              },
+              {
+                "denied": true,
+                "privilege": "USAGE",
+                "public_absent": true,
+                "rolname": "anon"
+              },
+              {
+                "denied": true,
+                "privilege": "SELECT",
+                "public_absent": true,
+                "rolname": "authenticated"
+              },
+              {
+                "denied": true,
+                "privilege": "UPDATE",
+                "public_absent": true,
+                "rolname": "authenticated"
+              },
+              {
+                "denied": true,
+                "privilege": "USAGE",
+                "public_absent": true,
+                "rolname": "authenticated"
+              }
+            ]
+          }
+        ],
+        "http_status": 201,
+        "observed_at_utc": "2026-10-25T07:18:42Z"
+      },
+      "rows": 6
+    },
+    {
+      "boolean_checks": 3,
+      "false_checks": [],
+      "name": "security-postcheck-session-rls",
+      "result": {
+        "data": [
+          {
+            "row_count": 1,
+            "rows": [
+              {
+                "enabled_expected_force": true,
+                "exact_owner_select_policy": true,
+                "exactly_one_policy": true,
+                "inspect_exact_owner_and_athlete_predicate": "((athlete_id = (auth.uid())::text) AND cohort_auth_is_athlete())"
+              }
+            ]
+          }
+        ],
+        "http_status": 201,
+        "observed_at_utc": "2026-10-25T07:18:44Z"
+      },
+      "rows": 1
+    },
+    {
+      "boolean_checks": 128,
+      "false_checks": [],
+      "name": "security-postcheck-table-acls",
+      "result": {
+        "data": [
+          {
+            "row_count": 128,
+            "rows": [
+              {
+                "exact_access": true,
+                "name": "coach_athlete_relationships",
+                "privilege": "DELETE",
+                "rolname": "anon"
+              },
+              {
+                "exact_access": true,
+                "name": "coach_athlete_relationships",
+                "privilege": "INSERT",
+                "rolname": "anon"
+              },
+              {
+                "exact_access": true,
+                "name": "coach_athlete_relationships",
+                "privilege": "MAINTAIN",
+                "rolname": "anon"
+              },
+              {
+                "exact_access": true,
+                "name": "coach_athlete_relationships",
+                "privilege": "REFERENCES",
+                "rolname": "anon"
+              },
+              {
+                "exact_access": true,
+                "name": "coach_athlete_relationships",
+                "privilege": "SELECT",
+                "rolname": "anon"
+              },
+              {
+                "exact_access": true,
+                "name": "coach_athlete_relationships",
+                "privilege": "TRIGGER",
+                "rolname": "anon"
+              },
+              {
+                "exact_access": true,
+                "name": "coach_athlete_relationships",
+                "privilege": "TRUNCATE",
+                "rolname": "anon"
+              },
+              {
+                "exact_access": true,
+                "name": "coach_athlete_relationships",
+                "privilege": "UPDATE",
+                "rolname": "anon"
+              },
+              {
+                "exact_access": true,
+                "name": "coach_athlete_relationships",
+                "privilege": "DELETE",
+                "rolname": "authenticated"
+              },
+              {
+                "exact_access": true,
+                "name": "coach_athlete_relationships",
+                "privilege": "INSERT",
+                "rolname": "authenticated"
+              },
+              {
+                "exact_access": true,
+                "name": "coach_athlete_relationships",
+                "privilege": "MAINTAIN",
+                "rolname": "authenticated"
+              },
+              {
+                "exact_access": true,
+                "name": "coach_athlete_relationships",
+                "privilege": "REFERENCES",
+                "rolname": "authenticated"
+              },
+              {
+                "exact_access": true,
+                "name": "coach_athlete_relationships",
+                "privilege": "SELECT",
+                "rolname": "authenticated"
+              },
+              {
+                "exact_access": true,
+                "name": "coach_athlete_relationships",
+                "privilege": "TRIGGER",
+                "rolname": "authenticated"
+              },
+              {
+                "exact_access": true,
+                "name": "coach_athlete_relationships",
+                "privilege": "TRUNCATE",
+                "rolname": "authenticated"
+              },
+              {
+                "exact_access": true,
+                "name": "coach_athlete_relationships",
+                "privilege": "UPDATE",
+                "rolname": "authenticated"
+              },
+              {
+                "exact_access": true,
+                "name": "performance_result_corrections",
+                "privilege": "DELETE",
+                "rolname": "anon"
+              },
+              {
+                "exact_access": true,
+                "name": "performance_result_corrections",
+                "privilege": "INSERT",
+                "rolname": "anon"
+              },
+              {
+                "exact_access": true,
+                "name": "performance_result_corrections",
+                "privilege": "MAINTAIN",
+                "rolname": "anon"
+              },
+              {
+                "exact_access": true,
+                "name": "performance_result_corrections",
+                "privilege": "REFERENCES",
+                "rolname": "anon"
+              },
+              {
+                "exact_access": true,
+                "name": "performance_result_corrections",
+                "privilege": "SELECT",
+                "rolname": "anon"
+              },
+              {
+                "exact_access": true,
+                "name": "performance_result_corrections",
+                "privilege": "TRIGGER",
+                "rolname": "anon"
+              },
+              {
+                "exact_access": true,
+                "name": "performance_result_corrections",
+                "privilege": "TRUNCATE",
+                "rolname": "anon"
+              },
+              {
+                "exact_access": true,
+                "name": "performance_result_corrections",
+                "privilege": "UPDATE",
+                "rolname": "anon"
+              },
+              {
+                "exact_access": true,
+                "name": "performance_result_corrections",
+                "privilege": "DELETE",
+                "rolname": "authenticated"
+              },
+              {
+                "exact_access": true,
+                "name": "performance_result_corrections",
+                "privilege": "INSERT",
+                "rolname": "authenticated"
+              },
+              {
+                "exact_access": true,
+                "name": "performance_result_corrections",
+                "privilege": "MAINTAIN",
+                "rolname": "authenticated"
+              },
+              {
+                "exact_access": true,
+                "name": "performance_result_corrections",
+                "privilege": "REFERENCES",
+                "rolname": "authenticated"
+              },
+              {
+                "exact_access": true,
+                "name": "performance_result_corrections",
+                "privilege": "SELECT",
+                "rolname": "authenticated"
+              },
+              {
+                "exact_access": true,
+                "name": "performance_result_corrections",
+                "privilege": "TRIGGER",
+                "rolname": "authenticated"
+              },
+              {
+                "exact_access": true,
+                "name": "performance_result_corrections",
+                "privilege": "TRUNCATE",
+                "rolname": "authenticated"
+              },
+              {
+                "exact_access": true,
+                "name": "performance_result_corrections",
+                "privilege": "UPDATE",
+                "rolname": "authenticated"
+              },
+              {
+                "exact_access": true,
+                "name": "profiles",
+                "privilege": "DELETE",
+                "rolname": "anon"
+              },
+              {
+                "exact_access": true,
+                "name": "profiles",
+                "privilege": "INSERT",
+                "rolname": "anon"
+              },
+              {
+                "exact_access": true,
+                "name": "profiles",
+                "privilege": "MAINTAIN",
+                "rolname": "anon"
+              },
+              {
+                "exact_access": true,
+                "name": "profiles",
+                "privilege": "REFERENCES",
+                "rolname": "anon"
+              },
+              {
+                "exact_access": true,
+                "name": "profiles",
+                "privilege": "SELECT",
+                "rolname": "anon"
+              },
+              {
+                "exact_access": true,
+                "name": "profiles",
+                "privilege": "TRIGGER",
+                "rolname": "anon"
+              },
+              {
+                "exact_access": true,
+                "name": "profiles",
+                "privilege": "TRUNCATE",
+                "rolname": "anon"
+              },
+              {
+                "exact_access": true,
+                "name": "profiles",
+                "privilege": "UPDATE",
+                "rolname": "anon"
+              },
+              {
+                "exact_access": true,
+                "name": "profiles",
+                "privilege": "DELETE",
+                "rolname": "authenticated"
+              },
+              {
+                "exact_access": true,
+                "name": "profiles",
+                "privilege": "INSERT",
+                "rolname": "authenticated"
+              },
+              {
+                "exact_access": true,
+                "name": "profiles",
+                "privilege": "MAINTAIN",
+                "rolname": "authenticated"
+              },
+              {
+                "exact_access": true,
+                "name": "profiles",
+                "privilege": "REFERENCES",
+                "rolname": "authenticated"
+              },
+              {
+                "exact_access": true,
+                "name": "profiles",
+                "privilege": "SELECT",
+                "rolname": "authenticated"
+              },
+              {
+                "exact_access": true,
+                "name": "profiles",
+                "privilege": "TRIGGER",
+                "rolname": "authenticated"
+              },
+              {
+                "exact_access": true,
+                "name": "profiles",
+                "privilege": "TRUNCATE",
+                "rolname": "authenticated"
+              },
+              {
+                "exact_access": true,
+                "name": "profiles",
+                "privilege": "UPDATE",
+                "rolname": "authenticated"
+              },
+              {
+                "exact_access": true,
+                "name": "training_block_results",
+                "privilege": "DELETE",
+                "rolname": "anon"
+              },
+              {
+                "exact_access": true,
+                "name": "training_block_results",
+                "privilege": "INSERT",
+                "rolname": "anon"
+              },
+              {
+                "exact_access": true,
+                "name": "training_block_results",
+                "privilege": "MAINTAIN",
+                "rolname": "anon"
+              },
+              {
+                "exact_access": true,
+                "name": "training_block_results",
+                "privilege": "REFERENCES",
+                "rolname": "anon"
+              },
+              {
+                "exact_access": true,
+                "name": "training_block_results",
+                "privilege": "SELECT",
+                "rolname": "anon"
+              },
+              {
+                "exact_access": true,
+                "name": "training_block_results",
+                "privilege": "TRIGGER",
+                "rolname": "anon"
+              },
+              {
+                "exact_access": true,
+                "name": "training_block_results",
+                "privilege": "TRUNCATE",
+                "rolname": "anon"
+              },
+              {
+                "exact_access": true,
+                "name": "training_block_results",
+                "privilege": "UPDATE",
+                "rolname": "anon"
+              },
+              {
+                "exact_access": true,
+                "name": "training_block_results",
+                "privilege": "DELETE",
+                "rolname": "authenticated"
+              },
+              {
+                "exact_access": true,
+                "name": "training_block_results",
+                "privilege": "INSERT",
+                "rolname": "authenticated"
+              },
+              {
+                "exact_access": true,
+                "name": "training_block_results",
+                "privilege": "MAINTAIN",
+                "rolname": "authenticated"
+              },
+              {
+                "exact_access": true,
+                "name": "training_block_results",
+                "privilege": "REFERENCES",
+                "rolname": "authenticated"
+              },
+              {
+                "exact_access": true,
+                "name": "training_block_results",
+                "privilege": "SELECT",
+                "rolname": "authenticated"
+              },
+              {
+                "exact_access": true,
+                "name": "training_block_results",
+                "privilege": "TRIGGER",
+                "rolname": "authenticated"
+              },
+              {
+                "exact_access": true,
+                "name": "training_block_results",
+                "privilege": "TRUNCATE",
+                "rolname": "authenticated"
+              },
+              {
+                "exact_access": true,
+                "name": "training_block_results",
+                "privilege": "UPDATE",
+                "rolname": "authenticated"
+              },
+              {
+                "exact_access": true,
+                "name": "training_exercise_results",
+                "privilege": "DELETE",
+                "rolname": "anon"
+              },
+              {
+                "exact_access": true,
+                "name": "training_exercise_results",
+                "privilege": "INSERT",
+                "rolname": "anon"
+              },
+              {
+                "exact_access": true,
+                "name": "training_exercise_results",
+                "privilege": "MAINTAIN",
+                "rolname": "anon"
+              },
+              {
+                "exact_access": true,
+                "name": "training_exercise_results",
+                "privilege": "REFERENCES",
+                "rolname": "anon"
+              },
+              {
+                "exact_access": true,
+                "name": "training_exercise_results",
+                "privilege": "SELECT",
+                "rolname": "anon"
+              },
+              {
+                "exact_access": true,
+                "name": "training_exercise_results",
+                "privilege": "TRIGGER",
+                "rolname": "anon"
+              },
+              {
+                "exact_access": true,
+                "name": "training_exercise_results",
+                "privilege": "TRUNCATE",
+                "rolname": "anon"
+              },
+              {
+                "exact_access": true,
+                "name": "training_exercise_results",
+                "privilege": "UPDATE",
+                "rolname": "anon"
+              },
+              {
+                "exact_access": true,
+                "name": "training_exercise_results",
+                "privilege": "DELETE",
+                "rolname": "authenticated"
+              },
+              {
+                "exact_access": true,
+                "name": "training_exercise_results",
+                "privilege": "INSERT",
+                "rolname": "authenticated"
+              },
+              {
+                "exact_access": true,
+                "name": "training_exercise_results",
+                "privilege": "MAINTAIN",
+                "rolname": "authenticated"
+              },
+              {
+                "exact_access": true,
+                "name": "training_exercise_results",
+                "privilege": "REFERENCES",
+                "rolname": "authenticated"
+              },
+              {
+                "exact_access": true,
+                "name": "training_exercise_results",
+                "privilege": "SELECT",
+                "rolname": "authenticated"
+              },
+              {
+                "exact_access": true,
+                "name": "training_exercise_results",
+                "privilege": "TRIGGER",
+                "rolname": "authenticated"
+              },
+              {
+                "exact_access": true,
+                "name": "training_exercise_results",
+                "privilege": "TRUNCATE",
+                "rolname": "authenticated"
+              },
+              {
+                "exact_access": true,
+                "name": "training_exercise_results",
+                "privilege": "UPDATE",
+                "rolname": "authenticated"
+              },
+              {
+                "exact_access": true,
+                "name": "training_session_records",
+                "privilege": "DELETE",
+                "rolname": "anon"
+              },
+              {
+                "exact_access": true,
+                "name": "training_session_records",
+                "privilege": "INSERT",
+                "rolname": "anon"
+              },
+              {
+                "exact_access": true,
+                "name": "training_session_records",
+                "privilege": "MAINTAIN",
+                "rolname": "anon"
+              },
+              {
+                "exact_access": true,
+                "name": "training_session_records",
+                "privilege": "REFERENCES",
+                "rolname": "anon"
+              },
+              {
+                "exact_access": true,
+                "name": "training_session_records",
+                "privilege": "SELECT",
+                "rolname": "anon"
+              },
+              {
+                "exact_access": true,
+                "name": "training_session_records",
+                "privilege": "TRIGGER",
+                "rolname": "anon"
+              },
+              {
+                "exact_access": true,
+                "name": "training_session_records",
+                "privilege": "TRUNCATE",
+                "rolname": "anon"
+              },
+              {
+                "exact_access": true,
+                "name": "training_session_records",
+                "privilege": "UPDATE",
+                "rolname": "anon"
+              },
+              {
+                "exact_access": true,
+                "name": "training_session_records",
+                "privilege": "DELETE",
+                "rolname": "authenticated"
+              },
+              {
+                "exact_access": true,
+                "name": "training_session_records",
+                "privilege": "INSERT",
+                "rolname": "authenticated"
+              },
+              {
+                "exact_access": true,
+                "name": "training_session_records",
+                "privilege": "MAINTAIN",
+                "rolname": "authenticated"
+              },
+              {
+                "exact_access": true,
+                "name": "training_session_records",
+                "privilege": "REFERENCES",
+                "rolname": "authenticated"
+              },
+              {
+                "exact_access": true,
+                "name": "training_session_records",
+                "privilege": "SELECT",
+                "rolname": "authenticated"
+              },
+              {
+                "exact_access": true,
+                "name": "training_session_records",
+                "privilege": "TRIGGER",
+                "rolname": "authenticated"
+              },
+              {
+                "exact_access": true,
+                "name": "training_session_records",
+                "privilege": "TRUNCATE",
+                "rolname": "authenticated"
+              },
+              {
+                "exact_access": true,
+                "name": "training_session_records",
+                "privilege": "UPDATE",
+                "rolname": "authenticated"
+              },
+              {
+                "exact_access": true,
+                "name": "training_sessions",
+                "privilege": "DELETE",
+                "rolname": "anon"
+              },
+              {
+                "exact_access": true,
+                "name": "training_sessions",
+                "privilege": "INSERT",
+                "rolname": "anon"
+              },
+              {
+                "exact_access": true,
+                "name": "training_sessions",
+                "privilege": "MAINTAIN",
+                "rolname": "anon"
+              },
+              {
+                "exact_access": true,
+                "name": "training_sessions",
+                "privilege": "REFERENCES",
+                "rolname": "anon"
+              },
+              {
+                "exact_access": true,
+                "name": "training_sessions",
+                "privilege": "SELECT",
+                "rolname": "anon"
+              },
+              {
+                "exact_access": true,
+                "name": "training_sessions",
+                "privilege": "TRIGGER",
+                "rolname": "anon"
+              },
+              {
+                "exact_access": true,
+                "name": "training_sessions",
+                "privilege": "TRUNCATE",
+                "rolname": "anon"
+              },
+              {
+                "exact_access": true,
+                "name": "training_sessions",
+                "privilege": "UPDATE",
+                "rolname": "anon"
+              },
+              {
+                "exact_access": true,
+                "name": "training_sessions",
+                "privilege": "DELETE",
+                "rolname": "authenticated"
+              },
+              {
+                "exact_access": true,
+                "name": "training_sessions",
+                "privilege": "INSERT",
+                "rolname": "authenticated"
+              },
+              {
+                "exact_access": true,
+                "name": "training_sessions",
+                "privilege": "MAINTAIN",
+                "rolname": "authenticated"
+              },
+              {
+                "exact_access": true,
+                "name": "training_sessions",
+                "privilege": "REFERENCES",
+                "rolname": "authenticated"
+              },
+              {
+                "exact_access": true,
+                "name": "training_sessions",
+                "privilege": "SELECT",
+                "rolname": "authenticated"
+              },
+              {
+                "exact_access": true,
+                "name": "training_sessions",
+                "privilege": "TRIGGER",
+                "rolname": "authenticated"
+              },
+              {
+                "exact_access": true,
+                "name": "training_sessions",
+                "privilege": "TRUNCATE",
+                "rolname": "authenticated"
+              },
+              {
+                "exact_access": true,
+                "name": "training_sessions",
+                "privilege": "UPDATE",
+                "rolname": "authenticated"
+              },
+              {
+                "exact_access": true,
+                "name": "training_set_results",
+                "privilege": "DELETE",
+                "rolname": "anon"
+              },
+              {
+                "exact_access": true,
+                "name": "training_set_results",
+                "privilege": "INSERT",
+                "rolname": "anon"
+              },
+              {
+                "exact_access": true,
+                "name": "training_set_results",
+                "privilege": "MAINTAIN",
+                "rolname": "anon"
+              },
+              {
+                "exact_access": true,
+                "name": "training_set_results",
+                "privilege": "REFERENCES",
+                "rolname": "anon"
+              },
+              {
+                "exact_access": true,
+                "name": "training_set_results",
+                "privilege": "SELECT",
+                "rolname": "anon"
+              },
+              {
+                "exact_access": true,
+                "name": "training_set_results",
+                "privilege": "TRIGGER",
+                "rolname": "anon"
+              },
+              {
+                "exact_access": true,
+                "name": "training_set_results",
+                "privilege": "TRUNCATE",
+                "rolname": "anon"
+              },
+              {
+                "exact_access": true,
+                "name": "training_set_results",
+                "privilege": "UPDATE",
+                "rolname": "anon"
+              },
+              {
+                "exact_access": true,
+                "name": "training_set_results",
+                "privilege": "DELETE",
+                "rolname": "authenticated"
+              },
+              {
+                "exact_access": true,
+                "name": "training_set_results",
+                "privilege": "INSERT",
+                "rolname": "authenticated"
+              },
+              {
+                "exact_access": true,
+                "name": "training_set_results",
+                "privilege": "MAINTAIN",
+                "rolname": "authenticated"
+              },
+              {
+                "exact_access": true,
+                "name": "training_set_results",
+                "privilege": "REFERENCES",
+                "rolname": "authenticated"
+              },
+              {
+                "exact_access": true,
+                "name": "training_set_results",
+                "privilege": "SELECT",
+                "rolname": "authenticated"
+              },
+              {
+                "exact_access": true,
+                "name": "training_set_results",
+                "privilege": "TRIGGER",
+                "rolname": "authenticated"
+              },
+              {
+                "exact_access": true,
+                "name": "training_set_results",
+                "privilege": "TRUNCATE",
+                "rolname": "authenticated"
+              },
+              {
+                "exact_access": true,
+                "name": "training_set_results",
+                "privilege": "UPDATE",
+                "rolname": "authenticated"
+              }
+            ]
+          }
+        ],
+        "http_status": 201,
+        "observed_at_utc": "2026-10-25T07:18:45Z"
+      },
+      "rows": 128
+    },
+    {
+      "boolean_checks": 16,
+      "false_checks": [],
+      "name": "security-postcheck-table-public-column-acls",
+      "result": {
+        "data": [
+          {
+            "row_count": 8,
+            "rows": [
+              {
+                "name": "coach_athlete_relationships",
+                "public_and_grant_options_absent": true,
+                "separate_column_grants_absent": true
+              },
+              {
+                "name": "performance_result_corrections",
+                "public_and_grant_options_absent": true,
+                "separate_column_grants_absent": true
+              },
+              {
+                "name": "profiles",
+                "public_and_grant_options_absent": true,
+                "separate_column_grants_absent": true
+              },
+              {
+                "name": "training_block_results",
+                "public_and_grant_options_absent": true,
+                "separate_column_grants_absent": true
+              },
+              {
+                "name": "training_exercise_results",
+                "public_and_grant_options_absent": true,
+                "separate_column_grants_absent": true
+              },
+              {
+                "name": "training_session_records",
+                "public_and_grant_options_absent": true,
+                "separate_column_grants_absent": true
+              },
+              {
+                "name": "training_sessions",
+                "public_and_grant_options_absent": true,
+                "separate_column_grants_absent": true
+              },
+              {
+                "name": "training_set_results",
+                "public_and_grant_options_absent": true,
+                "separate_column_grants_absent": true
+              }
+            ]
+          }
+        ],
+        "http_status": 201,
+        "observed_at_utc": "2026-10-25T07:18:47Z"
+      },
+      "rows": 8
+    },
+    {
+      "boolean_checks": 155,
+      "false_checks": [],
+      "name": "security-postcheck-unaffected-functions",
+      "result": {
+        "data": [
+          {
+            "row_count": 155,
+            "rows": [
+              {
+                "signature": "accept_coach_athlete_invite(text)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "apply_programme_schedule_operation(jsonb)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "approve_cohort_global_programme_version(uuid,text)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_append_running_5k_correction(jsonb,text,uuid)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_apply_payload_protocol_graphs(jsonb)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_athlete_has_active_coach(text)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_athlete_may_enrol_private_programme_version(uuid)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_athlete_may_use_non_commercial_catalogue_enrolment()",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_athlete_runtime_capabilities()",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_auth_is_athlete()",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_auth_is_coach()",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_auth_is_dual_role_coach_athlete()",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_authored_calendar_offset_days(integer,integer)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_authored_occurrence_date(date,integer,integer)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_authored_plan_package_graph_matches(uuid,jsonb)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_authored_running_v1_b2_is_valid(jsonb)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_authored_running_v1_is_valid(jsonb)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_b3_running_actuals_match_authority(jsonb,jsonb,boolean)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_b3_running_completion_authority(bigint,uuid)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_build_running_target_snapshot_aggregate(jsonb,uuid,uuid,uuid,uuid,uuid,text,date,text,timestamp with time zone)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_calculate_running_pace_range(bigint,integer,integer,bigint,text)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_can_read_assigned_exercise(text)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_can_read_assigned_programme_version(uuid)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_can_read_assigned_protocol(text)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_canonicalize_interval_result_data(jsonb)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_coach_has_active_athlete(text)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_coach_has_active_athlete(uuid)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_create_or_resume_fixed_occurrence_at(uuid,timestamp with time zone)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_exact_running_pace(bigint,integer,bigint,text)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_fixed_assignment_refresh_compatibility_cursor(uuid)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_fixed_occurrence_projection_json(uuid,date)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_freeze_b3_running_completion_history()",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_guard_b3_running_result_authority()",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_guard_interval_set_ordinal()",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_guard_performance_result_corrections()",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_insert_private_protocol_graph(text,jsonb)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_payload_exercise_capture_complete(jsonb)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_payload_protocol_graphs_complete(jsonb)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_plan_package_v2_slot_insert()",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_plan_package_v2_version_insert()",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_preserve_occurrence_original_date()",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_private_programme_visible_to_caller(uuid)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_private_protocol_is_executable(text)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_private_version_graphs_are_executable(uuid)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_programme_assignment_protect_materialisation()",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_programme_assignment_protect_schedule_revision()",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_programme_day_is_dev_coach_draft_writable(uuid)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_programme_day_is_dev_coach_readable(uuid)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_programme_day_is_dev_draft_global(uuid)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_programme_day_is_dev_readable(uuid)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_programme_dev_athlete_ids()",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_programme_dev_coach_id()",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_programme_lineage_has_dev_readable_version(uuid)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_programme_lineage_is_dev_coach_deletable(uuid)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_programme_lineage_is_dev_coach_owned(uuid)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_programme_schedule_programmed_session_key(uuid,uuid,integer,text,integer,text)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_programme_schedule_projection_json(uuid)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_programme_schedule_require_rpc_write()",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_programme_version_first_executable_slot(uuid)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_programme_version_id_for_day(uuid)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_programme_version_id_for_week(uuid)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_programme_version_is_catalogue_eligible(uuid)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_programme_version_is_dev_coach_draft_deletable(uuid)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_programme_version_is_dev_coach_draft_writable(uuid)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_programme_version_is_dev_coach_readable(uuid)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_programme_version_is_dev_draft_global(uuid)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_programme_version_is_dev_readable(uuid)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_programme_version_is_immutable(uuid)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_programme_version_is_private_assignable(uuid)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_programme_version_is_published(uuid)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_programme_version_next_executable_slot(uuid,integer,text,integer)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_programme_week_is_dev_coach_draft_writable(uuid)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_programme_week_is_dev_coach_readable(uuid)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_programme_week_is_dev_draft_global(uuid)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_programme_week_is_dev_readable(uuid)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_publisher_athlete_accept_invitation(uuid,text)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_publisher_athlete_cancel_invitation(uuid,text)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_publisher_athlete_decline_invitation(uuid,text)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_publisher_athlete_inspect_audit(uuid,uuid,integer,integer)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_publisher_athlete_inspect_memberships()",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_publisher_athlete_inspect_roster(uuid,integer,integer)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_publisher_athlete_invite(uuid,uuid,timestamp with time zone,text)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_publisher_athlete_list_pending_invitations(uuid,integer,integer)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_publisher_athlete_revoke_membership(uuid,text,text)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_reconcile_fixed_programme_schedule_at(uuid,timestamp with time zone)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_reconcile_terminal_training_sessions_from_records()",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_recover_overdue_fixed_programme_occurrence_at(jsonb,timestamp with time zone)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_reject_published_programme_content_mutation()",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_reject_running_5k_evidence_mutation()",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_reject_running_target_snapshot_mutation()",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_resolve_athlete_local_date(text)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_resolve_fixed_programme_calendar_at(uuid,timestamp with time zone)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_running_5k_payload_is_valid(jsonb,text[])",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_running_5k_timezone_is_valid(text)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_running_execution_mapping_matches_protocol(jsonb,text)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_running_gcd(numeric,numeric)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_scheduling_apply_fingerprint(jsonb)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_scheduling_canonical_json(jsonb)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_select_running_5k_benchmark(jsonb,jsonb,text,date,text)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_set_updated_at()",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_stable_uuid(text)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_tracking_artifact_immutable()",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_tracking_canonical_text(jsonb)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_tracking_payload_graphs_match(jsonb,jsonb)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_tracking_scope_seal(uuid,jsonb)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_training_session_record_with_tree(uuid)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_update_private_exercise_capture(text,jsonb)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "cohort_validate_running_execution_mapping_scope()",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "content_graph_actor_may_read_manifest(uuid,uuid,text)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "content_graph_assignment_impact(uuid)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "content_graph_composite_identity(text,integer,text,text)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "content_graph_is_service_role()",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "content_graph_prevent_assignment_repin()",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "content_graph_prevent_published_mutation()",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "content_graph_publisher_may_operate(uuid)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "content_graph_record_reconstruction(jsonb)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "content_graph_sha256_hex(text)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "content_graph_version_diff(uuid,uuid)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "correct_cohort_completed_5k_benchmark(jsonb)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "correct_manual_completed_5k_benchmark(jsonb)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "create_or_resume_fixed_programme_occurrence_session(uuid)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "create_or_resume_programme_training_session(jsonb)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "enrol_athlete_in_catalogue_programme_version(uuid,text,boolean)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "enrol_athlete_in_private_programme_version(uuid,text,boolean)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "enrol_athlete_in_private_programme_version(uuid,text,date,boolean)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "ensure_programme_schedule_projection(uuid)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "import_authored_plan_package(jsonb)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "list_my_eligible_5k_benchmark_evidence(date,integer)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "list_my_private_programme_versions()",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "materialise_athlete_plan_from_enrolment(uuid,text)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "publish_cohort_global_programme_version(uuid,text)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "publish_content_graph_manifest(jsonb)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "publish_private_exact_programme_version_retained_v1(jsonb)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "publish_private_exact_programme_version_v2(jsonb)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "publish_private_exact_programme_version(jsonb)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "publisher_athlete_assignment_is_own(uuid,uuid)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "publisher_athlete_expire_pending()",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "publisher_athlete_prevent_event_mutation()",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "publisher_athlete_record_event(uuid,uuid,uuid,uuid,uuid,text,text,text,text,text,text)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "publisher_athlete_set_updated_at()",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "read_performance_tracking_history_v1(uuid,jsonb)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "read_performance_tracking_programme_history_v1(uuid,jsonb)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "reconcile_fixed_programme_schedule(uuid)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "record_cohort_completed_5k_benchmark(jsonb)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "record_manual_completed_5k_benchmark(jsonb)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "recover_overdue_fixed_programme_occurrence(jsonb)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "repair_incomplete_private_programme_graph(jsonb)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "repair_private_materialised_assignment_schedule_mode(jsonb)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "repair_private_programme_exercise_capture(jsonb)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "replace_approved_cohort_global_programme_version(uuid,uuid,text)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "resolve_active_fixed_programme_calendar()",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "resolve_fixed_programme_calendar(uuid)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "select_my_running_5k_benchmark(jsonb,date,text)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "start_fixed_programme_from_enrolment(uuid,date,text)",
+                "unchanged_definition_and_acl": true
+              },
+              {
+                "signature": "swap_future_fixed_programme_session_and_begin(jsonb)",
+                "unchanged_definition_and_acl": true
+              }
+            ]
+          }
+        ],
+        "http_status": 201,
+        "observed_at_utc": "2026-10-25T07:18:49Z"
+      },
+      "rows": 155
+    }
+  ],
+  "retained_link_consistency": {
+    "data": [
+      {
+        "parent_guard_contradictions": 0,
+        "physically_linked_records": 21,
+        "records_with_retained_outcome": 19
+      }
+    ],
+    "http_status": 201,
+    "observed_at_utc": "2026-10-25T07:18:53Z"
+  }
+}

@@ -1,0 +1,32 @@
+[
+  {
+    "sha256": "61c16aa40d97be7ff2d776baceea9ca973b80d214c3284a28ff3db58d5ff99f2",
+    "signature": "retain_published_exercise_event_v1(text,jsonb,jsonb)",
+    "source": "supabase/migrations/20261024120000_atomic_exercise_publication_event.sql"
+  },
+  {
+    "sha256": "8bf66b2d62cffb7e143997835e9c29f586615492faeb6a472ad0c89a54de982d",
+    "signature": "cohort_v3_validate(jsonb)",
+    "source": "supabase/migrations/20261024130000_source_duration_choice.sql"
+  },
+  {
+    "sha256": "49f852b9448f247c4599cfcc8e1006e47925974f55c692ccb9ee49580f8a80ab",
+    "signature": "create_or_resume_fixed_programme_occurrence_session(uuid,uuid,jsonb)",
+    "source": "supabase/migrations/20261024130000_source_duration_choice.sql"
+  },
+  {
+    "sha256": "57ab3abf68a8b95a3260e98ac1dd8bf531f3e393b71feee5842025ba85871b57",
+    "signature": "create_or_resume_fixed_programme_occurrence_session(uuid,uuid)",
+    "source": "supabase/migrations/20261024130000_source_duration_choice.sql"
+  },
+  {
+    "sha256": "627a8c14d1a5a0648d3dd151691124e5e685a292600fa0c74bc83ad6c16a1e86",
+    "signature": "cohort_duration_record_prescription_guard()",
+    "source": "supabase/migrations/20261024130000_source_duration_choice.sql"
+  },
+  {
+    "sha256": "bd512c2cbf79fa0be75039dc884d9d8f86e105cef939c5d96e834906d314a560",
+    "signature": "cohort_fixed_occurrence_before_duration_choice(uuid,uuid)",
+    "source": "supabase/migrations/20261023122000_v3_programme_consent_start.sql"
+  }
+]

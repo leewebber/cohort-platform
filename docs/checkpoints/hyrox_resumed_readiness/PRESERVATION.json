@@ -1,0 +1,15 @@
+{
+  "after_sha256": "89518e8aee649286e1a5f8be73509d59ff9d4b7f6133282e24a4d527e1382820",
+  "before_sha256": "c8470a25a42d9b4afefe1a30dec44cb1d49d4803bda3ae292b53598a672f1a2e",
+  "global_settings_changed": false,
+  "historical_index_restoration_exception": "Five raw indices were lost in earlier cleanup incidents and previously regenerated. This task preserves their recorded starting bytes, not the lost originals.",
+  "indices_recreated": 0,
+  "limits": "Ignored build files outside recorded inventory are not claimed byte-identical. Active checkout changes are authorised readiness documentation and its normal Git index/commit only.",
+  "managed_worktree_lifecycle_calls": false,
+  "older_recorded_files_indices_HEADs_branches_dirty_paths_temp_byte_identical": true,
+  "original_head": "a331f52967e1887c4435cccc8f1ecfa192028cd6",
+  "original_outstanding_paths": 95,
+  "recorded_checkouts": 21,
+  "unchanged_older_checkouts": 20,
+  "worktrees_created_deleted_restored": 0
+}

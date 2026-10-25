@@ -1,0 +1,54 @@
+{
+  "apply_authorised": false,
+  "complete_ordered_prefix": true,
+  "exact_pending": [
+    {
+      "file": "supabase/migrations/20261022120000_hyrox_base_declared_evidence.sql",
+      "order": 1,
+      "sha256": "2ad14f089cd035bda16599214623a2d3cba9ec178be6855bdf88b71aa647e444"
+    },
+    {
+      "file": "supabase/migrations/20261022121000_v3_unresolved_authority_guard.sql",
+      "order": 2,
+      "sha256": "bffce413245eb8d71e5a4dcbc9f73ab36c91c58ec5ee8fec6e23c71dedba6cf0"
+    },
+    {
+      "file": "supabase/migrations/20261023120000_authoritative_exercise_versions.sql",
+      "order": 3,
+      "sha256": "78e392109342873d74125982763e6c4629508c9e7282ddd9bd66ba4bc39baa61"
+    },
+    {
+      "file": "supabase/migrations/20261023121000_v3_authoritative_publication.sql",
+      "order": 4,
+      "sha256": "3bbb2534706a633e7584a76f076c30e5a815ecf84f55ef85a51c6ebb40b33ef1"
+    },
+    {
+      "file": "supabase/migrations/20261023122000_v3_programme_consent_start.sql",
+      "order": 5,
+      "sha256": "33f7b9ef63bea7393c1355319b3812cd7d4c461efcb686b9b6aaa7ab0dd97398"
+    },
+    {
+      "file": "supabase/migrations/20261023130000_v3_athlete_review_state.sql",
+      "order": 6,
+      "sha256": "261619275e9007446f9502b24f61bf3e1d085f50562600e9ab8bb1e9b22cc98d"
+    },
+    {
+      "file": "supabase/migrations/20261024120000_atomic_exercise_publication_event.sql",
+      "order": 7,
+      "sha256": "486e3ad3ec7505330978407d7a2bd1a306a46e9c28eaaf7f92b73fe3c8468359"
+    },
+    {
+      "file": "supabase/migrations/20261024130000_source_duration_choice.sql",
+      "order": 8,
+      "sha256": "e8c7209635bfb7ff83ba7d9962230613c71704925a8d4eab413e71c81efe8522"
+    }
+  ],
+  "hash_limit": "SHA256s are exact reviewed source-file bytes, not reconstructed hosted ledger statement-array hashes.",
+  "name_drift": [],
+  "observed_ledger_count": 122,
+  "observed_ledger_tip": "20261009120000",
+  "source": "4bc3b0f406aa71deeabd8da7a533477467326335",
+  "source_count": 130,
+  "target": "otnhhdxstdnwccehacku",
+  "unknown_versions": []
+}

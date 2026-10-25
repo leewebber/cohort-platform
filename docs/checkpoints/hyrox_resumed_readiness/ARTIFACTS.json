@@ -1,0 +1,100 @@
+{
+  "files": [
+    {
+      "bytes": 1851682,
+      "path": "docs/checkpoints/hyrox_resumed_readiness/CATALOG.json",
+      "sha256": "cc67738e47c91be055729311e7cfd3b74f51084591aec6ec5f5555701f216e21"
+    },
+    {
+      "bytes": 24541,
+      "path": "docs/checkpoints/hyrox_resumed_readiness/CORRECTED_POLICY_COMPARISON.sql",
+      "sha256": "fb0cdb40f68ccdf778327863c20863b718f879d4ef0f56a1dda1c72756df2fd0"
+    },
+    {
+      "bytes": 10187,
+      "path": "docs/checkpoints/hyrox_resumed_readiness/DEPLOYMENT_PLAN.md",
+      "sha256": "e8cc56172ab75cb76a2c91bbde3797d1839b6cce814dc7ca1d759a40a63f5c9a"
+    },
+    {
+      "bytes": 1465,
+      "path": "docs/checkpoints/hyrox_resumed_readiness/FINAL_FUNCTION_BODIES.json",
+      "sha256": "6d7758c1ba7c78d06745be5794c1bc921fbbb0d250399b2f1e95a62cd2b65a78"
+    },
+    {
+      "bytes": 3743,
+      "path": "docs/checkpoints/hyrox_resumed_readiness/FUNCTION_EFFECTS.json",
+      "sha256": "46c06c8bfe174a8cad7e880ad5110c1bb4e2edc6da2f008975c429e1905ea1c1"
+    },
+    {
+      "bytes": 10607,
+      "path": "docs/checkpoints/hyrox_resumed_readiness/HANDOFF.md",
+      "sha256": "18704f3e267316b70109e55e0cba836662290462f71976ec8b2bf970de2d43f8"
+    },
+    {
+      "bytes": 32425,
+      "path": "docs/checkpoints/hyrox_resumed_readiness/INSPECTION.json",
+      "sha256": "94406cad5a9c3468e7b1e64524c4245fc430ef0fd4cdfd70ce9b7b0469283376"
+    },
+    {
+      "bytes": 30108,
+      "path": "docs/checkpoints/hyrox_resumed_readiness/LEDGER.json",
+      "sha256": "b74293389f2ea1658da9153b7cb0435c8fcef82e0e2d8c122144500501ca5d1f"
+    },
+    {
+      "bytes": 2037,
+      "path": "docs/checkpoints/hyrox_resumed_readiness/MIGRATIONS.json",
+      "sha256": "c75a5a3c7ecf773b4ea97f04bb5ab11c3c24aee076358d761c88138e155c3ed8"
+    },
+    {
+      "bytes": 1306,
+      "path": "docs/checkpoints/hyrox_resumed_readiness/POLICY_COMPARISON.json",
+      "sha256": "5994418934d035b32990d0972a5a2aa3ce9f2d810aeb6d187b2d049a49282832"
+    },
+    {
+      "bytes": 1389,
+      "path": "docs/checkpoints/hyrox_resumed_readiness/POSTCHECK_DATA.sql",
+      "sha256": "bc73216396a6d1c9b3f642f787c6d4a19fa03596cfaec220d443f6b4be083dac"
+    },
+    {
+      "bytes": 3978,
+      "path": "docs/checkpoints/hyrox_resumed_readiness/POSTCHECK_SUPPLEMENT.sql",
+      "sha256": "a495868fe47bf4b68df60e13787abe0f7dcd8b2c4dcd25fe8259b482a24558bd"
+    },
+    {
+      "bytes": 976,
+      "path": "docs/checkpoints/hyrox_resumed_readiness/PRESERVATION.json",
+      "sha256": "efc7a29c493728f3afc783457c4b747a775d16b699605dc28e535be52c28f7c1"
+    },
+    {
+      "bytes": 9484,
+      "path": "docs/checkpoints/hyrox_resumed_readiness/PROTECTED.json",
+      "sha256": "90852251a52878014b757527af5adae7c806ecf8aa8c619574cf91c610415824"
+    },
+    {
+      "bytes": 2786,
+      "path": "docs/checkpoints/hyrox_resumed_readiness/RECEIVER.json",
+      "sha256": "c94cafebd22325864b32009fb362205584df8b72fb5bc457f757f4a5ce21183b"
+    },
+    {
+      "bytes": 2687,
+      "path": "docs/checkpoints/hyrox_resumed_readiness/REUSED_POLICY_VALIDATION.json",
+      "sha256": "2157b5c5fe05cb1d49ae49be9992fbd3ce1c56bf9b7e9567b91dce7d102a6d8a"
+    },
+    {
+      "bytes": 28652,
+      "path": "docs/checkpoints/hyrox_resumed_readiness/REVIEW_INPUTS.json",
+      "sha256": "c2493522e4f61af56be563fbb41400b9ccb6f845e653c72612a87aa705a8321a"
+    },
+    {
+      "bytes": 102509,
+      "path": "docs/checkpoints/hyrox_resumed_readiness/SECURITY_CHECKS.json",
+      "sha256": "80feffdbc6ac634edab8b50ed47282a66fd3a92b5167903ce352ac884b7177e3"
+    },
+    {
+      "bytes": 11234,
+      "path": "docs/checkpoints/hyrox_resumed_readiness/VERIFICATION.json",
+      "sha256": "952f9d8525c53aa9e7a2250edf204c8e9cc3c11ef79b5baa066dd66c6e0b3b38"
+    }
+  ],
+  "hash_convention": "SHA256 exact retained file bytes; this file excluded"
+}

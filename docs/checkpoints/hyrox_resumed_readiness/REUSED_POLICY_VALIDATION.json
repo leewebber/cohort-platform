@@ -1,0 +1,123 @@
+{
+  "case_count": 19,
+  "cases": [
+    {
+      "actual": true,
+      "case": "frozen_literal_to_native_json_array",
+      "expected": true,
+      "passed": true
+    },
+    {
+      "actual": true,
+      "case": "native_array_fixture",
+      "expected": true,
+      "passed": true
+    },
+    {
+      "actual": true,
+      "case": "literal_actual_decoded_by_postgresql",
+      "expected": true,
+      "passed": true
+    },
+    {
+      "actual": true,
+      "case": "quoted_array_input_order_and_set_equivalence",
+      "expected": true,
+      "passed": true
+    },
+    {
+      "actual": false,
+      "case": "changed_roles",
+      "expected": false,
+      "passed": true
+    },
+    {
+      "actual": false,
+      "case": "changed_qual",
+      "expected": false,
+      "passed": true
+    },
+    {
+      "actual": false,
+      "case": "changed_with_check",
+      "expected": false,
+      "passed": true
+    },
+    {
+      "actual": false,
+      "case": "changed_cmd",
+      "expected": false,
+      "passed": true
+    },
+    {
+      "actual": false,
+      "case": "changed_permissive",
+      "expected": false,
+      "passed": true
+    },
+    {
+      "actual": false,
+      "case": "changed_schemaname",
+      "expected": false,
+      "passed": true
+    },
+    {
+      "actual": false,
+      "case": "changed_tablename",
+      "expected": false,
+      "passed": true
+    },
+    {
+      "actual": false,
+      "case": "changed_policyname",
+      "expected": false,
+      "passed": true
+    },
+    {
+      "actual": false,
+      "case": "missing_policy",
+      "expected": false,
+      "passed": true
+    },
+    {
+      "actual": false,
+      "case": "extra_policy",
+      "expected": false,
+      "passed": true
+    },
+    {
+      "actual": false,
+      "case": "duplicate_actual_policy",
+      "expected": false,
+      "passed": true
+    },
+    {
+      "actual": false,
+      "case": "duplicate_fixture_policy",
+      "expected": false,
+      "passed": true
+    },
+    {
+      "actual": false,
+      "case": "duplicates_on_both_sides",
+      "expected": false,
+      "passed": true
+    },
+    {
+      "actual": false,
+      "case": "omitted_nullable_fixture_field",
+      "expected": false,
+      "passed": true
+    },
+    {
+      "actual": false,
+      "case": "extra_fixture_field",
+      "expected": false,
+      "passed": true
+    }
+  ],
+  "database_version": "PostgreSQL 17.6 on aarch64-unknown-linux-gnu, compiled by gcc (GCC) 15.2.0, 64-bit",
+  "original_fixture_sha256": "be57f543535ac0de7a06db6ae3b9157799ae9ce92a8a7f96a378e930dc348d83",
+  "production_query_sha256": "fb0cdb40f68ccdf778327863c20863b718f879d4ef0f56a1dda1c72756df2fd0",
+  "unaltered_production_fixture_passed": true
+}

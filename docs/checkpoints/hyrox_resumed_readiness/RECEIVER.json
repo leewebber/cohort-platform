@@ -1,0 +1,94 @@
+{
+  "configuration_changes": false,
+  "observed_at_utc": "2026-10-25T07:30:46Z",
+  "project": {
+    "lifecycleState": "ACTIVE",
+    "projectId": "cohort-platform-production",
+    "projectNumber": "809647670049"
+  },
+  "secret_values_read": false,
+  "secret_version_metadata": [
+    {
+      "metadata": {
+        "createTime": "2026-08-11T01:25:11.299064Z",
+        "name": "projects/809647670049/secrets/cohort-trusted-plan-import-service-role/versions/1",
+        "state": "ENABLED"
+      },
+      "reference": {
+        "key": "1",
+        "name": "cohort-trusted-plan-import-service-role"
+      }
+    },
+    {
+      "metadata": {
+        "createTime": "2026-08-11T01:08:39.822356Z",
+        "name": "projects/809647670049/secrets/cohort-trusted-plan-import-founder-allowlist/versions/1",
+        "state": "ENABLED"
+      },
+      "reference": {
+        "key": "1",
+        "name": "cohort-trusted-plan-import-founder-allowlist"
+      }
+    }
+  ],
+  "service": {
+    "containers": [
+      {
+        "environment_metadata": [
+          {
+            "literal_present": true,
+            "matches_target": true,
+            "name": "SUPABASE_URL"
+          },
+          {
+            "literal_present": true,
+            "name": "SUPABASE_ANON_KEY"
+          },
+          {
+            "literal_present": true,
+            "name": "BIND_ADDRESS"
+          },
+          {
+            "literal_present": true,
+            "name": "MAX_PLAN_PACKAGE_YAML_BYTES"
+          },
+          {
+            "name": "SUPABASE_SERVICE_ROLE_KEY",
+            "secret_reference": {
+              "key": "1",
+              "name": "cohort-trusted-plan-import-service-role"
+            }
+          },
+          {
+            "name": "FOUNDER_EMAIL_ALLOWLIST",
+            "secret_reference": {
+              "key": "1",
+              "name": "cohort-trusted-plan-import-founder-allowlist"
+            }
+          }
+        ],
+        "image": "europe-west1-docker.pkg.dev/cohort-platform-production/cohort-trusted-runtime/trusted-plan-import@sha256:712ca882fb0bc8f09856679c5a9238b5e9cf00e73c01e4bcdd7cf2d73d8532b9"
+      }
+    ],
+    "metadata": {
+      "labels": {
+        "cloud.googleapis.com/location": "europe-west1",
+        "component": "trusted-plan-import",
+        "source-commit": "df97fb2f47974ce309f7b94d31fa1b0f725c1795"
+      },
+      "name": "cohort-trusted-plan-import"
+    },
+    "service_account": "cohort-trusted-plan-import@cohort-platform-production.iam.gserviceaccount.com",
+    "status": {
+      "latestReadyRevisionName": "cohort-trusted-plan-import-df97fb2f4797",
+      "traffic": [
+        {
+          "latestRevision": true,
+          "percent": 100,
+          "revisionName": "cohort-trusted-plan-import-df97fb2f4797"
+        }
+      ]
+    },
+    "timeout_seconds": 30
+  }
+}

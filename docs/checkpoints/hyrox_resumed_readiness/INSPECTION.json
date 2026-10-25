@@ -1,0 +1,1169 @@
+{
+  "authority_and_limits": {
+    "authorisation": "Founder explicit bounded resumption followed by read-only preflight",
+    "client_hold": "Founder confirms Cohort clients/debug closed, no known unresolved submissions, no publication/import/database scripts; maintain hold through readiness report",
+    "known_external_controls": "2026-10-25T07:06:17Z",
+    "mechanism": {
+      "method": "POST",
+      "operation_id": "v1RestoreAProject",
+      "path": "/v1/projects/otnhhdxstdnwccehacku/restore",
+      "request_body": "none",
+      "supported_mechanism_evidence": "Installed Supabase SDK operation definition; distinct from backup/database restore APIs"
+    },
+    "no_replacement_region_plan_billing_credential_or_deployment_changes": true,
+    "unknown_until_database_running": [
+      "pg_cron jobs",
+      "database queues",
+      "subscriptions",
+      "in-flight SQL and protected locks"
+    ]
+  },
+  "authority_relation_presence": {
+    "data": [
+      {
+        "name": "cohort_v3_publication_claims",
+        "present": false
+      },
+      {
+        "name": "hyrox_base_benchmark_revisions",
+        "present": false
+      },
+      {
+        "name": "hyrox_base_benchmark_selections",
+        "present": false
+      },
+      {
+        "name": "hyrox_prescription_dependencies",
+        "present": false
+      },
+      {
+        "name": "programme_occurrence_duration_choices",
+        "present": false
+      },
+      {
+        "name": "programme_occurrence_v3_prescription_snapshots",
+        "present": false
+      },
+      {
+        "name": "programme_v3_prescription_consents",
+        "present": false
+      },
+      {
+        "name": "programme_v3_prescription_reviews",
+        "present": false
+      },
+      {
+        "name": "programme_v3_publication_artifacts",
+        "present": false
+      },
+      {
+        "name": "published_exercise_definition_versions",
+        "present": false
+      },
+      {
+        "name": "published_exercise_version_retirements",
+        "present": false
+      }
+    ],
+    "http_status": 201,
+    "observed_at_utc": "2026-10-25T07:15:01Z"
+  },
+  "availability_polls": [
+    {
+      "attempt": 1,
+      "identity": {
+        "data": {
+          "created_at": "2026-07-03T06:53:00.976925Z",
+          "database": {
+            "host": "db.otnhhdxstdnwccehacku.supabase.co",
+            "postgres_engine": "17",
+            "release_channel": "ga",
+            "version": "17.6.1.155"
+          },
+          "id": "otnhhdxstdnwccehacku",
+          "name": "Cohort Field Manual",
+          "ref": "otnhhdxstdnwccehacku",
+          "region": "eu-west-1",
+          "status": "COMING_UP"
+        },
+        "http_status": 200,
+        "observed_at_utc": "2026-10-25T07:09:56Z"
+      },
+      "sql": {
+        "error_class": "management_request_failed_no_body_retained",
+        "http_status": 400,
+        "observed_at_utc": "2026-10-25T07:09:57Z"
+      }
+    },
+    {
+      "attempt": 2,
+      "identity": {
+        "data": {
+          "created_at": "2026-07-03T06:53:00.976925Z",
+          "database": {
+            "host": "db.otnhhdxstdnwccehacku.supabase.co",
+            "postgres_engine": "17",
+            "release_channel": "ga",
+            "version": "17.6.1.155"
+          },
+          "id": "otnhhdxstdnwccehacku",
+          "name": "Cohort Field Manual",
+          "ref": "otnhhdxstdnwccehacku",
+          "region": "eu-west-1",
+          "status": "COMING_UP"
+        },
+        "http_status": 200,
+        "observed_at_utc": "2026-10-25T07:10:07Z"
+      },
+      "sql": {
+        "error_class": "management_request_failed_no_body_retained",
+        "http_status": 400,
+        "observed_at_utc": "2026-10-25T07:10:07Z"
+      }
+    },
+    {
+      "attempt": 3,
+      "identity": {
+        "data": {
+          "created_at": "2026-07-03T06:53:00.976925Z",
+          "database": {
+            "host": "db.otnhhdxstdnwccehacku.supabase.co",
+            "postgres_engine": "17",
+            "release_channel": "ga",
+            "version": "17.6.1.155"
+          },
+          "id": "otnhhdxstdnwccehacku",
+          "name": "Cohort Field Manual",
+          "ref": "otnhhdxstdnwccehacku",
+          "region": "eu-west-1",
+          "status": "COMING_UP"
+        },
+        "http_status": 200,
+        "observed_at_utc": "2026-10-25T07:10:17Z"
+      },
+      "sql": {
+        "error_class": "management_request_failed_no_body_retained",
+        "http_status": 400,
+        "observed_at_utc": "2026-10-25T07:10:18Z"
+      }
+    },
+    {
+      "attempt": 4,
+      "identity": {
+        "data": {
+          "created_at": "2026-07-03T06:53:00.976925Z",
+          "database": {
+            "host": "db.otnhhdxstdnwccehacku.supabase.co",
+            "postgres_engine": "17",
+            "release_channel": "ga",
+            "version": "17.6.1.155"
+          },
+          "id": "otnhhdxstdnwccehacku",
+          "name": "Cohort Field Manual",
+          "ref": "otnhhdxstdnwccehacku",
+          "region": "eu-west-1",
+          "status": "COMING_UP"
+        },
+        "http_status": 200,
+        "observed_at_utc": "2026-10-25T07:10:28Z"
+      },
+      "sql": {
+        "error_class": "management_request_failed_no_body_retained",
+        "http_status": 400,
+        "observed_at_utc": "2026-10-25T07:10:28Z"
+      }
+    },
+    {
+      "attempt": 5,
+      "identity": {
+        "data": {
+          "created_at": "2026-07-03T06:53:00.976925Z",
+          "database": {
+            "host": "db.otnhhdxstdnwccehacku.supabase.co",
+            "postgres_engine": "17",
+            "release_channel": "ga",
+            "version": "17.6.1.155"
+          },
+          "id": "otnhhdxstdnwccehacku",
+          "name": "Cohort Field Manual",
+          "ref": "otnhhdxstdnwccehacku",
+          "region": "eu-west-1",
+          "status": "COMING_UP"
+        },
+        "http_status": 200,
+        "observed_at_utc": "2026-10-25T07:10:38Z"
+      },
+      "sql": {
+        "error_class": "management_request_failed_no_body_retained",
+        "http_status": 400,
+        "observed_at_utc": "2026-10-25T07:10:39Z"
+      }
+    },
+    {
+      "attempt": 6,
+      "identity": {
+        "data": {
+          "created_at": "2026-07-03T06:53:00.976925Z",
+          "database": {
+            "host": "db.otnhhdxstdnwccehacku.supabase.co",
+            "postgres_engine": "17",
+            "release_channel": "ga",
+            "version": "17.6.1.155"
+          },
+          "id": "otnhhdxstdnwccehacku",
+          "name": "Cohort Field Manual",
+          "ref": "otnhhdxstdnwccehacku",
+          "region": "eu-west-1",
+          "status": "COMING_UP"
+        },
+        "http_status": 200,
+        "observed_at_utc": "2026-10-25T07:10:49Z"
+      },
+      "sql": {
+        "error_class": "management_request_failed_no_body_retained",
+        "http_status": 400,
+        "observed_at_utc": "2026-10-25T07:10:49Z"
+      }
+    },
+    {
+      "attempt": 7,
+      "identity": {
+        "data": {
+          "created_at": "2026-07-03T06:53:00.976925Z",
+          "database": {
+            "host": "db.otnhhdxstdnwccehacku.supabase.co",
+            "postgres_engine": "17",
+            "release_channel": "ga",
+            "version": "17.6.1.155"
+          },
+          "id": "otnhhdxstdnwccehacku",
+          "name": "Cohort Field Manual",
+          "ref": "otnhhdxstdnwccehacku",
+          "region": "eu-west-1",
+          "status": "COMING_UP"
+        },
+        "http_status": 200,
+        "observed_at_utc": "2026-10-25T07:10:59Z"
+      },
+      "sql": {
+        "error_class": "management_request_failed_no_body_retained",
+        "http_status": 400,
+        "observed_at_utc": "2026-10-25T07:10:59Z"
+      }
+    },
+    {
+      "attempt": 8,
+      "identity": {
+        "data": {
+          "created_at": "2026-07-03T06:53:00.976925Z",
+          "database": {
+            "host": "db.otnhhdxstdnwccehacku.supabase.co",
+            "postgres_engine": "17",
+            "release_channel": "ga",
+            "version": "17.6.1.155"
+          },
+          "id": "otnhhdxstdnwccehacku",
+          "name": "Cohort Field Manual",
+          "ref": "otnhhdxstdnwccehacku",
+          "region": "eu-west-1",
+          "status": "COMING_UP"
+        },
+        "http_status": 200,
+        "observed_at_utc": "2026-10-25T07:11:10Z"
+      },
+      "sql": {
+        "error_class": "management_request_failed_no_body_retained",
+        "http_status": 400,
+        "observed_at_utc": "2026-10-25T07:11:10Z"
+      }
+    },
+    {
+      "attempt": 9,
+      "identity": {
+        "data": {
+          "created_at": "2026-07-03T06:53:00.976925Z",
+          "database": {
+            "host": "db.otnhhdxstdnwccehacku.supabase.co",
+            "postgres_engine": "17",
+            "release_channel": "ga",
+            "version": "17.6.1.155"
+          },
+          "id": "otnhhdxstdnwccehacku",
+          "name": "Cohort Field Manual",
+          "ref": "otnhhdxstdnwccehacku",
+          "region": "eu-west-1",
+          "status": "COMING_UP"
+        },
+        "http_status": 200,
+        "observed_at_utc": "2026-10-25T07:11:20Z"
+      },
+      "sql": {
+        "error_class": "management_request_failed_no_body_retained",
+        "http_status": 400,
+        "observed_at_utc": "2026-10-25T07:11:20Z"
+      }
+    },
+    {
+      "attempt": 10,
+      "identity": {
+        "data": {
+          "created_at": "2026-07-03T06:53:00.976925Z",
+          "database": {
+            "host": "db.otnhhdxstdnwccehacku.supabase.co",
+            "postgres_engine": "17",
+            "release_channel": "ga",
+            "version": "17.6.1.155"
+          },
+          "id": "otnhhdxstdnwccehacku",
+          "name": "Cohort Field Manual",
+          "ref": "otnhhdxstdnwccehacku",
+          "region": "eu-west-1",
+          "status": "COMING_UP"
+        },
+        "http_status": 200,
+        "observed_at_utc": "2026-10-25T07:11:31Z"
+      },
+      "sql": {
+        "error_class": "management_request_failed_no_body_retained",
+        "http_status": 400,
+        "observed_at_utc": "2026-10-25T07:11:31Z"
+      }
+    },
+    {
+      "attempt": 11,
+      "identity": {
+        "data": {
+          "created_at": "2026-07-03T06:53:00.976925Z",
+          "database": {
+            "host": "db.otnhhdxstdnwccehacku.supabase.co",
+            "postgres_engine": "17",
+            "release_channel": "ga",
+            "version": "17.6.1.155"
+          },
+          "id": "otnhhdxstdnwccehacku",
+          "name": "Cohort Field Manual",
+          "ref": "otnhhdxstdnwccehacku",
+          "region": "eu-west-1",
+          "status": "COMING_UP"
+        },
+        "http_status": 200,
+        "observed_at_utc": "2026-10-25T07:11:41Z"
+      },
+      "sql": {
+        "error_class": "management_request_failed_no_body_retained",
+        "http_status": 400,
+        "observed_at_utc": "2026-10-25T07:11:41Z"
+      }
+    },
+    {
+      "attempt": 12,
+      "identity": {
+        "data": {
+          "created_at": "2026-07-03T06:53:00.976925Z",
+          "database": {
+            "host": "db.otnhhdxstdnwccehacku.supabase.co",
+            "postgres_engine": "17",
+            "release_channel": "ga",
+            "version": "17.6.1.155"
+          },
+          "id": "otnhhdxstdnwccehacku",
+          "name": "Cohort Field Manual",
+          "ref": "otnhhdxstdnwccehacku",
+          "region": "eu-west-1",
+          "status": "COMING_UP"
+        },
+        "http_status": 200,
+        "observed_at_utc": "2026-10-25T07:11:52Z"
+      },
+      "sql": {
+        "error_class": "management_request_failed_no_body_retained",
+        "http_status": 400,
+        "observed_at_utc": "2026-10-25T07:11:52Z"
+      }
+    },
+    {
+      "attempt": 1,
+      "identity": {
+        "data": {
+          "created_at": "2026-07-03T06:53:00.976925Z",
+          "database": {
+            "host": "db.otnhhdxstdnwccehacku.supabase.co",
+            "postgres_engine": "17",
+            "release_channel": "ga",
+            "version": "17.6.1.155"
+          },
+          "id": "otnhhdxstdnwccehacku",
+          "name": "Cohort Field Manual",
+          "ref": "otnhhdxstdnwccehacku",
+          "region": "eu-west-1",
+          "status": "ACTIVE_HEALTHY"
+        },
+        "http_status": 200,
+        "observed_at_utc": "2026-10-25T07:14:31Z"
+      },
+      "sql": {
+        "data": [
+          {
+            "inspection": {
+              "active_replication_slots": 0,
+              "cron_catalog": false,
+              "database_name": "postgres",
+              "enabled_logical_replication_subscriptions": 0,
+              "extensions": [
+                {
+                  "name": "pg_stat_statements",
+                  "version": "1.11"
+                },
+                {
+                  "name": "pgcrypto",
+                  "version": "1.3"
+                },
+                {
+                  "name": "plpgsql",
+                  "version": "1.0"
+                },
+                {
+                  "name": "supabase_vault",
+                  "version": "0.3.1"
+                },
+                {
+                  "name": "uuid-ossp",
+                  "version": "1.1"
+                }
+              ],
+              "http_queue_catalog": false,
+              "inspection_role": "supabase_read_only_user",
+              "job_schemas": [],
+              "observed_at": "2026-10-25T07:14:33.189884+00:00",
+              "other_active_clients": [],
+              "other_active_or_open_client_transactions": 0,
+              "other_client_write_or_idle_transactions": 0,
+              "prepared_transactions": 0,
+              "protected_non_read_relation_locks": 0,
+              "queue_catalog": false,
+              "server_version": "PostgreSQL 17.6 on aarch64-unknown-linux-gnu, compiled by gcc (GCC) 15.2.0, 64-bit",
+              "transaction_read_only": "on",
+              "unobservable_client_activity": 0
+            }
+          }
+        ],
+        "http_status": 201,
+        "observed_at_utc": "2026-10-25T07:14:33Z"
+      }
+    }
+  ],
+  "catalogue_identity_leads": {
+    "data": [
+      {
+        "exercise_id": "EX-022",
+        "name": "Dead Bug",
+        "published": true
+      },
+      {
+        "exercise_id": "EX-037",
+        "name": "Dumbbell Strict Press",
+        "published": true
+      },
+      {
+        "exercise_id": "EX-049",
+        "name": "Row Erg",
+        "published": true
+      },
+      {
+        "exercise_id": "EX-050",
+        "name": "Ski Erg",
+        "published": true
+      },
+      {
+        "exercise_id": "EX-052",
+        "name": "Wall Ball",
+        "published": true
+      },
+      {
+        "exercise_id": "EX-053",
+        "name": "Pull Up",
+        "published": true
+      },
+      {
+        "exercise_id": "EX-057",
+        "name": "Kettlebell Swing",
+        "published": true
+      },
+      {
+        "exercise_id": "EX-073",
+        "name": "Back Squat",
+        "published": true
+      },
+      {
+        "exercise_id": "EX-078",
+        "name": "Romanian Deadlift",
+        "published": true
+      },
+      {
+        "exercise_id": "EX-084",
+        "name": "Incline Dumbbell Press",
+        "published": true
+      },
+      {
+        "exercise_id": "EX-088",
+        "name": "Strict Press",
+        "published": true
+      },
+      {
+        "exercise_id": "EX-090",
+        "name": "Chest Supported Row",
+        "published": true
+      },
+      {
+        "exercise_id": "EX-092",
+        "name": "Cable Row",
+        "published": true
+      },
+      {
+        "exercise_id": "EX-102",
+        "name": "Suitcase Carry",
+        "published": true
+      },
+      {
+        "exercise_id": "EX-114",
+        "name": "Pallof Press",
+        "published": true
+      },
+      {
+        "exercise_id": "EX-129",
+        "name": "Running",
+        "published": true
+      },
+      {
+        "exercise_id": "EX-142",
+        "name": "One-Arm Cable Row",
+        "published": true
+      }
+    ],
+    "http_status": 201,
+    "observed_at_utc": "2026-10-25T07:19:55Z"
+  },
+  "closing_drain": {
+    "data": [
+      {
+        "inspection": {
+          "active_replication_slots": 0,
+          "cron_catalog": false,
+          "database_name": "postgres",
+          "enabled_logical_replication_subscriptions": 0,
+          "extensions": [
+            {
+              "name": "pg_stat_statements",
+              "version": "1.11"
+            },
+            {
+              "name": "pgcrypto",
+              "version": "1.3"
+            },
+            {
+              "name": "plpgsql",
+              "version": "1.0"
+            },
+            {
+              "name": "supabase_vault",
+              "version": "0.3.1"
+            },
+            {
+              "name": "uuid-ossp",
+              "version": "1.1"
+            }
+          ],
+          "http_queue_catalog": false,
+          "inspection_role": "supabase_read_only_user",
+          "job_schemas": [],
+          "observed_at": "2026-10-25T07:42:04.165304+00:00",
+          "other_active_clients": [],
+          "other_active_or_open_client_transactions": 0,
+          "other_client_write_or_idle_transactions": 0,
+          "prepared_transactions": 0,
+          "protected_non_read_relation_locks": 0,
+          "queue_catalog": false,
+          "server_version": "PostgreSQL 17.6 on aarch64-unknown-linux-gnu, compiled by gcc (GCC) 15.2.0, 64-bit",
+          "transaction_read_only": "on",
+          "unobservable_client_activity": 0
+        }
+      }
+    ],
+    "http_status": 201,
+    "observed_at_utc": "2026-10-25T07:42:04Z"
+  },
+  "closing_integrations": {
+    "data": [
+      {
+        "integration_inspection": {
+          "content_graph_reconstruction_jobs": [],
+          "enabled_user_subscriptions": 0,
+          "foreign_data_wrappers": [],
+          "foreign_servers": [],
+          "outbound_or_job_function_metadata": [
+            {
+              "body_sha256": "7b97827deb516a59b5ce3b53829c57264dd60fdbabbba0925d5df908cd9dc285",
+              "signature": "content_graph_record_reconstruction(jsonb)"
+            }
+          ],
+          "realtime_subscription_rows": 0
+        }
+      }
+    ],
+    "http_status": 201,
+    "observed_at_utc": "2026-10-25T07:42:06Z"
+  },
+  "control_plane": {
+    "deployment_trigger_metadata": {
+      "europe-west1": [],
+      "global": [],
+      "source": "successful read-only gcloud builds triggers list before resumption; no triggers invoked"
+    },
+    "enabled_services": {
+      "available": true,
+      "data": [
+        {
+          "config": {
+            "name": "analyticshub.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "artifactregistry.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "bigquery.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "bigqueryconnection.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "bigquerydatapolicy.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "bigquerydatatransfer.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "bigquerymigration.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "bigqueryreservation.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "bigquerystorage.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "cloudapis.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "cloudbuild.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "cloudtrace.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "containerregistry.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "dataform.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "dataplex.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "datastore.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "iam.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "iamcredentials.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "logging.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "monitoring.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "pubsub.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "run.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "secretmanager.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "servicemanagement.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "serviceusage.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "sql-component.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "storage-api.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "storage-component.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "storage.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "telemetry.googleapis.com"
+          }
+        }
+      ]
+    },
+    "mutations": false,
+    "observed_at_utc": "2026-10-25T07:06:17Z",
+    "project": "cohort-platform-production",
+    "pubsub_subscriptions": {
+      "available": true,
+      "data": []
+    },
+    "receiver": {
+      "available": true,
+      "data": {
+        "metadata": {
+          "name": "cohort-trusted-plan-import"
+        },
+        "spec": {
+          "template": {
+            "spec": {
+              "serviceAccountName": "cohort-trusted-plan-import@cohort-platform-production.iam.gserviceaccount.com",
+              "timeoutSeconds": 30
+            }
+          }
+        },
+        "status": {
+          "conditions": [
+            {
+              "lastTransitionTime": "2026-08-11T01:40:29.197513Z",
+              "status": "True",
+              "type": "Ready"
+            },
+            {
+              "lastTransitionTime": "2026-08-11T01:40:18.210142Z",
+              "status": "True",
+              "type": "ConfigurationsReady"
+            },
+            {
+              "lastTransitionTime": "2026-08-11T01:40:29.172551Z",
+              "status": "True",
+              "type": "RoutesReady"
+            }
+          ],
+          "latestReadyRevisionName": "cohort-trusted-plan-import-df97fb2f4797",
+          "traffic": [
+            {
+              "latestRevision": true,
+              "percent": 100,
+              "revisionName": "cohort-trusted-plan-import-df97fb2f4797"
+            }
+          ]
+        }
+      }
+    },
+    "recent_receiver_request_metadata": {
+      "available": true,
+      "data": []
+    },
+    "region": "europe-west1",
+    "run_jobs": {
+      "available": true,
+      "data": []
+    },
+    "run_services": {
+      "available": true,
+      "data": [
+        {
+          "metadata": {
+            "labels": {
+              "cloud.googleapis.com/location": "europe-west1",
+              "component": "trusted-plan-import",
+              "source-commit": "df97fb2f47974ce309f7b94d31fa1b0f725c1795"
+            },
+            "name": "cohort-trusted-plan-import"
+          },
+          "status": {
+            "latestReadyRevisionName": "cohort-trusted-plan-import-df97fb2f4797",
+            "traffic": [
+              {
+                "latestRevision": true,
+                "percent": 100,
+                "revisionName": "cohort-trusted-plan-import-df97fb2f4797"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "scheduler": {
+      "available": false,
+      "exit_code": 1,
+      "reason": "SERVICE_DISABLED"
+    },
+    "tasks": {
+      "available": false,
+      "exit_code": 1,
+      "reason": "SERVICE_DISABLED"
+    }
+  },
+  "existing_interval_units": {
+    "data": [
+      {
+        "pace_unit": "sec_per_km",
+        "rows": 6
+      }
+    ],
+    "http_status": 201,
+    "observed_at_utc": "2026-10-25T07:26:32Z"
+  },
+  "final_health": {
+    "data": [
+      {
+        "healthy": true,
+        "info": {},
+        "name": "db",
+        "status": "ACTIVE_HEALTHY"
+      },
+      {
+        "healthy": true,
+        "info": {
+          "description": "GoTrue is a user registration and authentication API",
+          "name": "GoTrue",
+          "version": "v2.197.0"
+        },
+        "name": "auth",
+        "status": "ACTIVE_HEALTHY"
+      },
+      {
+        "healthy": true,
+        "info": {
+          "db_schema": "public,graphql_public"
+        },
+        "name": "rest",
+        "status": "ACTIVE_HEALTHY"
+      },
+      {
+        "healthy": true,
+        "info": {},
+        "name": "storage",
+        "status": "ACTIVE_HEALTHY"
+      },
+      {
+        "healthy": true,
+        "info": {
+          "connected_cluster": 0,
+          "db_connected": false,
+          "healthy": true,
+          "replication_connected": false
+        },
+        "name": "realtime",
+        "status": "ACTIVE_HEALTHY"
+      }
+    ],
+    "http_status": 200,
+    "observed_at_utc": "2026-10-25T07:42:08Z"
+  },
+  "final_identity": {
+    "data": {
+      "created_at": "2026-07-03T06:53:00.976925Z",
+      "database": {
+        "host": "db.otnhhdxstdnwccehacku.supabase.co",
+        "postgres_engine": "17",
+        "release_channel": "ga",
+        "version": "17.6.1.155"
+      },
+      "id": "otnhhdxstdnwccehacku",
+      "name": "Cohort Field Manual",
+      "ref": "otnhhdxstdnwccehacku",
+      "region": "eu-west-1",
+      "status": "ACTIVE_HEALTHY"
+    },
+    "http_status": 200,
+    "observed_at_utc": "2026-10-25T07:42:06Z"
+  },
+  "first_successful_read_only_SQL": {
+    "data": [
+      {
+        "inspection_role": "supabase_read_only_user",
+        "transaction_read_only": "on"
+      }
+    ],
+    "http_status": 201,
+    "observed_at_utc": "2026-10-25T07:13:16Z"
+  },
+  "first_writer_inspection": {
+    "data": [
+      {
+        "inspection": {
+          "active_replication_slots": 0,
+          "cron_catalog": false,
+          "database_name": "postgres",
+          "enabled_logical_replication_subscriptions": 0,
+          "extensions": [
+            {
+              "name": "pg_stat_statements",
+              "version": "1.11"
+            },
+            {
+              "name": "pgcrypto",
+              "version": "1.3"
+            },
+            {
+              "name": "plpgsql",
+              "version": "1.0"
+            },
+            {
+              "name": "supabase_vault",
+              "version": "0.3.1"
+            },
+            {
+              "name": "uuid-ossp",
+              "version": "1.1"
+            }
+          ],
+          "http_queue_catalog": false,
+          "inspection_role": "supabase_read_only_user",
+          "job_schemas": [],
+          "observed_at": "2026-10-25T07:13:18.996135+00:00",
+          "other_active_clients": [],
+          "other_active_or_open_client_transactions": 0,
+          "other_client_write_or_idle_transactions": 0,
+          "prepared_transactions": 0,
+          "protected_non_read_relation_locks": 0,
+          "queue_catalog": false,
+          "server_version": "PostgreSQL 17.6 on aarch64-unknown-linux-gnu, compiled by gcc (GCC) 15.2.0, 64-bit",
+          "transaction_read_only": "on",
+          "unobservable_client_activity": 0
+        }
+      }
+    ],
+    "http_status": 201,
+    "observed_at_utc": "2026-10-25T07:13:18Z"
+  },
+  "hold": {
+    "client_reopening_performed": false,
+    "founder_attestation": true,
+    "held_through_readiness": true,
+    "known_writers_held": true,
+    "observed_unexpected_writers": false,
+    "release_recommendation": "May release for previously supported v1/v2 workflows when this report is complete; a fresh full hold is required for deployment.",
+    "unknown_external_writers_absent_not_assumed": true
+  },
+  "identity_before": {
+    "data": {
+      "created_at": "2026-07-03T06:53:00.976925Z",
+      "database": {
+        "host": "db.otnhhdxstdnwccehacku.supabase.co",
+        "postgres_engine": "17",
+        "release_channel": "ga",
+        "version": "17.6.1.155"
+      },
+      "id": "otnhhdxstdnwccehacku",
+      "name": "Cohort Field Manual",
+      "ref": "otnhhdxstdnwccehacku",
+      "region": "eu-west-1",
+      "status": "INACTIVE"
+    },
+    "http_status": 200,
+    "observed_at_utc": "2026-10-25T07:04:26Z"
+  },
+  "inactive_sql_visibility": {
+    "error_class": "management_request_failed_no_body_retained",
+    "http_status": 400,
+    "observed_at_utc": "2026-10-25T07:04:26Z"
+  },
+  "inspection_limits": [
+    "Scheduler/Tasks APIs disabled: inventories unavailable, not proof of empty retained jobs/queues; do not enable them to inspect.",
+    "Google-project/region and database-catalog observations do not prove every external writer anywhere absent. Resolve/account for visibility gaps in the renewed pre-apply writer receipt.",
+    "No authenticated app commands/native/device validation or production event/retention/publication/assignment."
+  ],
+  "producer_role": {
+    "data": [],
+    "http_status": 201,
+    "observed_at_utc": "2026-10-25T07:20:00Z"
+  },
+  "programme_schema_counts": {
+    "data": [
+      {
+        "library_scope": "cohort_global",
+        "lifecycle_status": "archived",
+        "package_schema_version": 1,
+        "row_count": 1
+      },
+      {
+        "library_scope": "coach_private",
+        "lifecycle_status": "published",
+        "package_schema_version": 1,
+        "row_count": 1
+      },
+      {
+        "library_scope": "cohort_global",
+        "lifecycle_status": "published",
+        "package_schema_version": 1,
+        "row_count": 2
+      },
+      {
+        "library_scope": "coach_private",
+        "lifecycle_status": "published",
+        "package_schema_version": 2,
+        "row_count": 1
+      },
+      {
+        "library_scope": "coach_private",
+        "lifecycle_status": "draft",
+        "package_schema_version": null,
+        "row_count": 2
+      },
+      {
+        "library_scope": "cohort_global",
+        "lifecycle_status": "draft",
+        "package_schema_version": null,
+        "row_count": 2
+      },
+      {
+        "library_scope": "coach_private",
+        "lifecycle_status": "published",
+        "package_schema_version": null,
+        "row_count": 2
+      }
+    ],
+    "http_status": 201,
+    "observed_at_utc": "2026-10-25T07:19:56Z"
+  },
+  "provisional_namespace_collisions": {
+    "data": [
+      {
+        "provisional_namespace_collisions": 0
+      }
+    ],
+    "http_status": 201,
+    "observed_at_utc": "2026-10-25T07:26:34Z"
+  },
+  "resume": {
+    "data": null,
+    "http_status": 200,
+    "observed_at_utc": "2026-10-25T07:09:14Z"
+  },
+  "source": "4bc3b0f406aa71deeabd8da7a533477467326335",
+  "source_scope_counts": {
+    "data": [
+      {
+        "authoring_scope": "cohort_global",
+        "content_kind": "cohort_protocol",
+        "lifecycle_status": "draft",
+        "row_count": 132
+      },
+      {
+        "authoring_scope": "programme_only",
+        "content_kind": "session",
+        "lifecycle_status": "draft",
+        "row_count": 8
+      },
+      {
+        "authoring_scope": "coach_private",
+        "content_kind": "session",
+        "lifecycle_status": "published",
+        "row_count": 72
+      },
+      {
+        "authoring_scope": "cohort_global",
+        "content_kind": "cohort_protocol",
+        "lifecycle_status": "published",
+        "row_count": 4
+      },
+      {
+        "authoring_scope": "cohort_global",
+        "content_kind": "session_template",
+        "lifecycle_status": "published",
+        "row_count": 10
+      },
+      {
+        "authoring_scope": "organisation",
+        "content_kind": "session",
+        "lifecycle_status": "published",
+        "row_count": 84
+      },
+      {
+        "authoring_scope": "programme_only",
+        "content_kind": "session",
+        "lifecycle_status": "published",
+        "row_count": 7
+      }
+    ],
+    "http_status": 201,
+    "observed_at_utc": "2026-10-25T07:19:58Z"
+  },
+  "v3_record_markers": {
+    "data": [
+      {
+        "bound_packets": 0,
+        "duration_packets": 0
+      }
+    ],
+    "http_status": 201,
+    "observed_at_utc": "2026-10-25T07:26:30Z"
+  }
+}

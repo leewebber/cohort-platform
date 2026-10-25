@@ -1,5 +1,23 @@
 # Cohort Platform repository guidance
 
+> **Field Manual resumed/read-only readiness — 2026-10-25:**
+> [Readiness](docs/checkpoints/hyrox_resumed_readiness/HANDOFF.md) records the authorised one-time resume of
+> `otnhhdxstdnwccehacku`; db/auth/REST/storage/realtime are healthy. Fresh ledger is the
+> exact 122-file prefix through `20261009120000`; exactly eight hash-pinned HYROX files
+> remain pending, not the old six-file assumption. All 173 function bodies/expected ACLs,
+> fourteen security groups (retained native-array policy comparator), ownership/link and
+> measured 19-table/six-source held baselines pass. Original policy-query false is retained;
+> no DB policy changed. Three historical data-count/digest differences remain separately
+> recorded. No unexpected writer/job was observed; disabled Scheduler/Tasks API inventories
+> and external-writer visibility limits remain explicit. The legacy client hold may end
+> when the readiness report is complete; any schema apply needs a renewed hold/drain and
+> exact dry-run. No schema/permission/configuration/credential/producer/content/athlete
+> mutation occurred beyond the authorised project resume. Publisher role and eleven v3
+> tables remain absent; Base T1/B3 remain on all 48 sessions. Next separate authority is
+> only the exact eight-file schema batch plus read-only postchecks; no usable producer,
+> publication, assignment, client/device or broader closure follows. Old worktrees/indices/
+> original 95 paths/.temp are preserved; no cleanup trigger or global setting change.
+
 > **HYROX authoritative operations — prepared locally, 2026-10-25:**
 > [Operation package](docs/checkpoints/hyrox_publication_operations/HANDOFF.md) retains exact digests/templates for 27 approved definitions /
 > 29 labels, 48 provisional source graphs, eight rest entries and a strictly admitted

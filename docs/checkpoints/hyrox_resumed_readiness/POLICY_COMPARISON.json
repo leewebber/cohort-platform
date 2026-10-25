@@ -1,0 +1,36 @@
+{
+  "corrected_query": "CORRECTED_POLICY_COMPARISON.sql",
+  "corrected_result": {
+    "data": [
+      {
+        "all_other_policies_unchanged": true
+      }
+    ],
+    "http_status": 201,
+    "observed_at_utc": "2026-10-25T07:21:29Z"
+  },
+  "corrected_sha256": "fb0cdb40f68ccdf778327863c20863b718f879d4ef0f56a1dda1c72756df2fd0",
+  "exact_same_frozen_records": true,
+  "fixture_records": 53,
+  "logical_policy_fields": 8,
+  "missing_extra_duplicate_records_rejected": true,
+  "only_roles_normalised_as_native_name_array_sets": true,
+  "original_published_query": "docs/checkpoints/security_remediation_readiness/postchecks/postcheck-preserved-policies.sql",
+  "original_query_sha256": "9dc7491e9771fb7f6dad8240c2eadc4d4e86c83ab7b30b6043c389ec3563464f",
+  "original_result": {
+    "data": [
+      {
+        "row_count": 1,
+        "rows": [
+          {
+            "all_other_policies_unchanged": false
+          }
+        ]
+      }
+    ],
+    "http_status": 201,
+    "observed_at_utc": "2026-10-25T07:18:34Z"
+  },
+  "retained_19_case_validation_sha256": "2157b5c5fe05cb1d49ae49be9992fbd3ce1c56bf9b7e9567b91dce7d102a6d8a",
+  "source_copy": "Read-only comparator copied from the preserved original checkout; no original path/index was changed or staged. This does not integrate its other outstanding work."
+}

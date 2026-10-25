@@ -1,0 +1,738 @@
+{
+  "data": [
+    {
+      "ledger_statement_array_sha256": "ecf54b6b3f6b3c8bf4dad69d04a8d8e3cf4e34fd39a58e4d8e70caf1362b9b29",
+      "migration_name": "add_training_session_completion_context",
+      "statement_count": 6,
+      "version": "20260713140000"
+    },
+    {
+      "ledger_statement_array_sha256": "6a5b532dc36971f1938fcf069e6e4a9ca67fd88bd6b773935cd5cdb39b7c1ef7",
+      "migration_name": "add_training_session_intervals",
+      "statement_count": 4,
+      "version": "20260714100000"
+    },
+    {
+      "ledger_statement_array_sha256": "91d678f3a267c71204a370b8c17496df6e5c215b767c263fe5bcd0677ca497d3",
+      "migration_name": "add_training_session_circuits",
+      "statement_count": 4,
+      "version": "20260714120000"
+    },
+    {
+      "ledger_statement_array_sha256": "b13912a4a7003650b52ba81be11a27bd217d3c5116fe322dce750093e1c6abde",
+      "migration_name": "add_programme_engine_v1",
+      "statement_count": 58,
+      "version": "20260715120000"
+    },
+    {
+      "ledger_statement_array_sha256": "b9857dc39f6d355066569098ac71d0270cd2c3cd662f662994ec23e398d3034e",
+      "migration_name": "add_programme_engine_dev_policies",
+      "statement_count": 35,
+      "version": "20260715130000"
+    },
+    {
+      "ledger_statement_array_sha256": "d451b1ee38e82bf256c787de567c04141d96d43887fcf4931fff8fa7badb71e6",
+      "migration_name": "fix_programme_dev_rls_recursion",
+      "statement_count": 63,
+      "version": "20260715140000"
+    },
+    {
+      "ledger_statement_array_sha256": "d7eb64c33a6f9ea0e157144a8a41263fd3bbbaee4e79313fc8b5b9751f4bb198",
+      "migration_name": "add_athlete_state_athlete_unique",
+      "statement_count": 3,
+      "version": "20260715150000"
+    },
+    {
+      "ledger_statement_array_sha256": "7103b4c2ebe2eeef8e3d56d3ec8fa20787b8c01f830c1d8b63b2c700a8dcf490",
+      "migration_name": "allow_dev_programme_outcome_reset",
+      "statement_count": 2,
+      "version": "20260715160000"
+    },
+    {
+      "ledger_statement_array_sha256": "e4aa98748ca9c2a3cb2822c232af676cda15868f174e53fa13070809c2bb6c4e",
+      "migration_name": "allow_dev_coach_programme_authoring",
+      "statement_count": 62,
+      "version": "20260716150000"
+    },
+    {
+      "ledger_statement_array_sha256": "483f320a59816fba8e7120d03c859d06553a55001df59d0a9d9d755f146b36bf",
+      "migration_name": "fix_dev_coach_lineage_insert_policy",
+      "statement_count": 15,
+      "version": "20260717110000"
+    },
+    {
+      "ledger_statement_array_sha256": "2f1ad92523bb92d341e111930a6013da01b5a5ea1c10f59a93893944c0313732",
+      "migration_name": "fix_dev_coach_programme_version_authoring_policy",
+      "statement_count": 18,
+      "version": "20260717120000"
+    },
+    {
+      "ledger_statement_array_sha256": "a6f3bc1678b8e8e01dbda0f174e2f8f54b4fc1d27063d28b248fb581c88f9c0c",
+      "migration_name": "add_training_content_metadata",
+      "statement_count": 17,
+      "version": "20260718130000"
+    },
+    {
+      "ledger_statement_array_sha256": "850288009e8e1b0deef13387766d30dd7a5a6522f967b2fe8f19e69c52e4e569",
+      "migration_name": "add_session_blocks",
+      "statement_count": 10,
+      "version": "20260719140000"
+    },
+    {
+      "ledger_statement_array_sha256": "6e7638c88d089c696fc86eb09e5c784fbb7d16672736ce38d29d28223f051a36",
+      "migration_name": "add_training_session_records",
+      "statement_count": 22,
+      "version": "20260719160000"
+    },
+    {
+      "ledger_statement_array_sha256": "156856c15065fc656345d39c441ecd3766b41b0e1083a72754b9b567c15867a1",
+      "migration_name": "add_block_performance_capture_mode",
+      "statement_count": 4,
+      "version": "20260719170000"
+    },
+    {
+      "ledger_statement_array_sha256": "2285b1c1fa2cea8d34be7bed9d1fa9fedc56bb89387dbefcd8085cebee73bb23",
+      "migration_name": "add_session_lineages_and_revisions",
+      "statement_count": 12,
+      "version": "20260721100000"
+    },
+    {
+      "ledger_statement_array_sha256": "16d56552befb147f71ac0ddb7046c61fb94d3a0835bc72221e6f77b6013071b5",
+      "migration_name": "add_session_revision_usage_indexes",
+      "statement_count": 2,
+      "version": "20260721110000"
+    },
+    {
+      "ledger_statement_array_sha256": "d04aa510199f12d7eeb5eb5174de3d4a2593b915b8bb52b1ae23818dfda5c86b",
+      "migration_name": "add_exercise_usage_indexes",
+      "statement_count": 4,
+      "version": "20260721120000"
+    },
+    {
+      "ledger_statement_array_sha256": "19edbe219523fc3b8315f0111c4477de1205a6fe04514e2e0694889cd1d7d63f",
+      "migration_name": "add_programme_version_impact_indexes",
+      "statement_count": 8,
+      "version": "20260721130000"
+    },
+    {
+      "ledger_statement_array_sha256": "0897400a8f2f01dd26e6574bf537cf443ec97ea6910e7c200d6f570b516cabaa",
+      "migration_name": "add_profiles_and_auth_rls",
+      "statement_count": 12,
+      "version": "20260721140000"
+    },
+    {
+      "ledger_statement_array_sha256": "28212453a74c9fa9e00860459485244168a0a2cce479618decd848cd2a1e199e",
+      "migration_name": "add_coach_athlete_relationships",
+      "statement_count": 30,
+      "version": "20260721150000"
+    },
+    {
+      "ledger_statement_array_sha256": "f4279523aa2f11317e5ccf5bc1330f2c1424cb7a5202d0f24b41ff49286ebff4",
+      "migration_name": "convert_programme_assignments_athlete_id_to_uuid",
+      "statement_count": 40,
+      "version": "20260721155000"
+    },
+    {
+      "ledger_statement_array_sha256": "e656027cdfce4e9a12e1ed8ece4712ae80737692968e59af1e711400166c5f13",
+      "migration_name": "add_programme_adaptation_events",
+      "statement_count": 7,
+      "version": "20260721160000"
+    },
+    {
+      "ledger_statement_array_sha256": "6055f3a841f03f1460bbb35db10a864576870a8f3aa51bb3c0f7ebe18abb8c47",
+      "migration_name": "add_dual_role_self_assignment_policies",
+      "statement_count": 5,
+      "version": "20260722120000"
+    },
+    {
+      "ledger_statement_array_sha256": "12a520f4573c251326369e4dd443a8df98f75c574a39d02d8f361f6a6fd0939c",
+      "migration_name": "production_identity_rls_lockdown",
+      "statement_count": 128,
+      "version": "20260722130000"
+    },
+    {
+      "ledger_statement_array_sha256": "f5598d95b8869d618ccb2233214eab5a1086ba59542d3a846a66ad669d76aeb6",
+      "migration_name": "normalize_programme_assignment_uuid_rls",
+      "statement_count": 24,
+      "version": "20260722140000"
+    },
+    {
+      "ledger_statement_array_sha256": "58c42d986d1be39610d9ac257e6987724942ca1f6e8bb8daa12e401d0643fe21",
+      "migration_name": "fix_authenticated_programme_authoring_insert_returning",
+      "statement_count": 13,
+      "version": "20260722150000"
+    },
+    {
+      "ledger_statement_array_sha256": "ae2a40a406ee3591475b22045c55fe6fd7f80ae69f0306e659072d3a4e654738",
+      "migration_name": "fix_programme_version_days_authoring_rls",
+      "statement_count": 14,
+      "version": "20260722160000"
+    },
+    {
+      "ledger_statement_array_sha256": "6c6cea8941b2bf2bc5860fd625e15d1b89a3595e8437f9ceba2c7529c7b96a8b",
+      "migration_name": "add_session_block_exercise_prescriptions",
+      "statement_count": 2,
+      "version": "20260722170000"
+    },
+    {
+      "ledger_statement_array_sha256": "ef606b6d187613ac3f7fd0031a02041067e8f67bd51f1c7087bc66ab4b772797",
+      "migration_name": "fix_programme_version_publish_rls",
+      "statement_count": 6,
+      "version": "20260723100000"
+    },
+    {
+      "ledger_statement_array_sha256": "984abebed3574560d5cb586a6000b3c2791959920db11fadc8e5e27bd2e9a02a",
+      "migration_name": "add_programme_lineage_import_key",
+      "statement_count": 3,
+      "version": "20260724120000"
+    },
+    {
+      "ledger_statement_array_sha256": "5af48d6c769cb59963bcb9f7e0e653bdd86a88472596b5dd1e343334b043989e",
+      "migration_name": "founder_exercise_library_wave1",
+      "statement_count": 2,
+      "version": "20260724140000"
+    },
+    {
+      "ledger_statement_array_sha256": "10ec4a99d5488bdebc7181ff091f615f9b226ceefd328ac16b47da42ade1d3ef",
+      "migration_name": "add_session_and_block_adaptation_metadata",
+      "statement_count": 9,
+      "version": "20260725160000"
+    },
+    {
+      "ledger_statement_array_sha256": "0a0b770dd36b6e482201201efa1afacc6ec75ab685577ce7bd9dfa1e632d2c7f",
+      "migration_name": "seed_cohort_session_templates",
+      "statement_count": 22,
+      "version": "20260730150000"
+    },
+    {
+      "ledger_statement_array_sha256": "98f988f5533cad5779d7e74fe2436d4ccfabe205e603074b51e529b4f5de020b",
+      "migration_name": "authored_plan_package_import",
+      "statement_count": 140,
+      "version": "20260731120000"
+    },
+    {
+      "ledger_statement_array_sha256": "5b4cad4eff01c4753d9493c30961856b19eeb22f90253e9907754e4a50cd91aa",
+      "migration_name": "athlete_catalogue_enrolment",
+      "statement_count": 23,
+      "version": "20260801120000"
+    },
+    {
+      "ledger_statement_array_sha256": "fee731da4a4c7dd9c78e7f01c3b7a35a8ad7c312ed767c681d14cbe174be8500",
+      "migration_name": "athlete_plan_materialisation",
+      "statement_count": 35,
+      "version": "20260801140000"
+    },
+    {
+      "ledger_statement_array_sha256": "62e0976149aab7beb736e55d24bd837781aba06352febe1092c13e944d05e724",
+      "migration_name": "harden_materialisation_write_guard",
+      "statement_count": 2,
+      "version": "20260801150000"
+    },
+    {
+      "ledger_statement_array_sha256": "fd9faf0c81c5790f7f5d5c3f13838ab207339b87e84a02f2876e0a2d8231f65a",
+      "migration_name": "complete_programme_session_and_advance",
+      "statement_count": 19,
+      "version": "20260801160000"
+    },
+    {
+      "ledger_statement_array_sha256": "4ed30086007e0f57e5ec822fbd969370534987d79fd3ff95bcee75e98a11310e",
+      "migration_name": "add_programme_schedule_projection",
+      "statement_count": 70,
+      "version": "20260803120000"
+    },
+    {
+      "ledger_statement_array_sha256": "f427a8f75820ddbb82ca5cb4076f7a800cc85d21cf6a03071c0737aa79120330",
+      "migration_name": "apply_programme_schedule_move_swap",
+      "statement_count": 24,
+      "version": "20260803140000"
+    },
+    {
+      "ledger_statement_array_sha256": "30b52998eaa758eeac6872b234c0be72ddb7dcd1affcedfac44894f6e3825ec5",
+      "migration_name": "apply_programme_schedule_push_skip",
+      "statement_count": 6,
+      "version": "20260803160000"
+    },
+    {
+      "ledger_statement_array_sha256": "137b292d2bd2e12357e85dc0550e3e49d3d8baf2ec792b4438bf08a83d074628",
+      "migration_name": "apply_programme_schedule_undo_horizon",
+      "statement_count": 18,
+      "version": "20260803180000"
+    },
+    {
+      "ledger_statement_array_sha256": "f85942cb49fb17e7d4779bb3b921e2f5607c3ae82fdf31d98fa7188dfa8a5c9b",
+      "migration_name": "founder_exercise_library_phase_3_1f_part2",
+      "statement_count": 1,
+      "version": "20260809160000"
+    },
+    {
+      "ledger_statement_array_sha256": "38faf97aeda6d66d438beebd3b0f0d62a0701e158672247daee7f7c7b9f332a7",
+      "migration_name": "atomic_programme_training_session_start",
+      "statement_count": 8,
+      "version": "20260813140000"
+    },
+    {
+      "ledger_statement_array_sha256": "4f4c1f5759d520d79a0ed98ec1a0abae413dace536014abd9303c60fafce79ac",
+      "migration_name": "session_block_exercise_grouping",
+      "statement_count": 6,
+      "version": "20260813150000"
+    },
+    {
+      "ledger_statement_array_sha256": "323df730316520613233d5b9240cbe7fa16eaa906d764123c11e6292e22481ac",
+      "migration_name": "spartan_warmup_exercises",
+      "statement_count": 1,
+      "version": "20260813151000"
+    },
+    {
+      "ledger_statement_array_sha256": "6836ff7110441a937dfb701b6fcef36ad8e057bce6c8dd3ad231765da4c57fe8",
+      "migration_name": "atomic_catalogue_version_replacement",
+      "statement_count": 13,
+      "version": "20260813160000"
+    },
+    {
+      "ledger_statement_array_sha256": "9aab8406cf93993f48bb8040562ad0aed2e9f658fd0a75e289120a0cc4a9842b",
+      "migration_name": "atomic_catalogue_replacement_already_approved_target",
+      "statement_count": 6,
+      "version": "20260813160500"
+    },
+    {
+      "ledger_statement_array_sha256": "8d6162b03f05234562fadd14e05df058598caab0411e64ed7b845ce6d6f2d68f",
+      "migration_name": "catalogue_lineage_uniqueness",
+      "statement_count": 2,
+      "version": "20260813161000"
+    },
+    {
+      "ledger_statement_array_sha256": "8b293497a6390dc5722fccf6972447fdf94642d5febe4dced5b2e717527d1988",
+      "migration_name": "enrol_replace_active_materialised_assignment_guc_correction",
+      "statement_count": 6,
+      "version": "20260817170000"
+    },
+    {
+      "ledger_statement_array_sha256": "009110c53ed978a06870114792ab81ef30d7a7e13e722120bedc5ac2d3e85f76",
+      "migration_name": "apollo_build_week1_executable_protocols",
+      "statement_count": 6,
+      "version": "20260821120000"
+    },
+    {
+      "ledger_statement_array_sha256": "7d39fa4ee586c960b126ccb8cbac5986d2ab54d1247e417584e149bb9dd5b03e",
+      "migration_name": "apollo_build_week2_executable_protocols",
+      "statement_count": 4,
+      "version": "20260821121000"
+    },
+    {
+      "ledger_statement_array_sha256": "c5de3725726a9542667fe4e21e57f39d48acbbd178658ebbcb0cd4dbea227ebf",
+      "migration_name": "apollo_build_week3_executable_protocols",
+      "statement_count": 4,
+      "version": "20260821122000"
+    },
+    {
+      "ledger_statement_array_sha256": "59d1dfe2f5772a0a0433947539be331f2e8524702909247ee7251967f9bcaeea",
+      "migration_name": "apollo_build_week4_executable_protocols",
+      "statement_count": 4,
+      "version": "20260821123000"
+    },
+    {
+      "ledger_statement_array_sha256": "47f3c4bb30fea09f7ca3f1980ea89496b57a370f1f702399c1f6b9d69f490374",
+      "migration_name": "apollo_build_week5_executable_protocols",
+      "statement_count": 7,
+      "version": "20260821124000"
+    },
+    {
+      "ledger_statement_array_sha256": "a0339b859ffe1ff4cad070cf17bab064c99921c7129745ee1ea19fb4dbe61634",
+      "migration_name": "apollo_build_week6_executable_protocols",
+      "statement_count": 5,
+      "version": "20260821125000"
+    },
+    {
+      "ledger_statement_array_sha256": "260ecb9f4565b7a631d2f74a5fc8d1150457063d2939738e1942e66c3b5de727",
+      "migration_name": "apollo_build_week7_executable_protocols",
+      "statement_count": 5,
+      "version": "20260821130000"
+    },
+    {
+      "ledger_statement_array_sha256": "f54c61c5fcead14a28d94a1de4ded6fd846dcf7dd2b2ac242f415c6eed54d2c0",
+      "migration_name": "apollo_build_week8_executable_protocols",
+      "statement_count": 4,
+      "version": "20260821131000"
+    },
+    {
+      "ledger_statement_array_sha256": "ce883b3ced6f79176738f3c29d03a5f3d40abe87a3c1c0e5d94e5a5a4a4e4286",
+      "migration_name": "apollo_build_week9_executable_protocols",
+      "statement_count": 5,
+      "version": "20260821132000"
+    },
+    {
+      "ledger_statement_array_sha256": "a96852f6da364713ce31b58bff64a116b776fc95a7c00d60f76db85aaffe7c29",
+      "migration_name": "apollo_build_week10_executable_protocols",
+      "statement_count": 5,
+      "version": "20260821133000"
+    },
+    {
+      "ledger_statement_array_sha256": "5d7e2e552295562c17e166658b60b030a821a50c9297a468bb20bb8496b15203",
+      "migration_name": "apollo_build_week11_executable_protocols",
+      "statement_count": 5,
+      "version": "20260821134000"
+    },
+    {
+      "ledger_statement_array_sha256": "e95a22378ff535c4937a63c177b8443d98ba2bbaacfe5a8d0ea6a4fe8d7b4081",
+      "migration_name": "apollo_build_week12_executable_protocols",
+      "statement_count": 6,
+      "version": "20260821135000"
+    },
+    {
+      "ledger_statement_array_sha256": "870f706148d24460cddbb0dbc5919990c42e27e9de23ce2c3a49e5cc0e598189",
+      "migration_name": "publish_apollo_build_protocols",
+      "statement_count": 1,
+      "version": "20260822120000"
+    },
+    {
+      "ledger_statement_array_sha256": "3f3bf606db7eef3d6a5cc6a0612bb634ec0768f1283c0fd78c97c8c057c05035",
+      "migration_name": "allow_authenticated_profile_reads",
+      "statement_count": 2,
+      "version": "20260822121000"
+    },
+    {
+      "ledger_statement_array_sha256": "6c4c5388845df77dcc6aefd227758595908c0890886d5904038722d53ac53d21",
+      "migration_name": "allow_authenticated_assigned_programme_structure_reads",
+      "statement_count": 4,
+      "version": "20260822122000"
+    },
+    {
+      "ledger_statement_array_sha256": "6b4b96a85f9c8b369ad94e5cfe0854bcb743865451836c33516795bb5cc5783e",
+      "migration_name": "allow_authenticated_assigned_protocol_reads",
+      "statement_count": 21,
+      "version": "20260822123000"
+    },
+    {
+      "ledger_statement_array_sha256": "73c56e8b19e05a433b7da2846ef4448efda400013307b7d2f815127d68f0ce5b",
+      "migration_name": "allow_authenticated_assigned_session_start",
+      "statement_count": 7,
+      "version": "20260823120000"
+    },
+    {
+      "ledger_statement_array_sha256": "6d01053a65865466926f6d13fb9c70e8439161795829afe8d50d0d680871520a",
+      "migration_name": "structure_apollo_week1_monday_warmup_exercises",
+      "statement_count": 2,
+      "version": "20260823121000"
+    },
+    {
+      "ledger_statement_array_sha256": "4a2815abeda0677d455f66366d3c0ed853a1fd14851e235a68c420762588b39c",
+      "migration_name": "apollo_calendar_driven_schedule_slice_1",
+      "statement_count": 40,
+      "version": "20260824120000"
+    },
+    {
+      "ledger_statement_array_sha256": "05834e4bf4c40254dbb87f84fb6e6a13b46be0dfc01643de24b2feddc25ea712",
+      "migration_name": "correct_apollo_structured_warmup_prescriptions",
+      "statement_count": 1,
+      "version": "20260824121000"
+    },
+    {
+      "ledger_statement_array_sha256": "76cba0524bcebb7f531a0662f3dd9346972ded0d0dc7f41ba824c128f3aa2985",
+      "migration_name": "structure_all_apollo_warmups_and_athlete_details",
+      "statement_count": 10,
+      "version": "20260825120000"
+    },
+    {
+      "ledger_statement_array_sha256": "f4741bb9ae67ff0ddf7213dbceaa600a8cde85c50ec91be5d96a4cb6c6334708",
+      "migration_name": "allow_authenticated_programme_slot_outcome_reads",
+      "statement_count": 3,
+      "version": "20260902120000"
+    },
+    {
+      "ledger_statement_array_sha256": "58df3d37d022ca3d20a7e5570acf4cbfc8eb393ad4910d609d2cb5629d6cccf6",
+      "migration_name": "classify_continuous_conditioning_as_steady_state",
+      "statement_count": 4,
+      "version": "20260903120000"
+    },
+    {
+      "ledger_statement_array_sha256": "568a378e76992311220edfb34656fc4fe1a0d1f9684480c7c77eb6040ded51dc",
+      "migration_name": "correct_completed_performance_record",
+      "statement_count": 16,
+      "version": "20260904120000"
+    },
+    {
+      "ledger_statement_array_sha256": "f5489d94ad60b526bc1b368f9bb92e15654642cf23886ac8a3145c4914d5ca58",
+      "migration_name": "interval_set_result_integrity",
+      "statement_count": 5,
+      "version": "20260905120000"
+    },
+    {
+      "ledger_statement_array_sha256": "d26152a16259bbfc5af5275056848298b24989dd5ea55ca661e11d99eceadae2",
+      "migration_name": "correct_interval_performance_record",
+      "statement_count": 5,
+      "version": "20260905121000"
+    },
+    {
+      "ledger_statement_array_sha256": "3fa9c5888269988ff952c7cdfe3a7308fcedfe29e10f6b8897d3cba25c360561",
+      "migration_name": "swap_future_fixed_programme_session_and_begin",
+      "statement_count": 9,
+      "version": "20260905180000"
+    },
+    {
+      "ledger_statement_array_sha256": "3448ea30c6412d21901e290a525f8ae86482e117b27735e67d1cf83a5deb42c1",
+      "migration_name": "bound_future_train_today_swap_horizon",
+      "statement_count": 4,
+      "version": "20260906120000"
+    },
+    {
+      "ledger_statement_array_sha256": "fb2e7650f8c5bbd464f65230e331abf81ade0eca47e2e1c9a561817562a270f0",
+      "migration_name": "ignore_completed_sessions_in_train_today_swap",
+      "statement_count": 4,
+      "version": "20260906140000"
+    },
+    {
+      "ledger_statement_array_sha256": "c3083f6e77011307f8d3c9b54e63be381471a73f26d10b9863d5d79ade8fb4d5",
+      "migration_name": "apollo_w5_fixed_work_rounds_capture",
+      "statement_count": 2,
+      "version": "20260906160000"
+    },
+    {
+      "ledger_statement_array_sha256": "360629a81a4ed1631cd86fdbc658f4ca967558dc84f16d403032f3d1fcf16a92",
+      "migration_name": "overdue_fixed_programme_recovery",
+      "statement_count": 1,
+      "version": "20260911120000"
+    },
+    {
+      "ledger_statement_array_sha256": "360629a81a4ed1631cd86fdbc658f4ca967558dc84f16d403032f3d1fcf16a92",
+      "migration_name": "backfill_fixed_programme_session_results",
+      "statement_count": 1,
+      "version": "20260913120000"
+    },
+    {
+      "ledger_statement_array_sha256": "360629a81a4ed1631cd86fdbc658f4ca967558dc84f16d403032f3d1fcf16a92",
+      "migration_name": "terminalize_training_session_from_completed_record",
+      "statement_count": 1,
+      "version": "20260914120000"
+    },
+    {
+      "ledger_statement_array_sha256": "360629a81a4ed1631cd86fdbc658f4ca967558dc84f16d403032f3d1fcf16a92",
+      "migration_name": "reconcile_terminal_training_sessions_from_records",
+      "statement_count": 1,
+      "version": "20260914121000"
+    },
+    {
+      "ledger_statement_array_sha256": "a86e8373f863b25663fe576426409111ffaa0c88ce7fff98b03be9a4535f6add",
+      "migration_name": "content_graph_core",
+      "statement_count": 20,
+      "version": "20260918120000"
+    },
+    {
+      "ledger_statement_array_sha256": "653ce8a56f12ea490b56101fabe3e2fe7469c4b93ccda0a0ba48f6e105ef2b92",
+      "migration_name": "content_graph_publication",
+      "statement_count": 16,
+      "version": "20260918120100"
+    },
+    {
+      "ledger_statement_array_sha256": "a608e79f64549d4c0f19551fa4e006cc6aa6a06470277804448d6bd3bf7c9c71",
+      "migration_name": "content_graph_read_models",
+      "statement_count": 18,
+      "version": "20260918120200"
+    },
+    {
+      "ledger_statement_array_sha256": "612db5c7eab98350e90e329f619fe0e569f130bc8a4dfecc99a025cb8d532456",
+      "migration_name": "content_graph_rls",
+      "statement_count": 43,
+      "version": "20260918120300"
+    },
+    {
+      "ledger_statement_array_sha256": "97c7501e9e3e381a198b29cbc83311e1d2c97e181dcfbfdb079dca31f625bce7",
+      "migration_name": "content_graph_reconstruction",
+      "statement_count": 9,
+      "version": "20260918120400"
+    },
+    {
+      "ledger_statement_array_sha256": "ad7b1b6d54f1b6fa14fad3beb8ca47d877fc6817a23e30a30b08585213f59ea1",
+      "migration_name": "publisher_athlete_membership_core",
+      "statement_count": 24,
+      "version": "20260919120000"
+    },
+    {
+      "ledger_statement_array_sha256": "78cfa5433a5d3d72cf85ec9d84b603716469264ea26bd2fa5505a5a5daac53d5",
+      "migration_name": "publisher_athlete_membership_rpcs",
+      "statement_count": 14,
+      "version": "20260919120100"
+    },
+    {
+      "ledger_statement_array_sha256": "014bbd77174302a01190784918fc035f4c0af37aa61288901dc5266d532c296b",
+      "migration_name": "publisher_athlete_roster_projection",
+      "statement_count": 12,
+      "version": "20260919120200"
+    },
+    {
+      "ledger_statement_array_sha256": "1910dc8211f597b9e0f725bb50efdbff41fa9401a39074647860e8540a95e41f",
+      "migration_name": "publisher_athlete_membership_rls",
+      "statement_count": 23,
+      "version": "20260919120300"
+    },
+    {
+      "ledger_statement_array_sha256": "901b6248b285bdf5d6845523a8635e15d7d46eadc84cf882f8884874c6c16d46",
+      "migration_name": "publisher_athlete_membership_capabilities",
+      "statement_count": 4,
+      "version": "20260919120400"
+    },
+    {
+      "ledger_statement_array_sha256": "362a1cb25f3f63d54c55f6d3deb62b5888819b6733f0ca61fa42e6816badfe8f",
+      "migration_name": "publisher_athlete_membership_privilege_hardening",
+      "statement_count": 47,
+      "version": "20260920120000"
+    },
+    {
+      "ledger_statement_array_sha256": "4863a6db41e29cc058b639c6c3aec7e2beba450a081004899cd079c545bdbfd1",
+      "migration_name": "enrolment_iana_timezone_and_local_start",
+      "statement_count": 6,
+      "version": "20260923120000"
+    },
+    {
+      "ledger_statement_array_sha256": "1004b7ce75afd9d956742034ddf87df27824e0421c6cae19caa69aa46d21d62e",
+      "migration_name": "completed_fixed_programme_calendar_inspection",
+      "statement_count": 3,
+      "version": "20260924120000"
+    },
+    {
+      "ledger_statement_array_sha256": "460161f9e79bb2c759704dc3480675563996158c76005e4530f4301fa03b4796",
+      "migration_name": "authored_occurrence_calendar_dates",
+      "statement_count": 17,
+      "version": "20260926120000"
+    },
+    {
+      "ledger_statement_array_sha256": "6b727cfcdb91a314c360c78b41aace31b473413b6ecdf799eeb6f6414169cad3",
+      "migration_name": "private_exact_version_enrolment",
+      "statement_count": 16,
+      "version": "20260926130000"
+    },
+    {
+      "ledger_statement_array_sha256": "333a6114cb16c8ba6b008a886bc45a6f7c7847d43b4c513a1fbcc0eaedb3ea36",
+      "migration_name": "private_exact_version_publication",
+      "statement_count": 20,
+      "version": "20260926140000"
+    },
+    {
+      "ledger_statement_array_sha256": "3edc8e2af01543ab71cfe3ab34166232a6c9d85bfe84fc5a1c7221595c117d87",
+      "migration_name": "assigned_programme_graph_read",
+      "statement_count": 12,
+      "version": "20260926150000"
+    },
+    {
+      "ledger_statement_array_sha256": "1d49ffa4f223650b9e882ab196a0f5a7828c35c5e310339bb42a382e65943030",
+      "migration_name": "private_protocol_graph_publication",
+      "statement_count": 20,
+      "version": "20260926160000"
+    },
+    {
+      "ledger_statement_array_sha256": "6135519c04fc2788a2e65a6e3ef937b673383d852f4ffb8e31a93cf1f90b2352",
+      "migration_name": "private_exercise_capture_repair",
+      "statement_count": 9,
+      "version": "20260926170000"
+    },
+    {
+      "ledger_statement_array_sha256": "20ba743daaf47d73f6acb04ff2510d5288a6fcd25c920a0d5e53b96fe8911fa4",
+      "migration_name": "private_exercise_capture_repair_in_progress",
+      "statement_count": 4,
+      "version": "20260926180000"
+    },
+    {
+      "ledger_statement_array_sha256": "2fc007a92321236a13d62bbcf3c978c8dbe315a7a33f36d1fd6bb9b3dfe1c44b",
+      "migration_name": "fixed_occurrence_time_of_day",
+      "statement_count": 1,
+      "version": "20260926190000"
+    },
+    {
+      "ledger_statement_array_sha256": "3a876a626b3785d0cbb9d5ab27f98900bc2b8d6425d4fac4e25dcdee239ee8d0",
+      "migration_name": "private_assignment_fixed_schedule",
+      "statement_count": 12,
+      "version": "20260926200000"
+    },
+    {
+      "ledger_statement_array_sha256": "6d84eb6a8d1df79803a03c89f9d943afa961afdbe1f421dd41e020c4c32061d7",
+      "migration_name": "plan_package_v2_authored_running",
+      "statement_count": 16,
+      "version": "20260927120000"
+    },
+    {
+      "ledger_statement_array_sha256": "6cc007751ed8d30a1d9ef24f2d4e51aa72f1d4438e12c8d79d6fb5f60207b88e",
+      "migration_name": "running_5k_benchmark_evidence",
+      "statement_count": 40,
+      "version": "20260927130000"
+    },
+    {
+      "ledger_statement_array_sha256": "12cba576e545542d19abf92db96a124099d4206b992096a171861a5c04f06334",
+      "migration_name": "running_pace_sql_foundation",
+      "statement_count": 18,
+      "version": "20260927140000"
+    },
+    {
+      "ledger_statement_array_sha256": "29bb3221169803a5a9d3fec1a7ebcd46228db7c63fc8b06d15309ddab8a87c3d",
+      "migration_name": "occurrence_running_target_snapshot",
+      "statement_count": 12,
+      "version": "20260927150000"
+    },
+    {
+      "ledger_statement_array_sha256": "c50cef47b5f2c81fbd4b90814e1a2a4ee9158fdf69e16c12b1d079fce3feb2c2",
+      "migration_name": "b3_running_execution_mapping",
+      "statement_count": 13,
+      "version": "20260928120000"
+    },
+    {
+      "ledger_statement_array_sha256": "89249a6a496d87648c97b9602868131940c02f63719de18b52ae678307f409f3",
+      "migration_name": "b3_structured_running_targets_and_actuals",
+      "statement_count": 13,
+      "version": "20260929120000"
+    },
+    {
+      "ledger_statement_array_sha256": "e53f22a14a2715caefdd59d70bcf9c8ea8f1aa387a71f02e344bcd49016afa92",
+      "migration_name": "reject_overlapping_running_advisory_scope",
+      "statement_count": 5,
+      "version": "20261005120000"
+    },
+    {
+      "ledger_statement_array_sha256": "d98a239609b14181b24bcd7484c279c77eb1ec55c5ce2be3d4fab4e77f1f1df7",
+      "migration_name": "performance_tracking_coherent_history_read",
+      "statement_count": 4,
+      "version": "20261005130000"
+    },
+    {
+      "ledger_statement_array_sha256": "e77845397f63f61ee86ef4066f83ab1ae6280b34b2921c48e24a02e161490603",
+      "migration_name": "tracking_publication_artifact_retention",
+      "statement_count": 15,
+      "version": "20261005140000"
+    },
+    {
+      "ledger_statement_array_sha256": "0cd591d9684006da1ec715ab4676186e49495b21cc9550124687cf90179d197f",
+      "migration_name": "tracking_programme_coherent_read",
+      "statement_count": 3,
+      "version": "20261005141000"
+    },
+    {
+      "ledger_statement_array_sha256": "12af48e62e20d581c7d5c6f80de5b3919fc5a7d8d97ad561df5b188220c40353",
+      "migration_name": "history_read_permission_remediation",
+      "statement_count": 13,
+      "version": "20261007120000"
+    },
+    {
+      "ledger_statement_array_sha256": "f8ea0b11250744a3fe893514b098635dced729c2b9d4fa05ead7811a27ed1e89",
+      "migration_name": "completion_ownership_and_parent_guard",
+      "statement_count": 28,
+      "version": "20261007130000"
+    },
+    {
+      "ledger_statement_array_sha256": "d4fe0fe5b8910a8cf96f8d442aef1bc5f09105ec9a55d27d00fbd16193072b09",
+      "migration_name": "completion_result_identity",
+      "statement_count": 13,
+      "version": "20261008120000"
+    },
+    {
+      "ledger_statement_array_sha256": "3b7c1db24c8a423580bc5ba0c552e6534c8565f22c7fc6d5cbbadb118274355e",
+      "migration_name": "completion_link_locking",
+      "statement_count": 8,
+      "version": "20261008121000"
+    },
+    {
+      "ledger_statement_array_sha256": "0cd4fad73a63cbb16cc59ca7234e5bba952b10f156d213d3834a101d61f19723",
+      "migration_name": "backfill_authenticated_execute",
+      "statement_count": 4,
+      "version": "20261009120000"
+    }
+  ],
+  "http_status": 201,
+  "observed_at_utc": "2026-10-25T07:14:58Z"
+}

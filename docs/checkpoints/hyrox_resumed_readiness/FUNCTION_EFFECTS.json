@@ -1,0 +1,60 @@
+{
+  "all_other_170_existing_functions": "Exact body/definition/ACL identity must stay equal to freshly observed baseline except catalog OID formatting of new objects; unchanged pure helper grants are not newly inferred authority.",
+  "cloned_originals": [
+    {
+      "expected_body_sha256": "a9c7d9addebfc734ff59f5863bf4580a4b6d8f5b0d16041f5e91eb39830113e9",
+      "signature": "cohort_create_or_resume_fixed_occurrence_pre_v3(uuid,timestamp with time zone)"
+    },
+    {
+      "expected_body_sha256": "24e315c9996db3e19d0f332e375183230b9554ea33ecf7790b39500d512c3796",
+      "signature": "cohort_create_or_resume_programme_training_session_pre_v3(jsonb)"
+    }
+  ],
+  "existing_function_deltas": [
+    {
+      "after_source": "supabase/migrations/20261023122000_v3_programme_consent_start.sql",
+      "before_body_sha256": "a9c7d9addebfc734ff59f5863bf4580a4b6d8f5b0d16041f5e91eb39830113e9",
+      "expected_acl": "Preserve current ACL; fixed helper remains private; generic public start preserves its existing authenticated/service-role access; interval normalizer remains pure/invoker.",
+      "expected_after_body_sha256": "777c92ea027c4c174bba6ecdc93b256443313f72c40865395b5e19585cdc41bd",
+      "expected_search_path": "pg_catalog, pg_temp",
+      "retained_oid": "19675",
+      "signature": "cohort_create_or_resume_fixed_occurrence_at(uuid,timestamp with time zone)"
+    },
+    {
+      "after_source": "supabase/migrations/20261022121000_v3_unresolved_authority_guard.sql",
+      "before_body_sha256": "24e315c9996db3e19d0f332e375183230b9554ea33ecf7790b39500d512c3796",
+      "expected_acl": "Preserve current ACL; fixed helper remains private; generic public start preserves its existing authenticated/service-role access; interval normalizer remains pure/invoker.",
+      "expected_after_body_sha256": "f8dba02c77f0aa0a1b7abed444002ec6ab9cbfccc17ce3bd2cb411d9f156ecc9",
+      "expected_search_path": "pg_catalog, pg_temp",
+      "retained_oid": "19536",
+      "signature": "create_or_resume_programme_training_session(jsonb)"
+    },
+    {
+      "after_source": "supabase/migrations/20261023130000_v3_athlete_review_state.sql",
+      "before_body_sha256": "a887dedec615f54e630768d0caf2286da6dfe7526e13fd9d44958455d762b672",
+      "expected_acl": "Preserve current ACL; fixed helper remains private; generic public start preserves its existing authenticated/service-role access; interval normalizer remains pure/invoker.",
+      "expected_after_body_sha256": "d2460da20545299d4e06dafd1a68ecae9ea17f69ead8e357660e2d2616db344d",
+      "expected_search_path": "public, pg_temp",
+      "retained_oid": "19733",
+      "signature": "cohort_canonicalize_interval_result_data(jsonb)"
+    }
+  ],
+  "new_postcheck_supplement": "Verify atomic retention wrapper; duration choices table/RLS/immutable trigger; 2arg+3arg start ACLs; private renamed wrapper; duration record guard; final cohort_v3_validate body from latest migration",
+  "new_tables": [
+    "cohort_v3_publication_claims",
+    "hyrox_base_benchmark_revisions",
+    "hyrox_base_benchmark_selections",
+    "hyrox_prescription_dependencies",
+    "programme_occurrence_duration_choices",
+    "programme_occurrence_v3_prescription_snapshots",
+    "programme_v3_prescription_consents",
+    "programme_v3_prescription_reviews",
+    "programme_v3_publication_artifacts",
+    "published_exercise_definition_versions",
+    "published_exercise_version_retirements"
+  ],
+  "special_new_objects": [
+    "cohort_exercise_version_publisher: NOLOGIN/NOINHERIT/NOSUPERUSER/NOCREATEDB/NOCREATEROLE/NOBYPASSRLS; no usable membership; PG17 creator ADMIN-only SET/INHERIT=false",
+    "Exactly three reviewed hyrox_prescription_dependencies rule/benchmark rows; no exercise/programme/athlete seeds"
+  ]
+}
