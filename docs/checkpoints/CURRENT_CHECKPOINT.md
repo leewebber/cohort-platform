@@ -1,5 +1,26 @@
 # Current repository checkpoint
 
+> **HYROX authoritative operations — prepared locally, 2026-10-25:**
+> [Operation package](./hyrox_publication_operations/HANDOFF.md) retains exact digests/templates for 27 approved definitions /
+> 29 labels, 48 provisional source graphs, eight rest entries and a strictly admitted
+> LOCAL REHEARSAL canonical artifact. Original prescriptions/variants, all 130 migration
+> files and old contracts/goldens remain exact. Fresh/repeat full local sequence passes:
+> exercise retention/retry/conflict/recovery, source rollback and registration, strict
+> artifact admission/rollback/role isolation, programme consent, all 48 start/frozen
+> prescription/duration/save/reopen/completion/History paths and unchanged snapshots after
+> retirement.
+> 57 server tests, six manifest tests and six safety groups pass; analysis remains 362
+> identical inherited findings, zero errors/new/changed-file diagnostics. Synthetic JWTs
+> and aged fixture assignments are explicit limits; backdated private enrolment is not
+> proved. Field Manual remains INACTIVE; observed Cloud Run is legacy with no configured
+> v3 producer/event source/durable delivery. T1/B3 remain on all 48 real sessions. Exact
+> hosted pending schema/identity/version/event inputs remain unknown; no real events,
+> provisioning, retention, publication, assignment or hosted writes occurred. Smallest
+> next authority: bounded Field Manual resumption under verified writer hold, then
+> read-only ledger/definition/source/capability preflight. No automatic cleanup or global
+> settings change; original 95 paths and 20 older inventories are preserved. Test Week,
+> client/device, commercial readiness and wider Stage 2/Sprint C closure stay separate.
+
 > **HYROX complete sources/authenticated local proof — 2026-10-25:**
 > [Master](../programmes/hyrox_base/MASTER.md), [coverage](../programmes/hyrox_base/COVERAGE.md) and [handoff](./hyrox_complete_sources/HANDOFF.md) record 48 complete
 > content-approved prescriptions plus eight rest entries; no content/preparation decisions

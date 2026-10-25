@@ -1,0 +1,47 @@
+{
+  "base": "e5a5b8f387d084d6f446c0f23ee1fa43a4438382",
+  "checks": {
+    "analysis": {
+      "after": 362,
+      "baseline_sha256": "9b182c7a3a671a0b48551d4f974260938e7cc2c0f15609cdd17f80e91acdec03",
+      "before": 362,
+      "changed_file_findings": 0,
+      "diagnostic_identities_equal": true,
+      "errors": 0,
+      "info": 254,
+      "new": 0,
+      "removed": 0,
+      "warnings": 108
+    },
+    "approved_programme_sources": {
+      "byte_identical": true,
+      "differences": [],
+      "prior_files": 19
+    },
+    "athlete_and_compiler_source": {
+      "byte_identical": true,
+      "differences": [],
+      "prior_files": 1296
+    },
+    "migrations": {
+      "byte_identical": true,
+      "differences": [],
+      "prior_files": 130
+    },
+    "package_contracts_and_goldens": {
+      "byte_identical": true,
+      "differences": [],
+      "prior_files": 49
+    },
+    "runtime_source": {
+      "byte_identical": true,
+      "differences": [],
+      "prior_files": 12
+    },
+    "trusted_HTTP_producer_checkpoint_and_package": {
+      "byte_identical": true,
+      "differences": [],
+      "prior_files": 34
+    }
+  }
+}

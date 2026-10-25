@@ -1,0 +1,566 @@
+{
+  "classification": "LOCAL_FIXTURE_RECORDS_NOT_GENUINE_APPROVALS_OR_HOSTED_INPUT",
+  "records": [
+    {
+      "approval": {
+        "reference": "LOCAL-REHEARSAL-NOT-REAL-APPROVAL:base-review-assault_bike",
+        "status": "approved"
+      },
+      "artifact": {
+        "canonical_text": "{\"aliases\":[],\"canonical_name\":\"LOCAL REHEARSAL: Fan-resistance air bike\",\"coaching_content_refs\":[],\"environments\":{\"notes\":\"Equipment availability must be checked; no substitution or environment guarantee.\",\"suitable\":[],\"unsuitable\":[]},\"equipment\":{\"notes\":\"Seated on a fan bike; feet on pedals; use both moving handles. Closed neutral grip on moving handles.\",\"one_of_groups\":[],\"optional_tokens\":[],\"required_tokens\":[\"air_bike\"],\"supports_external_load\":false},\"id\":\"EX-901000\",\"impact_level\":\"unknown\",\"laterality\":\"bilateral\",\"lifecycle_status\":\"published\",\"media_refs\":[],\"modality\":\"erg\",\"movement_patterns\":[\"cyclical\"],\"movement_standard_refs\":[],\"owner\":\"founder\",\"published_at\":\"2026-10-25T00:00:00.000Z\",\"sport_standard_refs\":[],\"technical_complexity\":\"unknown\",\"transitional_alias_ids\":[],\"valid_completed_performance_dimensions\":[\"duration\",\"distance\",\"pace\"],\"valid_prescription_dimensions\":[\"duration\",\"distance\",\"pace\",\"rpe\"],\"version\":\"1\"}",
+        "publication": {
+          "approved_binding_kinds": [],
+          "event_id": "424eb791-67b2-4c47-80de-df6474197598",
+          "issuer": "founder_exercise_publication_v1",
+          "published_at": "2026-10-25T00:00:00Z",
+          "source_reference": "LOCAL-REHEARSAL-NOT-REAL-APPROVAL:base-review-assault_bike"
+        },
+        "retirement": null
+      },
+      "contract": "cohort.trusted-publication-event.v1",
+      "event_id": "424eb791-67b2-4c47-80de-df6474197598",
+      "kind": "exercise_published"
+    },
+    {
+      "approval": {
+        "reference": "LOCAL-REHEARSAL-NOT-REAL-APPROVAL:base-review-back_squat",
+        "status": "approved"
+      },
+      "artifact": {
+        "canonical_text": "{\"aliases\":[],\"canonical_name\":\"LOCAL REHEARSAL: Back Squat\",\"coaching_content_refs\":[],\"environments\":{\"notes\":\"Equipment availability must be checked; no substitution or environment guarantee.\",\"suitable\":[],\"unsuitable\":[]},\"equipment\":{\"notes\":\"Standing; bar high across the upper back; feet about shoulder-width, toes slightly out. Closed overhand grip at a comfortable width that stabilises the bar.\",\"one_of_groups\":[],\"optional_tokens\":[],\"required_tokens\":[\"barbell\",\"rack\"],\"supports_external_load\":true},\"id\":\"EX-901001\",\"impact_level\":\"unknown\",\"laterality\":\"bilateral\",\"lifecycle_status\":\"published\",\"media_refs\":[],\"modality\":\"strength\",\"movement_patterns\":[\"squat\"],\"movement_standard_refs\":[],\"owner\":\"founder\",\"published_at\":\"2026-10-25T00:00:00.000Z\",\"sport_standard_refs\":[],\"technical_complexity\":\"unknown\",\"transitional_alias_ids\":[],\"valid_completed_performance_dimensions\":[\"repetitions\",\"load\"],\"valid_prescription_dimensions\":[\"repetitions\",\"load\",\"rir\"],\"version\":\"1\"}",
+        "publication": {
+          "approved_binding_kinds": [
+            "backSquat"
+          ],
+          "event_id": "ec73eaef-63ad-4183-8092-97d3e6ea8c7f",
+          "issuer": "founder_exercise_publication_v1",
+          "published_at": "2026-10-25T00:00:00Z",
+          "source_reference": "LOCAL-REHEARSAL-NOT-REAL-APPROVAL:base-review-back_squat"
+        },
+        "retirement": null
+      },
+      "contract": "cohort.trusted-publication-event.v1",
+      "event_id": "ec73eaef-63ad-4183-8092-97d3e6ea8c7f",
+      "kind": "exercise_published"
+    },
+    {
+      "approval": {
+        "reference": "LOCAL-REHEARSAL-NOT-REAL-APPROVAL:base-review-bodyweight_squat",
+        "status": "approved"
+      },
+      "artifact": {
+        "canonical_text": "{\"aliases\":[],\"canonical_name\":\"LOCAL REHEARSAL: Bodyweight squat\",\"coaching_content_refs\":[],\"environments\":{\"notes\":\"Equipment availability must be checked; no substitution or environment guarantee.\",\"suitable\":[],\"unsuitable\":[]},\"equipment\":{\"notes\":\"Standing, feet about shoulder-width, hands in front for balance. No implement.\",\"one_of_groups\":[],\"optional_tokens\":[],\"required_tokens\":[\"bodyweight\"],\"supports_external_load\":false},\"id\":\"EX-901002\",\"impact_level\":\"unknown\",\"laterality\":\"bilateral\",\"lifecycle_status\":\"published\",\"media_refs\":[],\"modality\":\"bodyweight\",\"movement_patterns\":[\"squat\"],\"movement_standard_refs\":[],\"owner\":\"founder\",\"published_at\":\"2026-10-25T00:00:00.000Z\",\"sport_standard_refs\":[],\"technical_complexity\":\"unknown\",\"transitional_alias_ids\":[],\"valid_completed_performance_dimensions\":[\"repetitions\"],\"valid_prescription_dimensions\":[\"repetitions\"],\"version\":\"1\"}",
+        "publication": {
+          "approved_binding_kinds": [],
+          "event_id": "b66ab719-252c-4b17-8012-625789aecdc9",
+          "issuer": "founder_exercise_publication_v1",
+          "published_at": "2026-10-25T00:00:00Z",
+          "source_reference": "LOCAL-REHEARSAL-NOT-REAL-APPROVAL:base-review-bodyweight_squat"
+        },
+        "retirement": null
+      },
+      "contract": "cohort.trusted-publication-event.v1",
+      "event_id": "b66ab719-252c-4b17-8012-625789aecdc9",
+      "kind": "exercise_published"
+    },
+    {
+      "approval": {
+        "reference": "LOCAL-REHEARSAL-NOT-REAL-APPROVAL:base-review-chest_supported_row",
+        "status": "approved"
+      },
+      "artifact": {
+        "canonical_text": "{\"aliases\":[],\"canonical_name\":\"LOCAL REHEARSAL: Chest Supported Row\",\"coaching_content_refs\":[],\"environments\":{\"notes\":\"Equipment availability must be checked; no substitution or environment guarantee.\",\"suitable\":[],\"unsuitable\":[]},\"equipment\":{\"notes\":\"Prone on a bench set about 30 degrees; chest supported, feet planted, arms hanging. Neutral grip, palms facing each other.\",\"one_of_groups\":[],\"optional_tokens\":[],\"required_tokens\":[\"dumbbell\",\"adjustable_bench\"],\"supports_external_load\":true},\"id\":\"EX-901003\",\"impact_level\":\"unknown\",\"laterality\":\"bilateral\",\"lifecycle_status\":\"published\",\"media_refs\":[],\"modality\":\"strength\",\"movement_patterns\":[\"horizontal_pull\"],\"movement_standard_refs\":[],\"owner\":\"founder\",\"published_at\":\"2026-10-25T00:00:00.000Z\",\"sport_standard_refs\":[],\"technical_complexity\":\"unknown\",\"transitional_alias_ids\":[],\"valid_completed_performance_dimensions\":[\"repetitions\",\"load\"],\"valid_prescription_dimensions\":[\"repetitions\",\"load\",\"rir\"],\"version\":\"1\"}",
+        "publication": {
+          "approved_binding_kinds": [],
+          "event_id": "5868b57d-8616-4900-82c4-94d89ffb2f99",
+          "issuer": "founder_exercise_publication_v1",
+          "published_at": "2026-10-25T00:00:00Z",
+          "source_reference": "LOCAL-REHEARSAL-NOT-REAL-APPROVAL:base-review-chest_supported_row"
+        },
+        "retirement": null
+      },
+      "contract": "cohort.trusted-publication-event.v1",
+      "event_id": "5868b57d-8616-4900-82c4-94d89ffb2f99",
+      "kind": "exercise_published"
+    },
+    {
+      "approval": {
+        "reference": "LOCAL-REHEARSAL-NOT-REAL-APPROVAL:base-review-dead_bug",
+        "status": "approved"
+      },
+      "artifact": {
+        "canonical_text": "{\"aliases\":[],\"canonical_name\":\"LOCAL REHEARSAL: Dead Bug\",\"coaching_content_refs\":[],\"environments\":{\"notes\":\"Equipment availability must be checked; no substitution or environment guarantee.\",\"suitable\":[],\"unsuitable\":[]},\"equipment\":{\"notes\":\"Supine; hips and knees bent about 90 degrees, arms pointing upwards. No implement.\",\"one_of_groups\":[],\"optional_tokens\":[],\"required_tokens\":[\"bodyweight\"],\"supports_external_load\":false},\"id\":\"EX-901004\",\"impact_level\":\"unknown\",\"laterality\":\"unilateral\",\"lifecycle_status\":\"published\",\"media_refs\":[],\"modality\":\"bodyweight\",\"movement_patterns\":[\"core\"],\"movement_standard_refs\":[],\"owner\":\"founder\",\"published_at\":\"2026-10-25T00:00:00.000Z\",\"sport_standard_refs\":[],\"technical_complexity\":\"unknown\",\"transitional_alias_ids\":[],\"valid_completed_performance_dimensions\":[\"repetitions\"],\"valid_prescription_dimensions\":[\"repetitions\",\"unilateral_side\"],\"version\":\"1\"}",
+        "publication": {
+          "approved_binding_kinds": [],
+          "event_id": "645574e4-745c-42bd-86ee-2568ae5c1b2c",
+          "issuer": "founder_exercise_publication_v1",
+          "published_at": "2026-10-25T00:00:00Z",
+          "source_reference": "LOCAL-REHEARSAL-NOT-REAL-APPROVAL:base-review-dead_bug"
+        },
+        "retirement": null
+      },
+      "contract": "cohort.trusted-publication-event.v1",
+      "event_id": "645574e4-745c-42bd-86ee-2568ae5c1b2c",
+      "kind": "exercise_published"
+    },
+    {
+      "approval": {
+        "reference": "LOCAL-REHEARSAL-NOT-REAL-APPROVAL:base-review-dumbbell_shoulder_press",
+        "status": "approved"
+      },
+      "artifact": {
+        "canonical_text": "{\"aliases\":[],\"canonical_name\":\"LOCAL REHEARSAL: Dumbbell Strict Press\",\"coaching_content_refs\":[],\"environments\":{\"notes\":\"Equipment availability must be checked; no substitution or environment guarantee.\",\"suitable\":[],\"unsuitable\":[]},\"equipment\":{\"notes\":\"Seated against a near-upright backrest; feet supported, dumbbells at shoulder level. Neutral grip, palms facing inward.\",\"one_of_groups\":[],\"optional_tokens\":[],\"required_tokens\":[\"dumbbell\",\"adjustable_bench\"],\"supports_external_load\":true},\"id\":\"EX-901005\",\"impact_level\":\"unknown\",\"laterality\":\"bilateral\",\"lifecycle_status\":\"published\",\"media_refs\":[],\"modality\":\"strength\",\"movement_patterns\":[\"vertical_push\"],\"movement_standard_refs\":[],\"owner\":\"founder\",\"published_at\":\"2026-10-25T00:00:00.000Z\",\"sport_standard_refs\":[],\"technical_complexity\":\"unknown\",\"transitional_alias_ids\":[],\"valid_completed_performance_dimensions\":[\"repetitions\",\"load\"],\"valid_prescription_dimensions\":[\"repetitions\",\"load\",\"rir\"],\"version\":\"1\"}",
+        "publication": {
+          "approved_binding_kinds": [],
+          "event_id": "c7c7356f-ed06-48eb-882a-2b34de5d286b",
+          "issuer": "founder_exercise_publication_v1",
+          "published_at": "2026-10-25T00:00:00Z",
+          "source_reference": "LOCAL-REHEARSAL-NOT-REAL-APPROVAL:base-review-dumbbell_shoulder_press"
+        },
+        "retirement": null
+      },
+      "contract": "cohort.trusted-publication-event.v1",
+      "event_id": "c7c7356f-ed06-48eb-882a-2b34de5d286b",
+      "kind": "exercise_published"
+    },
+    {
+      "approval": {
+        "reference": "LOCAL-REHEARSAL-NOT-REAL-APPROVAL:base-review-front_rack_reverse_lunge",
+        "status": "approved"
+      },
+      "artifact": {
+        "canonical_text": "{\"aliases\":[],\"canonical_name\":\"LOCAL REHEARSAL: Barbell Front-Rack Reverse Lunge\",\"coaching_content_refs\":[],\"environments\":{\"notes\":\"Equipment availability must be checked; no substitution or environment guarantee.\",\"suitable\":[],\"unsuitable\":[]},\"equipment\":{\"notes\":\"Standing with the barbell supported across the front of the shoulders in a front rack. Front-rack grip with fingers under the bar and elbows forwards to support the rack.\",\"one_of_groups\":[],\"optional_tokens\":[],\"required_tokens\":[\"barbell\",\"rack\"],\"supports_external_load\":true},\"id\":\"EX-901006\",\"impact_level\":\"unknown\",\"laterality\":\"unilateral\",\"lifecycle_status\":\"published\",\"media_refs\":[],\"modality\":\"strength\",\"movement_patterns\":[\"lunge\"],\"movement_standard_refs\":[],\"owner\":\"founder\",\"published_at\":\"2026-10-25T00:00:00.000Z\",\"sport_standard_refs\":[],\"technical_complexity\":\"unknown\",\"transitional_alias_ids\":[],\"valid_completed_performance_dimensions\":[\"repetitions\",\"load\"],\"valid_prescription_dimensions\":[\"repetitions\",\"load\",\"rir\",\"unilateral_side\"],\"version\":\"1\"}",
+        "publication": {
+          "approved_binding_kinds": [],
+          "event_id": "fc713bca-eee8-46e9-8ef1-e7f2cc316b72",
+          "issuer": "founder_exercise_publication_v1",
+          "published_at": "2026-10-25T00:00:00Z",
+          "source_reference": "LOCAL-REHEARSAL-NOT-REAL-APPROVAL:base-review-front_rack_reverse_lunge"
+        },
+        "retirement": null
+      },
+      "contract": "cohort.trusted-publication-event.v1",
+      "event_id": "fc713bca-eee8-46e9-8ef1-e7f2cc316b72",
+      "kind": "exercise_published"
+    },
+    {
+      "approval": {
+        "reference": "LOCAL-REHEARSAL-NOT-REAL-APPROVAL:base-review-glute_bridge",
+        "status": "approved"
+      },
+      "artifact": {
+        "canonical_text": "{\"aliases\":[],\"canonical_name\":\"LOCAL REHEARSAL: Bodyweight floor glute bridge\",\"coaching_content_refs\":[],\"environments\":{\"notes\":\"Equipment availability must be checked; no substitution or environment guarantee.\",\"suitable\":[],\"unsuitable\":[]},\"equipment\":{\"notes\":\"Supine on floor, knees bent, feet flat about hip-width. No implement; arms rest beside the body.\",\"one_of_groups\":[],\"optional_tokens\":[],\"required_tokens\":[\"bodyweight\"],\"supports_external_load\":false},\"id\":\"EX-901007\",\"impact_level\":\"unknown\",\"laterality\":\"bilateral\",\"lifecycle_status\":\"published\",\"media_refs\":[],\"modality\":\"bodyweight\",\"movement_patterns\":[\"hinge\"],\"movement_standard_refs\":[],\"owner\":\"founder\",\"published_at\":\"2026-10-25T00:00:00.000Z\",\"sport_standard_refs\":[],\"technical_complexity\":\"unknown\",\"transitional_alias_ids\":[],\"valid_completed_performance_dimensions\":[\"repetitions\"],\"valid_prescription_dimensions\":[\"repetitions\"],\"version\":\"1\"}",
+        "publication": {
+          "approved_binding_kinds": [],
+          "event_id": "3a2fac1c-a393-477c-8191-a2447dcff060",
+          "issuer": "founder_exercise_publication_v1",
+          "published_at": "2026-10-25T00:00:00Z",
+          "source_reference": "LOCAL-REHEARSAL-NOT-REAL-APPROVAL:base-review-glute_bridge"
+        },
+        "retirement": null
+      },
+      "contract": "cohort.trusted-publication-event.v1",
+      "event_id": "3a2fac1c-a393-477c-8191-a2447dcff060",
+      "kind": "exercise_published"
+    },
+    {
+      "approval": {
+        "reference": "LOCAL-REHEARSAL-NOT-REAL-APPROVAL:base-review-incline_dumbbell_press",
+        "status": "approved"
+      },
+      "artifact": {
+        "canonical_text": "{\"aliases\":[],\"canonical_name\":\"LOCAL REHEARSAL: Incline Dumbbell Press\",\"coaching_content_refs\":[],\"environments\":{\"notes\":\"Equipment availability must be checked; no substitution or environment guarantee.\",\"suitable\":[],\"unsuitable\":[]},\"equipment\":{\"notes\":\"Supine on a bench set about 30 degrees; feet planted, dumbbells by the upper chest. Overhand grip, palms facing forwards.\",\"one_of_groups\":[],\"optional_tokens\":[],\"required_tokens\":[\"dumbbell\",\"adjustable_bench\"],\"supports_external_load\":true},\"id\":\"EX-901008\",\"impact_level\":\"unknown\",\"laterality\":\"bilateral\",\"lifecycle_status\":\"published\",\"media_refs\":[],\"modality\":\"strength\",\"movement_patterns\":[\"horizontal_push\"],\"movement_standard_refs\":[],\"owner\":\"founder\",\"published_at\":\"2026-10-25T00:00:00.000Z\",\"sport_standard_refs\":[],\"technical_complexity\":\"unknown\",\"transitional_alias_ids\":[],\"valid_completed_performance_dimensions\":[\"repetitions\",\"load\"],\"valid_prescription_dimensions\":[\"repetitions\",\"load\",\"rir\"],\"version\":\"1\"}",
+        "publication": {
+          "approved_binding_kinds": [],
+          "event_id": "5bf3f3a8-89a7-4396-85b9-e143b75a11f1",
+          "issuer": "founder_exercise_publication_v1",
+          "published_at": "2026-10-25T00:00:00Z",
+          "source_reference": "LOCAL-REHEARSAL-NOT-REAL-APPROVAL:base-review-incline_dumbbell_press"
+        },
+        "retirement": null
+      },
+      "contract": "cohort.trusted-publication-event.v1",
+      "event_id": "5bf3f3a8-89a7-4396-85b9-e143b75a11f1",
+      "kind": "exercise_published"
+    },
+    {
+      "approval": {
+        "reference": "LOCAL-REHEARSAL-NOT-REAL-APPROVAL:base-review-kettlebell_swing",
+        "status": "approved"
+      },
+      "artifact": {
+        "canonical_text": "{\"aliases\":[],\"canonical_name\":\"LOCAL REHEARSAL: Kettlebell Swing\",\"coaching_content_refs\":[],\"environments\":{\"notes\":\"Equipment availability must be checked; no substitution or environment guarantee.\",\"suitable\":[],\"unsuitable\":[]},\"equipment\":{\"notes\":\"Standing hinge stance with one kettlebell between the legs. Two hands on one handle with an overhand grip.\",\"one_of_groups\":[],\"optional_tokens\":[],\"required_tokens\":[\"kettlebell\"],\"supports_external_load\":true},\"id\":\"EX-901009\",\"impact_level\":\"unknown\",\"laterality\":\"bilateral\",\"lifecycle_status\":\"published\",\"media_refs\":[],\"modality\":\"strength\",\"movement_patterns\":[\"hinge\"],\"movement_standard_refs\":[],\"owner\":\"founder\",\"published_at\":\"2026-10-25T00:00:00.000Z\",\"sport_standard_refs\":[],\"technical_complexity\":\"unknown\",\"transitional_alias_ids\":[],\"valid_completed_performance_dimensions\":[\"repetitions\",\"load\"],\"valid_prescription_dimensions\":[\"repetitions\",\"load\",\"rir\"],\"version\":\"1\"}",
+        "publication": {
+          "approved_binding_kinds": [],
+          "event_id": "8778d444-8477-4740-8a04-bc9133b79b6c",
+          "issuer": "founder_exercise_publication_v1",
+          "published_at": "2026-10-25T00:00:00Z",
+          "source_reference": "LOCAL-REHEARSAL-NOT-REAL-APPROVAL:base-review-kettlebell_swing"
+        },
+        "retirement": null
+      },
+      "contract": "cohort.trusted-publication-event.v1",
+      "event_id": "8778d444-8477-4740-8a04-bc9133b79b6c",
+      "kind": "exercise_published"
+    },
+    {
+      "approval": {
+        "reference": "LOCAL-REHEARSAL-NOT-REAL-APPROVAL:base-review-light_band_pull_apart",
+        "status": "approved"
+      },
+      "artifact": {
+        "canonical_text": "{\"aliases\":[],\"canonical_name\":\"LOCAL REHEARSAL: Light band pull-apart\",\"coaching_content_refs\":[],\"environments\":{\"notes\":\"Equipment availability must be checked; no substitution or environment guarantee.\",\"suitable\":[],\"unsuitable\":[]},\"equipment\":{\"notes\":\"Standing with arms reaching forwards at about chest height. Overhand grip on a light band, hands about shoulder-width apart.\",\"one_of_groups\":[],\"optional_tokens\":[],\"required_tokens\":[\"resistance_band\"],\"supports_external_load\":false},\"id\":\"EX-901010\",\"impact_level\":\"unknown\",\"laterality\":\"bilateral\",\"lifecycle_status\":\"published\",\"media_refs\":[],\"modality\":\"mobility\",\"movement_patterns\":[\"horizontal_pull\"],\"movement_standard_refs\":[],\"owner\":\"founder\",\"published_at\":\"2026-10-25T00:00:00.000Z\",\"sport_standard_refs\":[],\"technical_complexity\":\"unknown\",\"transitional_alias_ids\":[],\"valid_completed_performance_dimensions\":[\"repetitions\"],\"valid_prescription_dimensions\":[\"repetitions\"],\"version\":\"1\"}",
+        "publication": {
+          "approved_binding_kinds": [],
+          "event_id": "9ac132fd-102d-4bed-85bc-33a3ff2c18d9",
+          "issuer": "founder_exercise_publication_v1",
+          "published_at": "2026-10-25T00:00:00Z",
+          "source_reference": "LOCAL-REHEARSAL-NOT-REAL-APPROVAL:base-review-light_band_pull_apart"
+        },
+        "retirement": null
+      },
+      "contract": "cohort.trusted-publication-event.v1",
+      "event_id": "9ac132fd-102d-4bed-85bc-33a3ff2c18d9",
+      "kind": "exercise_published"
+    },
+    {
+      "approval": {
+        "reference": "LOCAL-REHEARSAL-NOT-REAL-APPROVAL:base-review-light_scapular_row",
+        "status": "approved"
+      },
+      "artifact": {
+        "canonical_text": "{\"aliases\":[],\"canonical_name\":\"LOCAL REHEARSAL: Cable Row\",\"coaching_content_refs\":[],\"environments\":{\"notes\":\"Equipment availability must be checked; no substitution or environment guarantee.\",\"suitable\":[],\"unsuitable\":[]},\"equipment\":{\"notes\":\"Standing facing a chest-height cable; stable parallel stance, torso upright. Two-handed neutral grip on a short row handle.\",\"one_of_groups\":[],\"optional_tokens\":[],\"required_tokens\":[\"cable_machine\",\"neutral_row_handle\"],\"supports_external_load\":true},\"id\":\"EX-901011\",\"impact_level\":\"unknown\",\"laterality\":\"bilateral\",\"lifecycle_status\":\"published\",\"media_refs\":[],\"modality\":\"strength\",\"movement_patterns\":[\"horizontal_pull\"],\"movement_standard_refs\":[],\"owner\":\"founder\",\"published_at\":\"2026-10-25T00:00:00.000Z\",\"sport_standard_refs\":[],\"technical_complexity\":\"unknown\",\"transitional_alias_ids\":[],\"valid_completed_performance_dimensions\":[\"repetitions\",\"load\"],\"valid_prescription_dimensions\":[\"repetitions\",\"load\",\"rir\"],\"version\":\"1\"}",
+        "publication": {
+          "approved_binding_kinds": [],
+          "event_id": "1fc690be-03ff-4244-8768-75e170beeece",
+          "issuer": "founder_exercise_publication_v1",
+          "published_at": "2026-10-25T00:00:00Z",
+          "source_reference": "LOCAL-REHEARSAL-NOT-REAL-APPROVAL:base-review-light_scapular_row"
+        },
+        "retirement": null
+      },
+      "contract": "cohort.trusted-publication-event.v1",
+      "event_id": "1fc690be-03ff-4244-8768-75e170beeece",
+      "kind": "exercise_published"
+    },
+    {
+      "approval": {
+        "reference": "LOCAL-REHEARSAL-NOT-REAL-APPROVAL:base-review-long_lever_plank",
+        "status": "approved"
+      },
+      "artifact": {
+        "canonical_text": "{\"aliases\":[],\"canonical_name\":\"LOCAL REHEARSAL: Long-lever forearm plank\",\"coaching_content_refs\":[],\"environments\":{\"notes\":\"Equipment availability must be checked; no substitution or environment guarantee.\",\"suitable\":[],\"unsuitable\":[]},\"equipment\":{\"notes\":\"Prone forearm support with elbows slightly ahead of shoulders; feet on floor. Forearms/hands supported; no implement.\",\"one_of_groups\":[],\"optional_tokens\":[],\"required_tokens\":[\"bodyweight\"],\"supports_external_load\":false},\"id\":\"EX-901012\",\"impact_level\":\"unknown\",\"laterality\":\"bilateral\",\"lifecycle_status\":\"published\",\"media_refs\":[],\"modality\":\"bodyweight\",\"movement_patterns\":[\"core\"],\"movement_standard_refs\":[],\"owner\":\"founder\",\"published_at\":\"2026-10-25T00:00:00.000Z\",\"sport_standard_refs\":[],\"technical_complexity\":\"unknown\",\"transitional_alias_ids\":[],\"valid_completed_performance_dimensions\":[\"duration\"],\"valid_prescription_dimensions\":[\"duration\"],\"version\":\"1\"}",
+        "publication": {
+          "approved_binding_kinds": [],
+          "event_id": "9285c984-58aa-41dd-8072-85434cc1c1d5",
+          "issuer": "founder_exercise_publication_v1",
+          "published_at": "2026-10-25T00:00:00Z",
+          "source_reference": "LOCAL-REHEARSAL-NOT-REAL-APPROVAL:base-review-long_lever_plank"
+        },
+        "retirement": null
+      },
+      "contract": "cohort.trusted-publication-event.v1",
+      "event_id": "9285c984-58aa-41dd-8072-85434cc1c1d5",
+      "kind": "exercise_published"
+    },
+    {
+      "approval": {
+        "reference": "LOCAL-REHEARSAL-NOT-REAL-APPROVAL:base-review-pallof_press",
+        "status": "approved"
+      },
+      "artifact": {
+        "canonical_text": "{\"aliases\":[],\"canonical_name\":\"LOCAL REHEARSAL: Split-Stance Cable Pallof Press\",\"coaching_content_refs\":[],\"environments\":{\"notes\":\"Equipment availability must be checked; no substitution or environment guarantee.\",\"suitable\":[],\"unsuitable\":[]},\"equipment\":{\"notes\":\"Standing side-on to a chest-height cable in a stable split stance, one foot forwards and one back; handle at sternum. Both hands clasp the single cable handle.\",\"one_of_groups\":[],\"optional_tokens\":[],\"required_tokens\":[\"cable_machine\",\"single_cable_handle\"],\"supports_external_load\":true},\"id\":\"EX-901013\",\"impact_level\":\"unknown\",\"laterality\":\"unilateral\",\"lifecycle_status\":\"published\",\"media_refs\":[],\"modality\":\"strength\",\"movement_patterns\":[\"core\"],\"movement_standard_refs\":[],\"owner\":\"founder\",\"published_at\":\"2026-10-25T00:00:00.000Z\",\"sport_standard_refs\":[],\"technical_complexity\":\"unknown\",\"transitional_alias_ids\":[],\"valid_completed_performance_dimensions\":[\"repetitions\",\"load\"],\"valid_prescription_dimensions\":[\"repetitions\",\"load\",\"rir\",\"unilateral_side\"],\"version\":\"1\"}",
+        "publication": {
+          "approved_binding_kinds": [],
+          "event_id": "280bc611-792d-40f8-8d24-c73ea8892e73",
+          "issuer": "founder_exercise_publication_v1",
+          "published_at": "2026-10-25T00:00:00Z",
+          "source_reference": "LOCAL-REHEARSAL-NOT-REAL-APPROVAL:base-review-pallof_press"
+        },
+        "retirement": null
+      },
+      "contract": "cohort.trusted-publication-event.v1",
+      "event_id": "280bc611-792d-40f8-8d24-c73ea8892e73",
+      "kind": "exercise_published"
+    },
+    {
+      "approval": {
+        "reference": "LOCAL-REHEARSAL-NOT-REAL-APPROVAL:base-review-rdl",
+        "status": "approved"
+      },
+      "artifact": {
+        "canonical_text": "{\"aliases\":[],\"canonical_name\":\"LOCAL REHEARSAL: Romanian Deadlift\",\"coaching_content_refs\":[],\"environments\":{\"notes\":\"Equipment availability must be checked; no substitution or environment guarantee.\",\"suitable\":[],\"unsuitable\":[]},\"equipment\":{\"notes\":\"Standing with bar in front of thighs, feet about hip-width, knees softly bent. Double-overhand grip just outside the legs.\",\"one_of_groups\":[],\"optional_tokens\":[],\"required_tokens\":[\"barbell\"],\"supports_external_load\":true},\"id\":\"EX-901014\",\"impact_level\":\"unknown\",\"laterality\":\"bilateral\",\"lifecycle_status\":\"published\",\"media_refs\":[],\"modality\":\"strength\",\"movement_patterns\":[\"hinge\"],\"movement_standard_refs\":[],\"owner\":\"founder\",\"published_at\":\"2026-10-25T00:00:00.000Z\",\"sport_standard_refs\":[],\"technical_complexity\":\"unknown\",\"transitional_alias_ids\":[],\"valid_completed_performance_dimensions\":[\"repetitions\",\"load\"],\"valid_prescription_dimensions\":[\"repetitions\",\"load\",\"rir\"],\"version\":\"1\"}",
+        "publication": {
+          "approved_binding_kinds": [],
+          "event_id": "713f85fb-99d6-4ba2-81b3-9ede9e530821",
+          "issuer": "founder_exercise_publication_v1",
+          "published_at": "2026-10-25T00:00:00Z",
+          "source_reference": "LOCAL-REHEARSAL-NOT-REAL-APPROVAL:base-review-rdl"
+        },
+        "retirement": null
+      },
+      "contract": "cohort.trusted-publication-event.v1",
+      "event_id": "713f85fb-99d6-4ba2-81b3-9ede9e530821",
+      "kind": "exercise_published"
+    },
+    {
+      "approval": {
+        "reference": "LOCAL-REHEARSAL-NOT-REAL-APPROVAL:base-review-reverse_lunge",
+        "status": "approved"
+      },
+      "artifact": {
+        "canonical_text": "{\"aliases\":[],\"canonical_name\":\"LOCAL REHEARSAL: Bodyweight reverse lunge\",\"coaching_content_refs\":[],\"environments\":{\"notes\":\"Equipment availability must be checked; no substitution or environment guarantee.\",\"suitable\":[],\"unsuitable\":[]},\"equipment\":{\"notes\":\"Standing upright with space to step backwards. No implement; hands free for balance.\",\"one_of_groups\":[],\"optional_tokens\":[],\"required_tokens\":[\"bodyweight\"],\"supports_external_load\":false},\"id\":\"EX-901015\",\"impact_level\":\"unknown\",\"laterality\":\"unilateral\",\"lifecycle_status\":\"published\",\"media_refs\":[],\"modality\":\"bodyweight\",\"movement_patterns\":[\"lunge\"],\"movement_standard_refs\":[],\"owner\":\"founder\",\"published_at\":\"2026-10-25T00:00:00.000Z\",\"sport_standard_refs\":[],\"technical_complexity\":\"unknown\",\"transitional_alias_ids\":[],\"valid_completed_performance_dimensions\":[\"repetitions\"],\"valid_prescription_dimensions\":[\"repetitions\",\"unilateral_side\"],\"version\":\"1\"}",
+        "publication": {
+          "approved_binding_kinds": [],
+          "event_id": "f93a1c1d-3c4e-4e53-8e75-103ceb4e8a26",
+          "issuer": "founder_exercise_publication_v1",
+          "published_at": "2026-10-25T00:00:00Z",
+          "source_reference": "LOCAL-REHEARSAL-NOT-REAL-APPROVAL:base-review-reverse_lunge"
+        },
+        "retirement": null
+      },
+      "contract": "cohort.trusted-publication-event.v1",
+      "event_id": "f93a1c1d-3c4e-4e53-8e75-103ceb4e8a26",
+      "kind": "exercise_published"
+    },
+    {
+      "approval": {
+        "reference": "LOCAL-REHEARSAL-NOT-REAL-APPROVAL:base-review-rowing",
+        "status": "approved"
+      },
+      "artifact": {
+        "canonical_text": "{\"aliases\":[],\"canonical_name\":\"LOCAL REHEARSAL: Row Erg\",\"coaching_content_refs\":[],\"environments\":{\"notes\":\"Equipment availability must be checked; no substitution or environment guarantee.\",\"suitable\":[],\"unsuitable\":[]},\"equipment\":{\"notes\":\"Seated sliding-seat rowing erg, feet strapped, knees flexed at the catch. Two-handed overhand grip on the handle.\",\"one_of_groups\":[],\"optional_tokens\":[],\"required_tokens\":[\"rower\"],\"supports_external_load\":false},\"id\":\"EX-901016\",\"impact_level\":\"unknown\",\"laterality\":\"bilateral\",\"lifecycle_status\":\"published\",\"media_refs\":[],\"modality\":\"erg\",\"movement_patterns\":[\"cyclical\"],\"movement_standard_refs\":[],\"owner\":\"founder\",\"published_at\":\"2026-10-25T00:00:00.000Z\",\"sport_standard_refs\":[],\"technical_complexity\":\"unknown\",\"transitional_alias_ids\":[],\"valid_completed_performance_dimensions\":[\"duration\",\"distance\",\"pace\"],\"valid_prescription_dimensions\":[\"duration\",\"distance\",\"pace\",\"rpe\"],\"version\":\"1\"}",
+        "publication": {
+          "approved_binding_kinds": [
+            "dedicatedRowIntervals"
+          ],
+          "event_id": "fe02527e-1c7c-489a-8480-eadfb2beca51",
+          "issuer": "founder_exercise_publication_v1",
+          "published_at": "2026-10-25T00:00:00Z",
+          "source_reference": "LOCAL-REHEARSAL-NOT-REAL-APPROVAL:base-review-rowing"
+        },
+        "retirement": null
+      },
+      "contract": "cohort.trusted-publication-event.v1",
+      "event_id": "fe02527e-1c7c-489a-8480-eadfb2beca51",
+      "kind": "exercise_published"
+    },
+    {
+      "approval": {
+        "reference": "LOCAL-REHEARSAL-NOT-REAL-APPROVAL:base-review-running",
+        "status": "approved"
+      },
+      "artifact": {
+        "canonical_text": "{\"aliases\":[],\"canonical_name\":\"LOCAL REHEARSAL: Running\",\"coaching_content_refs\":[],\"environments\":{\"notes\":\"Equipment availability must be checked; no substitution or environment guarantee.\",\"suitable\":[],\"unsuitable\":[]},\"equipment\":{\"notes\":\"Upright running on a suitable outdoor path or track. No implement.\",\"one_of_groups\":[],\"optional_tokens\":[],\"required_tokens\":[\"bodyweight\"],\"supports_external_load\":false},\"id\":\"EX-901017\",\"impact_level\":\"unknown\",\"laterality\":\"not_applicable\",\"lifecycle_status\":\"published\",\"media_refs\":[],\"modality\":\"locomotion\",\"movement_patterns\":[\"locomotion\"],\"movement_standard_refs\":[],\"owner\":\"founder\",\"published_at\":\"2026-10-25T00:00:00.000Z\",\"sport_standard_refs\":[],\"technical_complexity\":\"unknown\",\"transitional_alias_ids\":[],\"valid_completed_performance_dimensions\":[\"duration\",\"distance\",\"pace\"],\"valid_prescription_dimensions\":[\"duration\",\"distance\",\"pace\",\"rpe\"],\"version\":\"1\"}",
+        "publication": {
+          "approved_binding_kinds": [
+            "runningIntervals"
+          ],
+          "event_id": "76e271a4-ef96-4f34-8013-a252da54e91c",
+          "issuer": "founder_exercise_publication_v1",
+          "published_at": "2026-10-25T00:00:00Z",
+          "source_reference": "LOCAL-REHEARSAL-NOT-REAL-APPROVAL:base-review-running"
+        },
+        "retirement": null
+      },
+      "contract": "cohort.trusted-publication-event.v1",
+      "event_id": "76e271a4-ef96-4f34-8013-a252da54e91c",
+      "kind": "exercise_published"
+    },
+    {
+      "approval": {
+        "reference": "LOCAL-REHEARSAL-NOT-REAL-APPROVAL:base-review-ski_erg",
+        "status": "approved"
+      },
+      "artifact": {
+        "canonical_text": "{\"aliases\":[],\"canonical_name\":\"LOCAL REHEARSAL: Ski Erg\",\"coaching_content_refs\":[],\"environments\":{\"notes\":\"Equipment availability must be checked; no substitution or environment guarantee.\",\"suitable\":[],\"unsuitable\":[]},\"equipment\":{\"notes\":\"Standing facing a two-handle SkiErg with arms raised under control. One handle in each hand, closed grip.\",\"one_of_groups\":[],\"optional_tokens\":[],\"required_tokens\":[\"ski_erg\"],\"supports_external_load\":false},\"id\":\"EX-901018\",\"impact_level\":\"unknown\",\"laterality\":\"bilateral\",\"lifecycle_status\":\"published\",\"media_refs\":[],\"modality\":\"erg\",\"movement_patterns\":[\"cyclical\"],\"movement_standard_refs\":[],\"owner\":\"founder\",\"published_at\":\"2026-10-25T00:00:00.000Z\",\"sport_standard_refs\":[],\"technical_complexity\":\"unknown\",\"transitional_alias_ids\":[],\"valid_completed_performance_dimensions\":[\"duration\",\"distance\",\"pace\"],\"valid_prescription_dimensions\":[\"duration\",\"distance\",\"pace\",\"rpe\"],\"version\":\"1\"}",
+        "publication": {
+          "approved_binding_kinds": [],
+          "event_id": "3276809e-ac4f-421c-8004-0548b3b3f786",
+          "issuer": "founder_exercise_publication_v1",
+          "published_at": "2026-10-25T00:00:00Z",
+          "source_reference": "LOCAL-REHEARSAL-NOT-REAL-APPROVAL:base-review-ski_erg"
+        },
+        "retirement": null
+      },
+      "contract": "cohort.trusted-publication-event.v1",
+      "event_id": "3276809e-ac4f-421c-8004-0548b3b3f786",
+      "kind": "exercise_published"
+    },
+    {
+      "approval": {
+        "reference": "LOCAL-REHEARSAL-NOT-REAL-APPROVAL:base-review-split_stance_single_arm_cable_row",
+        "status": "approved"
+      },
+      "artifact": {
+        "canonical_text": "{\"aliases\":[],\"canonical_name\":\"LOCAL REHEARSAL: One-Arm Cable Row\",\"coaching_content_refs\":[],\"environments\":{\"notes\":\"Equipment availability must be checked; no substitution or environment guarantee.\",\"suitable\":[],\"unsuitable\":[]},\"equipment\":{\"notes\":\"Standing facing a cable at lower-chest height, one foot forward, torso square. One hand on a D-handle with a neutral grip.\",\"one_of_groups\":[],\"optional_tokens\":[],\"required_tokens\":[\"cable_machine\",\"single_cable_handle\"],\"supports_external_load\":true},\"id\":\"EX-901019\",\"impact_level\":\"unknown\",\"laterality\":\"unilateral\",\"lifecycle_status\":\"published\",\"media_refs\":[],\"modality\":\"strength\",\"movement_patterns\":[\"horizontal_pull\"],\"movement_standard_refs\":[],\"owner\":\"founder\",\"published_at\":\"2026-10-25T00:00:00.000Z\",\"sport_standard_refs\":[],\"technical_complexity\":\"unknown\",\"transitional_alias_ids\":[],\"valid_completed_performance_dimensions\":[\"repetitions\",\"load\"],\"valid_prescription_dimensions\":[\"repetitions\",\"load\",\"rir\",\"unilateral_side\"],\"version\":\"1\"}",
+        "publication": {
+          "approved_binding_kinds": [],
+          "event_id": "596e68dc-b05a-42c8-82de-2060e61e5ab0",
+          "issuer": "founder_exercise_publication_v1",
+          "published_at": "2026-10-25T00:00:00Z",
+          "source_reference": "LOCAL-REHEARSAL-NOT-REAL-APPROVAL:base-review-split_stance_single_arm_cable_row"
+        },
+        "retirement": null
+      },
+      "contract": "cohort.trusted-publication-event.v1",
+      "event_id": "596e68dc-b05a-42c8-82de-2060e61e5ab0",
+      "kind": "exercise_published"
+    },
+    {
+      "approval": {
+        "reference": "LOCAL-REHEARSAL-NOT-REAL-APPROVAL:base-review-strict_overhead_press",
+        "status": "approved"
+      },
+      "artifact": {
+        "canonical_text": "{\"aliases\":[],\"canonical_name\":\"LOCAL REHEARSAL: Strict Press\",\"coaching_content_refs\":[],\"environments\":{\"notes\":\"Equipment availability must be checked; no substitution or environment guarantee.\",\"suitable\":[],\"unsuitable\":[]},\"equipment\":{\"notes\":\"Standing with bar at upper chest, feet about hip-width, trunk braced. Closed overhand grip just outside shoulder-width.\",\"one_of_groups\":[],\"optional_tokens\":[],\"required_tokens\":[\"barbell\",\"rack\"],\"supports_external_load\":true},\"id\":\"EX-901020\",\"impact_level\":\"unknown\",\"laterality\":\"bilateral\",\"lifecycle_status\":\"published\",\"media_refs\":[],\"modality\":\"strength\",\"movement_patterns\":[\"vertical_push\"],\"movement_standard_refs\":[],\"owner\":\"founder\",\"published_at\":\"2026-10-25T00:00:00.000Z\",\"sport_standard_refs\":[],\"technical_complexity\":\"unknown\",\"transitional_alias_ids\":[],\"valid_completed_performance_dimensions\":[\"repetitions\",\"load\"],\"valid_prescription_dimensions\":[\"repetitions\",\"load\",\"rir\"],\"version\":\"1\"}",
+        "publication": {
+          "approved_binding_kinds": [],
+          "event_id": "dd1a545e-0de6-48a5-8b69-5ffee6657152",
+          "issuer": "founder_exercise_publication_v1",
+          "published_at": "2026-10-25T00:00:00Z",
+          "source_reference": "LOCAL-REHEARSAL-NOT-REAL-APPROVAL:base-review-strict_overhead_press"
+        },
+        "retirement": null
+      },
+      "contract": "cohort.trusted-publication-event.v1",
+      "event_id": "dd1a545e-0de6-48a5-8b69-5ffee6657152",
+      "kind": "exercise_published"
+    },
+    {
+      "approval": {
+        "reference": "LOCAL-REHEARSAL-NOT-REAL-APPROVAL:base-review-strict_pull_up",
+        "status": "approved"
+      },
+      "artifact": {
+        "canonical_text": "{\"aliases\":[],\"canonical_name\":\"LOCAL REHEARSAL: Pull Up\",\"coaching_content_refs\":[],\"environments\":{\"notes\":\"Equipment availability must be checked; no substitution or environment guarantee.\",\"suitable\":[],\"unsuitable\":[]},\"equipment\":{\"notes\":\"Hanging from a fixed overhead bar, body controlled. Overhand grip about shoulder-width.\",\"one_of_groups\":[],\"optional_tokens\":[],\"required_tokens\":[\"pull_up_bar\"],\"supports_external_load\":false},\"id\":\"EX-901021\",\"impact_level\":\"unknown\",\"laterality\":\"bilateral\",\"lifecycle_status\":\"published\",\"media_refs\":[],\"modality\":\"bodyweight\",\"movement_patterns\":[\"vertical_pull\"],\"movement_standard_refs\":[],\"owner\":\"founder\",\"published_at\":\"2026-10-25T00:00:00.000Z\",\"sport_standard_refs\":[],\"technical_complexity\":\"unknown\",\"transitional_alias_ids\":[],\"valid_completed_performance_dimensions\":[\"repetitions\"],\"valid_prescription_dimensions\":[\"repetitions\"],\"version\":\"1\"}",
+        "publication": {
+          "approved_binding_kinds": [],
+          "event_id": "dc65297c-6ccb-4687-84bd-4553689ff626",
+          "issuer": "founder_exercise_publication_v1",
+          "published_at": "2026-10-25T00:00:00Z",
+          "source_reference": "LOCAL-REHEARSAL-NOT-REAL-APPROVAL:base-review-strict_pull_up"
+        },
+        "retirement": null
+      },
+      "contract": "cohort.trusted-publication-event.v1",
+      "event_id": "dc65297c-6ccb-4687-84bd-4553689ff626",
+      "kind": "exercise_published"
+    },
+    {
+      "approval": {
+        "reference": "LOCAL-REHEARSAL-NOT-REAL-APPROVAL:base-review-suitcase_carry",
+        "status": "approved"
+      },
+      "artifact": {
+        "canonical_text": "{\"aliases\":[],\"canonical_name\":\"LOCAL REHEARSAL: Suitcase Carry\",\"coaching_content_refs\":[],\"environments\":{\"notes\":\"Equipment availability must be checked; no substitution or environment guarantee.\",\"suitable\":[],\"unsuitable\":[]},\"equipment\":{\"notes\":\"Standing tall with one dumbbell beside one thigh; walk on clear level space. One-hand neutral grip with arm down at the side.\",\"one_of_groups\":[],\"optional_tokens\":[],\"required_tokens\":[\"dumbbell\"],\"supports_external_load\":true},\"id\":\"EX-901022\",\"impact_level\":\"unknown\",\"laterality\":\"unilateral\",\"lifecycle_status\":\"published\",\"media_refs\":[],\"modality\":\"strength\",\"movement_patterns\":[\"carry\"],\"movement_standard_refs\":[],\"owner\":\"founder\",\"published_at\":\"2026-10-25T00:00:00.000Z\",\"sport_standard_refs\":[],\"technical_complexity\":\"unknown\",\"transitional_alias_ids\":[],\"valid_completed_performance_dimensions\":[\"load\",\"distance\",\"duration\"],\"valid_prescription_dimensions\":[\"load\",\"distance\",\"duration\",\"unilateral_side\"],\"version\":\"1\"}",
+        "publication": {
+          "approved_binding_kinds": [],
+          "event_id": "49445977-0fe7-4f01-86f0-c9bea8012635",
+          "issuer": "founder_exercise_publication_v1",
+          "published_at": "2026-10-25T00:00:00Z",
+          "source_reference": "LOCAL-REHEARSAL-NOT-REAL-APPROVAL:base-review-suitcase_carry"
+        },
+        "retirement": null
+      },
+      "contract": "cohort.trusted-publication-event.v1",
+      "event_id": "49445977-0fe7-4f01-86f0-c9bea8012635",
+      "kind": "exercise_published"
+    },
+    {
+      "approval": {
+        "reference": "LOCAL-REHEARSAL-NOT-REAL-APPROVAL:base-review-two_dumbbell_devils_press",
+        "status": "approved"
+      },
+      "artifact": {
+        "canonical_text": "{\"aliases\":[],\"canonical_name\":\"LOCAL REHEARSAL: Two-dumbbell devil\u2019s press\",\"coaching_content_refs\":[],\"environments\":{\"notes\":\"Equipment availability must be checked; no substitution or environment guarantee.\",\"suitable\":[],\"unsuitable\":[]},\"equipment\":{\"notes\":\"Standing with two dumbbells at the sides; clear floor space. Neutral grip on both dumbbell handles.\",\"one_of_groups\":[],\"optional_tokens\":[],\"required_tokens\":[\"dumbbell\"],\"supports_external_load\":true},\"id\":\"EX-901023\",\"impact_level\":\"unknown\",\"laterality\":\"bilateral\",\"lifecycle_status\":\"published\",\"media_refs\":[],\"modality\":\"strength\",\"movement_patterns\":[\"hinge\"],\"movement_standard_refs\":[],\"owner\":\"founder\",\"published_at\":\"2026-10-25T00:00:00.000Z\",\"sport_standard_refs\":[],\"technical_complexity\":\"unknown\",\"transitional_alias_ids\":[],\"valid_completed_performance_dimensions\":[\"repetitions\",\"load\"],\"valid_prescription_dimensions\":[\"repetitions\",\"load\",\"rir\"],\"version\":\"1\"}",
+        "publication": {
+          "approved_binding_kinds": [],
+          "event_id": "16b24a9f-3136-4305-8514-f29d0fd5f6bd",
+          "issuer": "founder_exercise_publication_v1",
+          "published_at": "2026-10-25T00:00:00Z",
+          "source_reference": "LOCAL-REHEARSAL-NOT-REAL-APPROVAL:base-review-two_dumbbell_devils_press"
+        },
+        "retirement": null
+      },
+      "contract": "cohort.trusted-publication-event.v1",
+      "event_id": "16b24a9f-3136-4305-8514-f29d0fd5f6bd",
+      "kind": "exercise_published"
+    },
+    {
+      "approval": {
+        "reference": "LOCAL-REHEARSAL-NOT-REAL-APPROVAL:base-review-unloaded_hip_hinge",
+        "status": "approved"
+      },
+      "artifact": {
+        "canonical_text": "{\"aliases\":[],\"canonical_name\":\"LOCAL REHEARSAL: Unloaded standing hip hinge\",\"coaching_content_refs\":[],\"environments\":{\"notes\":\"Equipment availability must be checked; no substitution or environment guarantee.\",\"suitable\":[],\"unsuitable\":[]},\"equipment\":{\"notes\":\"Standing about hip-width, knees softly bent. Hands rest across the chest or on hips; no load.\",\"one_of_groups\":[],\"optional_tokens\":[],\"required_tokens\":[\"bodyweight\"],\"supports_external_load\":false},\"id\":\"EX-901024\",\"impact_level\":\"unknown\",\"laterality\":\"bilateral\",\"lifecycle_status\":\"published\",\"media_refs\":[],\"modality\":\"mobility\",\"movement_patterns\":[\"hinge\"],\"movement_standard_refs\":[],\"owner\":\"founder\",\"published_at\":\"2026-10-25T00:00:00.000Z\",\"sport_standard_refs\":[],\"technical_complexity\":\"unknown\",\"transitional_alias_ids\":[],\"valid_completed_performance_dimensions\":[\"repetitions\"],\"valid_prescription_dimensions\":[\"repetitions\"],\"version\":\"1\"}",
+        "publication": {
+          "approved_binding_kinds": [],
+          "event_id": "662cd649-b96d-48d5-88ad-7891c249ad2f",
+          "issuer": "founder_exercise_publication_v1",
+          "published_at": "2026-10-25T00:00:00Z",
+          "source_reference": "LOCAL-REHEARSAL-NOT-REAL-APPROVAL:base-review-unloaded_hip_hinge"
+        },
+        "retirement": null
+      },
+      "contract": "cohort.trusted-publication-event.v1",
+      "event_id": "662cd649-b96d-48d5-88ad-7891c249ad2f",
+      "kind": "exercise_published"
+    },
+    {
+      "approval": {
+        "reference": "LOCAL-REHEARSAL-NOT-REAL-APPROVAL:base-review-wall_ball",
+        "status": "approved"
+      },
+      "artifact": {
+        "canonical_text": "{\"aliases\":[],\"canonical_name\":\"LOCAL REHEARSAL: Wall Ball\",\"coaching_content_refs\":[],\"environments\":{\"notes\":\"Equipment availability must be checked; no substitution or environment guarantee.\",\"suitable\":[],\"unsuitable\":[]},\"equipment\":{\"notes\":\"Standing facing a clear wall target, ball held in front of the chest. Both hands support the ball.\",\"one_of_groups\":[],\"optional_tokens\":[],\"required_tokens\":[\"wall_ball\",\"wall_ball_target\"],\"supports_external_load\":true},\"id\":\"EX-901025\",\"impact_level\":\"unknown\",\"laterality\":\"bilateral\",\"lifecycle_status\":\"published\",\"media_refs\":[],\"modality\":\"sport_specific\",\"movement_patterns\":[\"ball_throw\"],\"movement_standard_refs\":[],\"owner\":\"founder\",\"published_at\":\"2026-10-25T00:00:00.000Z\",\"sport_standard_refs\":[],\"technical_complexity\":\"unknown\",\"transitional_alias_ids\":[],\"valid_completed_performance_dimensions\":[\"repetitions\",\"load\"],\"valid_prescription_dimensions\":[\"repetitions\",\"load\",\"height_or_target\",\"rpe\"],\"version\":\"1\"}",
+        "publication": {
+          "approved_binding_kinds": [],
+          "event_id": "0547e40d-97df-4d72-8b30-f899ceb99ce1",
+          "issuer": "founder_exercise_publication_v1",
+          "published_at": "2026-10-25T00:00:00Z",
+          "source_reference": "LOCAL-REHEARSAL-NOT-REAL-APPROVAL:base-review-wall_ball"
+        },
+        "retirement": null
+      },
+      "contract": "cohort.trusted-publication-event.v1",
+      "event_id": "0547e40d-97df-4d72-8b30-f899ceb99ce1",
+      "kind": "exercise_published"
+    },
+    {
+      "approval": {
+        "reference": "LOCAL-REHEARSAL-NOT-REAL-APPROVAL:base-review-wall_slide",
+        "status": "approved"
+      },
+      "artifact": {
+        "canonical_text": "{\"aliases\":[],\"canonical_name\":\"LOCAL REHEARSAL: Standing forearm wall slide\",\"coaching_content_refs\":[],\"environments\":{\"notes\":\"Equipment availability must be checked; no substitution or environment guarantee.\",\"suitable\":[],\"unsuitable\":[]},\"equipment\":{\"notes\":\"Standing facing a wall, forearms supported vertically against it, elbows bent. No implement.\",\"one_of_groups\":[],\"optional_tokens\":[],\"required_tokens\":[\"wall\"],\"supports_external_load\":false},\"id\":\"EX-901026\",\"impact_level\":\"unknown\",\"laterality\":\"bilateral\",\"lifecycle_status\":\"published\",\"media_refs\":[],\"modality\":\"mobility\",\"movement_patterns\":[\"vertical_push\"],\"movement_standard_refs\":[],\"owner\":\"founder\",\"published_at\":\"2026-10-25T00:00:00.000Z\",\"sport_standard_refs\":[],\"technical_complexity\":\"unknown\",\"transitional_alias_ids\":[],\"valid_completed_performance_dimensions\":[\"repetitions\"],\"valid_prescription_dimensions\":[\"repetitions\"],\"version\":\"1\"}",
+        "publication": {
+          "approved_binding_kinds": [],
+          "event_id": "fa02787d-c912-4fae-8eed-5ff799436c4b",
+          "issuer": "founder_exercise_publication_v1",
+          "published_at": "2026-10-25T00:00:00Z",
+          "source_reference": "LOCAL-REHEARSAL-NOT-REAL-APPROVAL:base-review-wall_slide"
+        },
+        "retirement": null
+      },
+      "contract": "cohort.trusted-publication-event.v1",
+      "event_id": "fa02787d-c912-4fae-8eed-5ff799436c4b",
+      "kind": "exercise_published"
+    },
+    {
+      "approval": {
+        "reference": "LOCAL-REHEARSAL-NOT-REAL-APPROVAL:complete-programme",
+        "status": "approved"
+      },
+      "artifact": {
+        "canonical_sha256": "4b8ff5ab9a01b29ab2ac8c2ac01b097dadf5eeedab9cc6e94e900ce952a2ca2d",
+        "owner_id": "bc310000-0000-4000-8000-000000000001",
+        "programme_version_id": "bc310000-0000-4000-8000-000000000040",
+        "source": "{\"adaptation_permissions\":[],\"assessments\":[],\"comparison_identities\":[],\"package_schema_version\":3,\"performance_evidence_requirements\":[],\"personalisation_binding\":{\"binding_schema_version\":1,\"freshness\":\"none\",\"missing_input_policy\":\"unavailable_with_authored_effort_only\",\"replacement_policy\":\"explicit_consent_future_unstarted_only\",\"targets\":[{\"benchmark\":{\"digest\":\"e228a6b37580ed670c033abdf647b94d0cd1df540b5a34be90c540915e6685f2\",\"id\":\"hyrox-base-benchmark-backSquat5rm\",\"version\":1},\"block_id\":\"39295139-708b-4838-8cea-4ffe5c22a8a9\",\"exercise\":{\"digest\":\"ea4171f90402a54fa1d2b3c98b6c57811b025005a281c86431d5d11b31ec682d\",\"id\":\"EX-901001\",\"version\":1},\"id\":\"base-w01-gym-a-backSquat\",\"identity_namespace\":\"canonical_exercise\",\"input_unit\":\"microgramsTotalExternalLoad\",\"kind\":\"backSquat\",\"output_unit\":\"gramsTotalExternalLoad\",\"parameters\":{\"five_rm_basis_points\":8000,\"reps\":8,\"rir\":\"3\",\"sets\":3},\"protocol_id\":\"LOCAL-HYROX-W01-GYM_A-R1\",\"protocol_revision\":1,\"rule\":{\"digest\":\"fb5ad8096dba95606d229bfdec558ce1e7ddc8d007405b11311baa55c1f4a420\",\"id\":\"hyrox-base-backSquat\",\"version\":1},\"session_body_sha256\":\"b0b6e202e4a0b99f8c707f139c57ff5095289e5934b23f3737a44d93e7fb3827\",\"session_key\":\"base-w01-gym-a\",\"slot_key\":\"base-w01-gym-a-slot\",\"step_ids\":[],\"week_number\":1},{\"benchmark\":{\"digest\":\"72dad6a87a4b1bec269ba4a6639a995bf1ae236f48d0adab20d0fdc179a53948\",\"id\":\"hyrox-base-benchmark-row2km\",\"version\":1},\"block_id\":\"b82dd7ba-602b-4044-8539-ea6f6286748c\",\"exercise\":{\"digest\":\"c6d1cfa046afd963b0cd024264a4795239ec657f1692bae7a062f2c89c126aef\",\"id\":\"EX-901016\",\"version\":1},\"id\":\"base-w01-gym-a-dedicatedRowIntervals\",\"identity_namespace\":\"canonical_exercise\",\"input_unit\":\"milliseconds\",\"kind\":\"dedicatedRowIntervals\",\"output_unit\":\"millisecondsPer500Metres\",\"parameters\":{\"recovery_seconds\":90,\"repetitions\":6,\"work_seconds\":120},\"protocol_id\":\"LOCAL-HYROX-W01-GYM_A-R1\",\"protocol_revision\":1,\"rule\":{\"digest\":\"bd46a16e1256b704e56242aa30f5041cf89e68b4f6b4d0a097ecef13dc7cfa58\",\"id\":\"hyrox-base-dedicatedRowIntervals\",\"version\":1},\"session_body_sha256\":\"b0b6e202e4a0b99f8c707f139c57ff5095289e5934b23f3737a44d93e7fb3827\",\"session_key\":\"base-w01-gym-a\",\"slot_key\":\"base-w01-gym-a-slot\",\"step_ids\":[\"work-1\",\"work-2\",\"work-3\",\"work-4\",\"work-5\",\"work-6\"],\"week_number\":1},{\"benchmark\":{\"digest\":\"8798a6f259c2f34fe2d44886000a3dcf2159c9fe0baba2b586180424b232b3c8\",\"id\":\"hyrox-base-benchmark-run10km\",\"version\":1},\"block_id\":\"6e23dcef-cdfe-4007-80d2-141d63d29b84\",\"exercise\":{\"digest\":\"19a9aa4628c2265f290abad156c8e15bb6f84f3f8da4878040fad2691a5cfbcd\",\"id\":\"EX-901017\",\"version\":1},\"id\":\"base-w01-quality-runningIntervals\",\"identity_namespace\":\"canonical_exercise\",\"input_unit\":\"milliseconds\",\"kind\":\"runningIntervals\",\"output_unit\":\"millisecondsPerKilometre\",\"parameters\":{\"recovery_seconds\":120,\"repetitions\":4,\"work_seconds\":240},\"protocol_id\":\"LOCAL-HYROX-W01-QUALITY-R1\",\"protocol_revision\":1,\"rule\":{\"digest\":\"86489ce9a72b401fba0b0ad7b9689ab79f9037c5c46fca388797e9169e0e22f7\",\"id\":\"hyrox-base-runningIntervals\",\"version\":1},\"session_body_sha256\":\"f204a48122736579c3c450cdb5310fa8dbfa67ed02e525b4eb19ee4c35ead783\",\"session_key\":\"base-w01-quality\",\"slot_key\":\"base-w01-quality-slot\",\"step_ids\":[\"work-1\",\"work-2\",\"work-3\",\"work-4\"],\"week_number\":1},{\"benchmark\":{\"digest\":\"e228a6b37580ed670c033abdf647b94d0cd1df540b5a34be90c540915e6685f2\",\"id\":\"hyrox-base-benchmark-backSquat5rm\",\"version\":1},\"block_id\":\"9b2012c2-cd5b-489e-8abb-4c973aad3e84\",\"exercise\":{\"digest\":\"ea4171f90402a54fa1d2b3c98b6c57811b025005a281c86431d5d11b31ec682d\",\"id\":\"EX-901001\",\"version\":1},\"id\":\"base-w02-gym-a-backSquat\",\"identity_namespace\":\"canonical_exercise\",\"input_unit\":\"microgramsTotalExternalLoad\",\"kind\":\"backSquat\",\"output_unit\":\"gramsTotalExternalLoad\",\"parameters\":{\"five_rm_basis_points\":8250,\"reps\":8,\"rir\":\"2\u20133\",\"sets\":3},\"protocol_id\":\"LOCAL-HYROX-W02-GYM_A-R1\",\"protocol_revision\":1,\"rule\":{\"digest\":\"fb5ad8096dba95606d229bfdec558ce1e7ddc8d007405b11311baa55c1f4a420\",\"id\":\"hyrox-base-backSquat\",\"version\":1},\"session_body_sha256\":\"78bf23afed203a05548b9c064ae5d7a380c3e04b46346e3cc96ed12613c509f2\",\"session_key\":\"base-w02-gym-a\",\"slot_key\":\"base-w02-gym-a-slot\",\"step_ids\":[],\"week_number\":2},{\"benchmark\":{\"digest\":\"72dad6a87a4b1bec269ba4a6639a995bf1ae236f48d0adab20d0fdc179a53948\",\"id\":\"hyrox-base-benchmark-row2km\",\"version\":1},\"block_id\":\"d6f3c250-617e-4c6f-8893-5704bacb03f2\",\"exercise\":{\"digest\":\"c6d1cfa046afd963b0cd024264a4795239ec657f1692bae7a062f2c89c126aef\",\"id\":\"EX-901016\",\"version\":1},\"id\":\"base-w02-gym-a-dedicatedRowIntervals\",\"identity_namespace\":\"canonical_exercise\",\"input_unit\":\"milliseconds\",\"kind\":\"dedicatedRowIntervals\",\"output_unit\":\"millisecondsPer500Metres\",\"parameters\":{\"recovery_seconds\":90,\"repetitions\":7,\"work_seconds\":120},\"protocol_id\":\"LOCAL-HYROX-W02-GYM_A-R1\",\"protocol_revision\":1,\"rule\":{\"digest\":\"bd46a16e1256b704e56242aa30f5041cf89e68b4f6b4d0a097ecef13dc7cfa58\",\"id\":\"hyrox-base-dedicatedRowIntervals\",\"version\":1},\"session_body_sha256\":\"78bf23afed203a05548b9c064ae5d7a380c3e04b46346e3cc96ed12613c509f2\",\"session_key\":\"base-w02-gym-a\",\"slot_key\":\"base-w02-gym-a-slot\",\"step_ids\":[\"work-1\",\"work-2\",\"work-3\",\"work-4\",\"work-5\",\"work-6\",\"work-7\"],\"week_number\":2},{\"benchmark\":{\"digest\":\"8798a6f259c2f34fe2d44886000a3dcf2159c9fe0baba2b586180424b232b3c8\",\"id\":\"hyrox-base-benchmark-run10km\",\"version\":1},\"block_id\":\"520e7e89-9c3f-445c-806a-19547718bad6\",\"exercise\":{\"digest\":\"19a9aa4628c2265f290abad156c8e15bb6f84f3f8da4878040fad2691a5cfbcd\",\"id\":\"EX-901017\",\"version\":1},\"id\":\"base-w02-quality-runningIntervals\",\"identity_namespace\":\"canonical_exercise\",\"input_unit\":\"milliseconds\",\"kind\":\"runningIntervals\",\"output_unit\":\"millisecondsPerKilometre\",\"parameters\":{\"recovery_seconds\":120,\"repetitions\":5,\"work_seconds\":240},\"protocol_id\":\"LOCAL-HYROX-W02-QUALITY-R1\",\"protocol_revision\":1,\"rule\":{\"digest\":\"86489ce9a72b401fba0b0ad7b9689ab79f9037c5c46fca388797e9169e0e22f7\",\"id\":\"hyrox-base-runningIntervals\",\"version\":1},\"session_body_sha256\":\"8ed6d58200620f08ae76978a8234489e7c4fcb62a345a994800734c81afd4f9a\",\"session_key\":\"base-w02-quality\",\"slot_key\":\"base-w02-quality-slot\",\"step_ids\":[\"work-1\",\"work-2\",\"work-3\",\"work-4\",\"work-5\"],\"week_number\":2},{\"benchmark\":{\"digest\":\"e228a6b37580ed670c033abdf647b94d0cd1df540b5a34be90c540915e6685f2\",\"id\":\"hyrox-base-benchmark-backSquat5rm\",\"version\":1},\"block_id\":\"d203764e-9d40-453f-8337-a02571bc5cd5\",\"exercise\":{\"digest\":\"ea4171f90402a54fa1d2b3c98b6c57811b025005a281c86431d5d11b31ec682d\",\"id\":\"EX-901001\",\"version\":1},\"id\":\"base-w03-gym-a-backSquat\",\"identity_namespace\":\"canonical_exercise\",\"input_unit\":\"microgramsTotalExternalLoad\",\"kind\":\"backSquat\",\"output_unit\":\"gramsTotalExternalLoad\",\"parameters\":{\"five_rm_basis_points\":8750,\"reps\":6,\"rir\":\"2\",\"sets\":4},\"protocol_id\":\"LOCAL-HYROX-W03-GYM_A-R1\",\"protocol_revision\":1,\"rule\":{\"digest\":\"fb5ad8096dba95606d229bfdec558ce1e7ddc8d007405b11311baa55c1f4a420\",\"id\":\"hyrox-base-backSquat\",\"version\":1},\"session_body_sha256\":\"b06216fb40160ae83f785ea810ec4ab26640f445d60ca57faa3021eb66032041\",\"session_key\":\"base-w03-gym-a\",\"slot_key\":\"base-w03-gym-a-slot\",\"step_ids\":[],\"week_number\":3},{\"benchmark\":{\"digest\":\"72dad6a87a4b1bec269ba4a6639a995bf1ae236f48d0adab20d0fdc179a53948\",\"id\":\"hyrox-base-benchmark-row2km\",\"version\":1},\"block_id\":\"3621f4fa-98b4-4d52-8039-b2bb73021aea\",\"exercise\":{\"digest\":\"c6d1cfa046afd963b0cd024264a4795239ec657f1692bae7a062f2c89c126aef\",\"id\":\"EX-901016\",\"version\":1},\"id\":\"base-w03-gym-a-dedicatedRowIntervals\",\"identity_namespace\":\"canonical_exercise\",\"input_unit\":\"milliseconds\",\"kind\":\"dedicatedRowIntervals\",\"output_unit\":\"millisecondsPer500Metres\",\"parameters\":{\"recovery_seconds\":90,\"repetitions\":5,\"work_seconds\":180},\"protocol_id\":\"LOCAL-HYROX-W03-GYM_A-R1\",\"protocol_revision\":1,\"rule\":{\"digest\":\"bd46a16e1256b704e56242aa30f5041cf89e68b4f6b4d0a097ecef13dc7cfa58\",\"id\":\"hyrox-base-dedicatedRowIntervals\",\"version\":1},\"session_body_sha256\":\"b06216fb40160ae83f785ea810ec4ab26640f445d60ca57faa3021eb66032041\",\"session_key\":\"base-w03-gym-a\",\"slot_key\":\"base-w03-gym-a-slot\",\"step_ids\":[\"work-1\",\"work-2\",\"work-3\",\"work-4\",\"work-5\"],\"week_number\":3},{\"benchmark\":{\"digest\":\"8798a6f259c2f34fe2d44886000a3dcf2159c9fe0baba2b586180424b232b3c8\",\"id\":\"hyrox-base-benchmark-run10km\",\"version\":1},\"block_id\":\"40b6e573-6627-4812-8296-3269d23ff226\",\"exercise\":{\"digest\":\"19a9aa4628c2265f290abad156c8e15bb6f84f3f8da4878040fad2691a5cfbcd\",\"id\":\"EX-901017\",\"version\":1},\"id\":\"base-w03-quality-runningIntervals\",\"identity_namespace\":\"canonical_exercise\",\"input_unit\":\"milliseconds\",\"kind\":\"runningIntervals\",\"output_unit\":\"millisecondsPerKilometre\",\"parameters\":{\"recovery_seconds\":120,\"repetitions\":4,\"work_seconds\":360},\"protocol_id\":\"LOCAL-HYROX-W03-QUALITY-R1\",\"protocol_revision\":1,\"rule\":{\"digest\":\"86489ce9a72b401fba0b0ad7b9689ab79f9037c5c46fca388797e9169e0e22f7\",\"id\":\"hyrox-base-runningIntervals\",\"version\":1},\"session_body_sha256\":\"2583032c9c5877f7cf78d70656ae141e8bcb147205e1cb2a49622a213d7d9208\",\"session_key\":\"base-w03-quality\",\"slot_key\":\"base-w03-quality-slot\",\"step_ids\":[\"work-1\",\"work-2\",\"work-3\",\"work-4\"],\"week_number\":3},{\"benchmark\":{\"digest\":\"e228a6b37580ed670c033abdf647b94d0cd1df540b5a34be90c540915e6685f2\",\"id\":\"hyrox-base-benchmark-backSquat5rm\",\"version\":1},\"block_id\":\"3943f651-6d69-4b66-889d-765d0d6097f6\",\"exercise\":{\"digest\":\"ea4171f90402a54fa1d2b3c98b6c57811b025005a281c86431d5d11b31ec682d\",\"id\":\"EX-901001\",\"version\":1},\"id\":\"base-w04-gym-a-backSquat\",\"identity_namespace\":\"canonical_exercise\",\"input_unit\":\"microgramsTotalExternalLoad\",\"kind\":\"backSquat\",\"output_unit\":\"gramsTotalExternalLoad\",\"parameters\":{\"five_rm_basis_points\":7000,\"reps\":6,\"rir\":\"4\",\"sets\":2},\"protocol_id\":\"LOCAL-HYROX-W04-GYM_A-R1\",\"protocol_revision\":1,\"rule\":{\"digest\":\"fb5ad8096dba95606d229bfdec558ce1e7ddc8d007405b11311baa55c1f4a420\",\"id\":\"hyrox-base-backSquat\",\"version\":1},\"session_body_sha256\":\"cdab41889e749afad8346eaf4d2beed00ff684512b5d9b4685756d24f1d2a2c9\",\"session_key\":\"base-w04-gym-a\",\"slot_key\":\"base-w04-gym-a-slot\",\"step_ids\":[],\"week_number\":4},{\"benchmark\":{\"digest\":\"72dad6a87a4b1bec269ba4a6639a995bf1ae236f48d0adab20d0fdc179a53948\",\"id\":\"hyrox-base-benchmark-row2km\",\"version\":1},\"block_id\":\"cc0c87df-99bf-4536-8401-b222e2114a73\",\"exercise\":{\"digest\":\"c6d1cfa046afd963b0cd024264a4795239ec657f1692bae7a062f2c89c126aef\",\"id\":\"EX-901016\",\"version\":1},\"id\":\"base-w04-gym-a-dedicatedRowIntervals\",\"identity_namespace\":\"canonical_exercise\",\"input_unit\":\"milliseconds\",\"kind\":\"dedicatedRowIntervals\",\"output_unit\":\"millisecondsPer500Metres\",\"parameters\":{\"recovery_seconds\":90,\"repetitions\":4,\"work_seconds\":120},\"protocol_id\":\"LOCAL-HYROX-W04-GYM_A-R1\",\"protocol_revision\":1,\"rule\":{\"digest\":\"bd46a16e1256b704e56242aa30f5041cf89e68b4f6b4d0a097ecef13dc7cfa58\",\"id\":\"hyrox-base-dedicatedRowIntervals\",\"version\":1},\"session_body_sha256\":\"cdab41889e749afad8346eaf4d2beed00ff684512b5d9b4685756d24f1d2a2c9\",\"session_key\":\"base-w04-gym-a\",\"slot_key\":\"base-w04-gym-a-slot\",\"step_ids\":[\"work-1\",\"work-2\",\"work-3\",\"work-4\"],\"week_number\":4},{\"benchmark\":{\"digest\":\"8798a6f259c2f34fe2d44886000a3dcf2159c9fe0baba2b586180424b232b3c8\",\"id\":\"hyrox-base-benchmark-run10km\",\"version\":1},\"block_id\":\"e4e0aadc-c3ee-4e8f-8c2b-d5deb042488e\",\"exercise\":{\"digest\":\"19a9aa4628c2265f290abad156c8e15bb6f84f3f8da4878040fad2691a5cfbcd\",\"id\":\"EX-901017\",\"version\":1},\"id\":\"base-w04-quality-runningIntervals\",\"identity_namespace\":\"canonical_exercise\",\"input_unit\":\"milliseconds\",\"kind\":\"runningIntervals\",\"output_unit\":\"millisecondsPerKilometre\",\"parameters\":{\"recovery_seconds\":120,\"repetitions\":4,\"work_seconds\":240},\"protocol_id\":\"LOCAL-HYROX-W04-QUALITY-R1\",\"protocol_revision\":1,\"rule\":{\"digest\":\"86489ce9a72b401fba0b0ad7b9689ab79f9037c5c46fca388797e9169e0e22f7\",\"id\":\"hyrox-base-runningIntervals\",\"version\":1},\"session_body_sha256\":\"1d92282e04bd9e5f0e5c01c791cf615a8bf2067d910b02b3d450fbb470153c86\",\"session_key\":\"base-w04-quality\",\"slot_key\":\"base-w04-quality-slot\",\"step_ids\":[\"work-1\",\"work-2\",\"work-3\",\"work-4\"],\"week_number\":4},{\"benchmark\":{\"digest\":\"e228a6b37580ed670c033abdf647b94d0cd1df540b5a34be90c540915e6685f2\",\"id\":\"hyrox-base-benchmark-backSquat5rm\",\"version\":1},\"block_id\":\"5f8d77f1-d27c-4092-86ce-80ad52d14a1b\",\"exercise\":{\"digest\":\"ea4171f90402a54fa1d2b3c98b6c57811b025005a281c86431d5d11b31ec682d\",\"id\":\"EX-901001\",\"version\":1},\"id\":\"base-w05-gym-a-backSquat\",\"identity_namespace\":\"canonical_exercise\",\"input_unit\":\"microgramsTotalExternalLoad\",\"kind\":\"backSquat\",\"output_unit\":\"gramsTotalExternalLoad\",\"parameters\":{\"five_rm_basis_points\":8750,\"reps\":6,\"rir\":\"3\",\"sets\":4},\"protocol_id\":\"LOCAL-HYROX-W05-GYM_A-R1\",\"protocol_revision\":1,\"rule\":{\"digest\":\"fb5ad8096dba95606d229bfdec558ce1e7ddc8d007405b11311baa55c1f4a420\",\"id\":\"hyrox-base-backSquat\",\"version\":1},\"session_body_sha256\":\"90515e7a5743bd8d3b08c7d6bd2e13526a7fef97fea17a4a444432330f0fe6ac\",\"session_key\":\"base-w05-gym-a\",\"slot_key\":\"base-w05-gym-a-slot\",\"step_ids\":[],\"week_number\":5},{\"benchmark\":{\"digest\":\"72dad6a87a4b1bec269ba4a6639a995bf1ae236f48d0adab20d0fdc179a53948\",\"id\":\"hyrox-base-benchmark-row2km\",\"version\":1},\"block_id\":\"5e8213b7-609e-4e7a-80ba-0bdd4a2937e9\",\"exercise\":{\"digest\":\"c6d1cfa046afd963b0cd024264a4795239ec657f1692bae7a062f2c89c126aef\",\"id\":\"EX-901016\",\"version\":1},\"id\":\"base-w05-gym-a-dedicatedRowIntervals\",\"identity_namespace\":\"canonical_exercise\",\"input_unit\":\"milliseconds\",\"kind\":\"dedicatedRowIntervals\",\"output_unit\":\"millisecondsPer500Metres\",\"parameters\":{\"recovery_seconds\":75,\"repetitions\":6,\"work_seconds\":120},\"protocol_id\":\"LOCAL-HYROX-W05-GYM_A-R1\",\"protocol_revision\":1,\"rule\":{\"digest\":\"bd46a16e1256b704e56242aa30f5041cf89e68b4f6b4d0a097ecef13dc7cfa58\",\"id\":\"hyrox-base-dedicatedRowIntervals\",\"version\":1},\"session_body_sha256\":\"90515e7a5743bd8d3b08c7d6bd2e13526a7fef97fea17a4a444432330f0fe6ac\",\"session_key\":\"base-w05-gym-a\",\"slot_key\":\"base-w05-gym-a-slot\",\"step_ids\":[\"work-1\",\"work-2\",\"work-3\",\"work-4\",\"work-5\",\"work-6\"],\"week_number\":5},{\"benchmark\":{\"digest\":\"8798a6f259c2f34fe2d44886000a3dcf2159c9fe0baba2b586180424b232b3c8\",\"id\":\"hyrox-base-benchmark-run10km\",\"version\":1},\"block_id\":\"fb2a366f-7c2d-45c5-8932-4e0d130c7c71\",\"exercise\":{\"digest\":\"19a9aa4628c2265f290abad156c8e15bb6f84f3f8da4878040fad2691a5cfbcd\",\"id\":\"EX-901017\",\"version\":1},\"id\":\"base-w05-quality-runningIntervals\",\"identity_namespace\":\"canonical_exercise\",\"input_unit\":\"milliseconds\",\"kind\":\"runningIntervals\",\"output_unit\":\"millisecondsPerKilometre\",\"parameters\":{\"recovery_seconds\":120,\"repetitions\":5,\"work_seconds\":300},\"protocol_id\":\"LOCAL-HYROX-W05-QUALITY-R1\",\"protocol_revision\":1,\"rule\":{\"digest\":\"86489ce9a72b401fba0b0ad7b9689ab79f9037c5c46fca388797e9169e0e22f7\",\"id\":\"hyrox-base-runningIntervals\",\"version\":1},\"session_body_sha256\":\"ac013efa33294dd29abe0d8ed1c102f82ed04cae91fe24f6396635982a609604\",\"session_key\":\"base-w05-quality\",\"slot_key\":\"base-w05-quality-slot\",\"step_ids\":[\"work-1\",\"work-2\",\"work-3\",\"work-4\",\"work-5\"],\"week_number\":5},{\"benchmark\":{\"digest\":\"e228a6b37580ed670c033abdf647b94d0cd1df540b5a34be90c540915e6685f2\",\"id\":\"hyrox-base-benchmark-backSquat5rm\",\"version\":1},\"block_id\":\"3fa35948-5ddd-4975-84da-7bfe2655ee6d\",\"exercise\":{\"digest\":\"ea4171f90402a54fa1d2b3c98b6c57811b025005a281c86431d5d11b31ec682d\",\"id\":\"EX-901001\",\"version\":1},\"id\":\"base-w06-gym-a-backSquat\",\"identity_namespace\":\"canonical_exercise\",\"input_unit\":\"microgramsTotalExternalLoad\",\"kind\":\"backSquat\",\"output_unit\":\"gramsTotalExternalLoad\",\"parameters\":{\"five_rm_basis_points\":9000,\"reps\":5,\"rir\":\"2\u20133\",\"sets\":4},\"protocol_id\":\"LOCAL-HYROX-W06-GYM_A-R1\",\"protocol_revision\":1,\"rule\":{\"digest\":\"fb5ad8096dba95606d229bfdec558ce1e7ddc8d007405b11311baa55c1f4a420\",\"id\":\"hyrox-base-backSquat\",\"version\":1},\"session_body_sha256\":\"1a9f55e737d2055a8076d2352fae7c13a86e0c01014949d4b43a687bc9aaca7d\",\"session_key\":\"base-w06-gym-a\",\"slot_key\":\"base-w06-gym-a-slot\",\"step_ids\":[],\"week_number\":6},{\"benchmark\":{\"digest\":\"72dad6a87a4b1bec269ba4a6639a995bf1ae236f48d0adab20d0fdc179a53948\",\"id\":\"hyrox-base-benchmark-row2km\",\"version\":1},\"block_id\":\"cb445789-cd49-484d-87d8-defe33134473\",\"exercise\":{\"digest\":\"c6d1cfa046afd963b0cd024264a4795239ec657f1692bae7a062f2c89c126aef\",\"id\":\"EX-901016\",\"version\":1},\"id\":\"base-w06-gym-a-dedicatedRowIntervals\",\"identity_namespace\":\"canonical_exercise\",\"input_unit\":\"milliseconds\",\"kind\":\"dedicatedRowIntervals\",\"output_unit\":\"millisecondsPer500Metres\",\"parameters\":{\"recovery_seconds\":75,\"repetitions\":7,\"work_seconds\":120},\"protocol_id\":\"LOCAL-HYROX-W06-GYM_A-R1\",\"protocol_revision\":1,\"rule\":{\"digest\":\"bd46a16e1256b704e56242aa30f5041cf89e68b4f6b4d0a097ecef13dc7cfa58\",\"id\":\"hyrox-base-dedicatedRowIntervals\",\"version\":1},\"session_body_sha256\":\"1a9f55e737d2055a8076d2352fae7c13a86e0c01014949d4b43a687bc9aaca7d\",\"session_key\":\"base-w06-gym-a\",\"slot_key\":\"base-w06-gym-a-slot\",\"step_ids\":[\"work-1\",\"work-2\",\"work-3\",\"work-4\",\"work-5\",\"work-6\",\"work-7\"],\"week_number\":6},{\"benchmark\":{\"digest\":\"8798a6f259c2f34fe2d44886000a3dcf2159c9fe0baba2b586180424b232b3c8\",\"id\":\"hyrox-base-benchmark-run10km\",\"version\":1},\"block_id\":\"8fa0cada-27c4-4e05-8fd6-fa784877afcb\",\"exercise\":{\"digest\":\"19a9aa4628c2265f290abad156c8e15bb6f84f3f8da4878040fad2691a5cfbcd\",\"id\":\"EX-901017\",\"version\":1},\"id\":\"base-w06-quality-runningIntervals\",\"identity_namespace\":\"canonical_exercise\",\"input_unit\":\"milliseconds\",\"kind\":\"runningIntervals\",\"output_unit\":\"millisecondsPerKilometre\",\"parameters\":{\"recovery_seconds\":120,\"repetitions\":4,\"work_seconds\":420},\"protocol_id\":\"LOCAL-HYROX-W06-QUALITY-R1\",\"protocol_revision\":1,\"rule\":{\"digest\":\"86489ce9a72b401fba0b0ad7b9689ab79f9037c5c46fca388797e9169e0e22f7\",\"id\":\"hyrox-base-runningIntervals\",\"version\":1},\"session_body_sha256\":\"35cebfacd24e86eb84f76ff931eb8e83cf82a0990adf4e1a568c24acc71ff7e9\",\"session_key\":\"base-w06-quality\",\"slot_key\":\"base-w06-quality-slot\",\"step_ids\":[\"work-1\",\"work-2\",\"work-3\",\"work-4\"],\"week_number\":6},{\"benchmark\":{\"digest\":\"e228a6b37580ed670c033abdf647b94d0cd1df540b5a34be90c540915e6685f2\",\"id\":\"hyrox-base-benchmark-backSquat5rm\",\"version\":1},\"block_id\":\"6f3d43f2-41f2-4ab9-8d4e-b84029a969f2\",\"exercise\":{\"digest\":\"ea4171f90402a54fa1d2b3c98b6c57811b025005a281c86431d5d11b31ec682d\",\"id\":\"EX-901001\",\"version\":1},\"id\":\"base-w07-gym-a-backSquat\",\"identity_namespace\":\"canonical_exercise\",\"input_unit\":\"microgramsTotalExternalLoad\",\"kind\":\"backSquat\",\"output_unit\":\"gramsTotalExternalLoad\",\"parameters\":{\"five_rm_basis_points\":9500,\"reps\":4,\"rir\":\"2\",\"sets\":4},\"protocol_id\":\"LOCAL-HYROX-W07-GYM_A-R1\",\"protocol_revision\":1,\"rule\":{\"digest\":\"fb5ad8096dba95606d229bfdec558ce1e7ddc8d007405b11311baa55c1f4a420\",\"id\":\"hyrox-base-backSquat\",\"version\":1},\"session_body_sha256\":\"1adb71a23b9cfc32a16da94b107b1a7ed9d7a0ea1ef84ddd4d530d08c8799191\",\"session_key\":\"base-w07-gym-a\",\"slot_key\":\"base-w07-gym-a-slot\",\"step_ids\":[],\"week_number\":7},{\"benchmark\":{\"digest\":\"72dad6a87a4b1bec269ba4a6639a995bf1ae236f48d0adab20d0fdc179a53948\",\"id\":\"hyrox-base-benchmark-row2km\",\"version\":1},\"block_id\":\"6a49e47a-1ea4-4cc6-8d67-bdd0f1725925\",\"exercise\":{\"digest\":\"c6d1cfa046afd963b0cd024264a4795239ec657f1692bae7a062f2c89c126aef\",\"id\":\"EX-901016\",\"version\":1},\"id\":\"base-w07-gym-a-dedicatedRowIntervals\",\"identity_namespace\":\"canonical_exercise\",\"input_unit\":\"milliseconds\",\"kind\":\"dedicatedRowIntervals\",\"output_unit\":\"millisecondsPer500Metres\",\"parameters\":{\"recovery_seconds\":75,\"repetitions\":5,\"work_seconds\":180},\"protocol_id\":\"LOCAL-HYROX-W07-GYM_A-R1\",\"protocol_revision\":1,\"rule\":{\"digest\":\"bd46a16e1256b704e56242aa30f5041cf89e68b4f6b4d0a097ecef13dc7cfa58\",\"id\":\"hyrox-base-dedicatedRowIntervals\",\"version\":1},\"session_body_sha256\":\"1adb71a23b9cfc32a16da94b107b1a7ed9d7a0ea1ef84ddd4d530d08c8799191\",\"session_key\":\"base-w07-gym-a\",\"slot_key\":\"base-w07-gym-a-slot\",\"step_ids\":[\"work-1\",\"work-2\",\"work-3\",\"work-4\",\"work-5\"],\"week_number\":7},{\"benchmark\":{\"digest\":\"8798a6f259c2f34fe2d44886000a3dcf2159c9fe0baba2b586180424b232b3c8\",\"id\":\"hyrox-base-benchmark-run10km\",\"version\":1},\"block_id\":\"4181d95f-a26c-4ae0-8328-868558c50d4c\",\"exercise\":{\"digest\":\"19a9aa4628c2265f290abad156c8e15bb6f84f3f8da4878040fad2691a5cfbcd\",\"id\":\"EX-901017\",\"version\":1},\"id\":\"base-w07-quality-runningIntervals\",\"identity_namespace\":\"canonical_exercise\",\"input_unit\":\"milliseconds\",\"kind\":\"runningIntervals\",\"output_unit\":\"millisecondsPerKilometre\",\"parameters\":{\"recovery_seconds\":120,\"repetitions\":3,\"work_seconds\":600},\"protocol_id\":\"LOCAL-HYROX-W07-QUALITY-R1\",\"protocol_revision\":1,\"rule\":{\"digest\":\"86489ce9a72b401fba0b0ad7b9689ab79f9037c5c46fca388797e9169e0e22f7\",\"id\":\"hyrox-base-runningIntervals\",\"version\":1},\"session_body_sha256\":\"0351267d6742b5f243671915b15bfba4ddcc5f8e9258c8449dcc29b0b6fcba1f\",\"session_key\":\"base-w07-quality\",\"slot_key\":\"base-w07-quality-slot\",\"step_ids\":[\"work-1\",\"work-2\",\"work-3\"],\"week_number\":7},{\"benchmark\":{\"digest\":\"e228a6b37580ed670c033abdf647b94d0cd1df540b5a34be90c540915e6685f2\",\"id\":\"hyrox-base-benchmark-backSquat5rm\",\"version\":1},\"block_id\":\"9583d0b2-c212-4fa0-8f82-30aa147736f6\",\"exercise\":{\"digest\":\"ea4171f90402a54fa1d2b3c98b6c57811b025005a281c86431d5d11b31ec682d\",\"id\":\"EX-901001\",\"version\":1},\"id\":\"base-w08-gym-a-backSquat\",\"identity_namespace\":\"canonical_exercise\",\"input_unit\":\"microgramsTotalExternalLoad\",\"kind\":\"backSquat\",\"output_unit\":\"gramsTotalExternalLoad\",\"parameters\":{\"five_rm_basis_points\":7500,\"reps\":5,\"rir\":\"3\u20134\",\"sets\":2},\"protocol_id\":\"LOCAL-HYROX-W08-GYM_A-R1\",\"protocol_revision\":1,\"rule\":{\"digest\":\"fb5ad8096dba95606d229bfdec558ce1e7ddc8d007405b11311baa55c1f4a420\",\"id\":\"hyrox-base-backSquat\",\"version\":1},\"session_body_sha256\":\"f4ef6c912892a46e8ab7f8dc44ce46bbf4e201e16351bc8282830419575f5d76\",\"session_key\":\"base-w08-gym-a\",\"slot_key\":\"base-w08-gym-a-slot\",\"step_ids\":[],\"week_number\":8},{\"benchmark\":{\"digest\":\"72dad6a87a4b1bec269ba4a6639a995bf1ae236f48d0adab20d0fdc179a53948\",\"id\":\"hyrox-base-benchmark-row2km\",\"version\":1},\"block_id\":\"0794489f-9ecd-4199-87c6-ac97c8a2254e\",\"exercise\":{\"digest\":\"c6d1cfa046afd963b0cd024264a4795239ec657f1692bae7a062f2c89c126aef\",\"id\":\"EX-901016\",\"version\":1},\"id\":\"base-w08-gym-a-dedicatedRowIntervals\",\"identity_namespace\":\"canonical_exercise\",\"input_unit\":\"milliseconds\",\"kind\":\"dedicatedRowIntervals\",\"output_unit\":\"millisecondsPer500Metres\",\"parameters\":{\"recovery_seconds\":90,\"repetitions\":4,\"work_seconds\":120},\"protocol_id\":\"LOCAL-HYROX-W08-GYM_A-R1\",\"protocol_revision\":1,\"rule\":{\"digest\":\"bd46a16e1256b704e56242aa30f5041cf89e68b4f6b4d0a097ecef13dc7cfa58\",\"id\":\"hyrox-base-dedicatedRowIntervals\",\"version\":1},\"session_body_sha256\":\"f4ef6c912892a46e8ab7f8dc44ce46bbf4e201e16351bc8282830419575f5d76\",\"session_key\":\"base-w08-gym-a\",\"slot_key\":\"base-w08-gym-a-slot\",\"step_ids\":[\"work-1\",\"work-2\",\"work-3\",\"work-4\"],\"week_number\":8},{\"benchmark\":{\"digest\":\"8798a6f259c2f34fe2d44886000a3dcf2159c9fe0baba2b586180424b232b3c8\",\"id\":\"hyrox-base-benchmark-run10km\",\"version\":1},\"block_id\":\"ea3dcd2b-ff88-43b3-8697-797cbd39b6fb\",\"exercise\":{\"digest\":\"19a9aa4628c2265f290abad156c8e15bb6f84f3f8da4878040fad2691a5cfbcd\",\"id\":\"EX-901017\",\"version\":1},\"id\":\"base-w08-quality-runningIntervals\",\"identity_namespace\":\"canonical_exercise\",\"input_unit\":\"milliseconds\",\"kind\":\"runningIntervals\",\"output_unit\":\"millisecondsPerKilometre\",\"parameters\":{\"recovery_seconds\":120,\"repetitions\":4,\"work_seconds\":300},\"protocol_id\":\"LOCAL-HYROX-W08-QUALITY-R1\",\"protocol_revision\":1,\"rule\":{\"digest\":\"86489ce9a72b401fba0b0ad7b9689ab79f9037c5c46fca388797e9169e0e22f7\",\"id\":\"hyrox-base-runningIntervals\",\"version\":1},\"session_body_sha256\":\"f9f0fa274508a3517660e4cd27daf73adc229b6a0f6097a7233f004008215ce6\",\"session_key\":\"base-w08-quality\",\"slot_key\":\"base-w08-quality-slot\",\"step_ids\":[\"work-1\",\"work-2\",\"work-3\",\"work-4\"],\"week_number\":8}]},\"phases\":[],\"programme\":{\"coaching_intent\":\"approved_variants: Exercise variant content is approved 2026-10-25: main front-rack reverse lunge uses a BARBELL front rack; cable Pallof press uses SPLIT STANCE. Preparation ramps remain separate from working sets. No RDL/lunge load derives from a squat benchmark.\\naudience: Developing or advanced athletes able to run continuously for 45 minutes.\\nbenchmarks: 10 km run time, 2 km row time, back squat 5RM total external load, strict OHP 5RM total external load, maximum strict pull-ups (zero valid). Own test date and source/type required; no freshness cutoff or automatic latest/best selection.\\ncapture: Prescribed targets, advisory guidance and actual performance are separate. Athletes may record actual load in existing supported actual-load fields or optional notes; no new mandatory result, race attestation or division lookup follows from advisory text.\\ncore_progression: Optional W5 carry load, longer plank lever or Pallof resistance only with position maintained and athlete choice. No compulsory increase. W4 carry and Pallof lighter.\\ncore_rest: 45\u201360 seconds as needed; no compulsory recovery at each side change is prescribed.\\nduration: Generally 60\u201390 minutes; do not add filler. Preparation and cooldown are additional to main running.\\nequipment: Approved variants use barbell/rack (including front-rack reverse lunge), dumbbells/incline bench, pull-up bar, cable station (including split-stance Pallof), carry space, rower, fan bike, SkiErg, wall ball/target, kettlebell and preparation bands. Canonical identity/version authority and marketing/prerequisite copy are separate.\\nfinisher_load: Effort/technique selected, no fixed kilograms. Rep work leaves recovery inside the minute; record athlete scaling using existing supported logging. \u201cUse your race weight\u201d in these circuits is advisory only: no exact load, target height, verified race standard or division lookup is prescribed. Explicit prescriptions and formal assessments retain their own requirements.\\nhistory: Explicit benchmark replacement acceptance affects future unstarted sessions only; started/completed prescriptions immutable. Actuals separate. No inferred loads for RDL/lunge/other press/pull-ups.\\nperiodisation: W1\u20133 build; W4 reduces gym/finisher demand with modest running reduction; W5\u20137 build; W8 consolidates.\\npersonalisation: Only quality running, dedicated rowing and back squat have approved numeric derivation. Pace=10 km seconds/10; 4\u20135 min x1.00\u20131.05, 6\u20137 min x1.02\u20131.07, 10 min x1.03\u20131.08. Row split=2 km seconds/4, +10\u201315 seconds for 2-min reps, +12\u201318 for 3-min reps; W4 +18\u201323, W8 +15\u201320. Squat=5RM x authored basis points/10000, nearest configured total barbell increment, ties down. No guessed increment. Missing means unavailable, plus authored effort only; no invented row fallback.\\npost_base: No compulsory post-Base assessment; representative benchmarks needed before next plan. Test Week is a separate unauthored programme, never inserted here.\\npurpose: Build aerobic capacity, compound strength, shoulders/pulling, grip and bracing before specific HYROX preparation. Base is purpose, not beginner status.\\nrunning_effort: Easy/long conversational, RPE about 3\u20134. Quality RPE about 7, repeatable. Choose within duration windows by feel/recovery; no level bands or invented HR zones.\\nschedule: Eight weeks; Mon Gym A, Tue easy run, Wed Gym B, Thu quality run, Fri Gym C, Sat long run, Sun rest. One session/day; six/week.\\nstrength_rest: Back squat working sets: 150\u2013180 seconds throughout; warm-up sets separate. RDL/reverse lunge: 120\u2013180 seconds. Upper pair A: 90\u2013120 seconds after pair; B/C: 90 seconds.\\nsubstitution: Running intended for all three aerobic sessions. Bike substitution only under verified existing rules plus athlete acceptance, preserving duration/effort, never running pace. Approved variant content does not grant new substitution or canonical mapping authority.\\nupper_progression: Build repetitions within ranges before suggesting load increases; athlete accepts. No OHP load inference from its benchmark. No automatic progression on completion.\",\"duration_weeks\":8,\"library_scope\":\"coach_private\",\"lineage_code\":\"LOCAL-HYROX-BASE-PUBLICATION-REHEARSAL\",\"name\":\"LOCAL REHEARSAL \u2014 complete approved HYROX Base content\",\"owner_type\":\"coach\",\"sessions_per_week\":6,\"version_number\":1},\"protected_invariants\":[],\"sessions\":[{\"protocol_id\":\"LOCAL-HYROX-W01-EASY-R1\",\"revision_number\":1,\"session_key\":\"base-w01-easy\",\"session_lineage_id\":\"2416223e-4daf-4ab5-8a6f-51ac3468f661\",\"title\":\"LOCAL REHEARSAL: HYROX Base \u00b7 Week 1 \u00b7 easy\"},{\"protocol_id\":\"LOCAL-HYROX-W01-GYM_A-R1\",\"revision_number\":1,\"session_key\":\"base-w01-gym-a\",\"session_lineage_id\":\"3bbc9c5f-5da6-40bc-87c6-d14ed34151e6\",\"title\":\"LOCAL REHEARSAL: HYROX Base \u00b7 Week 1 \u00b7 gym a\"},{\"protocol_id\":\"LOCAL-HYROX-W01-GYM_B-R1\",\"revision_number\":1,\"session_key\":\"base-w01-gym-b\",\"session_lineage_id\":\"f3e486de-aae6-40ba-893c-ef5cdbcae330\",\"title\":\"LOCAL REHEARSAL: HYROX Base \u00b7 Week 1 \u00b7 gym b\"},{\"protocol_id\":\"LOCAL-HYROX-W01-GYM_C-R1\",\"revision_number\":1,\"session_key\":\"base-w01-gym-c\",\"session_lineage_id\":\"09283844-f5d5-47db-8ccb-b5ff9bdc37ac\",\"title\":\"LOCAL REHEARSAL: HYROX Base \u00b7 Week 1 \u00b7 gym c\"},{\"protocol_id\":\"LOCAL-HYROX-W01-LONG-R1\",\"revision_number\":1,\"session_key\":\"base-w01-long\",\"session_lineage_id\":\"107c9a2b-adbd-4fdd-8c44-61d70ab88e9d\",\"title\":\"LOCAL REHEARSAL: HYROX Base \u00b7 Week 1 \u00b7 long\"},{\"protocol_id\":\"LOCAL-HYROX-W01-QUALITY-R1\",\"revision_number\":1,\"session_key\":\"base-w01-quality\",\"session_lineage_id\":\"45d3897b-ecfe-4207-8952-d345e9be7854\",\"title\":\"LOCAL REHEARSAL: HYROX Base \u00b7 Week 1 \u00b7 quality\"},{\"protocol_id\":\"LOCAL-HYROX-W02-EASY-R1\",\"revision_number\":1,\"session_key\":\"base-w02-easy\",\"session_lineage_id\":\"dd7c2ad0-b38a-4791-8f62-65d828b0f3c9\",\"title\":\"LOCAL REHEARSAL: HYROX Base \u00b7 Week 2 \u00b7 easy\"},{\"protocol_id\":\"LOCAL-HYROX-W02-GYM_A-R1\",\"revision_number\":1,\"session_key\":\"base-w02-gym-a\",\"session_lineage_id\":\"f5a5f319-8273-493b-8843-229aa69c3c16\",\"title\":\"LOCAL REHEARSAL: HYROX Base \u00b7 Week 2 \u00b7 gym a\"},{\"protocol_id\":\"LOCAL-HYROX-W02-GYM_B-R1\",\"revision_number\":1,\"session_key\":\"base-w02-gym-b\",\"session_lineage_id\":\"16e2bff0-748e-4074-87a0-de1240812372\",\"title\":\"LOCAL REHEARSAL: HYROX Base \u00b7 Week 2 \u00b7 gym b\"},{\"protocol_id\":\"LOCAL-HYROX-W02-GYM_C-R1\",\"revision_number\":1,\"session_key\":\"base-w02-gym-c\",\"session_lineage_id\":\"2a48928d-d96c-4a30-81e3-7d4f0ced7358\",\"title\":\"LOCAL REHEARSAL: HYROX Base \u00b7 Week 2 \u00b7 gym c\"},{\"protocol_id\":\"LOCAL-HYROX-W02-LONG-R1\",\"revision_number\":1,\"session_key\":\"base-w02-long\",\"session_lineage_id\":\"586fcee5-5570-41f7-884a-d4e0539439a5\",\"title\":\"LOCAL REHEARSAL: HYROX Base \u00b7 Week 2 \u00b7 long\"},{\"protocol_id\":\"LOCAL-HYROX-W02-QUALITY-R1\",\"revision_number\":1,\"session_key\":\"base-w02-quality\",\"session_lineage_id\":\"f21ee814-1df6-47a5-82c3-74c0e232ad32\",\"title\":\"LOCAL REHEARSAL: HYROX Base \u00b7 Week 2 \u00b7 quality\"},{\"protocol_id\":\"LOCAL-HYROX-W03-EASY-R1\",\"revision_number\":1,\"session_key\":\"base-w03-easy\",\"session_lineage_id\":\"01220f68-afe5-4360-8a02-afa4d79ee940\",\"title\":\"LOCAL REHEARSAL: HYROX Base \u00b7 Week 3 \u00b7 easy\"},{\"protocol_id\":\"LOCAL-HYROX-W03-GYM_A-R1\",\"revision_number\":1,\"session_key\":\"base-w03-gym-a\",\"session_lineage_id\":\"9b3425be-36cb-46c8-8f7a-b146ebc4bed4\",\"title\":\"LOCAL REHEARSAL: HYROX Base \u00b7 Week 3 \u00b7 gym a\"},{\"protocol_id\":\"LOCAL-HYROX-W03-GYM_B-R1\",\"revision_number\":1,\"session_key\":\"base-w03-gym-b\",\"session_lineage_id\":\"85348d19-b5eb-46d4-8d36-3ec168dd1883\",\"title\":\"LOCAL REHEARSAL: HYROX Base \u00b7 Week 3 \u00b7 gym b\"},{\"protocol_id\":\"LOCAL-HYROX-W03-GYM_C-R1\",\"revision_number\":1,\"session_key\":\"base-w03-gym-c\",\"session_lineage_id\":\"17504384-34ea-478f-8a8e-01d379a2cea1\",\"title\":\"LOCAL REHEARSAL: HYROX Base \u00b7 Week 3 \u00b7 gym c\"},{\"protocol_id\":\"LOCAL-HYROX-W03-LONG-R1\",\"revision_number\":1,\"session_key\":\"base-w03-long\",\"session_lineage_id\":\"6c535559-60f0-48ae-8c27-d77337922d01\",\"title\":\"LOCAL REHEARSAL: HYROX Base \u00b7 Week 3 \u00b7 long\"},{\"protocol_id\":\"LOCAL-HYROX-W03-QUALITY-R1\",\"revision_number\":1,\"session_key\":\"base-w03-quality\",\"session_lineage_id\":\"b0fa26f2-69a7-4aac-8960-c5bd2363452d\",\"title\":\"LOCAL REHEARSAL: HYROX Base \u00b7 Week 3 \u00b7 quality\"},{\"protocol_id\":\"LOCAL-HYROX-W04-EASY-R1\",\"revision_number\":1,\"session_key\":\"base-w04-easy\",\"session_lineage_id\":\"34bc08c3-9f85-4bf7-8362-d2292365b48e\",\"title\":\"LOCAL REHEARSAL: HYROX Base \u00b7 Week 4 \u00b7 easy\"},{\"protocol_id\":\"LOCAL-HYROX-W04-GYM_A-R1\",\"revision_number\":1,\"session_key\":\"base-w04-gym-a\",\"session_lineage_id\":\"6189acc0-4055-413f-840b-f890b4c8764b\",\"title\":\"LOCAL REHEARSAL: HYROX Base \u00b7 Week 4 \u00b7 gym a\"},{\"protocol_id\":\"LOCAL-HYROX-W04-GYM_B-R1\",\"revision_number\":1,\"session_key\":\"base-w04-gym-b\",\"session_lineage_id\":\"8b1d6f13-effa-4234-8810-1e48a1a74691\",\"title\":\"LOCAL REHEARSAL: HYROX Base \u00b7 Week 4 \u00b7 gym b\"},{\"protocol_id\":\"LOCAL-HYROX-W04-GYM_C-R1\",\"revision_number\":1,\"session_key\":\"base-w04-gym-c\",\"session_lineage_id\":\"556e9e33-0a26-4583-828d-46ffbda804cb\",\"title\":\"LOCAL REHEARSAL: HYROX Base \u00b7 Week 4 \u00b7 gym c\"},{\"protocol_id\":\"LOCAL-HYROX-W04-LONG-R1\",\"revision_number\":1,\"session_key\":\"base-w04-long\",\"session_lineage_id\":\"523fa6c2-74bb-402e-8142-ce2e2e3235b7\",\"title\":\"LOCAL REHEARSAL: HYROX Base \u00b7 Week 4 \u00b7 long\"},{\"protocol_id\":\"LOCAL-HYROX-W04-QUALITY-R1\",\"revision_number\":1,\"session_key\":\"base-w04-quality\",\"session_lineage_id\":\"97594fd0-7bda-43e2-8055-379e5e3a14d4\",\"title\":\"LOCAL REHEARSAL: HYROX Base \u00b7 Week 4 \u00b7 quality\"},{\"protocol_id\":\"LOCAL-HYROX-W05-EASY-R1\",\"revision_number\":1,\"session_key\":\"base-w05-easy\",\"session_lineage_id\":\"921268fe-64dd-44bb-8eda-380ac8b12784\",\"title\":\"LOCAL REHEARSAL: HYROX Base \u00b7 Week 5 \u00b7 easy\"},{\"protocol_id\":\"LOCAL-HYROX-W05-GYM_A-R1\",\"revision_number\":1,\"session_key\":\"base-w05-gym-a\",\"session_lineage_id\":\"62c3f77c-f16f-4cb2-8246-c2f8a2a3f082\",\"title\":\"LOCAL REHEARSAL: HYROX Base \u00b7 Week 5 \u00b7 gym a\"},{\"protocol_id\":\"LOCAL-HYROX-W05-GYM_B-R1\",\"revision_number\":1,\"session_key\":\"base-w05-gym-b\",\"session_lineage_id\":\"cd16eb6b-4c75-4c63-87ca-59f4bd1922ab\",\"title\":\"LOCAL REHEARSAL: HYROX Base \u00b7 Week 5 \u00b7 gym b\"},{\"protocol_id\":\"LOCAL-HYROX-W05-GYM_C-R1\",\"revision_number\":1,\"session_key\":\"base-w05-gym-c\",\"session_lineage_id\":\"fd14b34a-500b-4158-863a-66bb19b65eb0\",\"title\":\"LOCAL REHEARSAL: HYROX Base \u00b7 Week 5 \u00b7 gym c\"},{\"protocol_id\":\"LOCAL-HYROX-W05-LONG-R1\",\"revision_number\":1,\"session_key\":\"base-w05-long\",\"session_lineage_id\":\"4cdd27a7-e87d-473b-8df4-8fd61b9ce9df\",\"title\":\"LOCAL REHEARSAL: HYROX Base \u00b7 Week 5 \u00b7 long\"},{\"protocol_id\":\"LOCAL-HYROX-W05-QUALITY-R1\",\"revision_number\":1,\"session_key\":\"base-w05-quality\",\"session_lineage_id\":\"6d3a7968-b3de-4021-8607-984022226fbe\",\"title\":\"LOCAL REHEARSAL: HYROX Base \u00b7 Week 5 \u00b7 quality\"},{\"protocol_id\":\"LOCAL-HYROX-W06-EASY-R1\",\"revision_number\":1,\"session_key\":\"base-w06-easy\",\"session_lineage_id\":\"aaa4a301-fdb4-43c1-8665-7813c9422b84\",\"title\":\"LOCAL REHEARSAL: HYROX Base \u00b7 Week 6 \u00b7 easy\"},{\"protocol_id\":\"LOCAL-HYROX-W06-GYM_A-R1\",\"revision_number\":1,\"session_key\":\"base-w06-gym-a\",\"session_lineage_id\":\"dcee4a2f-9ba1-4b2a-8889-d9eed3468a11\",\"title\":\"LOCAL REHEARSAL: HYROX Base \u00b7 Week 6 \u00b7 gym a\"},{\"protocol_id\":\"LOCAL-HYROX-W06-GYM_B-R1\",\"revision_number\":1,\"session_key\":\"base-w06-gym-b\",\"session_lineage_id\":\"049fd276-72c5-42e1-847e-955643e0a27b\",\"title\":\"LOCAL REHEARSAL: HYROX Base \u00b7 Week 6 \u00b7 gym b\"},{\"protocol_id\":\"LOCAL-HYROX-W06-GYM_C-R1\",\"revision_number\":1,\"session_key\":\"base-w06-gym-c\",\"session_lineage_id\":\"bc6d73d7-9187-4fd0-8a67-4dcd94ab8e0b\",\"title\":\"LOCAL REHEARSAL: HYROX Base \u00b7 Week 6 \u00b7 gym c\"},{\"protocol_id\":\"LOCAL-HYROX-W06-LONG-R1\",\"revision_number\":1,\"session_key\":\"base-w06-long\",\"session_lineage_id\":\"ccb51a0b-fead-4616-8680-63a514ce3994\",\"title\":\"LOCAL REHEARSAL: HYROX Base \u00b7 Week 6 \u00b7 long\"},{\"protocol_id\":\"LOCAL-HYROX-W06-QUALITY-R1\",\"revision_number\":1,\"session_key\":\"base-w06-quality\",\"session_lineage_id\":\"2f6cfd9e-90d0-4ac0-8ac0-fbc897bfdbc7\",\"title\":\"LOCAL REHEARSAL: HYROX Base \u00b7 Week 6 \u00b7 quality\"},{\"protocol_id\":\"LOCAL-HYROX-W07-EASY-R1\",\"revision_number\":1,\"session_key\":\"base-w07-easy\",\"session_lineage_id\":\"be6b952e-6595-46c2-8b85-d2e5b4b0cd64\",\"title\":\"LOCAL REHEARSAL: HYROX Base \u00b7 Week 7 \u00b7 easy\"},{\"protocol_id\":\"LOCAL-HYROX-W07-GYM_A-R1\",\"revision_number\":1,\"session_key\":\"base-w07-gym-a\",\"session_lineage_id\":\"9b731e0a-1070-4ddd-88a3-97e4a3c5a96f\",\"title\":\"LOCAL REHEARSAL: HYROX Base \u00b7 Week 7 \u00b7 gym a\"},{\"protocol_id\":\"LOCAL-HYROX-W07-GYM_B-R1\",\"revision_number\":1,\"session_key\":\"base-w07-gym-b\",\"session_lineage_id\":\"9c4ad8a0-3af6-49d1-8979-404e23faf1e1\",\"title\":\"LOCAL REHEARSAL: HYROX Base \u00b7 Week 7 \u00b7 gym b\"},{\"protocol_id\":\"LOCAL-HYROX-W07-GYM_C-R1\",\"revision_number\":1,\"session_key\":\"base-w07-gym-c\",\"session_lineage_id\":\"8a8f7b5f-2e38-4acb-86d1-f67fb5ed8d2e\",\"title\":\"LOCAL REHEARSAL: HYROX Base \u00b7 Week 7 \u00b7 gym c\"},{\"protocol_id\":\"LOCAL-HYROX-W07-LONG-R1\",\"revision_number\":1,\"session_key\":\"base-w07-long\",\"session_lineage_id\":\"c898930a-4b19-4f01-84e3-c8050822896a\",\"title\":\"LOCAL REHEARSAL: HYROX Base \u00b7 Week 7 \u00b7 long\"},{\"protocol_id\":\"LOCAL-HYROX-W07-QUALITY-R1\",\"revision_number\":1,\"session_key\":\"base-w07-quality\",\"session_lineage_id\":\"657a9afe-11bf-439e-81ba-d8d21db9073f\",\"title\":\"LOCAL REHEARSAL: HYROX Base \u00b7 Week 7 \u00b7 quality\"},{\"protocol_id\":\"LOCAL-HYROX-W08-EASY-R1\",\"revision_number\":1,\"session_key\":\"base-w08-easy\",\"session_lineage_id\":\"650745f3-3d03-4547-8a0b-d92e2ec15c3d\",\"title\":\"LOCAL REHEARSAL: HYROX Base \u00b7 Week 8 \u00b7 easy\"},{\"protocol_id\":\"LOCAL-HYROX-W08-GYM_A-R1\",\"revision_number\":1,\"session_key\":\"base-w08-gym-a\",\"session_lineage_id\":\"ab03b4d5-c076-4f40-8d76-620323f71c51\",\"title\":\"LOCAL REHEARSAL: HYROX Base \u00b7 Week 8 \u00b7 gym a\"},{\"protocol_id\":\"LOCAL-HYROX-W08-GYM_B-R1\",\"revision_number\":1,\"session_key\":\"base-w08-gym-b\",\"session_lineage_id\":\"51a6e3ba-b0f1-4087-81d8-a686d213996d\",\"title\":\"LOCAL REHEARSAL: HYROX Base \u00b7 Week 8 \u00b7 gym b\"},{\"protocol_id\":\"LOCAL-HYROX-W08-GYM_C-R1\",\"revision_number\":1,\"session_key\":\"base-w08-gym-c\",\"session_lineage_id\":\"0d78dbc1-71c6-427c-84b9-af82531a10d2\",\"title\":\"LOCAL REHEARSAL: HYROX Base \u00b7 Week 8 \u00b7 gym c\"},{\"protocol_id\":\"LOCAL-HYROX-W08-LONG-R1\",\"revision_number\":1,\"session_key\":\"base-w08-long\",\"session_lineage_id\":\"b5054fdc-294a-4fca-8b24-c72a78e39667\",\"title\":\"LOCAL REHEARSAL: HYROX Base \u00b7 Week 8 \u00b7 long\"},{\"protocol_id\":\"LOCAL-HYROX-W08-QUALITY-R1\",\"revision_number\":1,\"session_key\":\"base-w08-quality\",\"session_lineage_id\":\"e3cfde5e-43a2-426b-8d10-fd2bb30ac871\",\"title\":\"LOCAL REHEARSAL: HYROX Base \u00b7 Week 8 \u00b7 quality\"}],\"weeks\":[{\"days\":[{\"day_key\":\"day_1\",\"day_order\":1,\"day_type\":\"training\",\"slots\":[{\"completion_expectation\":\"required\",\"is_optional\":false,\"progression\":{\"prescription_summary\":\"Exact approved BASE-W01-GYM_A content; local rehearsal only.\"},\"session_key\":\"base-w01-gym-a\",\"session_order\":1,\"slot_key\":\"base-w01-gym-a-slot\",\"time_of_day\":\"any\"}]},{\"day_key\":\"day_2\",\"day_order\":2,\"day_type\":\"training\",\"slots\":[{\"completion_expectation\":\"required\",\"is_optional\":false,\"progression\":{\"prescription_summary\":\"Exact approved BASE-W01-EASY content; local rehearsal only.\"},\"session_key\":\"base-w01-easy\",\"session_order\":1,\"slot_key\":\"base-w01-easy-slot\",\"time_of_day\":\"any\"}]},{\"day_key\":\"day_3\",\"day_order\":3,\"day_type\":\"training\",\"slots\":[{\"completion_expectation\":\"required\",\"is_optional\":false,\"progression\":{\"prescription_summary\":\"Exact approved BASE-W01-GYM_B content; local rehearsal only.\"},\"session_key\":\"base-w01-gym-b\",\"session_order\":1,\"slot_key\":\"base-w01-gym-b-slot\",\"time_of_day\":\"any\"}]},{\"day_key\":\"day_4\",\"day_order\":4,\"day_type\":\"training\",\"slots\":[{\"completion_expectation\":\"required\",\"is_optional\":false,\"progression\":{\"prescription_summary\":\"Exact approved BASE-W01-QUALITY content; local rehearsal only.\"},\"session_key\":\"base-w01-quality\",\"session_order\":1,\"slot_key\":\"base-w01-quality-slot\",\"time_of_day\":\"any\"}]},{\"day_key\":\"day_5\",\"day_order\":5,\"day_type\":\"training\",\"slots\":[{\"completion_expectation\":\"required\",\"is_optional\":false,\"progression\":{\"prescription_summary\":\"Exact approved BASE-W01-GYM_C content; local rehearsal only.\"},\"session_key\":\"base-w01-gym-c\",\"session_order\":1,\"slot_key\":\"base-w01-gym-c-slot\",\"time_of_day\":\"any\"}]},{\"day_key\":\"day_6\",\"day_order\":6,\"day_type\":\"training\",\"slots\":[{\"completion_expectation\":\"required\",\"is_optional\":false,\"progression\":{\"prescription_summary\":\"Exact approved BASE-W01-LONG content; local rehearsal only.\"},\"session_key\":\"base-w01-long\",\"session_order\":1,\"slot_key\":\"base-w01-long-slot\",\"time_of_day\":\"any\"}]},{\"day_key\":\"day_7\",\"day_order\":7,\"day_type\":\"rest\",\"slots\":[]}],\"week_number\":1},{\"days\":[{\"day_key\":\"day_1\",\"day_order\":1,\"day_type\":\"training\",\"slots\":[{\"completion_expectation\":\"required\",\"is_optional\":false,\"progression\":{\"prescription_summary\":\"Exact approved BASE-W02-GYM_A content; local rehearsal only.\"},\"session_key\":\"base-w02-gym-a\",\"session_order\":1,\"slot_key\":\"base-w02-gym-a-slot\",\"time_of_day\":\"any\"}]},{\"day_key\":\"day_2\",\"day_order\":2,\"day_type\":\"training\",\"slots\":[{\"completion_expectation\":\"required\",\"is_optional\":false,\"progression\":{\"prescription_summary\":\"Exact approved BASE-W02-EASY content; local rehearsal only.\"},\"session_key\":\"base-w02-easy\",\"session_order\":1,\"slot_key\":\"base-w02-easy-slot\",\"time_of_day\":\"any\"}]},{\"day_key\":\"day_3\",\"day_order\":3,\"day_type\":\"training\",\"slots\":[{\"completion_expectation\":\"required\",\"is_optional\":false,\"progression\":{\"prescription_summary\":\"Exact approved BASE-W02-GYM_B content; local rehearsal only.\"},\"session_key\":\"base-w02-gym-b\",\"session_order\":1,\"slot_key\":\"base-w02-gym-b-slot\",\"time_of_day\":\"any\"}]},{\"day_key\":\"day_4\",\"day_order\":4,\"day_type\":\"training\",\"slots\":[{\"completion_expectation\":\"required\",\"is_optional\":false,\"progression\":{\"prescription_summary\":\"Exact approved BASE-W02-QUALITY content; local rehearsal only.\"},\"session_key\":\"base-w02-quality\",\"session_order\":1,\"slot_key\":\"base-w02-quality-slot\",\"time_of_day\":\"any\"}]},{\"day_key\":\"day_5\",\"day_order\":5,\"day_type\":\"training\",\"slots\":[{\"completion_expectation\":\"required\",\"is_optional\":false,\"progression\":{\"prescription_summary\":\"Exact approved BASE-W02-GYM_C content; local rehearsal only.\"},\"session_key\":\"base-w02-gym-c\",\"session_order\":1,\"slot_key\":\"base-w02-gym-c-slot\",\"time_of_day\":\"any\"}]},{\"day_key\":\"day_6\",\"day_order\":6,\"day_type\":\"training\",\"slots\":[{\"completion_expectation\":\"required\",\"is_optional\":false,\"progression\":{\"prescription_summary\":\"Exact approved BASE-W02-LONG content; local rehearsal only.\"},\"session_key\":\"base-w02-long\",\"session_order\":1,\"slot_key\":\"base-w02-long-slot\",\"time_of_day\":\"any\"}]},{\"day_key\":\"day_7\",\"day_order\":7,\"day_type\":\"rest\",\"slots\":[]}],\"week_number\":2},{\"days\":[{\"day_key\":\"day_1\",\"day_order\":1,\"day_type\":\"training\",\"slots\":[{\"completion_expectation\":\"required\",\"is_optional\":false,\"progression\":{\"prescription_summary\":\"Exact approved BASE-W03-GYM_A content; local rehearsal only.\"},\"session_key\":\"base-w03-gym-a\",\"session_order\":1,\"slot_key\":\"base-w03-gym-a-slot\",\"time_of_day\":\"any\"}]},{\"day_key\":\"day_2\",\"day_order\":2,\"day_type\":\"training\",\"slots\":[{\"completion_expectation\":\"required\",\"is_optional\":false,\"progression\":{\"prescription_summary\":\"Exact approved BASE-W03-EASY content; local rehearsal only.\"},\"session_key\":\"base-w03-easy\",\"session_order\":1,\"slot_key\":\"base-w03-easy-slot\",\"time_of_day\":\"any\"}]},{\"day_key\":\"day_3\",\"day_order\":3,\"day_type\":\"training\",\"slots\":[{\"completion_expectation\":\"required\",\"is_optional\":false,\"progression\":{\"prescription_summary\":\"Exact approved BASE-W03-GYM_B content; local rehearsal only.\"},\"session_key\":\"base-w03-gym-b\",\"session_order\":1,\"slot_key\":\"base-w03-gym-b-slot\",\"time_of_day\":\"any\"}]},{\"day_key\":\"day_4\",\"day_order\":4,\"day_type\":\"training\",\"slots\":[{\"completion_expectation\":\"required\",\"is_optional\":false,\"progression\":{\"prescription_summary\":\"Exact approved BASE-W03-QUALITY content; local rehearsal only.\"},\"session_key\":\"base-w03-quality\",\"session_order\":1,\"slot_key\":\"base-w03-quality-slot\",\"time_of_day\":\"any\"}]},{\"day_key\":\"day_5\",\"day_order\":5,\"day_type\":\"training\",\"slots\":[{\"completion_expectation\":\"required\",\"is_optional\":false,\"progression\":{\"prescription_summary\":\"Exact approved BASE-W03-GYM_C content; local rehearsal only.\"},\"session_key\":\"base-w03-gym-c\",\"session_order\":1,\"slot_key\":\"base-w03-gym-c-slot\",\"time_of_day\":\"any\"}]},{\"day_key\":\"day_6\",\"day_order\":6,\"day_type\":\"training\",\"slots\":[{\"completion_expectation\":\"required\",\"is_optional\":false,\"progression\":{\"prescription_summary\":\"Exact approved BASE-W03-LONG content; local rehearsal only.\"},\"session_key\":\"base-w03-long\",\"session_order\":1,\"slot_key\":\"base-w03-long-slot\",\"time_of_day\":\"any\"}]},{\"day_key\":\"day_7\",\"day_order\":7,\"day_type\":\"rest\",\"slots\":[]}],\"week_number\":3},{\"days\":[{\"day_key\":\"day_1\",\"day_order\":1,\"day_type\":\"training\",\"slots\":[{\"completion_expectation\":\"required\",\"is_optional\":false,\"progression\":{\"prescription_summary\":\"Exact approved BASE-W04-GYM_A content; local rehearsal only.\"},\"session_key\":\"base-w04-gym-a\",\"session_order\":1,\"slot_key\":\"base-w04-gym-a-slot\",\"time_of_day\":\"any\"}]},{\"day_key\":\"day_2\",\"day_order\":2,\"day_type\":\"training\",\"slots\":[{\"completion_expectation\":\"required\",\"is_optional\":false,\"progression\":{\"prescription_summary\":\"Exact approved BASE-W04-EASY content; local rehearsal only.\"},\"session_key\":\"base-w04-easy\",\"session_order\":1,\"slot_key\":\"base-w04-easy-slot\",\"time_of_day\":\"any\"}]},{\"day_key\":\"day_3\",\"day_order\":3,\"day_type\":\"training\",\"slots\":[{\"completion_expectation\":\"required\",\"is_optional\":false,\"progression\":{\"prescription_summary\":\"Exact approved BASE-W04-GYM_B content; local rehearsal only.\"},\"session_key\":\"base-w04-gym-b\",\"session_order\":1,\"slot_key\":\"base-w04-gym-b-slot\",\"time_of_day\":\"any\"}]},{\"day_key\":\"day_4\",\"day_order\":4,\"day_type\":\"training\",\"slots\":[{\"completion_expectation\":\"required\",\"is_optional\":false,\"progression\":{\"prescription_summary\":\"Exact approved BASE-W04-QUALITY content; local rehearsal only.\"},\"session_key\":\"base-w04-quality\",\"session_order\":1,\"slot_key\":\"base-w04-quality-slot\",\"time_of_day\":\"any\"}]},{\"day_key\":\"day_5\",\"day_order\":5,\"day_type\":\"training\",\"slots\":[{\"completion_expectation\":\"required\",\"is_optional\":false,\"progression\":{\"prescription_summary\":\"Exact approved BASE-W04-GYM_C content; local rehearsal only.\"},\"session_key\":\"base-w04-gym-c\",\"session_order\":1,\"slot_key\":\"base-w04-gym-c-slot\",\"time_of_day\":\"any\"}]},{\"day_key\":\"day_6\",\"day_order\":6,\"day_type\":\"training\",\"slots\":[{\"completion_expectation\":\"required\",\"is_optional\":false,\"progression\":{\"prescription_summary\":\"Exact approved BASE-W04-LONG content; local rehearsal only.\"},\"session_key\":\"base-w04-long\",\"session_order\":1,\"slot_key\":\"base-w04-long-slot\",\"time_of_day\":\"any\"}]},{\"day_key\":\"day_7\",\"day_order\":7,\"day_type\":\"rest\",\"slots\":[]}],\"week_number\":4},{\"days\":[{\"day_key\":\"day_1\",\"day_order\":1,\"day_type\":\"training\",\"slots\":[{\"completion_expectation\":\"required\",\"is_optional\":false,\"progression\":{\"prescription_summary\":\"Exact approved BASE-W05-GYM_A content; local rehearsal only.\"},\"session_key\":\"base-w05-gym-a\",\"session_order\":1,\"slot_key\":\"base-w05-gym-a-slot\",\"time_of_day\":\"any\"}]},{\"day_key\":\"day_2\",\"day_order\":2,\"day_type\":\"training\",\"slots\":[{\"completion_expectation\":\"required\",\"is_optional\":false,\"progression\":{\"prescription_summary\":\"Exact approved BASE-W05-EASY content; local rehearsal only.\"},\"session_key\":\"base-w05-easy\",\"session_order\":1,\"slot_key\":\"base-w05-easy-slot\",\"time_of_day\":\"any\"}]},{\"day_key\":\"day_3\",\"day_order\":3,\"day_type\":\"training\",\"slots\":[{\"completion_expectation\":\"required\",\"is_optional\":false,\"progression\":{\"prescription_summary\":\"Exact approved BASE-W05-GYM_B content; local rehearsal only.\"},\"session_key\":\"base-w05-gym-b\",\"session_order\":1,\"slot_key\":\"base-w05-gym-b-slot\",\"time_of_day\":\"any\"}]},{\"day_key\":\"day_4\",\"day_order\":4,\"day_type\":\"training\",\"slots\":[{\"completion_expectation\":\"required\",\"is_optional\":false,\"progression\":{\"prescription_summary\":\"Exact approved BASE-W05-QUALITY content; local rehearsal only.\"},\"session_key\":\"base-w05-quality\",\"session_order\":1,\"slot_key\":\"base-w05-quality-slot\",\"time_of_day\":\"any\"}]},{\"day_key\":\"day_5\",\"day_order\":5,\"day_type\":\"training\",\"slots\":[{\"completion_expectation\":\"required\",\"is_optional\":false,\"progression\":{\"prescription_summary\":\"Exact approved BASE-W05-GYM_C content; local rehearsal only.\"},\"session_key\":\"base-w05-gym-c\",\"session_order\":1,\"slot_key\":\"base-w05-gym-c-slot\",\"time_of_day\":\"any\"}]},{\"day_key\":\"day_6\",\"day_order\":6,\"day_type\":\"training\",\"slots\":[{\"completion_expectation\":\"required\",\"is_optional\":false,\"progression\":{\"prescription_summary\":\"Exact approved BASE-W05-LONG content; local rehearsal only.\"},\"session_key\":\"base-w05-long\",\"session_order\":1,\"slot_key\":\"base-w05-long-slot\",\"time_of_day\":\"any\"}]},{\"day_key\":\"day_7\",\"day_order\":7,\"day_type\":\"rest\",\"slots\":[]}],\"week_number\":5},{\"days\":[{\"day_key\":\"day_1\",\"day_order\":1,\"day_type\":\"training\",\"slots\":[{\"completion_expectation\":\"required\",\"is_optional\":false,\"progression\":{\"prescription_summary\":\"Exact approved BASE-W06-GYM_A content; local rehearsal only.\"},\"session_key\":\"base-w06-gym-a\",\"session_order\":1,\"slot_key\":\"base-w06-gym-a-slot\",\"time_of_day\":\"any\"}]},{\"day_key\":\"day_2\",\"day_order\":2,\"day_type\":\"training\",\"slots\":[{\"completion_expectation\":\"required\",\"is_optional\":false,\"progression\":{\"prescription_summary\":\"Exact approved BASE-W06-EASY content; local rehearsal only.\"},\"session_key\":\"base-w06-easy\",\"session_order\":1,\"slot_key\":\"base-w06-easy-slot\",\"time_of_day\":\"any\"}]},{\"day_key\":\"day_3\",\"day_order\":3,\"day_type\":\"training\",\"slots\":[{\"completion_expectation\":\"required\",\"is_optional\":false,\"progression\":{\"prescription_summary\":\"Exact approved BASE-W06-GYM_B content; local rehearsal only.\"},\"session_key\":\"base-w06-gym-b\",\"session_order\":1,\"slot_key\":\"base-w06-gym-b-slot\",\"time_of_day\":\"any\"}]},{\"day_key\":\"day_4\",\"day_order\":4,\"day_type\":\"training\",\"slots\":[{\"completion_expectation\":\"required\",\"is_optional\":false,\"progression\":{\"prescription_summary\":\"Exact approved BASE-W06-QUALITY content; local rehearsal only.\"},\"session_key\":\"base-w06-quality\",\"session_order\":1,\"slot_key\":\"base-w06-quality-slot\",\"time_of_day\":\"any\"}]},{\"day_key\":\"day_5\",\"day_order\":5,\"day_type\":\"training\",\"slots\":[{\"completion_expectation\":\"required\",\"is_optional\":false,\"progression\":{\"prescription_summary\":\"Exact approved BASE-W06-GYM_C content; local rehearsal only.\"},\"session_key\":\"base-w06-gym-c\",\"session_order\":1,\"slot_key\":\"base-w06-gym-c-slot\",\"time_of_day\":\"any\"}]},{\"day_key\":\"day_6\",\"day_order\":6,\"day_type\":\"training\",\"slots\":[{\"completion_expectation\":\"required\",\"is_optional\":false,\"progression\":{\"prescription_summary\":\"Exact approved BASE-W06-LONG content; local rehearsal only.\"},\"session_key\":\"base-w06-long\",\"session_order\":1,\"slot_key\":\"base-w06-long-slot\",\"time_of_day\":\"any\"}]},{\"day_key\":\"day_7\",\"day_order\":7,\"day_type\":\"rest\",\"slots\":[]}],\"week_number\":6},{\"days\":[{\"day_key\":\"day_1\",\"day_order\":1,\"day_type\":\"training\",\"slots\":[{\"completion_expectation\":\"required\",\"is_optional\":false,\"progression\":{\"prescription_summary\":\"Exact approved BASE-W07-GYM_A content; local rehearsal only.\"},\"session_key\":\"base-w07-gym-a\",\"session_order\":1,\"slot_key\":\"base-w07-gym-a-slot\",\"time_of_day\":\"any\"}]},{\"day_key\":\"day_2\",\"day_order\":2,\"day_type\":\"training\",\"slots\":[{\"completion_expectation\":\"required\",\"is_optional\":false,\"progression\":{\"prescription_summary\":\"Exact approved BASE-W07-EASY content; local rehearsal only.\"},\"session_key\":\"base-w07-easy\",\"session_order\":1,\"slot_key\":\"base-w07-easy-slot\",\"time_of_day\":\"any\"}]},{\"day_key\":\"day_3\",\"day_order\":3,\"day_type\":\"training\",\"slots\":[{\"completion_expectation\":\"required\",\"is_optional\":false,\"progression\":{\"prescription_summary\":\"Exact approved BASE-W07-GYM_B content; local rehearsal only.\"},\"session_key\":\"base-w07-gym-b\",\"session_order\":1,\"slot_key\":\"base-w07-gym-b-slot\",\"time_of_day\":\"any\"}]},{\"day_key\":\"day_4\",\"day_order\":4,\"day_type\":\"training\",\"slots\":[{\"completion_expectation\":\"required\",\"is_optional\":false,\"progression\":{\"prescription_summary\":\"Exact approved BASE-W07-QUALITY content; local rehearsal only.\"},\"session_key\":\"base-w07-quality\",\"session_order\":1,\"slot_key\":\"base-w07-quality-slot\",\"time_of_day\":\"any\"}]},{\"day_key\":\"day_5\",\"day_order\":5,\"day_type\":\"training\",\"slots\":[{\"completion_expectation\":\"required\",\"is_optional\":false,\"progression\":{\"prescription_summary\":\"Exact approved BASE-W07-GYM_C content; local rehearsal only.\"},\"session_key\":\"base-w07-gym-c\",\"session_order\":1,\"slot_key\":\"base-w07-gym-c-slot\",\"time_of_day\":\"any\"}]},{\"day_key\":\"day_6\",\"day_order\":6,\"day_type\":\"training\",\"slots\":[{\"completion_expectation\":\"required\",\"is_optional\":false,\"progression\":{\"prescription_summary\":\"Exact approved BASE-W07-LONG content; local rehearsal only.\"},\"session_key\":\"base-w07-long\",\"session_order\":1,\"slot_key\":\"base-w07-long-slot\",\"time_of_day\":\"any\"}]},{\"day_key\":\"day_7\",\"day_order\":7,\"day_type\":\"rest\",\"slots\":[]}],\"week_number\":7},{\"days\":[{\"day_key\":\"day_1\",\"day_order\":1,\"day_type\":\"training\",\"slots\":[{\"completion_expectation\":\"required\",\"is_optional\":false,\"progression\":{\"prescription_summary\":\"Exact approved BASE-W08-GYM_A content; local rehearsal only.\"},\"session_key\":\"base-w08-gym-a\",\"session_order\":1,\"slot_key\":\"base-w08-gym-a-slot\",\"time_of_day\":\"any\"}]},{\"day_key\":\"day_2\",\"day_order\":2,\"day_type\":\"training\",\"slots\":[{\"completion_expectation\":\"required\",\"is_optional\":false,\"progression\":{\"prescription_summary\":\"Exact approved BASE-W08-EASY content; local rehearsal only.\"},\"session_key\":\"base-w08-easy\",\"session_order\":1,\"slot_key\":\"base-w08-easy-slot\",\"time_of_day\":\"any\"}]},{\"day_key\":\"day_3\",\"day_order\":3,\"day_type\":\"training\",\"slots\":[{\"completion_expectation\":\"required\",\"is_optional\":false,\"progression\":{\"prescription_summary\":\"Exact approved BASE-W08-GYM_B content; local rehearsal only.\"},\"session_key\":\"base-w08-gym-b\",\"session_order\":1,\"slot_key\":\"base-w08-gym-b-slot\",\"time_of_day\":\"any\"}]},{\"day_key\":\"day_4\",\"day_order\":4,\"day_type\":\"training\",\"slots\":[{\"completion_expectation\":\"required\",\"is_optional\":false,\"progression\":{\"prescription_summary\":\"Exact approved BASE-W08-QUALITY content; local rehearsal only.\"},\"session_key\":\"base-w08-quality\",\"session_order\":1,\"slot_key\":\"base-w08-quality-slot\",\"time_of_day\":\"any\"}]},{\"day_key\":\"day_5\",\"day_order\":5,\"day_type\":\"training\",\"slots\":[{\"completion_expectation\":\"required\",\"is_optional\":false,\"progression\":{\"prescription_summary\":\"Exact approved BASE-W08-GYM_C content; local rehearsal only.\"},\"session_key\":\"base-w08-gym-c\",\"session_order\":1,\"slot_key\":\"base-w08-gym-c-slot\",\"time_of_day\":\"any\"}]},{\"day_key\":\"day_6\",\"day_order\":6,\"day_type\":\"training\",\"slots\":[{\"completion_expectation\":\"required\",\"is_optional\":false,\"progression\":{\"prescription_summary\":\"Exact approved BASE-W08-LONG content; local rehearsal only.\"},\"session_key\":\"base-w08-long\",\"session_order\":1,\"slot_key\":\"base-w08-long-slot\",\"time_of_day\":\"any\"}]},{\"day_key\":\"day_7\",\"day_order\":7,\"day_type\":\"rest\",\"slots\":[]}],\"week_number\":8}]}"
+      },
+      "contract": "cohort.trusted-publication-event.v1",
+      "event_id": "bc310000-0000-4000-8000-000000000099",
+      "kind": "programme_approved"
+    }
+  ]
+}

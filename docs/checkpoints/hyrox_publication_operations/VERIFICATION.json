@@ -1,0 +1,92 @@
+{
+  "actual_current_checks": {
+    "additional_existing_test_baseline": true,
+    "approved_sources": 48,
+    "athlete_cannot_retain_register_or_publish_and_service_cannot_retain": true,
+    "changed_Dart_analysis_findings": 0,
+    "content_templates": 27,
+    "exercise_lost_ack_exact_retries": true,
+    "exercise_partial_failure_recovery": true,
+    "exercise_same_version_conflict_refused": true,
+    "fresh_and_repeat_full_gate": true,
+    "frozen_prescription_actuals_separate": true,
+    "immutable_history_and_artifact_guards": true,
+    "label_bindings": 29,
+    "manifest_tests": 6,
+    "per_pass": {
+      "History_records": 48,
+      "canonical_programmes": 1,
+      "chosen_duration_sessions": 16,
+      "foreign_owner_record_reads_refused": 1,
+      "gym_pair_sessions": 24,
+      "local_exercise_retentions": 27,
+      "retirement_unchanged_started_snapshots": 48,
+      "source_graphs": 48,
+      "synthetic_completed_sessions": 48
+    },
+    "personalisation_targets": 24,
+    "programme_claim_artifact_transaction_rollback": true,
+    "programme_retry_owner_conflict": true,
+    "required_safety_groups": 6,
+    "rest_entries": 8,
+    "save_reopen_completion_history": true,
+    "server_tests": 57,
+    "source_full_body_retry_conflict": true,
+    "source_roundtrips": 48,
+    "source_transaction_failure_rolls_parent_graph_back": true,
+    "unchanged_real_migrations": 130,
+    "unresolved_canonical_admission_refused": true
+  },
+  "analysis": {
+    "after": 362,
+    "baseline_sha256": "9b182c7a3a671a0b48551d4f974260938e7cc2c0f15609cdd17f80e91acdec03",
+    "before": 362,
+    "changed_file_findings": 0,
+    "diagnostic_identities_equal": true,
+    "errors": 0,
+    "info": 254,
+    "new": 0,
+    "removed": 0,
+    "warnings": 108
+  },
+  "base": "e5a5b8f387d084d6f446c0f23ee1fa43a4438382",
+  "desktop_browser_control": false,
+  "fixture_limits": [
+    "All EX-901xxx/version-1/event/owner UUID values are explicitly synthetic; no real authority is asserted.",
+    "Existing private materialiser resets an explicit start date to today. Rehearsal seeds untouched historical synthetic assignments and regenerates only their empty projections; backdated private enrolment is not proved or fixed.",
+    "Task-owned local fixture JWTs authenticate PostgREST; no GoTrue login/native gesture/device claim.",
+    "New History read isolation returns null, matching the existing repository contract; no new mandatory capture fields."
+  ],
+  "known_managed_worktree_lifecycle_triggers_used": false,
+  "python_network_used": false,
+  "raw_evidence_directory": "/private/tmp/cohort-hyrox-publication-ops",
+  "raw_log_sha256": {
+    "analysis-after.log": "9e58f3040c608b8019ac928aa3f4f6291c8d2fbc3afef03da6d0b244bb43a56c",
+    "analysis-before.log": "31dea174faa3868c980c7dc611edc8c0b3ba52d393b879046c942bc4907dd2b1",
+    "changed-analysis.log": "75917bc644cdd64cefdd51b09ddcc61c0d7aa5883204ffd22c97a9c983d75f06",
+    "operation-tests.log": "7696e9559c74dc7f6fa4bff160d9b9ec1864ac3d727b39ed2f35cd067451c8e2",
+    "rehearsal-final.log": "18ed59dfd0aa8b9847baa8a145f4057f4508302439c9e8dee618ff0c5de78d99",
+    "safety.log": "19d0396b1a4fd831e689c64544ea697c385f4f81725cd5f4b9223597f0cf2620",
+    "server-analysis.log": "a6343ba29b8db92c943e6bbb9222a1d4704034c917b834540047f132cca68556",
+    "server-tests.log": "1344816e95dd36b037a17d904951798b2765f177f411e0a29f501a0df6c34d6a"
+  },
+  "real_environment": {
+    "capability_grants": false,
+    "credential_creation": false,
+    "device_operations": false,
+    "hosted_writes": false,
+    "project_resumed": false,
+    "real_athlete_writes": false,
+    "real_events": false,
+    "real_exercise_retention": false,
+    "real_programme_publication": false
+  },
+  "status": "LOCAL_FIXTURE_SEQUENCE_PROVED_REAL_T1_B3_UNRESOLVED",
+  "temporary_configuration_deleted": true,
+  "unchanged_evidence_reused": {
+    "checkpoint": "docs/checkpoints/hyrox_v3_http/VERIFICATION.json",
+    "file_sha256": "8eff15564d404cb6c87a7e618d05548b39e785ac6bc86dbe26ebd4b82a0dc1d6",
+    "new_genuine_producer_proof": false,
+    "scope": "Unchanged compiled HTTP/GoTrue Founder/non-Founder/event-ID-only facade proof:79 assertions per fresh/repeat pass. Existing compiler/golden evidence:41 tests. Entire prior trusted package/checkpoint/gate and all package golden bytes remain exact."
+  }
+}

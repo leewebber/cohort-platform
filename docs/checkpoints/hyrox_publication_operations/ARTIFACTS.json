@@ -1,0 +1,111 @@
+{
+  "classification": "LOCAL_PREPARATION_AND_FIXTURE_EVIDENCE_NOT_HOSTED_APPROVAL",
+  "files": [
+    {
+      "bytes": 6647,
+      "path": "docs/checkpoints/hyrox_publication_operations/APPROVAL_STAGES.json",
+      "sha256": "85db88bf3c173cf6f00fc62520838b40575267f747dfd0218e4cf43ab576339f"
+    },
+    {
+      "bytes": 1136,
+      "path": "docs/checkpoints/hyrox_publication_operations/COMPATIBILITY.json",
+      "sha256": "8dab78f5d0779405671f2de2ca372589e72744c36058ced51c7563a8e117395c"
+    },
+    {
+      "bytes": 13636,
+      "path": "docs/checkpoints/hyrox_publication_operations/HANDOFF.md",
+      "sha256": "3a55dc30ee9f5f30c9e129ab29f3c3cae31446f45cf2a176473d8b485fea3f39"
+    },
+    {
+      "bytes": 9874,
+      "path": "docs/checkpoints/hyrox_publication_operations/IDENTITY_REVIEW.md",
+      "sha256": "360b3a88269d89b04025941f8e5010eb59f4d4e3ec4324aafdd61cb42158e356"
+    },
+    {
+      "bytes": 109488,
+      "path": "docs/checkpoints/hyrox_publication_operations/LOCAL_REHEARSAL_EVENTS.json",
+      "sha256": "7b686567078d4a8bc20c6bd2975eeef5a2140a68e67be695a7d8b0bf24b9ff8d"
+    },
+    {
+      "bytes": 54664,
+      "path": "docs/checkpoints/hyrox_publication_operations/LOCAL_REHEARSAL_PROGRAMME.canonical.json",
+      "sha256": "4b8ff5ab9a01b29ab2ac8c2ac01b097dadf5eeedab9cc6e94e900ce952a2ca2d"
+    },
+    {
+      "bytes": 1396409,
+      "path": "docs/checkpoints/hyrox_publication_operations/LOCAL_REHEARSAL_SOURCE_INVENTORY.json",
+      "sha256": "950ba8a248589aa038b732ec68114cc8ed2e1a81f7d900d4aee8edf58377cf84"
+    },
+    {
+      "bytes": 901735,
+      "path": "docs/checkpoints/hyrox_publication_operations/OPERATIONS.json",
+      "sha256": "f7fd7f71ae693a1521acbe64cdf85ed45384f25a638c417a531c5b4e330a281b"
+    },
+    {
+      "bytes": 1231,
+      "path": "docs/checkpoints/hyrox_publication_operations/PRESERVATION.json",
+      "sha256": "2e72eae57022910e975bbbb4097c24baa11372878c2e60dc4290d4972bb85c90"
+    },
+    {
+      "bytes": 4804,
+      "path": "docs/checkpoints/hyrox_publication_operations/READINESS.json",
+      "sha256": "befe38a7f82e70c65bf78928162c2fa1e728085c49352c0986cfc0ebe90a59ad"
+    },
+    {
+      "bytes": 26078,
+      "path": "docs/checkpoints/hyrox_publication_operations/SCHEMA_INVENTORY.json",
+      "sha256": "cff5032fc6f1db8160b2d2bb7aaf76f220bdeedec5fd1498f9af12ff9c02cdfc"
+    },
+    {
+      "bytes": 4319,
+      "path": "docs/checkpoints/hyrox_publication_operations/VERIFICATION.json",
+      "sha256": "73d3611b2f06c2357ad1015535e3aad4d0620a49b07e66e53fc76655deb42a4a"
+    },
+    {
+      "bytes": 8781,
+      "path": "server/trusted_plan_package_import/tool/hyrox_publication_fixture.dart",
+      "sha256": "93a89827ea7c0993b1674234c76968e60ba5ad786c95a2cdefa53fb22ab1c3f1"
+    },
+    {
+      "bytes": 3617,
+      "path": "supabase/tests/run_hyrox_publication_operations_gate.sh",
+      "sha256": "b75450c5b4e64246002eb0159cec1844b04da4f2b318d78c63d1b283aa4334f7"
+    },
+    {
+      "bytes": 2189,
+      "path": "supabase/tests/sql/gate_hyrox_operations_history.sql",
+      "sha256": "0ae14aa0fbc9839f6c191ef4ca0187dcbaaf293e09710ee92fefaf3ea66c3de6"
+    },
+    {
+      "bytes": 5985,
+      "path": "supabase/tests/sql/gate_hyrox_publication_operations.sql",
+      "sha256": "fc4cf3190afdaf5de4dcfbc1ffe6f38da898d2d376c1dee1e84ef8fece9f8371"
+    },
+    {
+      "bytes": 11813,
+      "path": "test/hyrox_base/publication_operations_local_test.dart",
+      "sha256": "5e7ff9171f0cfad925aa7b7229eb2ca38576b2de2f9a0f5c86b07690d8ca6c16"
+    },
+    {
+      "bytes": 7464,
+      "path": "tool/hyrox_base/prepare_publication_sources.dart",
+      "sha256": "d30e8125d618ae284962d4c33704fc0d308b3f59cce3d8beee4e3f0067d4e4e8"
+    },
+    {
+      "bytes": 9032,
+      "path": "tool/hyrox_base/publication_fixture_sql.py",
+      "sha256": "3c574a7ec784079d76c52660dc42fa0e1a82f861b630cd3d80f2cf29787fb44b"
+    },
+    {
+      "bytes": 18395,
+      "path": "tool/hyrox_base/publication_operations.py",
+      "sha256": "ffd8aceb22303eb410f82897aaaefdcba83532b8f4f189559599a3f9dbb8cf79"
+    },
+    {
+      "bytes": 4209,
+      "path": "tool/hyrox_base/test_publication_operations.py",
+      "sha256": "2565234a11ef381e437839a0487900a1c2d200643c344ae5cd59c3da14016c70"
+    }
+  ],
+  "hash_convention": "SHA256 of exact retained file bytes; self excluded"
+}

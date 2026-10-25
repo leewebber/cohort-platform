@@ -1,0 +1,115 @@
+{
+  "format": "hyrox-publication-approval-stages-v1",
+  "stages": [
+    {
+      "expected_changes": "Resume only this inactive project; no schema/content/credential writes.",
+      "inputs": {
+        "readiness_sha256": "ec8559bee55215b76d2b72fad0f5ef90329d57d45b7a47254b8f04374fdd3864"
+      },
+      "prerequisites": [
+        "Operator receipt for a complete reversible writer hold: app/device clients, legacy importer callers, jobs, direct writers, queues/retries. No repository maintenance switch is assumed."
+      ],
+      "recovery_limits": "Resumption can reconnect existing writers. Do not resume before hold verification; re-pausing is not rollback of any intervening writes.",
+      "smallest_next_action": "Authorise this bounded resumption only after the verified writer hold, followed by read-only ledger/catalogue/definition/source/capability preflight.",
+      "stage": "1-project-resumption",
+      "status": "REQUIRES_FOUNDER_AUTHORITY",
+      "target": "Cohort Field Manual / otnhhdxstdnwccehacku"
+    },
+    {
+      "conditional_suffix": [
+        {
+          "file": "supabase/migrations/20261022120000_hyrox_base_declared_evidence.sql",
+          "sha256": "2ad14f089cd035bda16599214623a2d3cba9ec178be6855bdf88b71aa647e444"
+        },
+        {
+          "file": "supabase/migrations/20261022121000_v3_unresolved_authority_guard.sql",
+          "sha256": "bffce413245eb8d71e5a4dcbc9f73ab36c91c58ec5ee8fec6e23c71dedba6cf0"
+        },
+        {
+          "file": "supabase/migrations/20261023120000_authoritative_exercise_versions.sql",
+          "sha256": "78e392109342873d74125982763e6c4629508c9e7282ddd9bd66ba4bc39baa61"
+        },
+        {
+          "file": "supabase/migrations/20261023121000_v3_authoritative_publication.sql",
+          "sha256": "3bbb2534706a633e7584a76f076c30e5a815ecf84f55ef85a51c6ebb40b33ef1"
+        },
+        {
+          "file": "supabase/migrations/20261023122000_v3_programme_consent_start.sql",
+          "sha256": "33f7b9ef63bea7393c1355319b3812cd7d4c461efcb686b9b6aaa7ab0dd97398"
+        },
+        {
+          "file": "supabase/migrations/20261023130000_v3_athlete_review_state.sql",
+          "sha256": "261619275e9007446f9502b24f61bf3e1d085f50562600e9ab8bb1e9b22cc98d"
+        },
+        {
+          "file": "supabase/migrations/20261024120000_atomic_exercise_publication_event.sql",
+          "sha256": "486e3ad3ec7505330978407d7a2bd1a306a46e9c28eaaf7f92b73fe3c8468359"
+        },
+        {
+          "file": "supabase/migrations/20261024130000_source_duration_choice.sql",
+          "sha256": "e8c7209635bfb7ff83ba7d9962230613c71704925a8d4eab413e71c81efe8522"
+        }
+      ],
+      "exact_pending_batch": null,
+      "expected_changes": "Only actual missing, individually hash-approved migration files after exact ledger/security comparison; no seeds/repair/include-all.",
+      "prerequisites": [
+        "ACTIVE_HEALTHY read-only identity/ledger/object/ACL/RLS/defaults/role proof",
+        "Exact later approved pending set and fresh dry-run under hold"
+      ],
+      "recovery_limits": "Per-file transactions, not one global batch. Stop after partial failure; reconcile committed ledger and effects, no down migration or ledger repair.",
+      "reviewed_schema_inventory_sha256": "1653d9b2cd01a2427e9730a70c4171800963fd58bdcb83baaaf875639f032472",
+      "stage": "2-schema",
+      "status": "BLOCKED_CURRENT_LEDGER_UNKNOWN",
+      "target": "Same Supabase project"
+    },
+    {
+      "expected_changes": "Later named producer identity, approval/event store, durable retry delivery, pinned server-only source credential and dedicated exercise capability; reviewed receiver image/config revision. No resources are created by this package.",
+      "prerequisites": [
+        "Identify responsible producer/operator and real approved event source",
+        "Review exact role graph and credential issuance/rotation/revocation without ordinary service-role substitution",
+        "Name durable event retention/redelivery owner; current endpoint is synchronous, not a subscribed webhook",
+        "Review immutable image digest, pinned secret versions, caller policy, traffic/timeout and rollback plan"
+      ],
+      "recovery_limits": "Disable opt-in/route new work only under reviewed config authority. Do not revoke or rewrite immutable history as compensation; reconcile event IDs after timeouts.",
+      "reviewed_contracts": [
+        "docs/checkpoints/hyrox_v3_http/CONTRACT.md",
+        "docs/checkpoints/hyrox_v3_http/DEPLOYMENT.md"
+      ],
+      "stage": "3-producer-and-receiver",
+      "status": "UNCONFIGURED_REQUIRES_SEPARATE_REVIEW",
+      "target": "Existing Cloud Run receiver plus a genuinely governed producer/event store"
+    },
+    {
+      "expected_changes": "Exact assigned exercise retention/reuse, 48 immutable source revisions and one private canonical programme artifact; no assignment.",
+      "operation_plan_sha256": "65868cd7d1b70394b6e6d3252598960cb8ef518c16fade952ec79e0d63c0f5c8",
+      "prerequisites": [
+        "Complete stages 1–3 and populate every unassigned real identity/version/event/owner slot",
+        "Regenerate all dependent source/body/artifact digests and review them before authorising exact operations"
+      ],
+      "recovery_limits": "Exercise events, each source and programme admission are separate transactions. Persist stage receipts; exact retries only, no compensating deletions or invented events.",
+      "stage": "4-exercise-source-artifact-publication",
+      "status": "BLOCKED_REAL_ASSIGNMENTS_EVENTS_AND_ARTIFACT_MISSING",
+      "target": "Same Supabase project through existing trusted boundaries"
+    },
+    {
+      "expected_changes": "Later reviewed client distribution/native usability and supported capture/History validation, only under named authority.",
+      "prerequisites": [
+        "Verified hosted publication/configuration and separate synthetic/private assignment scope",
+        "Exact matching build/artifact and explicit device/browser authority"
+      ],
+      "recovery_limits": "Local model/SQL rehearsal does not establish native acceptance, commercial readiness or broader Stage 2/Sprint C closure.",
+      "stage": "5-client-device",
+      "status": "LATER_SEPARATE_AUTHORITY",
+      "target": "Matched client build and founder-controlled validation actors/devices"
+    }
+  ],
+  "target": {
+    "cloud_project": "cohort-platform-production",
+    "cloud_project_number": "809647670049",
+    "cloud_run_region": "europe-west1",
+    "name": "Cohort Field Manual",
+    "receiver": "cohort-trusted-plan-import",
+    "region": "eu-west-1",
+    "supabase_ref": "otnhhdxstdnwccehacku"
+  }
+}
