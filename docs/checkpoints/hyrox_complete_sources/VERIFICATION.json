@@ -1,0 +1,95 @@
+{
+  "analysis": {
+    "added": [],
+    "after": 362,
+    "before": 362,
+    "removed": [],
+    "severity_after": {
+      "info": 254,
+      "warning": 108
+    },
+    "severity_before": {
+      "info": 254,
+      "warning": 108
+    }
+  },
+  "authenticated_fresh": "PASS",
+  "authenticated_repeat": "PASS",
+  "base": "0d8e04efac9e9468339cb1ef47664ea90e485ee9",
+  "checks": {
+    "affected_flutter_passed": 492,
+    "all_current_sources_round_trip": 48,
+    "changed_dart_diagnostics": 0,
+    "dedicated_configured_authenticated_test_fresh": "PASS",
+    "dedicated_configured_authenticated_test_repeat": "PASS",
+    "deterministic_source_artifacts": 8,
+    "diff_whitespace": "PASS",
+    "ordinary_opt_in_test_skipped": 1,
+    "prior_source_export_receipts_identical": 48,
+    "programme_links": "PASS",
+    "python_tests": 14,
+    "safety_groups": 6,
+    "source_lowering_tests": 11
+  },
+  "configured_test": {
+    "coverage": [
+      "review/consent",
+      "explicit duration-required refusal and three-argument start",
+      "canonical immutable retry",
+      "replacement/withdrawal cannot rewrite started targets",
+      "original duration window and selected seconds",
+      "draft save/reopen",
+      "completion",
+      "actual-result correction",
+      "History and actor isolation"
+    ],
+    "path_source": "Same uniquely named disposable Supabase project: supabase status -o json \u2192 app-local.json",
+    "python_probes_invoked": false,
+    "required_duration_assertion": "COHORT_LOCAL_V3_EXPECT_DURATION=1",
+    "secrets_copied_from_production": false,
+    "task_configs_removed": true,
+    "variable": "COHORT_LOCAL_V3_CONFIG"
+  },
+  "duration_window_required": true,
+  "historical_brief_transfer_approval_bytes_unchanged": true,
+  "implementation": "5cca2c21d89e6021cd83368284125331e7531888",
+  "main_doses_and_progression_unchanged": true,
+  "obsolete_Base_circuit_B2_D4_removed": true,
+  "packages_server_runtime_rules_importer_unchanged": true,
+  "preparation_gaps": 0,
+  "prior_migrations_unchanged": 130,
+  "producer_content_templates": 27,
+  "proof_scope": "Task-owned disposable local synthetic fixtures, authenticated Flutter repository/RPC and SQL-role proof; not GoTrue login, hosted or device proof.",
+  "publication_authority_granted": false,
+  "python_network_used": false,
+  "raw_evidence_directory": "/private/tmp/cohort-hyrox-content-approved",
+  "raw_log_sha256": {
+    "analysis-before.log": "31dea174faa3868c980c7dc611edc8c0b3ba52d393b879046c942bc4907dd2b1",
+    "analysis-final.log": "11bf3ebc0573f4aca6fd255afe172059959cac90c9eb5392482f1360026b8e24",
+    "authenticated-gate-final.log": "71a9c60a317ef00765c146d39c50da278907c36b0b298558e1a5fadfe11ae958",
+    "changed-analysis.log": "ed948bcc6141461d22af020fe3550d8eb843bcf2d8aa116918e20590f751d55e",
+    "compatibility.log": "790337f7f3ea35725f6202ec1d2f54d0d3be959aa36088b28185b2b59c7a3913",
+    "definition-validation.json": "609be8e7ecbb19c9eed5d2982a1facb45207c4f45996abbc1727a13f36b0eeed",
+    "python-tests.log": "9d414629c260874c875522a693151936d4aad731ffa55f616143718e0e925e2b",
+    "regressions-final.log": "7496be7ee10506fd138270d0f3491843f2e7ba662cbdb8926c8b77318c80d1b4",
+    "safety-final.log": "2d047ab9ac54d90fdec78b056673923d3ebf03321718f597bbfb4779bbf2343c",
+    "source-check.json": "9a1226d4322a7e1aaafeb531fb7a96a47540ea06ba6de0f4d0b4c2dda1398521",
+    "source-verified.log": "0eca58c1274f17fb8b272b0cc0f6d8b705ea119c520e09b8ee57119f7edf5929"
+  },
+  "rest_entries_complete": 8,
+  "retained_real_definition_versions": 0,
+  "source_decisions_remaining": 0,
+  "source_label_bindings": 29,
+  "task_configs_removed": true,
+  "task_owned_project_dirs": [
+    "/var/folders/h6/nj9509kj73xc496rks6cx0q40000gn/T//sprint12_gate.s12g10251126130061.lbXcg6"
+  ],
+  "training_sources_complete": 48,
+  "unassigned_definition_templates": 10,
+  "unchanged_evidence_reused": {
+    "compiler_and_goldens": 41,
+    "reason": "Shared package and trusted-server runtime bytes unchanged. No new HTTP/producer/GoTrue proof claimed.",
+    "source": "docs/checkpoints/hyrox_source_lowering/VERIFICATION.json",
+    "trusted_server_unit_tests": 57
+  }
+}

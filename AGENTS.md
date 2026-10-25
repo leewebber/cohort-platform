@@ -1,5 +1,24 @@
 # Cohort Platform repository guidance
 
+> **HYROX complete sources/authenticated local proof — 2026-10-25:**
+> [Master](docs/programmes/hyrox_base/MASTER.md), [coverage](docs/programmes/hyrox_base/COVERAGE.md) and [handoff](docs/checkpoints/hyrox_complete_sources/HANDOFF.md) record 48 complete
+> content-approved prescriptions plus eight rest entries; no content/preparation decisions
+> remain. Barbell front-rack reverse lunge and split-stance cable Pallof are retained in
+> readable review, model/source exports and round trips. Base circuit race-weight wording
+> is advisory only, with no numerical load/height, division lookup or mandatory actual;
+> obsolete B2/D4 is removed only there. Explicit standards/assessments remain unchanged.
+> All 48 retain T1/B3 authority blockers. The existing producer receives 27 unpublished
+> approved content templates for 29 labels, with no invented IDs/versions/events.
+> Fresh/repeat task-owned authenticated Flutter duration-RPC/save/completion/correction/
+> History and SQL proof pass without Python networking; 492 affected tests (one ordinary
+> opt-in skip), 11 source, 14 offline tests and six safety groups pass. Analysis remains
+> 362 identical inherited diagnostics; zero errors/new/changed-file findings. All 48 prior
+> export receipts and 130 migration bytes remain exact. Older inventories/original 95
+> paths are preserved; historical index-restoration exceptions remain explicit. No managed
+> worktree/lifecycle cleanup trigger, global setting, browser/app/device, hosted or real
+> producer/publication/athlete action. Automatic deletion is not assumed off. Test Week,
+> commercial readiness and broader Stage 2/Sprint C closure remain separate.
+
 > **HYROX founder decision packet — proposed, 2026-10-25:**
 > [Decision packet](docs/programmes/hyrox_base/FOUNDER_DECISION_PACKET.md) and [handoff](docs/checkpoints/hyrox_founder_decisions/HANDOFF.md) propose exact equipment/position/grip/
 > execution for all 29 labels, 27 definition templates and four reusable preparations.

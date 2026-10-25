@@ -1,0 +1,20 @@
+{
+  "Base_circuit_B2_D4": 0,
+  "artifact": "docs/programmes/hyrox_base/PRODUCER_REVIEW_BUNDLE.json",
+  "artifact_sha256": "540c323d058351eef345ee5519cfc9fa22e99fa345b404899e8ea925a7cca330",
+  "blockers": {
+    "B3": "Complete immutable physical protocol/session/block/step versions and producer-approved programme artifacts.",
+    "T1": "Exact operational published definitions/variants, assigned current versions/digests and verified producer events; candidate identity rows do not suffice."
+  },
+  "boundary": "Existing PublishedExerciseVersionRetention and trusted event/publication runtime. This JSON is a content handoff, not an admissible publication event or command.",
+  "content_approved": true,
+  "deduplicated_content_templates": 27,
+  "distinct_existing_identity_candidates": 17,
+  "next_step": "Separately authorise the existing trusted producer to deduplicate/verify all 27 approved templates against current canonical definitions, resolve identities without speculative IDs, then assign current versions and retain genuine verified events. Only afterwards bind real immutable physical sources/artifact.",
+  "physical_source_versions": 0,
+  "real_producer_event_integration_and_capability_configuration": "Not supplied/provisioned by this task; separate authority required.",
+  "real_retained_published_versions": 0,
+  "source_labels": 29,
+  "source_sessions_blocked": 48,
+  "unassigned_content_templates": 10
+}

@@ -1,0 +1,16 @@
+{
+  "all_prior_migration_bytes_exact": true,
+  "approved_main_doses_and_progression_unchanged": true,
+  "base": "0d8e04efac9e9468339cb1ef47664ea90e485ee9",
+  "compatibility_test_sha256": "9c7ec00b104f04c8152f61a7e6a2807902153b3676d3e103f508850af10628ec",
+  "formal_assessments_and_explicit_load_standards_unchanged": true,
+  "implementation": "5cca2c21d89e6021cd83368284125331e7531888",
+  "new_migrations": 0,
+  "original_brief_transfer_and_2026_10_24_approval_unchanged": true,
+  "plan_package_rules_server_runtime_and_importer_unchanged": true,
+  "prior_compiler_copy_sha256": "04d6ffc815aefa5e56ecc510bb5ccc09b2e2c7f9e964a8b4335a6b5fb88bef86",
+  "prior_export_receipts": 48,
+  "prior_export_test": "compatibility.log uses compiler and source bytes from the immutable base, with explicit software-only exercise fixtures.",
+  "prior_migrations": 130,
+  "prior_source_copy_sha256": "b6cfb93024ecbfcb02346bf17455d78b94a3dbca7272de4af7f9bf5a83174f8b"
+}
