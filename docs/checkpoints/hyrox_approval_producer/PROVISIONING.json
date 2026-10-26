@@ -1,0 +1,237 @@
+{
+  "artifacts": {
+    "Dockerfile": {
+      "file": "server/trusted_plan_package_import/Dockerfile",
+      "sha256": "7e815f818d44808dc87c7f7b0eda9e33716b1d7036a0399914a9712694b20e42"
+    },
+    "Dockerignore_sha256": "d5a65aa0e0ffb3429e99300ca2d907feb3b2567b6060f7f6bd57c613ac53fc68",
+    "Linux_OCI": "See OCI_ARTIFACT.json; locally built only, not pushed or deployed. Promotion must preserve and verify the same platform manifest digest.",
+    "migration": {
+      "expected_after": {
+        "ledger_count": 131,
+        "tip": "20261026120000"
+      },
+      "expected_before": {
+        "ledger_count": 130,
+        "tip": "20261024130000"
+      },
+      "file": "supabase/migrations/20261026120000_durable_publication_approval_events.sql",
+      "order": 1,
+      "sha256": "526881b82d7ab20e3e246db4ea808970300ef7570fdd03dd8d43a2b753b9f588"
+    },
+    "runtime_source": "3d1218ef2fac7c08b683608f3cbfc9f3152f9460"
+  },
+  "capability_credential_plan": {
+    "claims": {
+      "aud": "authenticated",
+      "exp": "required finite <= 60 minutes from issuance; reissue only for separately authorised windows",
+      "role": "exact capability role above"
+    },
+    "issuer_boundary": "Existing authorised Supabase project signing operator; issuer key must never enter the Cloud Run runtime, Git, logs or this packet. Production issuance/algorithm availability not attested by local HS256 fixtures.",
+    "precondition": "Before credential/grant execution, confirm the existing supported signing/issuance mechanism and authorised operator; if unavailable, stop that portion. No new external issuer service, service-role substitute, main password reset or broad key rotation.",
+    "recommended": "Three distinct server-only, role-scoped gateway JWT credentials issued by the existing Supabase project signing boundary/operator for one bounded publication window (maximum 60 minutes); no Founder session persistence.",
+    "revocation": "Drain in-flight work, disable runtime flags, then revoke exactly the three SET memberships from authenticator under separate authority. Signed-token expiry does not terminate already-running work."
+  },
+  "components": {
+    "database": {
+      "name": "Cohort Field Manual",
+      "observed_ledger": 130,
+      "observed_tip": "20261024130000",
+      "project_ref": "otnhhdxstdnwccehacku",
+      "region": "eu-west-1"
+    },
+    "registry": {
+      "image": "trusted-plan-import",
+      "push_performed": false,
+      "repository": "europe-west1-docker.pkg.dev/cohort-platform-production/cohort-trusted-runtime"
+    },
+    "runtime": {
+      "change_invocation_IAM_or_region_plan": false,
+      "create_new_service": false,
+      "existing_image_digest": "sha256:712ca882fb0bc8f09856679c5a9238b5e9cf00e73c01e4bcdd7cf2d73d8532b9",
+      "existing_revision": "cohort-trusted-plan-import-df97fb2f4797",
+      "project_id": "cohort-platform-production",
+      "project_number": "809647670049",
+      "region": "europe-west1",
+      "service": "cohort-trusted-plan-import",
+      "service_account": "cohort-trusted-plan-import@cohort-platform-production.iam.gserviceaccount.com"
+    }
+  },
+  "existing_secret_refs": "Preserve existing service-role and Founder allowlist references pinned to version 1 and all other legacy variables; no value reads/rotation included.",
+  "expected_new_function_body_sha256": {
+    "approve_publication_event_v1": "d197bdd62c6cdbe26d91262a537716a264b3ef4c67c434ec75203cfe238f4037",
+    "claim_publication_delivery_v1": "34e7c5c10b69b01ea5e37dfc762c23112f0aab08995ac6cec6826af98af030fa",
+    "finish_publication_delivery_v1": "4e740ea4793197d8565008e7745c477ce8518bebdda8dd81a1d0be5c9ce147a8",
+    "list_publication_deliveries_v1": "8b61dde265061588d637d9fad161d689c1f236f35b077063f46b0c71c2dfe789",
+    "prepare_publication_approval_v1": "f6f6b379f02b982dc01e2bf065dfd70c03fba88ab64393f4f32ab2cf6185e013",
+    "read_publication_approval_draft_v1": "f8da2d18ff288d0b0cf2d0a339d94ce84064b6762cae5839daa095aad0e09d87",
+    "resolve_publication_approval_event_v1": "385ead7d7c7fec4f38412e582be362013dc9f7cff28a240b43dd65b7e909964f",
+    "retry_publication_delivery_v1": "ec213c3f8616856447aa678e7a3bdd8ca1cfc1da9570d82d958534019fd6bd2f"
+  },
+  "format": "cohort.trusted-producer-provisioning-proposal.v1",
+  "implementation_source_sha": "3d1218ef2fac7c08b683608f3cbfc9f3152f9460",
+  "minimal_SQL_capabilities": {
+    "cohort_exercise_version_publisher": [
+      "retain_published_exercise_definition_v1(text,jsonb)",
+      "retire_published_exercise_version_v1(text,text,jsonb)",
+      "retain_published_exercise_event_v1(text,jsonb,jsonb)"
+    ],
+    "cohort_publication_approval_writer": [
+      "prepare_publication_approval_v1(uuid,uuid,text,jsonb)",
+      "read_publication_approval_draft_v1(uuid,uuid)",
+      "approve_publication_event_v1(uuid,uuid,text)"
+    ],
+    "cohort_publication_event_delivery": [
+      "resolve_publication_approval_event_v1(uuid)",
+      "list_publication_deliveries_v1(uuid)",
+      "claim_publication_delivery_v1(uuid,uuid)",
+      "finish_publication_delivery_v1(uuid,uuid,uuid,text,jsonb)",
+      "retry_publication_delivery_v1(uuid,uuid,text)"
+    ]
+  },
+  "ownership": {
+    "content_approval": "Authenticated allowlisted Founder; current GoTrue user verification before any body/store access. Prior content decisions are input, not new authenticated events.",
+    "delivery_state": "Field Manual PostgreSQL durable outbox",
+    "durable_record": "Field Manual PostgreSQL immutable draft/event records",
+    "retry_operator": "Approving Founder with a fresh session; existing backend executes exact-ID delivery and persists result",
+    "unattended_retry": "Not implemented or required for this first bounded version; machine authentication/scheduler would need separate review."
+  },
+  "pending_inputs": [
+    {
+      "authority": "pending reviewed input only; not a real approval event or canonical publication",
+      "path": "docs/checkpoints/hyrox_publication_operations/OPERATIONS.json",
+      "sha256": "f7fd7f71ae693a1521acbe64cdf85ed45384f25a638c417a531c5b4e330a281b"
+    },
+    {
+      "authority": "pending reviewed input only; not a real approval event or canonical publication",
+      "path": "docs/checkpoints/hyrox_publication_operations/ARTIFACTS.json",
+      "sha256": "52a01a435095cfbf8fe86efc1dea12dbfaeb7ce87326a09207882f2d803c4339"
+    },
+    {
+      "authority": "pending reviewed input only; not a real approval event or canonical publication",
+      "path": "docs/programmes/hyrox_base/EXERCISE_DEFINITION_PROPOSALS.json",
+      "sha256": "1012e323ffd7839e53298eb75265ad025f473c9ece3e855fa51411910d08c438"
+    },
+    {
+      "authority": "pending reviewed input only; not a real approval event or canonical publication",
+      "path": "docs/programmes/hyrox_base/MASTER.md",
+      "sha256": "63448a6084d7a31a3f77dfba74ca87d7bad612a6e5589b14dd075a4552d7b29f"
+    },
+    {
+      "authority": "pending reviewed input only; not a real approval event or canonical publication",
+      "path": "docs/programmes/hyrox_base/COVERAGE.md",
+      "sha256": "0f36ea9953557e44821fe7298b8754ad1d6e654129535394a3da56c158f1f7a3"
+    }
+  ],
+  "pending_scope": {
+    "actual_identity_version_owner_assignments": "Still unresolved; no assignments invented by event UUID generation",
+    "definition_templates": 27,
+    "labels": 29,
+    "physical_session_graphs": 48,
+    "rest_entries": 8
+  },
+  "reviewed_base": "da738eb75bad87f05de41418d6af17eb2fbe72df",
+  "secret_references": [
+    {
+      "IAM": "roles/secretmanager.secretAccessor on this secret only; no project-wide grant",
+      "environment": "PUBLICATION_APPROVAL_WRITER_TOKEN",
+      "proposed_reference": "projects/809647670049/secrets/cohort-publication-approval-writer-token/versions/1",
+      "reader": "cohort-trusted-plan-import@cohort-platform-production.iam.gserviceaccount.com",
+      "status": "PROPOSED_FUTURE_INITIAL_VERSION_NOT_CREATED"
+    },
+    {
+      "IAM": "roles/secretmanager.secretAccessor on this secret only; no project-wide grant",
+      "environment": "PUBLICATION_EVENT_DELIVERY_TOKEN",
+      "proposed_reference": "projects/809647670049/secrets/cohort-publication-event-delivery-token/versions/1",
+      "reader": "cohort-trusted-plan-import@cohort-platform-production.iam.gserviceaccount.com",
+      "status": "PROPOSED_FUTURE_INITIAL_VERSION_NOT_CREATED"
+    },
+    {
+      "IAM": "roles/secretmanager.secretAccessor on this secret only; no project-wide grant",
+      "environment": "EXERCISE_VERSION_PRODUCER_TOKEN",
+      "proposed_reference": "projects/809647670049/secrets/cohort-exercise-version-producer-token/versions/1",
+      "reader": "cohort-trusted-plan-import@cohort-platform-production.iam.gserviceaccount.com",
+      "status": "PROPOSED_FUTURE_INITIAL_VERSION_NOT_CREATED"
+    }
+  ],
+  "smallest_next_authority": "S1 only: apply the one pinned migration after a fresh hold/exact preflight/dry-run, then read-only postchecks. No credential creation, usable capability, runtime deployment, real approval or publication.",
+  "stages": [
+    {
+      "changes": "Exactly one hash-pinned transactional migration: three empty RLS tables, two unusable NOLOGIN roles, eight closed RPCs, immutable guards. No usable memberships or seeds.",
+      "id": "S1_schema_only",
+      "optional_operational_access_requiring_explicit_authority": {
+        "constraints": [
+          "No main database password reset, additional membership/role privilege change or producer provisioning.",
+          "Task-owned disposable linked copy and private SUPABASE_HOME; no values in logs/arguments/chat/Git.",
+          "Verify finite provider expiry and unchanged role attributes/existing memberships; remove local credential material and report actual expiry/backend cleanup after final dry-run."
+        ],
+        "operation": "Normal supported temporary CLI login refresh via POST /v1/projects/otnhhdxstdnwccehacku/cli/login-role with read_only=false, only if existing operational DB access is unavailable.",
+        "scope": "This exact one-file deployment plus initial/final dry-runs only; prior eight-file deployment authority/expired login is not reused.",
+        "status": "PROPOSED_NOT_AUTHORISED_OR_EXECUTED"
+      },
+      "prerequisites": [
+        "Fresh demonstrated client/script/writer hold; existing v1/v2 hold currently remains released.",
+        "Exact target health/ledger130/catalog/default/security/25 protected-source aggregates; inspect unexpected writers without disabling them.",
+        "Normal disposable linked-copy dry-run must list exactly this one file. Separate operational temporary-login authority if required."
+      ],
+      "ready_for_specific_authority": true,
+      "recovery": "On error hold writers, inspect ledger AND catalogs. No blind rerun/ledger repair/down migration; separately review any remaining suffix or forward repair.",
+      "target": "otnhhdxstdnwccehacku",
+      "verify": [
+        "Exact ledger131/tip20261026120000; original130 entries and old source/function/security contracts unchanged.",
+        "POSTCHECK.sql passes; all three new tables empty; all25 protected/source aggregates unchanged.",
+        "No usable new capability memberships; empty final dry-run; healthy target."
+      ]
+    },
+    {
+      "changes": [
+        "After issuer/operator confirmation, create only the three proposed expiring server-only credential secret versions.",
+        "Grant only role SET membership to existing authenticator, ADMIN=false INHERIT=false; SQL_EXECUTE grants already installed/pinned in schema.",
+        "Grant only per-secret accessor to existing runtime service account.",
+        "Push the reviewed local OCI artifact to the existing repository, verify exact platform manifest digest/labels, update existing service using that digest. Keep both activation flags false and existing traffic/IAM/legacy config otherwise unchanged."
+      ],
+      "closed_configuration": {
+        "PUBLICATION_APPROVAL_ENABLED": "false",
+        "PUBLICATION_EVENT_SOURCE_MODE": "internal_store",
+        "TRUSTED_V3_PUBLICATION_ENABLED": "false"
+      },
+      "id": "S2_capabilities_and_closed_runtime",
+      "prerequisites": [
+        "S1 passed, separate exact capability/credential/registry/runtime authority, confirmed issuer and initial secret namespace availability.",
+        "Read existing invoker/secret IAM through an available metadata view before any update; do not infer missing projected IAM is empty.",
+        "OCI artifact promoted byte-faithfully; reject any registry manifest rewrite or mismatched source/platform."
+      ],
+      "ready_for_specific_authority": false,
+      "recovery": "Disable both flags/revert exact existing revision under runtime authority; retain SQL events/outbox/history. Drain leases before separately revoking only new SET links and disabling only new secret versions; do not reset project signing/main DB credentials.",
+      "target": "Same existing Supabase/GCP service and identity; no replacement service",
+      "verify": [
+        "Exact creator ADMIN-only plus authenticator SET-only graph for each of the three capabilities; no other membership links.",
+        "Effective role/RPC/table/column/PUBLIC/default privilege matrix equals reviewed boundaries, no source/catalogue/athlete grant.",
+        "Exact runtime service identity, source label, image digest, pinned secret-reference metadata; no values in evidence.",
+        "Disabled authenticated routes refuse before store access; legacy paths remain compatible.",
+        "No approval/event/outbox/definition/artifact/source/athlete writes; metadata counts remain zero as appropriate."
+      ]
+    },
+    {
+      "changes": "Separate authorisation for enabling prepare/review/approve, and later exact-ID delivery. Resolve real identities/versions/physical graphs/owner first. Every new prepared digest needs an explicit authenticated approval; no historic events fabricated. Programme publication remains independently admitted.",
+      "id": "S3_explicit_content_approval_and_publication",
+      "prerequisites": [
+        "S2 verified and bounded active credentials; exact real content inputs/digests/IDs/source assignments reviewed.",
+        "Explicit Founder approval-action authority; each delivery list separately approved."
+      ],
+      "ready_for_specific_authority": false,
+      "recovery": "Keep immutable records, suspend delivery under reviewed configuration, reconcile exact IDs/receipts; no compensating deletes, fabricated approvals or retirement.",
+      "target": "Same Founder HTTP backend and exact reviewed content",
+      "verify": [
+        "Immutable actor/time/artifact/event and durable pending delivery; exact real retention/source/artifact inventories match authorised operations.",
+        "No programme/definition/athlete write outside exact operation list; conflict stops, retries preserve same IDs."
+      ]
+    },
+    {
+      "changes": "Separate named private athlete assignment/client/device acceptance after real artifact verification. No authority granted here.",
+      "id": "S4_assignment_and_client_validation",
+      "ready_for_specific_authority": false
+    }
+  ],
+  "status": "REVIEW_PACKAGE_ONLY_NOT_EXECUTED"
+}

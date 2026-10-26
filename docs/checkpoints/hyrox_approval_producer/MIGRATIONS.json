@@ -1,0 +1,20 @@
+{
+  "apply_authorised": false,
+  "exact_pending": [
+    {
+      "file": "supabase/migrations/20261026120000_durable_publication_approval_events.sql",
+      "order": 1,
+      "sha256": "526881b82d7ab20e3e246db4ea808970300ef7570fdd03dd8d43a2b753b9f588"
+    }
+  ],
+  "expected_after": {
+    "ledger_count": 131,
+    "tip": "20261026120000"
+  },
+  "limits": "Prospective schema-only proposal. Fresh hold/target/security/data/drain and exact normal dry-run required. No provisioning, approval event, publication or assignment.",
+  "observed_ledger_count": 130,
+  "observed_ledger_tip": "20261024130000",
+  "source": "3d1218ef2fac7c08b683608f3cbfc9f3152f9460",
+  "source_count": 131,
+  "target": "otnhhdxstdnwccehacku"
+}

@@ -1,0 +1,101 @@
+{
+  "Linux_OCI": {
+    "archive_sha256": "553957c6107a4925fb53624585d1059c5f353e36b0e2ac0b62f29404b7f7ad57",
+    "base_materials": [
+      {
+        "digest": {
+          "sha256": "5ac89dbcae4327278b257920e2786df0f22c87adc630017266b67cfcceef8348"
+        },
+        "uri": "pkg:docker/dart@3.12.2?platform=linux%2Famd64"
+      },
+      {
+        "digest": {
+          "sha256": "7f0c72cd138b442ae0deeb69c08b1acf5525439ba251a49ad93c320a061567e5"
+        },
+        "uri": "pkg:docker/gcr.io/distroless/base-debian12@nonroot?platform=linux%2Famd64"
+      }
+    ],
+    "build_log_sha256": "d8e796f40b4687de965629d1f891f5a359c7ef79308ba859950adbe722206ee0",
+    "config_digest": "sha256:e78d9f848d50b57b73aecb086e88cf245f78002ab372177f33f3d26d747ce417",
+    "deployed": false,
+    "meaning": "Local OCI artifact only. Promotion must preserve/verify exact platform manifest; no published programme/definition authority.",
+    "path": "/private/tmp/cohort-producer-boundary-20261026/trusted-runtime.oci.tar",
+    "platform": "linux/amd64",
+    "platform_manifest_digest": "sha256:94f529388bf0db7eeaaaba120d1e53d436f432d62b1357b6a7eea2480aeaa31b",
+    "pushed": false,
+    "source_SHA": "3d1218ef2fac7c08b683608f3cbfc9f3152f9460",
+    "user": "65532:65532"
+  },
+  "Linux_loopback_smoke": {
+    "activation_flags_supplied": false,
+    "codes": {
+      "health": 200,
+      "v1/founder/plan-packages/import": 401,
+      "v1/founder/publication-approvals/prepare": 401
+    },
+    "hosted_requests": false,
+    "local_Linux_runtime_smoke": "PASS",
+    "manifest_digest": "sha256:94f529388bf0db7eeaaaba120d1e53d436f432d62b1357b6a7eea2480aeaa31b",
+    "production_credentials_supplied": false,
+    "source_SHA": "3d1218ef2fac7c08b683608f3cbfc9f3152f9460"
+  },
+  "Python_network": false,
+  "all_previous130_migration_bytes_unchanged": true,
+  "browser_desktop_AppleScript": false,
+  "credential_creation_or_capability_grants_hosted": false,
+  "default_disabled": true,
+  "exact_schema_only_postcheck": {
+    "log_sha256": "85b2cc9e03d46728148571c48a3b6e099b50304aa7804e12bd773b260d1312cb",
+    "passed": true,
+    "scope": "Fresh empty disposable131-file schema; exact8 function body hashes, closed effective privilege graph, three empty approval/delivery tables. No hosted check/apply."
+  },
+  "focused_analysis": "No issues found; trusted backend includes all changed server/proof files. Repository-wide Flutter analysis not rerun or claimed green.",
+  "hosted_mutations": false,
+  "implementation_source_sha": "3d1218ef2fac7c08b683608f3cbfc9f3152f9460",
+  "local_fresh_repeat": {
+    "GoTrue_issued_Founder_and_nonFounder_sessions": true,
+    "checks_per_pass": 61,
+    "coverage": [
+      "Founder/non-Founder/service/capability authentication",
+      "prepare/review/exact-digest approval; no implicit publication",
+      "request replay/conflict; immutable drafts/events",
+      "SQL/Dart artifact digest parity and original source bytes",
+      "delivery unavailable/backoff/lost acknowledgement/replay",
+      "blocked exact-digest retry; concurrent/expired/stale leases",
+      "linked retirement and atomic canonical retention",
+      "approved programme missing authority still refuses",
+      "effective RPC/table/column/PUBLIC/MAINTAIN/owner/RLS/role isolation"
+    ],
+    "log_sha256": "b291a19b258a0a1068b8a7c9bc687bec7df74414b149b6ebd437df05f6e4756c",
+    "passes": [
+      "fresh",
+      "repeat"
+    ],
+    "real_HTTP_PostgREST_SQL_capabilities": true,
+    "runtime_material": "Private local keys/config only inside disposable directory; gate removes it on exit.",
+    "synthetic_fixtures_only": true
+  },
+  "native_compile": {
+    "artifact": "/private/tmp/cohort-producer-boundary-20261026/trusted-plan-import",
+    "passed": true,
+    "sha256": "5493173d5d38a39e3d1d9498c900c597c5dee78f18dee0e4a5148e1f5bc46a58"
+  },
+  "old_contracts_hashes_goldens_content_unchanged": true,
+  "postcheck_file_sha256": "4a71c7aecba1f34489571b80ba67ed5e1d46238c368435f9b72e5a01718b5011",
+  "real_approval_or_content_or_athlete_writes": false,
+  "safety": {
+    "groups": 6,
+    "log_sha256": "1c02ef5e9564944f71d94806a54afac9b2f22107e84534b0cd4a83ea9f2d6648",
+    "passed": true
+  },
+  "server_tests": {
+    "log_sha256": "8619298875c67356b189e43f29ecc914da032028b5ae97ff148d3f0975d3d6d2",
+    "new": 8,
+    "passed": 65
+  },
+  "unchanged_previous_evidence": {
+    "file": "docs/checkpoints/hyrox_publication_operations/VERIFICATION.json",
+    "scope": "Previous full48 fixture execution, compiler/HTTP/runner contracts unchanged; not rerun/claimed as real hosted events or device proof.",
+    "sha256": "73d3611b2f06c2357ad1015535e3aad4d0620a49b07e66e53fc76655deb42a4a"
+  }
+}

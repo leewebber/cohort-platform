@@ -1,5 +1,20 @@
 # Cohort Platform repository guidance
 
+> **Approval producer/outbox — local proof, 2026-10-26:**
+> [Producer package](docs/checkpoints/hyrox_approval_producer/HANDOFF.md) pins implementation `3d1218ef2fac7c08b683608f3cbfc9f3152f9460`.
+> Hosted read-only refresh: Field Manual ACTIVE_HEALTHY / ledger130, no genuine approval
+> producer/store/durable delivery found; receiver remains legacy. New local backend
+> prepare/review/exact-digest approval/outbox and Founder-operated retry reuse existing
+> authentication, with distinct closed writer/delivery/retention capabilities. Both flags
+> default disabled; no external service or unattended worker is a prerequisite. 65 server
+> tests, 61 actual-GoTrue/HTTP/SQL checks each fresh/repeat, zero server analysis issues,
+> six safety groups and unpushed Linux OCI smoke pass. New one-file schema extension is
+> **UNAPPLIED**; no hosted provisioning/grant/configuration/credential/event/publication/
+> athlete/device mutation. Existing v1/v2 hold remains released; all 48 T1/B3 remain.
+> Next exact authority: the single hash-pinned schema file under a fresh hold/preflight/
+> dry-run; credential issuer/provisioning and content actions remain separate. Older 20
+> checkouts/original 95 paths/indices/.temp preserved; no managed cleanup/global change.
+
 > **HYROX eight-file schema deployment — verified, 2026-10-26:**
 > [Closeout](docs/checkpoints/hyrox_schema_deployment_closeout/HANDOFF.md) records the founder-authorised exact batch from
 > `fe0454edd0d1ac533337d288b89f6e7018ae6d70`, deployed from main `1b2e8cd` to Field Manual

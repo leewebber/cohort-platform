@@ -1,8 +1,10 @@
 # Trusted Plan Package import runtime operations
 
-This package is the founder-only server boundary for compiling authored Plan
-Package YAML and invoking the existing atomic import RPC. It is not a general
-backend and must not publish, assign or materialise programmes.
+Local 2026-10-26 extension: the [durable Founder approval producer](../../docs/checkpoints/hyrox_approval_producer/HANDOFF.md) uses this existing backend and an SQL outbox. It is unprovisioned/default-disabled; the external-source adapter below remains supported and is not a discovered producer.
+
+The legacy import endpoint is the founder-only server boundary for compiling authored Plan
+Package YAML and invoking the existing atomic import RPC. This endpoint must not
+publish, assign or materialise programmes; explicit v3 routes have separate gates.
 
 ## Runtime configuration
 

@@ -1,0 +1,27 @@
+{
+  "archive_sha256": "553957c6107a4925fb53624585d1059c5f353e36b0e2ac0b62f29404b7f7ad57",
+  "base_materials": [
+    {
+      "digest": {
+        "sha256": "5ac89dbcae4327278b257920e2786df0f22c87adc630017266b67cfcceef8348"
+      },
+      "uri": "pkg:docker/dart@3.12.2?platform=linux%2Famd64"
+    },
+    {
+      "digest": {
+        "sha256": "7f0c72cd138b442ae0deeb69c08b1acf5525439ba251a49ad93c320a061567e5"
+      },
+      "uri": "pkg:docker/gcr.io/distroless/base-debian12@nonroot?platform=linux%2Famd64"
+    }
+  ],
+  "build_log_sha256": "d8e796f40b4687de965629d1f891f5a359c7ef79308ba859950adbe722206ee0",
+  "config_digest": "sha256:e78d9f848d50b57b73aecb086e88cf245f78002ab372177f33f3d26d747ce417",
+  "deployed": false,
+  "meaning": "Local OCI artifact only. Promotion must preserve/verify exact platform manifest; no published programme/definition authority.",
+  "path": "/private/tmp/cohort-producer-boundary-20261026/trusted-runtime.oci.tar",
+  "platform": "linux/amd64",
+  "platform_manifest_digest": "sha256:94f529388bf0db7eeaaaba120d1e53d436f432d62b1357b6a7eea2480aeaa31b",
+  "pushed": false,
+  "source_SHA": "3d1218ef2fac7c08b683608f3cbfc9f3152f9460",
+  "user": "65532:65532"
+}

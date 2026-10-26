@@ -1,0 +1,17 @@
+{
+  "active_temp_unchanged": true,
+  "additional_schema_only_postcheck_directory_removed": true,
+  "after_sha256": "536339fc62a5d949a8ee2a6ede789e370f6a1289e5b25e052a29fe4124418075",
+  "before_sha256": "1d10e02aee131d1746574e789677264961f57c4bca1bd5e09c71564049eee7a0",
+  "disposable_local_gate_directories_removed": 4,
+  "global_settings_changed": false,
+  "historical_exception": "Five original raw indices were restored in earlier incidents, not byte-identical recovery. This task preserves its recorded starting resources.",
+  "indices_recreated": 0,
+  "local_Linux_smoke_container_removed": true,
+  "managed_worktree_lifecycle_operations": 0,
+  "older20_checkouts_HEADs_indices_files_temp_exact": true,
+  "original95_outstanding_paths_unchanged": true,
+  "private_local_test_credentials_removed_with_directories": true,
+  "retained_local_OCI_archive": "/private/tmp/cohort-producer-boundary-20261026/trusted-runtime.oci.tar",
+  "retained_local_binary": "/private/tmp/cohort-producer-boundary-20261026/trusted-plan-import"
+}
