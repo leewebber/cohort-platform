@@ -1,0 +1,103 @@
+{
+  "apply": {
+    "command": "supabase db push --linked --yes --workdir <task-owned disposable copy>",
+    "credentials_in_arguments_or_retained_output": false,
+    "exit_code": 0,
+    "finished_at_utc": "2026-10-26T01:27:09Z",
+    "migration_filenames": [
+      "20261022120000_hyrox_base_declared_evidence.sql",
+      "20261022121000_v3_unresolved_authority_guard.sql",
+      "20261023120000_authoritative_exercise_versions.sql",
+      "20261023121000_v3_authoritative_publication.sql",
+      "20261023122000_v3_programme_consent_start.sql",
+      "20261023130000_v3_athlete_review_state.sql",
+      "20261024120000_atomic_exercise_publication_event.sql",
+      "20261024130000_source_duration_choice.sql"
+    ],
+    "sanitized_log": "cli-apply.txt",
+    "started_at_utc": "2026-10-26T01:26:52Z",
+    "step": "apply"
+  },
+  "before_dry_run": {
+    "command": "supabase db push --linked --dry-run --workdir <task-owned disposable copy>",
+    "credentials_in_arguments_or_retained_output": false,
+    "exit_code": 0,
+    "finished_at_utc": "2026-10-26T01:23:52Z",
+    "migration_filenames": [
+      "20261022120000_hyrox_base_declared_evidence.sql",
+      "20261022121000_v3_unresolved_authority_guard.sql",
+      "20261023120000_authoritative_exercise_versions.sql",
+      "20261023121000_v3_authoritative_publication.sql",
+      "20261023122000_v3_programme_consent_start.sql",
+      "20261023130000_v3_athlete_review_state.sql",
+      "20261024120000_atomic_exercise_publication_event.sql",
+      "20261024130000_source_duration_choice.sql"
+    ],
+    "sanitized_log": "cli-dry-run.txt",
+    "started_at_utc": "2026-10-26T01:23:46Z",
+    "step": "dry-run"
+  },
+  "cache_export_warning": {
+    "message": "pg-delta cache export: missing pgdelta-target-ca.crt in CLI runtime; no output produced",
+    "observed": true,
+    "outcome_independently_verified": "Live ledger/catalog/effective security/data and empty final ordinary dry-run pass",
+    "repair_or_apply_retry": false
+  },
+  "exact_applied": [
+    {
+      "file": "supabase/migrations/20261022120000_hyrox_base_declared_evidence.sql",
+      "order": 1,
+      "sha256": "2ad14f089cd035bda16599214623a2d3cba9ec178be6855bdf88b71aa647e444"
+    },
+    {
+      "file": "supabase/migrations/20261022121000_v3_unresolved_authority_guard.sql",
+      "order": 2,
+      "sha256": "bffce413245eb8d71e5a4dcbc9f73ab36c91c58ec5ee8fec6e23c71dedba6cf0"
+    },
+    {
+      "file": "supabase/migrations/20261023120000_authoritative_exercise_versions.sql",
+      "order": 3,
+      "sha256": "78e392109342873d74125982763e6c4629508c9e7282ddd9bd66ba4bc39baa61"
+    },
+    {
+      "file": "supabase/migrations/20261023121000_v3_authoritative_publication.sql",
+      "order": 4,
+      "sha256": "3bbb2534706a633e7584a76f076c30e5a815ecf84f55ef85a51c6ebb40b33ef1"
+    },
+    {
+      "file": "supabase/migrations/20261023122000_v3_programme_consent_start.sql",
+      "order": 5,
+      "sha256": "33f7b9ef63bea7393c1355319b3812cd7d4c461efcb686b9b6aaa7ab0dd97398"
+    },
+    {
+      "file": "supabase/migrations/20261023130000_v3_athlete_review_state.sql",
+      "order": 6,
+      "sha256": "261619275e9007446f9502b24f61bf3e1d085f50562600e9ab8bb1e9b22cc98d"
+    },
+    {
+      "file": "supabase/migrations/20261024120000_atomic_exercise_publication_event.sql",
+      "order": 7,
+      "sha256": "486e3ad3ec7505330978407d7a2bd1a306a46e9c28eaaf7f92b73fe3c8468359"
+    },
+    {
+      "file": "supabase/migrations/20261024130000_source_duration_choice.sql",
+      "order": 8,
+      "sha256": "e8c7209635bfb7ff83ba7d9962230613c71704925a8d4eab413e71c81efe8522"
+    }
+  ],
+  "final_dry_run": {
+    "command": "supabase db push --linked --dry-run --workdir <task-owned disposable copy>",
+    "credentials_in_arguments_or_retained_output": false,
+    "exit_code": 0,
+    "finished_at_utc": "2026-10-26T01:36:53Z",
+    "migration_filenames": [],
+    "sanitized_log": "cli-final-dry-run.txt",
+    "started_at_utc": "2026-10-26T01:36:47Z",
+    "step": "final-dry-run"
+  },
+  "reviewed_manifest": "docs/checkpoints/hyrox_resumed_readiness/MIGRATIONS.json",
+  "reviewed_manifest_sha256": "c75a5a3c7ecf773b4ea97f04bb5ab11c3c24aee076358d761c88138e155c3ed8",
+  "reviewed_readiness_source": "fe0454edd0d1ac533337d288b89f6e7018ae6d70",
+  "source_HEAD": "1b2e8cd0369e8af669d4bfcea7587d263e66ec5a",
+  "target": "otnhhdxstdnwccehacku"
+}

@@ -1,0 +1,1134 @@
+{
+  "control_plane_before": {
+    "enabled_services": {
+      "available": true,
+      "data": [
+        {
+          "config": {
+            "name": "analyticshub.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "artifactregistry.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "bigquery.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "bigqueryconnection.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "bigquerydatapolicy.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "bigquerydatatransfer.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "bigquerymigration.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "bigqueryreservation.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "bigquerystorage.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "cloudapis.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "cloudbuild.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "cloudtrace.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "containerregistry.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "dataform.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "dataplex.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "datastore.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "iam.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "iamcredentials.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "logging.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "monitoring.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "pubsub.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "run.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "secretmanager.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "servicemanagement.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "serviceusage.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "sql-component.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "storage-api.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "storage-component.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "storage.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "telemetry.googleapis.com"
+          }
+        }
+      ]
+    },
+    "mutations": false,
+    "observed_at_utc": "2026-10-26T01:21:56Z",
+    "project": "cohort-platform-production",
+    "pubsub_subscriptions": {
+      "available": true,
+      "data": []
+    },
+    "receiver": {
+      "available": true,
+      "data": {
+        "metadata": {
+          "name": "cohort-trusted-plan-import"
+        },
+        "spec": {
+          "template": {
+            "spec": {
+              "serviceAccountName": "cohort-trusted-plan-import@cohort-platform-production.iam.gserviceaccount.com",
+              "timeoutSeconds": 30
+            }
+          }
+        },
+        "status": {
+          "conditions": [
+            {
+              "lastTransitionTime": "2026-08-11T01:40:29.197513Z",
+              "status": "True",
+              "type": "Ready"
+            },
+            {
+              "lastTransitionTime": "2026-08-11T01:40:18.210142Z",
+              "status": "True",
+              "type": "ConfigurationsReady"
+            },
+            {
+              "lastTransitionTime": "2026-08-11T01:40:29.172551Z",
+              "status": "True",
+              "type": "RoutesReady"
+            }
+          ],
+          "latestReadyRevisionName": "cohort-trusted-plan-import-df97fb2f4797",
+          "traffic": [
+            {
+              "latestRevision": true,
+              "percent": 100,
+              "revisionName": "cohort-trusted-plan-import-df97fb2f4797"
+            }
+          ]
+        }
+      }
+    },
+    "recent_receiver_request_metadata": {
+      "available": true,
+      "data": []
+    },
+    "region": "europe-west1",
+    "run_jobs": {
+      "available": true,
+      "data": []
+    },
+    "run_services": {
+      "available": true,
+      "data": [
+        {
+          "metadata": {
+            "labels": {
+              "cloud.googleapis.com/location": "europe-west1",
+              "component": "trusted-plan-import",
+              "source-commit": "df97fb2f47974ce309f7b94d31fa1b0f725c1795"
+            },
+            "name": "cohort-trusted-plan-import"
+          },
+          "status": {
+            "latestReadyRevisionName": "cohort-trusted-plan-import-df97fb2f4797",
+            "traffic": [
+              {
+                "latestRevision": true,
+                "percent": 100,
+                "revisionName": "cohort-trusted-plan-import-df97fb2f4797"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "scheduler": {
+      "available": false,
+      "exit_code": 1,
+      "reason": "SERVICE_DISABLED"
+    },
+    "tasks": {
+      "available": false,
+      "exit_code": 1,
+      "reason": "SERVICE_DISABLED"
+    }
+  },
+  "drain_before_apply": {
+    "data": [
+      {
+        "inspection": {
+          "active_replication_slots": 0,
+          "cron_catalog": false,
+          "database_name": "postgres",
+          "enabled_logical_replication_subscriptions": 0,
+          "extensions": [
+            {
+              "name": "pg_stat_statements",
+              "version": "1.11"
+            },
+            {
+              "name": "pgcrypto",
+              "version": "1.3"
+            },
+            {
+              "name": "plpgsql",
+              "version": "1.0"
+            },
+            {
+              "name": "supabase_vault",
+              "version": "0.3.1"
+            },
+            {
+              "name": "uuid-ossp",
+              "version": "1.1"
+            }
+          ],
+          "http_queue_catalog": false,
+          "inspection_role": "supabase_read_only_user",
+          "job_schemas": [],
+          "observed_at": "2026-10-26T01:24:48.184703+00:00",
+          "other_active_clients": [],
+          "other_active_or_open_client_transactions": 0,
+          "other_client_write_or_idle_transactions": 0,
+          "prepared_transactions": 0,
+          "protected_non_read_relation_locks": 0,
+          "queue_catalog": false,
+          "server_version": "PostgreSQL 17.6 on aarch64-unknown-linux-gnu, compiled by gcc (GCC) 15.2.0, 64-bit",
+          "transaction_read_only": "on",
+          "unobservable_client_activity": 0
+        }
+      }
+    ],
+    "http_status": 201,
+    "observed_at_utc": "2026-10-26T01:24:47Z"
+  },
+  "drain_final": {
+    "data": [
+      {
+        "inspection": {
+          "active_replication_slots": 0,
+          "cron_catalog": false,
+          "database_name": "postgres",
+          "enabled_logical_replication_subscriptions": 0,
+          "extensions": [
+            {
+              "name": "pg_stat_statements",
+              "version": "1.11"
+            },
+            {
+              "name": "pgcrypto",
+              "version": "1.3"
+            },
+            {
+              "name": "plpgsql",
+              "version": "1.0"
+            },
+            {
+              "name": "supabase_vault",
+              "version": "0.3.1"
+            },
+            {
+              "name": "uuid-ossp",
+              "version": "1.1"
+            }
+          ],
+          "http_queue_catalog": false,
+          "inspection_role": "supabase_read_only_user",
+          "job_schemas": [],
+          "observed_at": "2026-10-26T01:37:48.543125+00:00",
+          "other_active_clients": [],
+          "other_active_or_open_client_transactions": 0,
+          "other_client_write_or_idle_transactions": 0,
+          "prepared_transactions": 0,
+          "protected_non_read_relation_locks": 0,
+          "queue_catalog": false,
+          "server_version": "PostgreSQL 17.6 on aarch64-unknown-linux-gnu, compiled by gcc (GCC) 15.2.0, 64-bit",
+          "transaction_read_only": "on",
+          "unobservable_client_activity": 0
+        }
+      }
+    ],
+    "http_status": 201,
+    "observed_at_utc": "2026-10-26T01:37:48Z"
+  },
+  "health_final": {
+    "data": [
+      {
+        "healthy": true,
+        "name": "db",
+        "status": "ACTIVE_HEALTHY"
+      },
+      {
+        "healthy": true,
+        "info": {
+          "description": "GoTrue is a user registration and authentication API",
+          "name": "GoTrue",
+          "version": "v2.197.0"
+        },
+        "name": "auth",
+        "status": "ACTIVE_HEALTHY"
+      },
+      {
+        "healthy": true,
+        "info": {
+          "db_schema": "public,graphql_public"
+        },
+        "name": "rest",
+        "status": "ACTIVE_HEALTHY"
+      },
+      {
+        "healthy": true,
+        "name": "storage",
+        "status": "ACTIVE_HEALTHY"
+      },
+      {
+        "healthy": true,
+        "info": {
+          "connected_cluster": 0,
+          "db_connected": false,
+          "healthy": true,
+          "node": "realtime@2406:da18:19fc:1d01:3718:f931:6bb5:ca02",
+          "region": "ap-southeast-1",
+          "replication_connected": false
+        },
+        "name": "realtime",
+        "status": "ACTIVE_HEALTHY"
+      }
+    ],
+    "http_status": 200,
+    "observed_at_utc": "2026-10-26T01:37:56Z"
+  },
+  "hold": {
+    "founder_attestation": true,
+    "held_during_apply_and_postchecks": true,
+    "limits": [
+      "Scheduler/Tasks APIs disabled: inventory unavailable, not proof of empty jobs.",
+      "Bounded project/region/catalog/log observations plus founder known-writer hold; no claim of universal external-writer visibility."
+    ],
+    "release_recommendation": "May end for previously supported v1/v2 workflows after this complete report. No client/device action performed.",
+    "unexpected_writer_observed": false,
+    "unknown_external_writers_absent_not_assumed": true,
+    "v3_or_HYROX_Base_available": false
+  },
+  "identity_before": {
+    "data": {
+      "created_at": "2026-07-03T06:53:00.976925Z",
+      "database": {
+        "host": "db.otnhhdxstdnwccehacku.supabase.co",
+        "postgres_engine": "17",
+        "release_channel": "ga",
+        "version": "17.6.1.155"
+      },
+      "id": "otnhhdxstdnwccehacku",
+      "name": "Cohort Field Manual",
+      "ref": "otnhhdxstdnwccehacku",
+      "region": "eu-west-1",
+      "status": "ACTIVE_HEALTHY"
+    },
+    "http_status": 200,
+    "observed_at_utc": "2026-10-26T01:20:43Z"
+  },
+  "identity_before_apply": {
+    "data": {
+      "created_at": "2026-07-03T06:53:00.976925Z",
+      "database": {
+        "host": "db.otnhhdxstdnwccehacku.supabase.co",
+        "postgres_engine": "17",
+        "release_channel": "ga",
+        "version": "17.6.1.155"
+      },
+      "id": "otnhhdxstdnwccehacku",
+      "name": "Cohort Field Manual",
+      "ref": "otnhhdxstdnwccehacku",
+      "region": "eu-west-1",
+      "status": "ACTIVE_HEALTHY"
+    },
+    "http_status": 200,
+    "observed_at_utc": "2026-10-26T01:24:53Z"
+  },
+  "identity_final": {
+    "data": {
+      "created_at": "2026-07-03T06:53:00.976925Z",
+      "database": {
+        "host": "db.otnhhdxstdnwccehacku.supabase.co",
+        "postgres_engine": "17",
+        "release_channel": "ga",
+        "version": "17.6.1.155"
+      },
+      "id": "otnhhdxstdnwccehacku",
+      "name": "Cohort Field Manual",
+      "ref": "otnhhdxstdnwccehacku",
+      "region": "eu-west-1",
+      "status": "ACTIVE_HEALTHY"
+    },
+    "http_status": 200,
+    "observed_at_utc": "2026-10-26T01:37:55Z"
+  },
+  "integrations_before": {
+    "data": [
+      {
+        "integration_inspection": {
+          "content_graph_reconstruction_jobs": [],
+          "enabled_user_subscriptions": 0,
+          "foreign_data_wrappers": [],
+          "foreign_servers": [],
+          "outbound_or_job_function_metadata": [
+            {
+              "body_sha256": "7b97827deb516a59b5ce3b53829c57264dd60fdbabbba0925d5df908cd9dc285",
+              "signature": "content_graph_record_reconstruction(jsonb)"
+            }
+          ],
+          "realtime_subscription_rows": 0
+        }
+      }
+    ],
+    "http_status": 201,
+    "observed_at_utc": "2026-10-26T01:22:48Z"
+  },
+  "integrations_final": {
+    "data": [
+      {
+        "integration_inspection": {
+          "content_graph_reconstruction_jobs": [],
+          "enabled_user_subscriptions": 0,
+          "foreign_data_wrappers": [],
+          "foreign_servers": [],
+          "outbound_or_job_function_metadata": [
+            {
+              "body_sha256": "7b97827deb516a59b5ce3b53829c57264dd60fdbabbba0925d5df908cd9dc285",
+              "signature": "content_graph_record_reconstruction(jsonb)"
+            }
+          ],
+          "realtime_subscription_rows": 0
+        }
+      }
+    ],
+    "http_status": 201,
+    "observed_at_utc": "2026-10-26T01:37:50Z"
+  },
+  "memberships_before": {
+    "data": [
+      {
+        "admin_option": false,
+        "granted_role": "anon",
+        "grantor": "supabase_admin",
+        "inherit_option": false,
+        "member": "authenticator",
+        "set_option": true
+      },
+      {
+        "admin_option": true,
+        "granted_role": "anon",
+        "grantor": "supabase_admin",
+        "inherit_option": true,
+        "member": "postgres",
+        "set_option": true
+      },
+      {
+        "admin_option": false,
+        "granted_role": "authenticated",
+        "grantor": "supabase_admin",
+        "inherit_option": false,
+        "member": "authenticator",
+        "set_option": true
+      },
+      {
+        "admin_option": true,
+        "granted_role": "authenticated",
+        "grantor": "supabase_admin",
+        "inherit_option": true,
+        "member": "postgres",
+        "set_option": true
+      },
+      {
+        "admin_option": true,
+        "granted_role": "authenticator",
+        "grantor": "supabase_admin",
+        "inherit_option": true,
+        "member": "postgres",
+        "set_option": true
+      },
+      {
+        "admin_option": false,
+        "granted_role": "authenticator",
+        "grantor": "supabase_admin",
+        "inherit_option": false,
+        "member": "supabase_storage_admin",
+        "set_option": true
+      },
+      {
+        "admin_option": true,
+        "granted_role": "pg_create_subscription",
+        "grantor": "supabase_admin",
+        "inherit_option": true,
+        "member": "postgres",
+        "set_option": true
+      },
+      {
+        "admin_option": true,
+        "granted_role": "pg_monitor",
+        "grantor": "supabase_admin",
+        "inherit_option": true,
+        "member": "postgres",
+        "set_option": true
+      },
+      {
+        "admin_option": false,
+        "granted_role": "pg_monitor",
+        "grantor": "supabase_admin",
+        "inherit_option": true,
+        "member": "supabase_etl_admin",
+        "set_option": true
+      },
+      {
+        "admin_option": false,
+        "granted_role": "pg_monitor",
+        "grantor": "supabase_admin",
+        "inherit_option": true,
+        "member": "supabase_read_only_user",
+        "set_option": true
+      },
+      {
+        "admin_option": true,
+        "granted_role": "pg_read_all_data",
+        "grantor": "supabase_admin",
+        "inherit_option": true,
+        "member": "postgres",
+        "set_option": true
+      },
+      {
+        "admin_option": false,
+        "granted_role": "pg_read_all_data",
+        "grantor": "supabase_admin",
+        "inherit_option": true,
+        "member": "supabase_etl_admin",
+        "set_option": true
+      },
+      {
+        "admin_option": false,
+        "granted_role": "pg_read_all_data",
+        "grantor": "supabase_admin",
+        "inherit_option": true,
+        "member": "supabase_read_only_user",
+        "set_option": true
+      },
+      {
+        "admin_option": false,
+        "granted_role": "pg_read_all_settings",
+        "grantor": "supabase_admin",
+        "inherit_option": true,
+        "member": "pg_monitor",
+        "set_option": true
+      },
+      {
+        "admin_option": false,
+        "granted_role": "pg_read_all_stats",
+        "grantor": "supabase_admin",
+        "inherit_option": true,
+        "member": "pg_monitor",
+        "set_option": true
+      },
+      {
+        "admin_option": true,
+        "granted_role": "pg_signal_backend",
+        "grantor": "supabase_admin",
+        "inherit_option": true,
+        "member": "postgres",
+        "set_option": true
+      },
+      {
+        "admin_option": false,
+        "granted_role": "pg_stat_scan_tables",
+        "grantor": "supabase_admin",
+        "inherit_option": true,
+        "member": "pg_monitor",
+        "set_option": true
+      },
+      {
+        "admin_option": false,
+        "granted_role": "postgres",
+        "grantor": "supabase_admin",
+        "inherit_option": false,
+        "member": "cli_login_postgres",
+        "set_option": true
+      },
+      {
+        "admin_option": false,
+        "granted_role": "service_role",
+        "grantor": "supabase_admin",
+        "inherit_option": false,
+        "member": "authenticator",
+        "set_option": true
+      },
+      {
+        "admin_option": true,
+        "granted_role": "service_role",
+        "grantor": "supabase_admin",
+        "inherit_option": true,
+        "member": "postgres",
+        "set_option": true
+      },
+      {
+        "admin_option": false,
+        "granted_role": "supabase_privileged_role",
+        "grantor": "supabase_admin",
+        "inherit_option": true,
+        "member": "postgres",
+        "set_option": true
+      },
+      {
+        "admin_option": false,
+        "granted_role": "supabase_privileged_role",
+        "grantor": "supabase_admin",
+        "inherit_option": true,
+        "member": "supabase_etl_admin",
+        "set_option": true
+      }
+    ],
+    "http_status": 201,
+    "observed_at_utc": "2026-10-26T01:24:53Z"
+  },
+  "memberships_final": {
+    "data": [
+      {
+        "admin_option": false,
+        "granted_role": "anon",
+        "inherit_option": false,
+        "member": "authenticator",
+        "set_option": true
+      },
+      {
+        "admin_option": true,
+        "granted_role": "anon",
+        "inherit_option": true,
+        "member": "postgres",
+        "set_option": true
+      },
+      {
+        "admin_option": false,
+        "granted_role": "authenticated",
+        "inherit_option": false,
+        "member": "authenticator",
+        "set_option": true
+      },
+      {
+        "admin_option": true,
+        "granted_role": "authenticated",
+        "inherit_option": true,
+        "member": "postgres",
+        "set_option": true
+      },
+      {
+        "admin_option": true,
+        "granted_role": "authenticator",
+        "inherit_option": true,
+        "member": "postgres",
+        "set_option": true
+      },
+      {
+        "admin_option": false,
+        "granted_role": "authenticator",
+        "inherit_option": false,
+        "member": "supabase_storage_admin",
+        "set_option": true
+      },
+      {
+        "admin_option": true,
+        "granted_role": "cohort_exercise_version_publisher",
+        "inherit_option": false,
+        "member": "postgres",
+        "set_option": false
+      },
+      {
+        "admin_option": true,
+        "granted_role": "pg_create_subscription",
+        "inherit_option": true,
+        "member": "postgres",
+        "set_option": true
+      },
+      {
+        "admin_option": true,
+        "granted_role": "pg_monitor",
+        "inherit_option": true,
+        "member": "postgres",
+        "set_option": true
+      },
+      {
+        "admin_option": false,
+        "granted_role": "pg_monitor",
+        "inherit_option": true,
+        "member": "supabase_etl_admin",
+        "set_option": true
+      },
+      {
+        "admin_option": false,
+        "granted_role": "pg_monitor",
+        "inherit_option": true,
+        "member": "supabase_read_only_user",
+        "set_option": true
+      },
+      {
+        "admin_option": true,
+        "granted_role": "pg_read_all_data",
+        "inherit_option": true,
+        "member": "postgres",
+        "set_option": true
+      },
+      {
+        "admin_option": false,
+        "granted_role": "pg_read_all_data",
+        "inherit_option": true,
+        "member": "supabase_etl_admin",
+        "set_option": true
+      },
+      {
+        "admin_option": false,
+        "granted_role": "pg_read_all_data",
+        "inherit_option": true,
+        "member": "supabase_read_only_user",
+        "set_option": true
+      },
+      {
+        "admin_option": false,
+        "granted_role": "pg_read_all_settings",
+        "inherit_option": true,
+        "member": "pg_monitor",
+        "set_option": true
+      },
+      {
+        "admin_option": false,
+        "granted_role": "pg_read_all_stats",
+        "inherit_option": true,
+        "member": "pg_monitor",
+        "set_option": true
+      },
+      {
+        "admin_option": true,
+        "granted_role": "pg_signal_backend",
+        "inherit_option": true,
+        "member": "postgres",
+        "set_option": true
+      },
+      {
+        "admin_option": false,
+        "granted_role": "pg_stat_scan_tables",
+        "inherit_option": true,
+        "member": "pg_monitor",
+        "set_option": true
+      },
+      {
+        "admin_option": false,
+        "granted_role": "postgres",
+        "inherit_option": false,
+        "member": "cli_login_postgres",
+        "set_option": true
+      },
+      {
+        "admin_option": false,
+        "granted_role": "service_role",
+        "inherit_option": false,
+        "member": "authenticator",
+        "set_option": true
+      },
+      {
+        "admin_option": true,
+        "granted_role": "service_role",
+        "inherit_option": true,
+        "member": "postgres",
+        "set_option": true
+      },
+      {
+        "admin_option": false,
+        "granted_role": "supabase_privileged_role",
+        "inherit_option": true,
+        "member": "postgres",
+        "set_option": true
+      },
+      {
+        "admin_option": false,
+        "granted_role": "supabase_privileged_role",
+        "inherit_option": true,
+        "member": "supabase_etl_admin",
+        "set_option": true
+      }
+    ],
+    "http_status": 201,
+    "observed_at_utc": "2026-10-26T01:37:54Z"
+  },
+  "network_ban_count_before": {
+    "data": {
+      "banned_address_count": 0
+    },
+    "http_status": 201,
+    "observed_at_utc": "2026-10-26T01:22:00Z"
+  },
+  "only_new_membership": [
+    {
+      "admin_option": true,
+      "granted_role": "cohort_exercise_version_publisher",
+      "inherit_option": false,
+      "member": "postgres",
+      "set_option": false
+    }
+  ],
+  "receiver_before": {
+    "configuration_changes": false,
+    "observed_at_utc": "2026-10-26T01:22:14Z",
+    "project": {
+      "lifecycleState": "ACTIVE",
+      "projectId": "cohort-platform-production",
+      "projectNumber": "809647670049"
+    },
+    "secret_values_read": false,
+    "secret_version_metadata": [
+      {
+        "metadata": {
+          "createTime": "2026-08-11T01:25:11.299064Z",
+          "name": "projects/809647670049/secrets/cohort-trusted-plan-import-service-role/versions/1",
+          "state": "ENABLED"
+        },
+        "reference": {
+          "key": "1",
+          "name": "cohort-trusted-plan-import-service-role"
+        }
+      },
+      {
+        "metadata": {
+          "createTime": "2026-08-11T01:08:39.822356Z",
+          "name": "projects/809647670049/secrets/cohort-trusted-plan-import-founder-allowlist/versions/1",
+          "state": "ENABLED"
+        },
+        "reference": {
+          "key": "1",
+          "name": "cohort-trusted-plan-import-founder-allowlist"
+        }
+      }
+    ],
+    "service": {
+      "containers": [
+        {
+          "environment_metadata": [
+            {
+              "literal_present": true,
+              "matches_target": true,
+              "name": "SUPABASE_URL"
+            },
+            {
+              "literal_present": true,
+              "name": "SUPABASE_ANON_KEY"
+            },
+            {
+              "literal_present": true,
+              "name": "BIND_ADDRESS"
+            },
+            {
+              "literal_present": true,
+              "name": "MAX_PLAN_PACKAGE_YAML_BYTES"
+            },
+            {
+              "name": "SUPABASE_SERVICE_ROLE_KEY",
+              "secret_reference": {
+                "key": "1",
+                "name": "cohort-trusted-plan-import-service-role"
+              }
+            },
+            {
+              "name": "FOUNDER_EMAIL_ALLOWLIST",
+              "secret_reference": {
+                "key": "1",
+                "name": "cohort-trusted-plan-import-founder-allowlist"
+              }
+            }
+          ],
+          "image": "europe-west1-docker.pkg.dev/cohort-platform-production/cohort-trusted-runtime/trusted-plan-import@sha256:712ca882fb0bc8f09856679c5a9238b5e9cf00e73c01e4bcdd7cf2d73d8532b9"
+        }
+      ],
+      "metadata": {
+        "labels": {
+          "cloud.googleapis.com/location": "europe-west1",
+          "component": "trusted-plan-import",
+          "source-commit": "df97fb2f47974ce309f7b94d31fa1b0f725c1795"
+        },
+        "name": "cohort-trusted-plan-import"
+      },
+      "service_account": "cohort-trusted-plan-import@cohort-platform-production.iam.gserviceaccount.com",
+      "status": {
+        "latestReadyRevisionName": "cohort-trusted-plan-import-df97fb2f4797",
+        "traffic": [
+          {
+            "latestRevision": true,
+            "percent": 100,
+            "revisionName": "cohort-trusted-plan-import-df97fb2f4797"
+          }
+        ]
+      },
+      "timeout_seconds": 30
+    }
+  },
+  "receiver_final": {
+    "configuration_changes": false,
+    "observed_at_utc": "2026-10-26T01:39:27Z",
+    "project": {
+      "lifecycleState": "ACTIVE",
+      "projectId": "cohort-platform-production",
+      "projectNumber": "809647670049"
+    },
+    "secret_values_read": false,
+    "secret_version_metadata": [
+      {
+        "metadata": {
+          "createTime": "2026-08-11T01:25:11.299064Z",
+          "name": "projects/809647670049/secrets/cohort-trusted-plan-import-service-role/versions/1",
+          "state": "ENABLED"
+        },
+        "reference": {
+          "key": "1",
+          "name": "cohort-trusted-plan-import-service-role"
+        }
+      },
+      {
+        "metadata": {
+          "createTime": "2026-08-11T01:08:39.822356Z",
+          "name": "projects/809647670049/secrets/cohort-trusted-plan-import-founder-allowlist/versions/1",
+          "state": "ENABLED"
+        },
+        "reference": {
+          "key": "1",
+          "name": "cohort-trusted-plan-import-founder-allowlist"
+        }
+      }
+    ],
+    "service": {
+      "containers": [
+        {
+          "environment_metadata": [
+            {
+              "literal_present": true,
+              "matches_target": true,
+              "name": "SUPABASE_URL"
+            },
+            {
+              "literal_present": true,
+              "name": "SUPABASE_ANON_KEY"
+            },
+            {
+              "literal_present": true,
+              "name": "BIND_ADDRESS"
+            },
+            {
+              "literal_present": true,
+              "name": "MAX_PLAN_PACKAGE_YAML_BYTES"
+            },
+            {
+              "name": "SUPABASE_SERVICE_ROLE_KEY",
+              "secret_reference": {
+                "key": "1",
+                "name": "cohort-trusted-plan-import-service-role"
+              }
+            },
+            {
+              "name": "FOUNDER_EMAIL_ALLOWLIST",
+              "secret_reference": {
+                "key": "1",
+                "name": "cohort-trusted-plan-import-founder-allowlist"
+              }
+            }
+          ],
+          "image": "europe-west1-docker.pkg.dev/cohort-platform-production/cohort-trusted-runtime/trusted-plan-import@sha256:712ca882fb0bc8f09856679c5a9238b5e9cf00e73c01e4bcdd7cf2d73d8532b9"
+        }
+      ],
+      "metadata": {
+        "labels": {
+          "cloud.googleapis.com/location": "europe-west1",
+          "component": "trusted-plan-import",
+          "source-commit": "df97fb2f47974ce309f7b94d31fa1b0f725c1795"
+        },
+        "name": "cohort-trusted-plan-import"
+      },
+      "service_account": "cohort-trusted-plan-import@cohort-platform-production.iam.gserviceaccount.com",
+      "status": {
+        "latestReadyRevisionName": "cohort-trusted-plan-import-df97fb2f4797",
+        "traffic": [
+          {
+            "latestRevision": true,
+            "percent": 100,
+            "revisionName": "cohort-trusted-plan-import-df97fb2f4797"
+          }
+        ]
+      },
+      "timeout_seconds": 30
+    }
+  },
+  "receiver_unchanged": true,
+  "roles_before": {
+    "data": [
+      {
+        "rolbypassrls": false,
+        "rolcanlogin": true,
+        "rolconfig": null,
+        "rolcreatedb": false,
+        "rolcreaterole": false,
+        "rolinherit": false,
+        "rolname": "cli_login_postgres",
+        "rolsuper": false,
+        "rolvaliduntil": "2026-10-09 12:15:44.966556+00"
+      },
+      {
+        "rolbypassrls": true,
+        "rolcanlogin": true,
+        "rolconfig": [
+          "search_path=\"\\$user\", public, extensions"
+        ],
+        "rolcreatedb": true,
+        "rolcreaterole": true,
+        "rolinherit": true,
+        "rolname": "postgres",
+        "rolsuper": false,
+        "rolvaliduntil": null
+      }
+    ],
+    "http_status": 201,
+    "observed_at_utc": "2026-10-26T01:23:20Z"
+  },
+  "roles_final": {
+    "data": [
+      {
+        "login_expired": false,
+        "rolbypassrls": false,
+        "rolcanlogin": true,
+        "rolconfig": null,
+        "rolcreatedb": false,
+        "rolcreaterole": false,
+        "rolinherit": false,
+        "rolname": "cli_login_postgres",
+        "rolsuper": false,
+        "rolvaliduntil": "2026-10-26 01:41:50.052073+00"
+      },
+      {
+        "login_expired": null,
+        "rolbypassrls": false,
+        "rolcanlogin": false,
+        "rolconfig": null,
+        "rolcreatedb": false,
+        "rolcreaterole": false,
+        "rolinherit": false,
+        "rolname": "cohort_exercise_version_publisher",
+        "rolsuper": false,
+        "rolvaliduntil": null
+      },
+      {
+        "login_expired": null,
+        "rolbypassrls": true,
+        "rolcanlogin": true,
+        "rolconfig": [
+          "search_path=\"\\$user\", public, extensions"
+        ],
+        "rolcreatedb": true,
+        "rolcreaterole": true,
+        "rolinherit": true,
+        "rolname": "postgres",
+        "rolsuper": false,
+        "rolvaliduntil": null
+      }
+    ],
+    "http_status": 201,
+    "observed_at_utc": "2026-10-26T01:37:51Z"
+  }
+}

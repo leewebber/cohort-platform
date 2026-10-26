@@ -1,0 +1,15 @@
+{
+  "active_checkout_reused": "/Users/leewebber/.codex/worktrees/hyrox-athlete-runner/cohort_platform",
+  "after_sha256": "d29ecc335b774b62a153a0703ce1a0d1d7012f4f642adc0477974bc5c3902116",
+  "before_sha256": "d29ecc335b774b62a153a0703ce1a0d1d7012f4f642adc0477974bc5c3902116",
+  "global_settings_changed": false,
+  "historical_index_exception": "Five original raw indices lost/restored in prior incidents are historical restoration exceptions; this task preserves starting resources, not lost original index bytes.",
+  "indices_recreated": 0,
+  "managed_cleanup_triggers_used": false,
+  "older_checkouts_unchanged": 20,
+  "older_recorded_files_indices_HEADs_branches_temp_exact": true,
+  "original_outstanding_paths": 95,
+  "recorded_checkouts": 21,
+  "task_only_disposable_CLI_resources_removed": true,
+  "worktrees_created_removed_restored": 0
+}

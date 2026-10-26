@@ -1,0 +1,699 @@
+{
+  "all_25_unchanged": true,
+  "approved_new_dependency_rows": {
+    "data": [
+      {
+        "benchmark_document": {
+          "freshness": "none",
+          "id": "hyrox-base-benchmark-backSquat5rm",
+          "metric": "backSquat5rm",
+          "source_policy": "declared known or recorded result; no test attestation; explicit programme consent required",
+          "test_date_required": true,
+          "test_meaning": "back squat 5RM total external load",
+          "unit": "microgramsTotalExternalLoad",
+          "version": 1
+        },
+        "kind": "backSquat",
+        "metric": "backSquat5rm",
+        "rule_document": {
+          "approved_brief_sha256": "5ae2ebcc020883ce2f496b457296d349ee1793c513818501d616238341d32056",
+          "approved_rule": "hyrox-base-personalisation-v1",
+          "formula": "5rm_micrograms * authored_basis_points / 10000; nearest configured total gram increment; ties down; RIR governs adjustments",
+          "id": "hyrox-base-backSquat",
+          "input_unit": "microgramsTotalExternalLoad",
+          "output_unit": "gramsTotalExternalLoad",
+          "version": 1,
+          "weeks": [
+            {
+              "five_rm_basis_points": 8000,
+              "reps": 8,
+              "rir": "3",
+              "sets": 3,
+              "week": 1
+            },
+            {
+              "five_rm_basis_points": 8250,
+              "reps": 8,
+              "rir": "2\u20133",
+              "sets": 3,
+              "week": 2
+            },
+            {
+              "five_rm_basis_points": 8750,
+              "reps": 6,
+              "rir": "2",
+              "sets": 4,
+              "week": 3
+            },
+            {
+              "five_rm_basis_points": 7000,
+              "reps": 6,
+              "rir": "4",
+              "sets": 2,
+              "week": 4
+            },
+            {
+              "five_rm_basis_points": 8750,
+              "reps": 6,
+              "rir": "3",
+              "sets": 4,
+              "week": 5
+            },
+            {
+              "five_rm_basis_points": 9000,
+              "reps": 5,
+              "rir": "2\u20133",
+              "sets": 4,
+              "week": 6
+            },
+            {
+              "five_rm_basis_points": 9500,
+              "reps": 4,
+              "rir": "2",
+              "sets": 4,
+              "week": 7
+            },
+            {
+              "five_rm_basis_points": 7500,
+              "reps": 5,
+              "rir": "3\u20134",
+              "sets": 2,
+              "week": 8
+            }
+          ]
+        }
+      },
+      {
+        "benchmark_document": {
+          "freshness": "none",
+          "id": "hyrox-base-benchmark-row2km",
+          "metric": "row2km",
+          "source_policy": "declared known or recorded result; no test attestation; explicit programme consent required",
+          "test_date_required": true,
+          "test_meaning": "2 km row elapsed completion time",
+          "unit": "milliseconds",
+          "version": 1
+        },
+        "kind": "dedicatedRowIntervals",
+        "metric": "row2km",
+        "rule_document": {
+          "approved_brief_sha256": "5ae2ebcc020883ce2f496b457296d349ee1793c513818501d616238341d32056",
+          "approved_rule": "hyrox-base-personalisation-v1",
+          "formula": "2km_ms/4 + split_offset_ms; 2min:+10000..15000; 3min:+12000..18000; W4:+18000..23000; W8:+15000..20000; dedicated only",
+          "id": "hyrox-base-dedicatedRowIntervals",
+          "input_unit": "milliseconds",
+          "output_unit": "millisecondsPer500Metres",
+          "version": 1,
+          "weeks": [
+            {
+              "recovery_seconds": 90,
+              "repetitions": 6,
+              "week": 1,
+              "work_seconds": 120
+            },
+            {
+              "recovery_seconds": 90,
+              "repetitions": 7,
+              "week": 2,
+              "work_seconds": 120
+            },
+            {
+              "recovery_seconds": 90,
+              "repetitions": 5,
+              "week": 3,
+              "work_seconds": 180
+            },
+            {
+              "recovery_seconds": 90,
+              "repetitions": 4,
+              "week": 4,
+              "work_seconds": 120
+            },
+            {
+              "recovery_seconds": 75,
+              "repetitions": 6,
+              "week": 5,
+              "work_seconds": 120
+            },
+            {
+              "recovery_seconds": 75,
+              "repetitions": 7,
+              "week": 6,
+              "work_seconds": 120
+            },
+            {
+              "recovery_seconds": 75,
+              "repetitions": 5,
+              "week": 7,
+              "work_seconds": 180
+            },
+            {
+              "recovery_seconds": 90,
+              "repetitions": 4,
+              "week": 8,
+              "work_seconds": 120
+            }
+          ]
+        }
+      },
+      {
+        "benchmark_document": {
+          "freshness": "none",
+          "id": "hyrox-base-benchmark-run10km",
+          "metric": "run10km",
+          "source_policy": "declared known or recorded result; no test attestation; explicit programme consent required",
+          "test_date_required": true,
+          "test_meaning": "10 km run elapsed completion time",
+          "unit": "milliseconds",
+          "version": 1
+        },
+        "kind": "runningIntervals",
+        "metric": "run10km",
+        "rule_document": {
+          "approved_brief_sha256": "5ae2ebcc020883ce2f496b457296d349ee1793c513818501d616238341d32056",
+          "approved_rule": "hyrox-base-personalisation-v1",
+          "formula": "10km_ms/10 * pace_multiplier; 4-5min:100/100..105/100; 6-7min:102/100..107/100; 10min:103/100..108/100",
+          "id": "hyrox-base-runningIntervals",
+          "input_unit": "milliseconds",
+          "output_unit": "millisecondsPerKilometre",
+          "version": 1,
+          "weeks": [
+            {
+              "recovery_seconds": 120,
+              "repetitions": 4,
+              "week": 1,
+              "work_seconds": 240
+            },
+            {
+              "recovery_seconds": 120,
+              "repetitions": 5,
+              "week": 2,
+              "work_seconds": 240
+            },
+            {
+              "recovery_seconds": 120,
+              "repetitions": 4,
+              "week": 3,
+              "work_seconds": 360
+            },
+            {
+              "recovery_seconds": 120,
+              "repetitions": 4,
+              "week": 4,
+              "work_seconds": 240
+            },
+            {
+              "recovery_seconds": 120,
+              "repetitions": 5,
+              "week": 5,
+              "work_seconds": 300
+            },
+            {
+              "recovery_seconds": 120,
+              "repetitions": 4,
+              "week": 6,
+              "work_seconds": 420
+            },
+            {
+              "recovery_seconds": 120,
+              "repetitions": 3,
+              "week": 7,
+              "work_seconds": 600
+            },
+            {
+              "recovery_seconds": 120,
+              "repetitions": 4,
+              "week": 8,
+              "work_seconds": 300
+            }
+          ]
+        }
+      }
+    ],
+    "http_status": 201,
+    "observed_at_utc": "2026-10-26T01:31:07Z"
+  },
+  "historical_differences": "The three dated October 9 differences (assignments 3\u21924, occurrences 159\u2192230, projections 3\u21924) were already present in the held reviewed baseline; no new difference. See hyrox_resumed_readiness/PROTECTED.json; no athlete-row attribution inferred.",
+  "new_table_counts": {
+    "data": [
+      {
+        "relation": "hyrox_base_benchmark_revisions",
+        "rows": 0
+      },
+      {
+        "relation": "hyrox_base_benchmark_selections",
+        "rows": 0
+      },
+      {
+        "relation": "published_exercise_definition_versions",
+        "rows": 0
+      },
+      {
+        "relation": "published_exercise_version_retirements",
+        "rows": 0
+      },
+      {
+        "relation": "hyrox_prescription_dependencies",
+        "rows": 3
+      },
+      {
+        "relation": "programme_v3_publication_artifacts",
+        "rows": 0
+      },
+      {
+        "relation": "cohort_v3_publication_claims",
+        "rows": 0
+      },
+      {
+        "relation": "programme_v3_prescription_reviews",
+        "rows": 0
+      },
+      {
+        "relation": "programme_v3_prescription_consents",
+        "rows": 0
+      },
+      {
+        "relation": "programme_occurrence_v3_prescription_snapshots",
+        "rows": 0
+      },
+      {
+        "relation": "programme_occurrence_duration_choices",
+        "rows": 0
+      }
+    ],
+    "http_status": 201,
+    "observed_at_utc": "2026-10-26T01:29:04Z"
+  },
+  "protected_after": {
+    "data": [
+      {
+        "relation": "coach_athlete_relationships",
+        "row_count": 0,
+        "rowset_md5": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "relation": "performance_result_corrections",
+        "row_count": 0,
+        "rowset_md5": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "relation": "profiles",
+        "row_count": 2,
+        "rowset_md5": "05bbbf7871edd474349c0dbdad0b966c"
+      },
+      {
+        "relation": "programme_assignments",
+        "row_count": 4,
+        "rowset_md5": "7e1eeb6b47202161fddd54428bb34489"
+      },
+      {
+        "relation": "programme_occurrence_running_target_snapshots",
+        "row_count": 4,
+        "rowset_md5": "3051e0761c69f8dce4ad2fe3582f27ef"
+      },
+      {
+        "relation": "programme_publication_artifacts",
+        "row_count": 0,
+        "rowset_md5": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "relation": "programme_schedule_occurrences",
+        "row_count": 230,
+        "rowset_md5": "993aceb2d9e9bb4e00eb931ff114f7a1"
+      },
+      {
+        "relation": "programme_schedule_projections",
+        "row_count": 4,
+        "rowset_md5": "84e6d10cf5b407b31fb2d655ae6618a3"
+      },
+      {
+        "relation": "programme_slot_outcomes",
+        "row_count": 19,
+        "rowset_md5": "cef070f5ebb77ec823861d171e049f2b"
+      },
+      {
+        "relation": "programme_version_days",
+        "row_count": 181,
+        "rowset_md5": "d2958bf65a61a706c74d7c6641b1ef72"
+      },
+      {
+        "relation": "programme_version_session_slots",
+        "row_count": 188,
+        "rowset_md5": "d69b784c44a5dd655031c3ab78899814"
+      },
+      {
+        "relation": "programme_version_weeks",
+        "row_count": 29,
+        "rowset_md5": "aef4f0e0fb035197d98a84bfcc0eb6a8"
+      },
+      {
+        "relation": "programme_versions",
+        "row_count": 11,
+        "rowset_md5": "efa3ffebac4022e49d79d80cbba79afe"
+      },
+      {
+        "relation": "session_blocks",
+        "row_count": 495,
+        "rowset_md5": "51e8b026a8a6c782bb2dfc9b49338ae3"
+      },
+      {
+        "relation": "training_block_results",
+        "row_count": 63,
+        "rowset_md5": "09c061feae3a51d899b15cbe2e35cee3"
+      },
+      {
+        "relation": "training_exercise_results",
+        "row_count": 183,
+        "rowset_md5": "95fa7f233464700beb2a462731b390ae"
+      },
+      {
+        "relation": "training_session_records",
+        "row_count": 24,
+        "rowset_md5": "991c35c77cf81b5b966728c7bed3bf7f"
+      },
+      {
+        "relation": "training_sessions",
+        "row_count": 47,
+        "rowset_md5": "8e4a15439d61ca42505bc4f34fba966e"
+      },
+      {
+        "relation": "training_set_results",
+        "row_count": 411,
+        "rowset_md5": "ebe23fafe37ebed93134c1ab91196983"
+      }
+    ],
+    "http_status": 201,
+    "observed_at_utc": "2026-10-26T01:29:43Z"
+  },
+  "protected_before": {
+    "data": [
+      {
+        "relation": "coach_athlete_relationships",
+        "row_count": 0,
+        "rowset_md5": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "relation": "performance_result_corrections",
+        "row_count": 0,
+        "rowset_md5": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "relation": "profiles",
+        "row_count": 2,
+        "rowset_md5": "05bbbf7871edd474349c0dbdad0b966c"
+      },
+      {
+        "relation": "programme_assignments",
+        "row_count": 4,
+        "rowset_md5": "7e1eeb6b47202161fddd54428bb34489"
+      },
+      {
+        "relation": "programme_occurrence_running_target_snapshots",
+        "row_count": 4,
+        "rowset_md5": "3051e0761c69f8dce4ad2fe3582f27ef"
+      },
+      {
+        "relation": "programme_publication_artifacts",
+        "row_count": 0,
+        "rowset_md5": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "relation": "programme_schedule_occurrences",
+        "row_count": 230,
+        "rowset_md5": "993aceb2d9e9bb4e00eb931ff114f7a1"
+      },
+      {
+        "relation": "programme_schedule_projections",
+        "row_count": 4,
+        "rowset_md5": "84e6d10cf5b407b31fb2d655ae6618a3"
+      },
+      {
+        "relation": "programme_slot_outcomes",
+        "row_count": 19,
+        "rowset_md5": "cef070f5ebb77ec823861d171e049f2b"
+      },
+      {
+        "relation": "programme_version_days",
+        "row_count": 181,
+        "rowset_md5": "d2958bf65a61a706c74d7c6641b1ef72"
+      },
+      {
+        "relation": "programme_version_session_slots",
+        "row_count": 188,
+        "rowset_md5": "d69b784c44a5dd655031c3ab78899814"
+      },
+      {
+        "relation": "programme_version_weeks",
+        "row_count": 29,
+        "rowset_md5": "aef4f0e0fb035197d98a84bfcc0eb6a8"
+      },
+      {
+        "relation": "programme_versions",
+        "row_count": 11,
+        "rowset_md5": "efa3ffebac4022e49d79d80cbba79afe"
+      },
+      {
+        "relation": "session_blocks",
+        "row_count": 495,
+        "rowset_md5": "51e8b026a8a6c782bb2dfc9b49338ae3"
+      },
+      {
+        "relation": "training_block_results",
+        "row_count": 63,
+        "rowset_md5": "09c061feae3a51d899b15cbe2e35cee3"
+      },
+      {
+        "relation": "training_exercise_results",
+        "row_count": 183,
+        "rowset_md5": "95fa7f233464700beb2a462731b390ae"
+      },
+      {
+        "relation": "training_session_records",
+        "row_count": 24,
+        "rowset_md5": "991c35c77cf81b5b966728c7bed3bf7f"
+      },
+      {
+        "relation": "training_sessions",
+        "row_count": 47,
+        "rowset_md5": "8e4a15439d61ca42505bc4f34fba966e"
+      },
+      {
+        "relation": "training_set_results",
+        "row_count": 411,
+        "rowset_md5": "ebe23fafe37ebed93134c1ab91196983"
+      }
+    ],
+    "http_status": 201,
+    "observed_at_utc": "2026-10-26T01:22:46Z"
+  },
+  "protected_final": {
+    "data": [
+      {
+        "relation": "coach_athlete_relationships",
+        "row_count": 0,
+        "rowset_md5": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "relation": "performance_result_corrections",
+        "row_count": 0,
+        "rowset_md5": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "relation": "profiles",
+        "row_count": 2,
+        "rowset_md5": "05bbbf7871edd474349c0dbdad0b966c"
+      },
+      {
+        "relation": "programme_assignments",
+        "row_count": 4,
+        "rowset_md5": "7e1eeb6b47202161fddd54428bb34489"
+      },
+      {
+        "relation": "programme_occurrence_running_target_snapshots",
+        "row_count": 4,
+        "rowset_md5": "3051e0761c69f8dce4ad2fe3582f27ef"
+      },
+      {
+        "relation": "programme_publication_artifacts",
+        "row_count": 0,
+        "rowset_md5": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "relation": "programme_schedule_occurrences",
+        "row_count": 230,
+        "rowset_md5": "993aceb2d9e9bb4e00eb931ff114f7a1"
+      },
+      {
+        "relation": "programme_schedule_projections",
+        "row_count": 4,
+        "rowset_md5": "84e6d10cf5b407b31fb2d655ae6618a3"
+      },
+      {
+        "relation": "programme_slot_outcomes",
+        "row_count": 19,
+        "rowset_md5": "cef070f5ebb77ec823861d171e049f2b"
+      },
+      {
+        "relation": "programme_version_days",
+        "row_count": 181,
+        "rowset_md5": "d2958bf65a61a706c74d7c6641b1ef72"
+      },
+      {
+        "relation": "programme_version_session_slots",
+        "row_count": 188,
+        "rowset_md5": "d69b784c44a5dd655031c3ab78899814"
+      },
+      {
+        "relation": "programme_version_weeks",
+        "row_count": 29,
+        "rowset_md5": "aef4f0e0fb035197d98a84bfcc0eb6a8"
+      },
+      {
+        "relation": "programme_versions",
+        "row_count": 11,
+        "rowset_md5": "efa3ffebac4022e49d79d80cbba79afe"
+      },
+      {
+        "relation": "session_blocks",
+        "row_count": 495,
+        "rowset_md5": "51e8b026a8a6c782bb2dfc9b49338ae3"
+      },
+      {
+        "relation": "training_block_results",
+        "row_count": 63,
+        "rowset_md5": "09c061feae3a51d899b15cbe2e35cee3"
+      },
+      {
+        "relation": "training_exercise_results",
+        "row_count": 183,
+        "rowset_md5": "95fa7f233464700beb2a462731b390ae"
+      },
+      {
+        "relation": "training_session_records",
+        "row_count": 24,
+        "rowset_md5": "991c35c77cf81b5b966728c7bed3bf7f"
+      },
+      {
+        "relation": "training_sessions",
+        "row_count": 47,
+        "rowset_md5": "8e4a15439d61ca42505bc4f34fba966e"
+      },
+      {
+        "relation": "training_set_results",
+        "row_count": 411,
+        "rowset_md5": "ebe23fafe37ebed93134c1ab91196983"
+      }
+    ],
+    "http_status": 201,
+    "observed_at_utc": "2026-10-26T01:37:44Z"
+  },
+  "protected_transformations": 0,
+  "sources_after": {
+    "data": [
+      {
+        "relation": "content_graph_manifests",
+        "row_count": 2,
+        "rowset_md5": "79ca291a0373dcbca703200002ed6d5b"
+      },
+      {
+        "relation": "content_graph_reconstruction_jobs",
+        "row_count": 0,
+        "rowset_md5": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "relation": "exercises_v2",
+        "row_count": 169,
+        "rowset_md5": "4d371d77460814709a59a128c53327e0"
+      },
+      {
+        "relation": "performance_protocols",
+        "row_count": 317,
+        "rowset_md5": "8b53719eaa6d4ba73c7519184dd6e6d0"
+      },
+      {
+        "relation": "session_block_exercises",
+        "row_count": 1648,
+        "rowset_md5": "98685d8c71553379c3d8f31e5a8f8ae4"
+      },
+      {
+        "relation": "session_lineages",
+        "row_count": 306,
+        "rowset_md5": "b0e5d34b2e9bcfbffea94faef16dc948"
+      }
+    ],
+    "http_status": 201,
+    "observed_at_utc": "2026-10-26T01:31:05Z"
+  },
+  "sources_before": {
+    "data": [
+      {
+        "relation": "content_graph_manifests",
+        "row_count": 2,
+        "rowset_md5": "79ca291a0373dcbca703200002ed6d5b"
+      },
+      {
+        "relation": "content_graph_reconstruction_jobs",
+        "row_count": 0,
+        "rowset_md5": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "relation": "exercises_v2",
+        "row_count": 169,
+        "rowset_md5": "4d371d77460814709a59a128c53327e0"
+      },
+      {
+        "relation": "performance_protocols",
+        "row_count": 317,
+        "rowset_md5": "8b53719eaa6d4ba73c7519184dd6e6d0"
+      },
+      {
+        "relation": "session_block_exercises",
+        "row_count": 1648,
+        "rowset_md5": "98685d8c71553379c3d8f31e5a8f8ae4"
+      },
+      {
+        "relation": "session_lineages",
+        "row_count": 306,
+        "rowset_md5": "b0e5d34b2e9bcfbffea94faef16dc948"
+      }
+    ],
+    "http_status": 201,
+    "observed_at_utc": "2026-10-26T01:23:16Z"
+  },
+  "sources_final": {
+    "data": [
+      {
+        "relation": "content_graph_manifests",
+        "row_count": 2,
+        "rowset_md5": "79ca291a0373dcbca703200002ed6d5b"
+      },
+      {
+        "relation": "content_graph_reconstruction_jobs",
+        "row_count": 0,
+        "rowset_md5": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "relation": "exercises_v2",
+        "row_count": 169,
+        "rowset_md5": "4d371d77460814709a59a128c53327e0"
+      },
+      {
+        "relation": "performance_protocols",
+        "row_count": 317,
+        "rowset_md5": "8b53719eaa6d4ba73c7519184dd6e6d0"
+      },
+      {
+        "relation": "session_block_exercises",
+        "row_count": 1648,
+        "rowset_md5": "98685d8c71553379c3d8f31e5a8f8ae4"
+      },
+      {
+        "relation": "session_lineages",
+        "row_count": 306,
+        "rowset_md5": "b0e5d34b2e9bcfbffea94faef16dc948"
+      }
+    ],
+    "http_status": 201,
+    "observed_at_utc": "2026-10-26T01:37:46Z"
+  }
+}

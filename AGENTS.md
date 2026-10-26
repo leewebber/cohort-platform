@@ -1,5 +1,22 @@
 # Cohort Platform repository guidance
 
+> **HYROX eight-file schema deployment — verified, 2026-10-26:**
+> [Closeout](docs/checkpoints/hyrox_schema_deployment_closeout/HANDOFF.md) records the founder-authorised exact batch from
+> `fe0454edd0d1ac533337d288b89f6e7018ae6d70`, deployed from main `1b2e8cd` to Field Manual
+> `otnhhdxstdnwccehacku`. Ledger **130 / 20261024130000**, exactly eight additions;
+> final ordinary dry-run empty; all five services healthy. All 25 protected/source
+> aggregates unchanged; 170 old functions exact plus three approved body deltas/OIDs/ACLs
+> and two retained legacy copies; effective security/owner/RLS/default/policy/trigger
+> checks pass. Eleven new tables contain only three approved calculation dependency rows.
+> Separately authorised temporary CLI login expired 2026-10-26 01:41:50 UTC; task-owned
+> credential caches/disposable copy removed; no main DB password reset or broadened
+> existing memberships. Publisher is NOLOGIN/unusable; no producer/configuration/content/
+> assignment/athlete/device mutation. Client hold may end for existing v1/v2 workflows.
+> V3/Base availability and all 48 T1/B3 blockers remain. Next: genuine approval-event
+> producer/delivery owner and separately reviewed exact provisioning/configuration;
+> publication stays separate. Older checkouts/original 95 paths/indices/.temp preserved;
+> no managed cleanup/global change. Earlier no-apply/readiness notices below are historical.
+
 > **HYROX schema apply — stopped before dry-run, 2026-10-25:**
 > [No-apply receipt](docs/checkpoints/hyrox_schema_deployment/HANDOFF.md) acknowledges the founder's exact eight-file schema approval
 > from `fe0454edd0d1ac533337d288b89f6e7018ae6d70`. Manifest/order/hash bytes, ledger 122,
