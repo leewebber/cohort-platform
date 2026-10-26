@@ -1,0 +1,68 @@
+{
+  "Gate_A": "OPEN; no complete numbered M1-M4 outcome certified for these testers",
+  "audited_main": "7736d60cc4ea87de548860b8a701918cf367bf03",
+  "evidence_reuse": "Historical tests/build/SQL/device acceptance attributed in HANDOFF and EVIDENCE. No new green suite or fresh hosted/device availability is claimed. This task changes planning/pointers only, preserving frozen technical contracts.",
+  "focused_documentation_checks": {
+    "added_text_credential_shape_scan": "no matches",
+    "all_17_points_present": true,
+    "git_diff_check": "PASS",
+    "historical_bodies_retained_in_all_five_existing_docs": true,
+    "pending_migration_apply_authorised": false,
+    "pending_migration_hash_matches_both_manifests": true,
+    "permission_loader_injection_locations": "staging_tooling only; production defaults remain empty",
+    "production_onboarding_instantiation_outside_definition": 0,
+    "relative_links_in_new_docs_and_added_notices_resolve": true,
+    "result": "PASS",
+    "retained_v1_v2_publisher_has_no_approval_producer_call": true,
+    "source_anchor_lines_checked": true,
+    "source_files_hashed_and_baseline_matched": 106
+  },
+  "format": "cohort.m0-alpha-baseline.verification.v1",
+  "m0": {
+    "M0.1": "complete: inspected real code/config/schema/test and release routes",
+    "M0.2": "complete: all 17 M1-M4 points have status, evidence type and blocker",
+    "M0.3": "complete: one dependency order, next M1.2 build and parallel founder actions"
+  },
+  "next_build": {
+    "milestone": "M1.2",
+    "started": false,
+    "status": "PROPOSED_NOT_AUTHORISED",
+    "task": "ALPHA_NORMAL_ONBOARDING_AND_PRIVATE_FREE_PROGRAMME_ACQUISITION"
+  },
+  "non_actions": {
+    "Garmin_account_actions": 0,
+    "application_hosted_query": false,
+    "application_tests_run": 0,
+    "architecture_safety_suite_rerun": false,
+    "browser_app_AppleScript_control": false,
+    "build_or_distribution": false,
+    "content_publication_assignment_athlete_writes": 0,
+    "database_gate_run": false,
+    "external_messages": 0,
+    "flutter_analysis_run": false,
+    "hosted_mutations": 0
+  },
+  "preservation": {
+    "after_sha256": "302f1c22f384ff1a7d79a208253b2a8b89e4efce68c70385683069646507b18d",
+    "before_sha256": "302f1c22f384ff1a7d79a208253b2a8b89e4efce68c70385683069646507b18d",
+    "coverage": "Every present registered checkout from both original Git repositories: HEAD, branch, raw index, porcelain status, all tracked and nonignored untracked file hashes, .env and supabase/.temp hashes; absent entries remain absent. No file contents retained in this public receipt.",
+    "existing_checkouts_measured": 22,
+    "global_settings_changes": 0,
+    "historical_index_exceptions": "Prior five regenerated-index exceptions remain historical; this task claims only equality against its measured starting inventory.",
+    "identical": true,
+    "indices_recreated": 0,
+    "managed_worktree_lifecycle_calls": 0,
+    "original_outstanding_paths": "all captured and unchanged; no original files staged",
+    "registered_absent_checkouts_left_absent": 28
+  },
+  "producer_disposition": "DEFERRED for selected v1/v2 alpha path; retain prepared v3 work",
+  "publication": {
+    "authorised": "one reviewed sanitised documentation commit; normal non-force HEAD:refs/heads/main only; no tags or feature branch",
+    "base": "7736d60cc4ea87de548860b8a701918cf367bf03",
+    "expected_merge_commits": 0,
+    "expected_new_commits": 1,
+    "post_push_receipt": "Exact containing commit SHA and fetched origin/main equality/divergence/clean-state result are reported after publication; not self-embedded in this file."
+  },
+  "recorded_local_date": "2026-10-26",
+  "timezone": "Asia/Makassar"
+}

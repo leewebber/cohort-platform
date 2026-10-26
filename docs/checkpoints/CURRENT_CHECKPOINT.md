@@ -1,5 +1,25 @@
 # Current repository checkpoint
 
+> **M0 release baseline — complete as audit, 2026-10-26:**
+> [Controlling founder M0–M10 plan](../planning/Founder_Release_Plan_M0_M10_v1.md) replaces older
+> product-priority/build-order proposals while preserving technical authority contracts.
+> [M0.1–M0.3 findings, all M1–M4 statuses and ordered critical path](./m0_alpha_baseline/HANDOFF.md)
+> audit published main `7736d60cc4ea87de548860b8a701918cf367bf03`.
+> No entire M1–M4 point is certified complete for the new testers; **Gate A remains open**.
+> Existing retained private v1/v2 publication/exact assignment/Programme Athlete runtime is the
+> supported starting path. Genuine Hybrid10K and father content, normal onboarding/private-free
+> marketplace acquisition, actual adaptation gaps, Garmin both ways and current device/release
+> acceptance remain. Pending approval-producer migration/provisioning is **DEFERRED**, not an
+> automatic alpha prerequisite. B3 device proof remains test-programme scoped; old uncommitted
+> security/device receipts were inspected and sanitised by hash, left in place unchanged.
+> Single next build: **M1.2 ALPHA_NORMAL_ONBOARDING_AND_PRIVATE_FREE_PROGRAMME_ACQUISITION**, proposed
+> only. Parallel founder actions: real source approval, tester/platform/watch confirmation,
+> Apple/Garmin developer access and feedback destination. No implementation follows this audit.
+> Docs-only checks/preservation/publication evidence: [verification](./m0_alpha_baseline/VERIFICATION.json).
+> No hosted application query/mutation, app/browser/device control, content publication, athlete
+> write, distribution, managed worktree lifecycle/cleanup or global setting change in M0.
+
+
 > **Approval producer/outbox — local proof, 2026-10-26:**
 > [Producer package](./hyrox_approval_producer/HANDOFF.md) pins implementation `3d1218ef2fac7c08b683608f3cbfc9f3152f9460`.
 > Hosted read-only refresh: Field Manual ACTIVE_HEALTHY / ledger130, no genuine approval

@@ -1,5 +1,12 @@
 # Delivery roadmap
 
+> **Product-priority precedence — 2026-10-26:** The founder's
+> [M0–M10 release plan](./Founder_Release_Plan_M0_M10_v1.md) supersedes the older delivery order,
+> staged cohort sizes and provider-later priorities below. Historical milestone closures
+> retain their original scope; the new Gate A includes onboarding, private free access and
+> Garmin delivery plus activity return. [M0 audit/next-task boundary](../checkpoints/m0_alpha_baseline/HANDOFF.md).
+
+
 > **HYROX Base approved brief / local personalisation — 2026-10-22:**
 > Founder approved the partial eight-week brief, Week 1/progression and Base-specific
 > benchmark rules; [decisions](../checkpoints/hyrox_base_personalisation/DECISIONS.md)

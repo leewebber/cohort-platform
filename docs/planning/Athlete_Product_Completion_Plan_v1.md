@@ -1,5 +1,13 @@
 # Athlete Product Completion Plan v1
 
+> **Product-priority precedence — 2026-10-26:** The founder's
+> [M0–M10 release plan](./Founder_Release_Plan_M0_M10_v1.md) controls delivery priorities,
+> alpha scope and gates. This older plan remains historical requirements/evidence context;
+> its cohort sizes, percentages, wearables/onboarding ordering and former M9/M10 numbering
+> do not establish completion or the next task under the new plan. Technical contracts
+> remain binding. [M0 baseline](../checkpoints/m0_alpha_baseline/HANDOFF.md).
+
+
 > **HYROX Base approved brief / local personalisation — 2026-10-22:**
 > Founder approved the partial eight-week brief, Week 1/progression and Base-specific
 > benchmark rules; [decisions](../checkpoints/hyrox_base_personalisation/DECISIONS.md)

@@ -1,5 +1,20 @@
 # Cohort Platform repository guidance
 
+> **Controlling founder release reset — 2026-10-26:**
+> [M0–M10 plan](docs/planning/Founder_Release_Plan_M0_M10_v1.md) now controls product priorities;
+> [M0 audit](docs/checkpoints/m0_alpha_baseline/HANDOFF.md) completes baseline inspection/allocation only.
+> Gate A is the tiny friends-and-family alpha, including real Hybrid10K/father programmes,
+> normal onboarding/marketplace/private-free access and Garmin delivery **plus** activity return.
+> Existing technical authority contracts remain binding. Older HYROX Base-first, provider-later,
+> cohort-size and M9/M10 roadmap sequencing is historical where reconciled in the new plan.
+> Reuse retained private v1/v2 publication and Programme Athlete execution; the pending HYROX
+> approval-producer schema/provisioning is deferred off that path, not authorised or discarded.
+> Single next build recommendation: **M1.2 normal onboarding/private-free acquisition**;
+> it is **PROPOSED_NOT_AUTHORISED**. No next implementation, content invention, hosted mutation,
+> account action, athlete write, device distribution or computer/browser control follows from M0.
+> Preserve older files/indices/HEADs/.temp; no managed lifecycle cleanup or global setting change.
+
+
 > **Approval producer/outbox — local proof, 2026-10-26:**
 > [Producer package](docs/checkpoints/hyrox_approval_producer/HANDOFF.md) pins implementation `3d1218ef2fac7c08b683608f3cbfc9f3152f9460`.
 > Hosted read-only refresh: Field Manual ACTIVE_HEALTHY / ledger130, no genuine approval

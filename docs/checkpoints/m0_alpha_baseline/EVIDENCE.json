@@ -1,0 +1,1546 @@
+{
+  "audited_main": "7736d60cc4ea87de548860b8a701918cf367bf03",
+  "external_public_docs": [
+    {
+      "finding": "Current page separates Personal activity-data access from Business Starter/Enterprise including Training and Activity. Cohort account/access unverified.",
+      "read_date": "2026-10-26",
+      "url": "https://developer.garmin.com/gc-developer-program/overview/"
+    },
+    {
+      "finding": "Public TestFlight beta distribution overview; Cohort enrolment/account/build access unverified.",
+      "read_date": "2026-10-26",
+      "url": "https://developer.apple.com/testflight/"
+    },
+    {
+      "finding": "External tester metadata/review path; no invitations or account actions.",
+      "read_date": "2026-10-26",
+      "url": "https://developer.apple.com/help/app-store-connect/test-a-beta-version/invite-external-testers"
+    }
+  ],
+  "format": "cohort.m0-alpha-baseline.evidence.v1",
+  "hosted_evidence": "Dated immutable main receipts and separately identified U records; no fresh application-hosted query in M0.",
+  "pending_producer_manifest_hash_verified": true,
+  "recorded_local_date": "2026-10-26",
+  "scope": "Read-only code/config/test inspection plus planning documentation only; historical passes attributed, not rerun.",
+  "source_entries": [
+    {
+      "anchors": [
+        {
+          "line": 125,
+          "text": "publish_private_exact_programme_version_retained_v1"
+        }
+      ],
+      "path": "tool/programmes/bin/publish_private_exact_version.dart",
+      "points": [
+        "M1.1"
+      ],
+      "sha256": "63163451b2e007ea4d3f9ba047753717a289c53820b3895d14d2e46e4c9ade6f",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 108,
+          "text": "'timer_config': null"
+        }
+      ],
+      "path": "lib/features/private_programme/private_protocol_graph_builder.dart",
+      "points": [
+        "M1.1"
+      ],
+      "sha256": "0c31fdc4910386867bcd02946fd62f4bd104cd18ad7272dac276b8cc0c1e03b7",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 10,
+          "text": "class ReviewedProtocolGraphArtifact"
+        }
+      ],
+      "path": "lib/features/private_programme/reviewed_protocol_graph_artifact.dart",
+      "points": [
+        "M1.1"
+      ],
+      "sha256": "8f8cda007e9da1933e12f6258973118e159e344fe795f75ecb124ec9a0857b68",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 109,
+          "text": "CREATE FUNCTION public.publish_private_exact_programme_version_retained_v1"
+        }
+      ],
+      "path": "supabase/migrations/20261005140000_tracking_publication_artifact_retention.sql",
+      "points": [
+        "M1.1"
+      ],
+      "sha256": "b0380ba02c0e778b505019a7dc55e62a7d2c7a7642c4c9b454d5b595a62c4cdb",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 206,
+          "text": "CREATE FUNCTION public.publish_private_exact_programme_version_v3"
+        }
+      ],
+      "path": "supabase/migrations/20261023121000_v3_authoritative_publication.sql",
+      "points": [
+        "M1.1"
+      ],
+      "sha256": "3bbb2534706a633e7584a76f076c30e5a815ecf84f55ef85a51c6ebb40b33ef1",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 7,
+          "text": "Future<void> main"
+        }
+      ],
+      "path": "lib/main.dart",
+      "points": [
+        "M1.2"
+      ],
+      "sha256": "3cf4809c775b2a844eaf3a39c550c896cd3703365943d05998afd8cf02683564",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 60,
+          "text": "AuthGate"
+        }
+      ],
+      "path": "lib/app/app.dart",
+      "points": [
+        "M1.2"
+      ],
+      "sha256": "23ff6795c683714fe203111ca266b2fce4a0c71f117d06b580c7cd95b2ed8d6f",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 82,
+          "text": "ProductionAuthPhase.profileRequired"
+        }
+      ],
+      "path": "lib/features/auth/screens/auth_gate.dart",
+      "points": [
+        "M1.2"
+      ],
+      "sha256": "4223eb749b62b6a6a0d2c3c5b651d240d786c262c70e1f7616dfdfbf4d6d1b3e",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 14,
+          "text": "class SignUpScreen"
+        }
+      ],
+      "path": "lib/features/auth/screens/sign_up_screen.dart",
+      "points": [
+        "M1.2"
+      ],
+      "sha256": "e88bf216a2152310331b876b0c4507fa82b0f9a76d601c6855f4b0511aabd95f",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 14,
+          "text": "class ProfileSetupScreen"
+        }
+      ],
+      "path": "lib/features/auth/screens/profile_setup_screen.dart",
+      "points": [
+        "M1.2"
+      ],
+      "sha256": "15a1c200851efaefa0387829122cf2e38bc86ae515297673c2bc917101a0827d",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 190,
+          "text": "Future<void> signOut"
+        }
+      ],
+      "path": "lib/features/auth/controllers/auth_controller.dart",
+      "points": [
+        "M1.2"
+      ],
+      "sha256": "91c87b0c11f3e1a0b7d8ee8b93c04ab766eb2fc2d292b83de399a6abc04bf316",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 65,
+          "text": "_generateAndFinish"
+        }
+      ],
+      "path": "lib/features/athlete_profile/onboarding/athlete_onboarding_flow.dart",
+      "points": [
+        "M1.2"
+      ],
+      "sha256": "8d545a610a71b751a8224332f6a2fabc7a78900276f31516f7327b9bc16c44ee",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 14,
+          "text": "AuthGate never uses local onboarding"
+        }
+      ],
+      "path": "test/auth/production_entry_scan_test.dart",
+      "points": [
+        "M1.2"
+      ],
+      "sha256": "7a27dd7891aaaf156029e381adef66b1f644b899b8a031f63b09be3ce3580056",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 172,
+          "text": "label: 'PREVIEW ATHLETE APP'"
+        }
+      ],
+      "path": "lib/features/app_shell/founder_workspace_shell.dart",
+      "points": [
+        "M1.2"
+      ],
+      "sha256": "6fc9855a6c11ed06e6eb0fa154f585fc468d963ae5a71d7a5b5baa065b959fac",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 24,
+          "text": "ProgrammeLibraryScope.cohortGlobal"
+        }
+      ],
+      "path": "lib/features/programme/services/athlete_programme_switch_catalog_service.dart",
+      "points": [
+        "M1.2"
+      ],
+      "sha256": "9ffd0ce5e658ed5076113bddc15a8116b455e84d359765fe7b3b115a55638553",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 408,
+          "text": "AthletePrivateProgrammesSection"
+        }
+      ],
+      "path": "lib/features/programme/screens/athlete_programme_screen.dart",
+      "points": [
+        "M1.2"
+      ],
+      "sha256": "8c0913e0b59c65192de96b1cd9020639e2ea4f26f5c62475382e306c298f9cc3",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 45,
+          "text": "Future<void> _reload"
+        }
+      ],
+      "path": "lib/features/programme/widgets/athlete_private_programmes_section.dart",
+      "points": [
+        "M1.2"
+      ],
+      "sha256": "ef641714071baba61d22429db6e450de44ef236653048a496c577ea8a2f04458",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 12,
+          "text": "list_my_private_programme_versions"
+        }
+      ],
+      "path": "lib/features/programme/services/private_programme_discovery_store.dart",
+      "points": [
+        "M1.2"
+      ],
+      "sha256": "90f06e6a04fc4a1e9df60536b7fed45ed70e4cec9146c06ebe16f278b87142e6",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 17,
+          "text": "enrol_athlete_in_private_programme_version"
+        }
+      ],
+      "path": "lib/features/programme/services/private_programme_enrolment_store.dart",
+      "points": [
+        "M1.2"
+      ],
+      "sha256": "878964909f71c86922df9cfacbf457036735f810f3fbe3a717e23c7e3ad4b508",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 7,
+          "text": "cohort_athlete_may_use_non_commercial_catalogue_enrolment"
+        }
+      ],
+      "path": "supabase/migrations/20260801120000_athlete_catalogue_enrolment.sql",
+      "points": [
+        "M1.2"
+      ],
+      "sha256": "9426294573bc430b4a9fe744494c03fd9397b106fe10e58d3921af9ece899e85",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 17,
+          "text": "CREATE OR REPLACE FUNCTION public.cohort_private_programme_visible_to_caller"
+        }
+      ],
+      "path": "supabase/migrations/20260926140000_private_exact_version_publication.sql",
+      "points": [
+        "M1.2"
+      ],
+      "sha256": "c2bd9f2dd4226fc0d66bdde1b0d35b43eab419f709e5a9ec5235cace7943ae44",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 15,
+          "text": "class ProgrammePrescriptionReviewScreen"
+        }
+      ],
+      "path": "lib/features/programme/screens/programme_prescription_review_screen.dart",
+      "points": [
+        "M1.2"
+      ],
+      "sha256": "2232681141d6ca628d5dee835df9a48451c31ba74fbb63e9d30ab7ccd995459e",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 72,
+          "text": "B3 device validation benchmark"
+        }
+      ],
+      "path": "lib/features/internal_tools/internal_tools_screen.dart",
+      "points": [
+        "M1.2"
+      ],
+      "sha256": "357acd2ea09005e301ab79b368b178525313821c72824193629af8967d620d3b",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 8,
+          "text": "class AthletePersistence"
+        }
+      ],
+      "path": "lib/core/persistence/athlete_persistence.dart",
+      "points": [
+        "M1.3"
+      ],
+      "sha256": "34dd6ad3678d2d147d77c87ccfb63e9a63b07468664a8cf4086bb090f43b27a7",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 5,
+          "text": "class ProductionRestoreEnvelope"
+        }
+      ],
+      "path": "lib/features/session/models/production_restore_envelope.dart",
+      "points": [
+        "M1.3"
+      ],
+      "sha256": "d1c59a5eccce139bb4ccf19fbc5c8c198047cebcfc9834fee5653d3ad58dc9da",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 85,
+          "text": "class ProductionRestoreResolver"
+        }
+      ],
+      "path": "lib/features/session/services/production_restore_resolver.dart",
+      "points": [
+        "M1.3"
+      ],
+      "sha256": "919beb653e3ff292b58e218b637a0d8dce175cac0d7616a696892f5d1d94f789",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 27,
+          "text": "void main"
+        }
+      ],
+      "path": "test/session/production_format_restore_matrix_test.dart",
+      "points": [
+        "M1.3"
+      ],
+      "sha256": "8e2f05d05fec9ddb9ea53f52e9f87bea038833e1383dea75602389a237421157",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 122,
+          "text": "_loadPreviousStrength"
+        },
+        {
+          "line": 409,
+          "text": "Future<void> _openExercise"
+        }
+      ],
+      "path": "lib/features/session/screens/active_session_screen.dart",
+      "points": [
+        "M2.1",
+        "M4.3"
+      ],
+      "sha256": "1d38c6954dbd23417726eb431f9463e242b848c42142cfdc2989b75c70d51114",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 1340,
+          "text": "StrengthPrescriptionFormatter.formatRest"
+        }
+      ],
+      "path": "lib/features/performance/widgets/performance_capture_widgets.dart",
+      "points": [
+        "M2.1"
+      ],
+      "sha256": "7fa5ab36eec613b753474db1adecb0f16e6a810eb96f47588aabb18d68803651",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 65,
+          "text": "class PreviousStrengthPerformanceService"
+        }
+      ],
+      "path": "lib/features/performance/services/previous_strength_performance_service.dart",
+      "points": [
+        "M2.1"
+      ],
+      "sha256": "a46b9c5a2bdbe842f16e7c258361d69b6b37e75c2138c86ecc533983d63e1b85",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 57,
+          "text": "class PreviousStrengthPerformanceSelector"
+        }
+      ],
+      "path": "lib/features/performance/services/previous_strength_performance_selector.dart",
+      "points": [
+        "M2.1"
+      ],
+      "sha256": "8634f31b2751d21c3aa84739139e6f06ec2458128934ce66ae14d6978172d7b5",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 6,
+          "text": "class StrengthRestTimerController"
+        }
+      ],
+      "path": "lib/features/session/services/strength_rest_timer_controller.dart",
+      "points": [
+        "M2.1"
+      ],
+      "sha256": "59e1fa9c5decd9483186c759649dc7ff313a7bfc926d834dad35e4cc1ad2823a",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 149,
+          "text": "StrengthRestTimerController"
+        }
+      ],
+      "path": "lib/features/session/widgets/strength_session_view.dart",
+      "points": [
+        "M2.1"
+      ],
+      "sha256": "d38220378f4d3e25ada8ecea043267ea58bb1226df974bd0d03ebb7323df0d15",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 16,
+          "text": "class AthleteBlockCard"
+        }
+      ],
+      "path": "lib/features/session/widgets/athlete/athlete_block_card.dart",
+      "points": [
+        "M2.2"
+      ],
+      "sha256": "aef578a4fd27434be9c22a3cfbf328209fb272ed2e31b149f660525da1ded703",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 7,
+          "text": "enum BlockTimerPhase"
+        }
+      ],
+      "path": "lib/features/session/services/block_timer_controller.dart",
+      "points": [
+        "M2.2"
+      ],
+      "sha256": "7e045571736c31b1df1389ac388adec0158d02af1483be343bfc5266f8f2adbd",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 15,
+          "text": "class BlockTimerScreen"
+        }
+      ],
+      "path": "lib/features/session/screens/block_timer_screen.dart",
+      "points": [
+        "M2.2"
+      ],
+      "sha256": "feaf900109454575e7c7ef4e21ea954f1337a534f200052f29107fea73fd1c42",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 10,
+          "text": "class CircuitCaptureContract"
+        }
+      ],
+      "path": "lib/features/performance/services/circuit_capture_contract.dart",
+      "points": [
+        "M2.2"
+      ],
+      "sha256": "fa59095913aabdfff8c6613fe9a3c10b8ce8af888965e185d3724b7b23098e58",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 9,
+          "text": "class CircuitCaptureEditor"
+        }
+      ],
+      "path": "lib/features/performance/widgets/circuit_capture_editor.dart",
+      "points": [
+        "M2.2"
+      ],
+      "sha256": "c7377842f2985d78b24236e35b05d7f84139ccf8ca76b9f9efa75c4125bdc591",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 13,
+          "text": "class EmomResultCapture"
+        }
+      ],
+      "path": "lib/features/performance/widgets/emom_result_capture.dart",
+      "points": [
+        "M2.2"
+      ],
+      "sha256": "c5841bcf29e3c1eb5a7fd339f9dd14a4d679011cb423d744930323897ad53b73",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 18,
+          "text": "class FixedWorkRoundsCapture"
+        }
+      ],
+      "path": "lib/features/performance/widgets/fixed_work_rounds_capture.dart",
+      "points": [
+        "M2.2"
+      ],
+      "sha256": "6a8ca607fc9e8aca618392504697ab00a129d95991a5cd53a11d7c69df50f386",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 7,
+          "text": "enum RunningDurationKind"
+        }
+      ],
+      "path": "lib/domain/running_workout/running_workout_model.dart",
+      "points": [
+        "M2.3"
+      ],
+      "sha256": "6d5bb6cb54d1782bc394f05f4fcdff1fd4ba524501280a3f9d9f3466557174ae",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 256,
+          "text": "'unsupported_duration'"
+        }
+      ],
+      "path": "lib/features/session/models/structured_running_execution.dart",
+      "points": [
+        "M2.3"
+      ],
+      "sha256": "debfe31525ba46fae6737f87793c9fc7e55f3fc9ecb4b3b8f286fa6f6929a6c5",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 9,
+          "text": "class StructuredRunningController"
+        }
+      ],
+      "path": "lib/features/session/services/structured_running_controller.dart",
+      "points": [
+        "M2.3"
+      ],
+      "sha256": "605e2a0ed8f3ea8ea348f0b054a98b06e5cfeea5b8d5ab0882f1de57d6c5a64b",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 87,
+          "text": "class ProgrammeSessionExecutionLauncher"
+        }
+      ],
+      "path": "lib/features/session/services/programme_session_execution_launcher.dart",
+      "points": [
+        "M2.3"
+      ],
+      "sha256": "0ae5e238395bf1507d9983b4da845b371a0906c56008f1328a8598f63fb548b9",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 33,
+          "text": "void main"
+        }
+      ],
+      "path": "test/performance/structured_running_targets_actuals_test.dart",
+      "points": [
+        "M2.3"
+      ],
+      "sha256": "50e66bda92a59c74b3767bdde9b424449ea91b14ef248823743d6387640b79b0",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 17,
+          "text": "create_or_resume_fixed_programme_occurrence_session"
+        }
+      ],
+      "path": "lib/features/session/services/programme_training_session_start_supabase_store.dart",
+      "points": [
+        "M2.4"
+      ],
+      "sha256": "085bd411b5fdfbcfa423df4bcd9dbbbd68e8fbf4fc1c6d8b9fbc85cd6482aeaa",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 106,
+          "text": "_completeProgrammeBacked"
+        }
+      ],
+      "path": "lib/features/performance/services/performance_record_save_coordinator.dart",
+      "points": [
+        "M2.4"
+      ],
+      "sha256": "b3c88debfd8fceea47be88dbda566f47e9202ac37862c2f076d1cc35077522eb",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 8,
+          "text": "complete_programme_session_and_advance"
+        }
+      ],
+      "path": "lib/features/programme/services/athlete_programme_completion_supabase_store.dart",
+      "points": [
+        "M2.4"
+      ],
+      "sha256": "c0833a906e5ce6b208b94d7d70abfad7e775984ebf626e6c4c2925e87129a3d9",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 135,
+          "text": "correct_completed_performance_record"
+        }
+      ],
+      "path": "lib/features/performance/repositories/supabase_performance_record_store.dart",
+      "points": [
+        "M2.4"
+      ],
+      "sha256": "0967351b57273f7e8e05b89fad15a4d36c58a0dacab8d00a1bca04a148515791",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 21,
+          "text": "class TrainingHistoryScreen"
+        }
+      ],
+      "path": "lib/features/performance/screens/training_history_screen.dart",
+      "points": [
+        "M2.4"
+      ],
+      "sha256": "f26add23ad5611038cca2caeb06f339759355b98eb3c3e93c2135829f76952b4",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 10,
+          "text": "class TrainingHistoryDetailScreen"
+        }
+      ],
+      "path": "lib/features/performance/screens/training_history_detail_screen.dart",
+      "points": [
+        "M2.4"
+      ],
+      "sha256": "eb56255c1a806a259120d8ef379f9c8a3cde27b644c8ae9a46072c338b5a0f24",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 25,
+          "text": "void main"
+        }
+      ],
+      "path": "test/performance/completed_performance_correction_test.dart",
+      "points": [
+        "M2.4"
+      ],
+      "sha256": "c7b4ade955e193067741c6334ad9d9997bc0345a634434d5903c7472226a8e10",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 108,
+          "text": "subtitle: 'Coming later'"
+        }
+      ],
+      "path": "lib/features/app_shell/screens/athlete_profile_screen.dart",
+      "points": [
+        "M2.5"
+      ],
+      "sha256": "7e073b561adbe50bd9598a6119f8bf186d82586afd840e3a58e4fd8bda179e26",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 6,
+          "text": "importedGarmin"
+        }
+      ],
+      "path": "lib/models/interval_data_source.dart",
+      "points": [
+        "M2.5"
+      ],
+      "sha256": "6449ba9e584a3ef38724735fd1c5b96463399a8c6345cfc74ce36da61b80a232",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 6,
+          "text": "importedGarmin"
+        }
+      ],
+      "path": "lib/models/circuit_data_source.dart",
+      "points": [
+        "M2.5"
+      ],
+      "sha256": "81ff651cb2a331ab01d4642bd66014d9927c0593daadac30cbde96c6b2366a59",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 308,
+          "text": "### Garmin-specific"
+        }
+      ],
+      "path": "docs/architecture/Running_Workout_and_Device_Interop_v1.md",
+      "points": [
+        "M2.5"
+      ],
+      "sha256": "070dd959a877e009ec1bd995f1c5bdc5d6ab1890dc731c7e3d03eabb82cf6809",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 30,
+          "text": "dependencies:"
+        }
+      ],
+      "path": "pubspec.yaml",
+      "points": [
+        "M2.5"
+      ],
+      "sha256": "82acab4559f81c1054fc781ea0d5ddc9958a169860e31c1d0c22a841a5db7415",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 75,
+          "text": "ProgrammeAdaptFlow("
+        }
+      ],
+      "path": "lib/features/home/widgets/athlete_programme_today_section.dart",
+      "points": [
+        "M3.1"
+      ],
+      "sha256": "045705b299715975b37f9edb28e4416cf8e5e47811f53a160a7ef518cc82e224",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 16,
+          "text": "class ProgrammeAdaptFlow"
+        }
+      ],
+      "path": "lib/features/home/services/programme_adapt_flow.dart",
+      "points": [
+        "M3.1"
+      ],
+      "sha256": "a8407a6414bdf282bdbdcdce34a00eb1f49bdbe5f81bf3467592e25829ae723c",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 44,
+          "text": "loadAdaptationPermissions ??"
+        }
+      ],
+      "path": "lib/application/adaptation/programme_adaptation_proposal_service.dart",
+      "points": [
+        "M3.1"
+      ],
+      "sha256": "19efafe897822ddcb4f9a07dcb8719a704776a3299e4466a52ced0d14761bad3",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 73,
+          "text": "loadAdaptationPermissions ??"
+        }
+      ],
+      "path": "lib/application/adaptation/programme_adaptation_acceptance_service.dart",
+      "points": [
+        "M3.1"
+      ],
+      "sha256": "95139271ea07703d64040946e8704d82b0fddbcdb43dc8d29aeb8089bec04d46",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 61,
+          "text": "allowEquipmentSubstitution"
+        }
+      ],
+      "path": "lib/application/adaptation/plan_package_session_adaptation_adapter.dart",
+      "points": [
+        "M3.1"
+      ],
+      "sha256": "e257965eb9235a2914df2bd34498832cd8066b208333216e87c14f38a6b97463",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 69,
+          "text": "if (permissions.isEmpty)"
+        }
+      ],
+      "path": "lib/application/adaptation/programme_adaptation_permission_gate.dart",
+      "points": [
+        "M3.1"
+      ],
+      "sha256": "d473a5ccbe84f17555ea1088c736fdd99ab1a58d28cad34abcd10d28a7d5c428",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 432,
+          "text": "loadAdaptationPermissions:"
+        }
+      ],
+      "path": "lib/staging_tooling/journey_d/journey_d_execute_workflow.dart",
+      "points": [
+        "M3.1"
+      ],
+      "sha256": "8633beceb3d807ae71290a0014565e860cdb2a6de135438a58744ed39777ca02",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 33,
+          "text": "void main"
+        }
+      ],
+      "path": "test/application/adaptation/equipment_adaptation_b4d19_test.dart",
+      "points": [
+        "M3.1"
+      ],
+      "sha256": "0d28f8ca604c83bf14c254a52a811d5f5f2f5d9f61cb993d45c95f9851e7f5da",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 251,
+          "text": "class _TimeStep"
+        }
+      ],
+      "path": "lib/core/widgets/adaptation_bottom_sheet.dart",
+      "points": [
+        "M3.2"
+      ],
+      "sha256": "20263956acb7858e8918392598e33e0e073c3fcd94fa36ecde53e3e4a860acc2",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 41,
+          "text": "class SessionAdaptationPlanner"
+        },
+        {
+          "line": 73,
+          "text": "_buildEquipmentConstrainedPlan"
+        }
+      ],
+      "path": "lib/domain/adaptation/planning/session_adaptation_planner.dart",
+      "points": [
+        "M3.2",
+        "M3.4"
+      ],
+      "sha256": "56340aadfcaa65f785a6b672331e6d643c5a72f272b340454cede79882c62ad0",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 49,
+          "text": "class ProgrammeAdaptationReversionService"
+        }
+      ],
+      "path": "lib/application/adaptation/programme_adaptation_reversion_service.dart",
+      "points": [
+        "M3.2"
+      ],
+      "sha256": "d81060509e0357501dd6255ed803be7a80db7f0bf0922e4b0f927b9a88eb583d",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 22,
+          "text": "void main"
+        }
+      ],
+      "path": "test/application/adaptation/programme_adaptation_acceptance_service_test.dart",
+      "points": [
+        "M3.2"
+      ],
+      "sha256": "b5881f51c9b8487107b0fcfcd955c4260312fc141f045ea4ebc27edc210cf1bf",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 455,
+          "text": "constraints.recoveryStateLabel"
+        }
+      ],
+      "path": "lib/domain/adaptation/evaluation/session_adaptation_read_only_evaluator.dart",
+      "points": [
+        "M3.3"
+      ],
+      "sha256": "81ea78e75e9a34f5d67de1bc1987c70630e5d774f715d61ca8220f6b1028a5e7",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 135,
+          "text": "ProgrammeAdaptationNoSafeReason.unsupportedConstraintFamily"
+        }
+      ],
+      "path": "lib/application/adaptation/programme_adaptation_proposal_mapper.dart",
+      "points": [
+        "M3.3"
+      ],
+      "sha256": "b35fbb3d3b7c4079f5f1f9be4de5547468b15541fa795113934eef90b9cee7e2",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 111,
+          "text": "environment and recovery reasons return typed no-safe"
+        }
+      ],
+      "path": "test/application/adaptation/programme_adaptation_proposal_service_test.dart",
+      "points": [
+        "M3.3"
+      ],
+      "sha256": "4438cdee431e59dad2f61a84ba0ba35140f570415010f005381b5d17f4e647a0",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 47,
+          "text": "AdaptationActionType.swapExercise"
+        }
+      ],
+      "path": "lib/application/adaptation/programme_adaptation_plan_applier.dart",
+      "points": [
+        "M3.4"
+      ],
+      "sha256": "3021aff31399e4e587b3bd550eb5320c36111c776d4da13f7a18ca9cce06f3b2",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 15,
+          "text": "class ProgrammeAdaptationProposalSheet"
+        }
+      ],
+      "path": "lib/core/widgets/programme_adaptation_proposal_sheet.dart",
+      "points": [
+        "M3.4"
+      ],
+      "sha256": "79f1793a172a86b694133ddd4fe6bdc9c84ac25006370294baed2d87ef8f32a5",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 21,
+          "text": "## Production"
+        }
+      ],
+      "path": "tool/release/README.md",
+      "points": [
+        "M4.1"
+      ],
+      "sha256": "ba0e9fc76a8093950b9ff0fa9197869a93d863a2a5caf53c0d3ce7be5f94cc91",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 54,
+          "text": "internal tools are allowed only in development builds"
+        }
+      ],
+      "path": "tool/release/build_app.sh",
+      "points": [
+        "M4.1"
+      ],
+      "sha256": "ae0a830c8e1b7e274d1a39f956f0fd859eaeb22640214798d49283b33d88d1f0",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 35,
+          "text": "class ReleaseConfigurationPolicy"
+        }
+      ],
+      "path": "lib/core/config/release_configuration_policy.dart",
+      "points": [
+        "M4.1"
+      ],
+      "sha256": "4a439199ca4da0523ce4e65c67948600e825a6fa159614d6a59291bd1d2dd3ae",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 388,
+          "text": "PRODUCT_BUNDLE_IDENTIFIER = uk.cohortperformance.cohort"
+        }
+      ],
+      "path": "ios/Runner.xcodeproj/project.pbxproj",
+      "points": [
+        "M4.1"
+      ],
+      "sha256": "4efc6b571217a2d2ec8b952c3131ce37b77c29e309bb1c4aee34d76f9a9159c5",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 13,
+          "text": "CFBundleIdentifier"
+        }
+      ],
+      "path": "ios/Runner/Info.plist",
+      "points": [
+        "M4.1"
+      ],
+      "sha256": "b5cb51d475ec04bc629d2186889da1200c72b7c1e3c5b1d5ecd87ad2a6a6a394",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 32,
+          "text": "signingConfig = signingConfigs.getByName(\"debug\")"
+        }
+      ],
+      "path": "android/app/build.gradle.kts",
+      "points": [
+        "M4.1"
+      ],
+      "sha256": "8442f0707fd60ad05522122f54931b124f21aa6a43236c5ed24ce4e1dcab0e82",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 2,
+          "text": "<application"
+        }
+      ],
+      "path": "android/app/src/main/AndroidManifest.xml",
+      "points": [
+        "M4.1"
+      ],
+      "sha256": "1cda075af2c33f0ba0202ca08cd10dbd1fddc9475e4f02d52548df648cb1810e",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 6,
+          "text": "android.permission.INTERNET"
+        }
+      ],
+      "path": "android/app/src/debug/AndroidManifest.xml",
+      "points": [
+        "M4.1"
+      ],
+      "sha256": "30b0832ed8b92dfbd6ae2abfa939ccf26333d37600056b1572bd4a397a18a74b",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 27,
+          "text": "## Delivered locally"
+        }
+      ],
+      "path": "docs/checkpoints/STRUCTURED_RUNNING_B3_DEVICE_VALIDATION_HANDOFF.md",
+      "points": [
+        "M4.2"
+      ],
+      "sha256": "d2e6ab054c9a2a12492becd2abae12fbe1b9774bc590e027999ee7288509b500",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 74,
+          "text": "device"
+        }
+      ],
+      "path": "docs/checkpoints/hyrox_athlete_runner/HANDOFF.md",
+      "points": [
+        "M4.2"
+      ],
+      "sha256": "caffffca68e0e917f523c0ebf8e4c144af28412b39eb78ad42ead7bb54e6a40b",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 84,
+          "text": "Future<Map<String, Exercise>> _loadExercises"
+        }
+      ],
+      "path": "lib/features/session/services/session_execution_loader.dart",
+      "points": [
+        "M4.3"
+      ],
+      "sha256": "b2d8ba81212a3b7a24bea1a48a8c281b8bbf0ed93e796a33d7da9528edaa1c5e",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 88,
+          "text": "title: 'Coaching Cues'"
+        }
+      ],
+      "path": "lib/features/exercises/exercise_detail/exercise_detail_screen.dart",
+      "points": [
+        "M4.3"
+      ],
+      "sha256": "dbfc2b7e402d2e9a105ddc714cd68efca37d153512c8ad29462b0603800df75d",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 4,
+          "text": "no consumer or hosted"
+        }
+      ],
+      "path": "docs/architecture/Phase_3_2D_Approved_Movement_Knowledge_Pilot_v1.md",
+      "points": [
+        "M4.3"
+      ],
+      "sha256": "848b54be7431c0990c251a0dcf4a30645241e13d4c66957444ce13e179d34fd4",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 78,
+          "text": "label: 'Report a problem'"
+        }
+      ],
+      "path": "lib/features/beta_support/beta_support_screen.dart",
+      "points": [
+        "M4.4"
+      ],
+      "sha256": "f09f185a7324b004bfadf0487bb288b9fb0583aaddfd21f90e86ebb4926f001a",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 10,
+          "text": "class BetaDiagnosticSummary"
+        }
+      ],
+      "path": "lib/features/beta_support/beta_diagnostic_summary.dart",
+      "points": [
+        "M4.4"
+      ],
+      "sha256": "0978f18e1cb7d3c64a7ee38915514865140ed922cbb4b48cd31b804ac60c7527",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 28,
+          "text": "Effective security"
+        }
+      ],
+      "path": "docs/checkpoints/hyrox_schema_deployment_closeout/HANDOFF.md",
+      "points": [
+        "M4.5"
+      ],
+      "sha256": "250c6d6c881d6a37dace121a65cc6dde0aeeba71fdb4e209c6f6e1cfa63d5b07",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 22,
+          "text": "ACTIVE_HEALTHY"
+        }
+      ],
+      "path": "docs/checkpoints/hyrox_approval_producer/HANDOFF.md",
+      "points": [
+        "M4.5"
+      ],
+      "sha256": "9ca84cefc8edefe9e863eaefaba9e06685f68717fd9f4d6c50e0d7f408e755aa",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 10,
+          "text": "training_session"
+        }
+      ],
+      "path": "supabase/migrations/20261007130000_completion_ownership_and_parent_guard.sql",
+      "points": [
+        "M4.5"
+      ],
+      "sha256": "d0a6a4b16a60376c3d7d97420b9e5e423efaf12d6d636b16064bfa7143fcbbe5",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 70,
+          "text": "Programme progression remains"
+        }
+      ],
+      "path": "docs/architecture/Canonical_Programme_Architecture_Freeze_v1.md",
+      "points": [
+        "progression"
+      ],
+      "sha256": "9679d1730fa7e8f956a05d530661f9beac3363ab9bd956f73c8a4b2e85c88936",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 51,
+          "text": "## Observational boundary"
+        }
+      ],
+      "path": "docs/architecture/Progression_Mechanics_v1.md",
+      "points": [
+        "progression"
+      ],
+      "sha256": "3dc8c8c5362ea61b3cd487b4d21f41f6b7d8f35258fc4899bef3e57c0377e95f",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 1,
+          "text": "enum ProgressionOutcome"
+        }
+      ],
+      "path": "lib/features/performance/progression/progression_comparison.dart",
+      "points": [
+        "progression"
+      ],
+      "sha256": "cbcf2485424b2821624840ebca3f1a7a0235f0700754f42d0cb7d332d6dc3da1",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 157,
+          "text": "StrengthProgressionComparison"
+        }
+      ],
+      "path": "lib/features/performance/services/strength_result_comparison.dart",
+      "points": [
+        "progression"
+      ],
+      "sha256": "8caf8ba1274d62b1b02c5e484a128f7433f954e2ca5cd2689c8ea3bcfc90184c",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 44,
+          "text": "class AthleteProgressSummaryBuilder"
+        }
+      ],
+      "path": "lib/features/progress/services/athlete_progress_summary_builder.dart",
+      "points": [
+        "progression"
+      ],
+      "sha256": "ff6206779985608ad0b141f13311b6103f6cee78de34c981d3f0b04f0ed108da",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 161,
+          "text": "S1_schema_only"
+        }
+      ],
+      "path": "docs/checkpoints/hyrox_approval_producer/PROVISIONING.json",
+      "points": [
+        "producer_disposition"
+      ],
+      "sha256": "dbb561c47bb47b64d7a548d74f37b9aadc95f9986d4ee51e0dd7ecf4c209837b",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 3,
+          "text": "exact_pending"
+        }
+      ],
+      "path": "docs/checkpoints/hyrox_approval_producer/MIGRATIONS.json",
+      "points": [
+        "producer_disposition"
+      ],
+      "sha256": "94aa816420050fcbb5dcc0cb5ea6bb525aab5f1c9a99e658daf3de53865761e6",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 8,
+          "text": "CREATE"
+        }
+      ],
+      "path": "supabase/migrations/20261026120000_durable_publication_approval_events.sql",
+      "points": [
+        "producer_disposition"
+      ],
+      "sha256": "526881b82d7ab20e3e246db4ea808970300ef7570fdd03dd8d43a2b753b9f588",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 144,
+          "text": "## Verification evidence"
+        }
+      ],
+      "path": "docs/checkpoints/COMPLETE_ATHLETE_EXPERIENCE_CLOSEOUT.md",
+      "points": [
+        "accepted_historical_evidence"
+      ],
+      "sha256": "7a08d4f16ca3553499050ac865553fa14ffc5df82f8ca5a4200cdde6cde25c54",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 1,
+          "text": "document start"
+        }
+      ],
+      "path": "docs/checkpoints/BALI_STRENGTH_LOAD_CAPTURE_HANDOFF.md",
+      "points": [
+        "accepted_historical_evidence"
+      ],
+      "sha256": "e21ec133c9878afe173566f0ae15fc1fbe268e3d39304232eb8a9bf2caa757b3",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 1,
+          "text": "document start"
+        }
+      ],
+      "path": "docs/checkpoints/RUNNING_PACE_FOUNDATION_B2_HANDOFF.md",
+      "points": [
+        "accepted_historical_evidence"
+      ],
+      "sha256": "5f3a6def0b44071be0218e378ea086f65941fd4d8bdffe1d52fe67e5048a95b2",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 1,
+          "text": "document start"
+        }
+      ],
+      "path": "docs/checkpoints/STRUCTURED_RUNNING_B3_SLICE_3_HANDOFF.md",
+      "points": [
+        "accepted_historical_evidence"
+      ],
+      "sha256": "fa0547b16f28d617599b3f84fb1ed05fc0fc9a123a18154b0723f87a91cd311a",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 1,
+          "text": "document start"
+        }
+      ],
+      "path": "docs/checkpoints/hyrox_approval_producer/VERIFICATION.json",
+      "points": [
+        "accepted_historical_evidence"
+      ],
+      "sha256": "0e770defc0e47310dd3866c144dfbbaefae5f98286dbcf9e260b43a46bb1f747",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    },
+    {
+      "anchors": [
+        {
+          "line": 1,
+          "text": "document start"
+        }
+      ],
+      "path": "docs/checkpoints/hyrox_publication_operations/VERIFICATION.json",
+      "points": [
+        "accepted_historical_evidence"
+      ],
+      "sha256": "73d3611b2f06c2357ad1015535e3aad4d0620a49b07e66e53fc76655deb42a4a",
+      "source_sha": "7736d60cc4ea87de548860b8a701918cf367bf03"
+    }
+  ],
+  "supplemental_uncommitted_sources": [
+    {
+      "checkout": "preserved Developer checkout; original dirty/untracked evidence",
+      "path": "docs/checkpoints/security_remediation_readiness/DEPLOYMENT_CLOSEOUT.md",
+      "raw_content_copied": false,
+      "sha256": "6dbabf5e5da9302a6141779bd58852cab5c9f2f6cce80866d308c7c126746219",
+      "type": "U - inspected dated local operational record; not published main; no live M0 corroboration"
+    },
+    {
+      "checkout": "preserved Developer checkout; original dirty/untracked evidence",
+      "path": "docs/checkpoints/performance_tracking_device_validation/closeout/VALIDATION_CLOSEOUT_AND_NEXT_BUILD_HANDOFF.md",
+      "raw_content_copied": false,
+      "sha256": "e54f8ae33d464d51a84b591804f851307cc5eed557a02c32940081969365a79b",
+      "type": "U - inspected dated local operational record; not published main; no live M0 corroboration"
+    },
+    {
+      "checkout": "preserved Developer checkout; original dirty/untracked evidence",
+      "path": "docs/checkpoints/performance_tracking_device_validation/DEVICE_VALIDATION_CHECKPOINT.md",
+      "raw_content_copied": false,
+      "sha256": "ce8dbf1c31caf22ff5261bba5f3767b6f6d88edfb3cdeaedc43e86a86ba0eed1",
+      "type": "U - inspected dated local operational record; not published main; no live M0 corroboration"
+    }
+  ],
+  "tests_run_in_m0": [],
+  "timezone": "Asia/Makassar"
+}

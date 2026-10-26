@@ -1,5 +1,13 @@
 # Launch Programme Library v1
 
+> **Founder product reset — 2026-10-26:** The locked eight-programme catalogue and
+> alpha priorities in the [M0–M10 release plan](../planning/Founder_Release_Plan_M0_M10_v1.md)
+> supersede older family lists, HYROX Base-first ordering and infrastructure prerequisites
+> as a product sequence. Historical prescriptions/approvals and immutable technical contracts
+> remain unchanged. Commercial Base publication is not an alpha prerequisite for the
+> supported private v1/v2 path. [M0 evidence/critical path](../checkpoints/m0_alpha_baseline/HANDOFF.md).
+
+
 > **Live infrastructure continuation — 2026-10-05:** Studio Stage 1 and B1–B4
 > are complete within their recorded scopes; B4 is visually approved/integrated
 > with its bounded overlap migration recorded applied. See
