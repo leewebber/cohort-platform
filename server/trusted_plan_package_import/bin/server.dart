@@ -26,6 +26,15 @@ Future<void> main() async {
     ),
     maxYamlBytes: config.maxYamlBytes,
   );
+  final approvalStore = config.eventDeliveryCredential == null
+      ? null
+      : SupabasePublicationApprovalStore(
+          supabaseUrl: config.supabaseUrl,
+          anonKey: config.supabaseAnonKey,
+          writerCredential: config.approvalWriterCredential,
+          deliveryCredential: config.eventDeliveryCredential!,
+          client: rpcClient,
+        );
   final v3 = TrustedV3PublicationEndpoint(
     founderPublication: TrustedV3FounderPublication(
       auth: SupabaseAuthTokenVerifier(
@@ -42,7 +51,9 @@ Future<void> main() async {
         ),
       ),
     ),
-    events: config.publicationEventsUrl == null
+    events: config.eventSourceMode == 'internal_store'
+        ? approvalStore
+        : config.publicationEventsUrl == null
         ? null
         : HttpVerifiedPublicationEvents(
             baseUrl: config.publicationEventsUrl!,
@@ -58,7 +69,13 @@ Future<void> main() async {
             client: rpcClient,
           ),
   );
+  final approvals = DurablePublicationApprovalEndpoint(
+    founder: v3.founderPublication,
+    store: config.approvalsEnabled ? approvalStore : null,
+    deliveryHandler: config.exerciseProducerCredential == null ? null : v3.call,
+  );
   final runtime = TrustedRuntimeHandler(
+    publicationApprovalHandler: approvals.call,
     importHandler: endpoint.call,
     v3PublicationHandler: v3.call,
     logSink: stdout.writeln,

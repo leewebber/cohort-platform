@@ -12,6 +12,10 @@ class TrustedImportServerConfig {
     this.publicationEventsUrl,
     this.publicationEventsCredential,
     this.exerciseProducerCredential,
+    this.approvalsEnabled = false,
+    this.eventSourceMode = 'external',
+    this.approvalWriterCredential,
+    this.eventDeliveryCredential,
   });
 
   final Uri supabaseUrl;
@@ -24,6 +28,9 @@ class TrustedImportServerConfig {
   final Uri? publicationEventsUrl;
   final String? publicationEventsCredential;
   final String? exerciseProducerCredential;
+  final bool approvalsEnabled;
+  final String eventSourceMode;
+  final String? approvalWriterCredential, eventDeliveryCredential;
 
   factory TrustedImportServerConfig.fromEnvironment(
     Map<String, String> environment,
@@ -76,23 +83,50 @@ class TrustedImportServerConfig {
     if (flag != 'true' && flag != 'false') {
       throw StateError('Invalid v3 enablement configuration.');
     }
+    final approvalFlag = environment['PUBLICATION_APPROVAL_ENABLED'] ?? 'false';
+    final mode = environment['PUBLICATION_EVENT_SOURCE_MODE'] ?? 'external';
+    if (!{'true', 'false'}.contains(approvalFlag) ||
+        !{'external', 'internal_store'}.contains(mode) ||
+        (approvalFlag == 'true' && mode != 'internal_store')) {
+      throw StateError('Invalid approval store configuration.');
+    }
+    String? writer, delivery;
+    if (approvalFlag == 'true' ||
+        (flag == 'true' && mode == 'internal_store')) {
+      delivery = requireValue('PUBLICATION_EVENT_DELIVERY_TOKEN');
+      if (approvalFlag == 'true') {
+        writer = requireValue('PUBLICATION_APPROVAL_WRITER_TOKEN');
+      }
+      final caps = [
+        delivery,
+        ?writer,
+        if (flag == 'true') requireValue('EXERCISE_VERSION_PRODUCER_TOKEN'),
+      ];
+      if (caps.toSet().length != caps.length ||
+          caps.contains(requireValue('SUPABASE_SERVICE_ROLE_KEY')) ||
+          caps.contains(requireValue('SUPABASE_ANON_KEY'))) {
+        throw StateError('Approval capabilities must be distinct and narrow.');
+      }
+    }
     Uri? eventUrl;
     String? eventCredential;
     String? producerCredential;
     if (flag == 'true') {
-      eventUrl = Uri.tryParse(requireValue('PUBLICATION_EVENT_SOURCE_URL'));
-      if (eventUrl == null ||
-          eventUrl.host.isEmpty ||
-          eventUrl.userInfo.isNotEmpty ||
-          eventUrl.hasQuery ||
-          eventUrl.hasFragment ||
-          !eventUrl.path.endsWith('/') ||
-          !(eventUrl.scheme == 'https' ||
-              eventUrl.scheme == 'http' &&
-                  {'localhost', '127.0.0.1'}.contains(eventUrl.host))) {
-        throw StateError('Invalid trusted publication event source URL.');
+      if (mode == 'external') {
+        eventUrl = Uri.tryParse(requireValue('PUBLICATION_EVENT_SOURCE_URL'));
+        if (eventUrl == null ||
+            eventUrl.host.isEmpty ||
+            eventUrl.userInfo.isNotEmpty ||
+            eventUrl.hasQuery ||
+            eventUrl.hasFragment ||
+            !eventUrl.path.endsWith('/') ||
+            !(eventUrl.scheme == 'https' ||
+                eventUrl.scheme == 'http' &&
+                    {'localhost', '127.0.0.1'}.contains(eventUrl.host))) {
+          throw StateError('Invalid trusted publication event source URL.');
+        }
+        eventCredential = requireValue('PUBLICATION_EVENT_SOURCE_TOKEN');
       }
-      eventCredential = requireValue('PUBLICATION_EVENT_SOURCE_TOKEN');
       producerCredential = requireValue('EXERCISE_VERSION_PRODUCER_TOKEN');
       if (producerCredential == requireValue('SUPABASE_SERVICE_ROLE_KEY')) {
         throw StateError(
@@ -101,6 +135,10 @@ class TrustedImportServerConfig {
       }
     }
     return TrustedImportServerConfig(
+      approvalsEnabled: approvalFlag == 'true',
+      eventSourceMode: mode,
+      approvalWriterCredential: writer,
+      eventDeliveryCredential: delivery,
       publicationEventsUrl: eventUrl,
       publicationEventsCredential: eventCredential,
       exerciseProducerCredential: producerCredential,

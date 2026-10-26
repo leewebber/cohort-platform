@@ -9,3 +9,4 @@ export 'src/authoritative_v3_publication.dart';
 export 'src/publication_events.dart';
 export 'src/exercise_publication_producer.dart';
 export 'src/v3_publication_endpoint.dart';
+export 'src/publication_approval_store.dart';

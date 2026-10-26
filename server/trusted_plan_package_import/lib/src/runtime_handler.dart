@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:shelf/shelf.dart';
 import 'v3_publication_endpoint.dart';
+import 'publication_approval_store.dart';
 
 typedef RuntimeLogSink = void Function(String encodedEvent);
 typedef RuntimeRequestIdFactory = String Function();
@@ -11,12 +12,14 @@ class TrustedRuntimeHandler {
   factory TrustedRuntimeHandler({
     required Handler importHandler,
     Handler? v3PublicationHandler,
+    Handler? publicationApprovalHandler,
     required RuntimeLogSink logSink,
     RuntimeRequestIdFactory? requestIdFactory,
   }) {
     return TrustedRuntimeHandler._(
       importHandler,
       v3PublicationHandler,
+      publicationApprovalHandler,
       logSink,
       requestIdFactory ?? _secureRequestId,
     );
@@ -25,6 +28,7 @@ class TrustedRuntimeHandler {
   TrustedRuntimeHandler._(
     this._importHandler,
     this._v3PublicationHandler,
+    this._publicationApprovalHandler,
     this._logSink,
     this._requestIdFactory,
   );
@@ -34,6 +38,7 @@ class TrustedRuntimeHandler {
 
   final Handler _importHandler;
   final Handler? _v3PublicationHandler;
+  final Handler? _publicationApprovalHandler;
   final RuntimeLogSink _logSink;
   final RuntimeRequestIdFactory _requestIdFactory;
 
@@ -45,6 +50,9 @@ class TrustedRuntimeHandler {
     try {
       response = request.url.path == healthPath
           ? _healthResponse(request)
+          : _publicationApprovalHandler != null &&
+                DurablePublicationApprovalEndpoint.handles(request.url.path)
+          ? await _publicationApprovalHandler(request)
           : _v3PublicationHandler != null &&
                 {
                   TrustedV3PublicationEndpoint.exerciseRoute,
@@ -100,6 +108,9 @@ class TrustedRuntimeHandler {
   }
 
   String _routeLabel(String path) {
+    if (DurablePublicationApprovalEndpoint.handles(path)) {
+      return 'founder_publication_approval';
+    }
     return switch (path) {
       healthPath => 'health',
       importPath => 'founder_plan_package_import',
