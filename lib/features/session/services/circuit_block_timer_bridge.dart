@@ -4,6 +4,7 @@ import '../../../models/authored_station_target_formatter.dart';
 import '../../../models/timer_configuration.dart';
 import '../../../models/workout_format.dart';
 import '../models/session_execution_plan.dart';
+import '../models/steady_state_timer_cursor.dart';
 import 'block_timer_controller.dart';
 
 class CircuitBlockTimerBridge {
@@ -13,9 +14,34 @@ class CircuitBlockTimerBridge {
     required SessionExecutionBlock block,
     required PerformanceResultData? result,
     Map<String, String> stationLabels = const {},
+    SteadyStateTimerCursor? steadyStateTimer,
   }) {
     final configuration = block.timerConfiguration;
+    if (configuration == null && steadyStateTimer != null) {
+      throw const FormatException('Saved timer does not match this block.');
+    }
     if (configuration == null) return null;
+    if (steadyStateTimer != null) {
+      if (block.workoutFormat != WorkoutFormat.steadyState ||
+          configuration.durationSeconds == null) {
+        throw const FormatException('Saved timer does not match this block.');
+      }
+      steadyStateTimer.validate(
+        expectedBlockId: block.blockId,
+        expectedDurationSeconds: configuration.durationSeconds,
+      );
+      final finished =
+          steadyStateTimer.state == SteadyStateTimerStatus.finished;
+      return BlockTimerState(
+        format: WorkoutFormat.steadyState,
+        phase: BlockTimerPhase.countdown,
+        isRunning: false,
+        isPaused: !finished,
+        isFinished: finished,
+        primarySeconds: steadyStateTimer.remainingSeconds,
+        phaseLabel: finished ? 'Complete' : 'Steady state',
+      );
+    }
     if (result is CircuitResultData && result.timerCursor != null) {
       return stateFrom(
         cursor: result.timerCursor!,

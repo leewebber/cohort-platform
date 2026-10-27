@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import '../../../domain/hyrox_base/programme_prescription.dart';
 
@@ -24,6 +26,7 @@ class BlockTimerScreen extends StatefulWidget {
     this.prescriptionLines = const [],
     this.restoredWorkNote,
     this.onCheckpoint,
+    this.onSaveCheckpoint,
   });
 
   final String blockTitle;
@@ -35,6 +38,7 @@ class BlockTimerScreen extends StatefulWidget {
   final List<String> prescriptionLines;
   final String? restoredWorkNote;
   final ValueChanged<BlockTimerState>? onCheckpoint;
+  final Future<bool> Function(BlockTimerState)? onSaveCheckpoint;
 
   @override
   State<BlockTimerScreen> createState() => _BlockTimerScreenState();
@@ -45,6 +49,9 @@ class _BlockTimerScreenState extends State<BlockTimerScreen>
   BlockTimerController? _controller;
   BlockTimerState? _state;
   String? _announcement;
+  bool _checkpointFailed = false;
+  bool _isLeaving = false;
+  int _checkpointRevision = 0;
 
   @override
   void initState() {
@@ -59,6 +66,9 @@ class _BlockTimerScreenState extends State<BlockTimerScreen>
         final justFinished = state.isFinished && _state?.isFinished != true;
         final wasPaused = _state?.isPaused;
         setState(() => _state = state);
+        if (widget.onSaveCheckpoint != null) {
+          unawaited(_saveCheckpoint(state));
+        }
         if (wasPaused == false && state.isPaused) {
           _announce(
             '${widget.format.displayLabel} timer paused. ${_timeSummary(state)}',
@@ -74,7 +84,9 @@ class _BlockTimerScreenState extends State<BlockTimerScreen>
         if (justFinished) {
           widget.onCheckpoint?.call(state);
           _announce(
-            '${widget.format.displayLabel} block completed. ${_timeSummary(state)}',
+            widget.onSaveCheckpoint != null
+                ? '${widget.format.displayLabel} timer finished. Review and record your result.'
+                : '${widget.format.displayLabel} block completed. ${_timeSummary(state)}',
           );
           if (widget.format == WorkoutFormat.emom) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -89,7 +101,7 @@ class _BlockTimerScreenState extends State<BlockTimerScreen>
       _controller!.restore(restored);
       _announcement =
           '${widget.format.displayLabel} timer restored, '
-          '${restored.isPaused ? 'paused' : 'running'}. '
+          '${restored.isFinished ? 'finished' : restored.isPaused ? 'paused' : 'running'}. '
           '${_timeSummary(restored)}';
     } else {
       _controller!.start();
@@ -100,6 +112,37 @@ class _BlockTimerScreenState extends State<BlockTimerScreen>
 
   void _announce(String message) {
     setState(() => _announcement = message);
+  }
+
+  Future<bool> _saveCheckpoint(BlockTimerState state) async {
+    final save = widget.onSaveCheckpoint;
+    if (save == null) return true;
+    final revision = ++_checkpointRevision;
+    var saved = false;
+    try {
+      saved = await save(state);
+    } catch (_) {
+      saved = false;
+    }
+    if (mounted && revision == _checkpointRevision) {
+      if (!saved) _controller?.pause();
+      setState(() => _checkpointFailed = !saved);
+    }
+    return saved;
+  }
+
+  Future<void> _leaveTimer() async {
+    if (_isLeaving) return;
+    _isLeaving = true;
+    _controller?.pause();
+    final state = _controller?.state;
+    final saved = state == null || await _saveCheckpoint(state);
+    if (!mounted) return;
+    if (saved) {
+      Navigator.pop(context, state);
+    } else {
+      setState(() => _isLeaving = false);
+    }
   }
 
   String _timeSummary(BlockTimerState state) {
@@ -149,8 +192,7 @@ class _BlockTimerScreenState extends State<BlockTimerScreen>
       ),
     );
     if (shouldExit == true && mounted) {
-      _controller?.pause();
-      Navigator.pop(context, _controller?.state);
+      await _leaveTimer();
     }
   }
 
@@ -167,8 +209,7 @@ class _BlockTimerScreenState extends State<BlockTimerScreen>
       canPop: false,
       onPopInvokedWithResult: (didPop, _) {
         if (didPop) return;
-        _controller?.pause();
-        Navigator.of(context).pop(_controller?.state);
+        unawaited(_leaveTimer());
       },
       child: Scaffold(
       body: SafeArea(
@@ -185,6 +226,19 @@ class _BlockTimerScreenState extends State<BlockTimerScreen>
                 ),
               ),
               JourneyAnnouncement(message: _announcement),
+              if (_checkpointFailed) ...[
+                const Text(
+                  "Couldn't save timer. Retry before leaving.",
+                  key: ValueKey('timer-save-failed'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    final state = _controller?.state;
+                    if (state != null) unawaited(_saveCheckpoint(state));
+                  },
+                  child: const Text('Retry saving timer'),
+                ),
+              ],
               const SizedBox(height: CohortSpacing.md),
               Text(widget.blockTitle, style: CohortTextStyles.h2),
               Text(widget.format.displayLabel, style: CohortTextStyles.eyebrow),
@@ -267,6 +321,8 @@ class _BlockTimerScreenState extends State<BlockTimerScreen>
                 ),
               ],
               const SizedBox(height: CohortSpacing.xl),
+              if (widget.onSaveCheckpoint != null && state?.isFinished == true)
+                const Text('Timer finished. Review and record your result.'),
               if (widget.format == WorkoutFormat.rounds &&
                   state?.phase == BlockTimerPhase.work &&
                   state?.isFinished != true)
@@ -314,11 +370,14 @@ class _BlockTimerScreenState extends State<BlockTimerScreen>
               LayoutBuilder(
                 builder: (context, constraints) {
                   final pause = CohortButton(
-                    label: state?.isPaused == true ? 'Resume' : 'Pause',
-                    semanticLabel: state?.isPaused == true
+                    label: widget.onSaveCheckpoint != null && state?.isFinished == true
+                        ? 'Timer finished' : state?.isPaused == true ? 'Resume' : 'Pause',
+                    semanticLabel: widget.onSaveCheckpoint != null && state?.isFinished == true
+                        ? '${widget.format.displayLabel} timer finished'
+                        : state?.isPaused == true
                         ? 'Resume ${widget.format.displayLabel} timer'
                         : 'Pause ${widget.format.displayLabel} timer',
-                    onPressed: () {
+                    onPressed: state?.isFinished == true || _checkpointFailed ? null : () {
                       if (state?.isPaused == true) {
                         _controller?.resume();
                       } else {

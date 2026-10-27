@@ -27,19 +27,23 @@ class SharedPreferencesKvStore implements LocalKvStore {
 
   @override
   Future<void> writeString(String key, String value) async {
-    await _prefs.setString(key, value);
+    if (!await _prefs.setString(key, value)) {
+      throw StateError('Could not save local state.');
+    }
   }
 
   @override
   Future<void> remove(String key) async {
-    await _prefs.remove(key);
+    if (!await _prefs.remove(key)) {
+      throw StateError('Could not remove local state.');
+    }
   }
 
   @override
   Future<void> clearPrefix(String prefix) async {
     final keys = _prefs.getKeys().where((k) => k.startsWith(prefix)).toList();
     for (final key in keys) {
-      await _prefs.remove(key);
+      await remove(key);
     }
   }
 }

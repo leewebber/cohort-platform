@@ -1,4 +1,5 @@
 import 'structured_running_execution.dart';
+import 'steady_state_timer_cursor.dart';
 
 /// Versioned production UI cursor. Never changes athletic result semantics.
 class ProductionSessionUiCursor {
@@ -17,9 +18,10 @@ class ProductionSessionUiCursor {
     this.capturePage,
     this.savedAt,
     this.structuredRunning,
+    this.steadyStateTimers = const {},
   });
 
-  static const currentSchemaVersion = 2;
+  static const currentSchemaVersion = 3;
 
   final int schemaVersion;
   final String athleteId;
@@ -35,13 +37,20 @@ class ProductionSessionUiCursor {
   final String? capturePage;
   final DateTime? savedAt;
   final StructuredRunningCursor? structuredRunning;
+  final Map<String, SteadyStateTimerCursor> steadyStateTimers;
 
   bool get isUnsupportedFutureVersion => schemaVersion > currentSchemaVersion;
 
   bool get hasInvalidStructuredScope =>
       structuredRunning != null &&
-      (schemaVersion != currentSchemaVersion ||
+      (schemaVersion < 2 ||
+          isUnsupportedFutureVersion ||
           activeBlockId != structuredRunning!.sessionBlockId);
+
+  bool get hasInvalidSteadyStateScope =>
+      steadyStateTimers.isNotEmpty &&
+      (schemaVersion != currentSchemaVersion ||
+          activeBlockId?.isNotEmpty != true);
 
   Map<String, dynamic> toJson() {
     return {
@@ -61,12 +70,36 @@ class ProductionSessionUiCursor {
       if (savedAt != null) 'saved_at': savedAt!.toUtc().toIso8601String(),
       if (structuredRunning != null)
         'structured_running': structuredRunning!.toJson(),
+      if (steadyStateTimers.isNotEmpty)
+        'steady_state_timers': [
+          for (final timer in steadyStateTimers.values) timer.toJson(),
+        ],
     };
   }
 
   factory ProductionSessionUiCursor.fromJson(Map<String, dynamic> json) {
     final expandedRaw = json['expanded_block_ids'];
     final structuredRaw = json['structured_running'];
+    final steadyRaw = json['steady_state_timers'];
+    final steadyTimers = <String, SteadyStateTimerCursor>{};
+    if (json.containsKey('steady_state_timers')) {
+      if (steadyRaw is! List ||
+          json['schema_version'] != currentSchemaVersion) {
+        throw const FormatException('Invalid steady-state timer scope.');
+      }
+      for (final raw in steadyRaw) {
+        if (raw is! Map) {
+          throw const FormatException('Invalid steady-state timer.');
+        }
+        final timer = SteadyStateTimerCursor.fromJson(
+          Map<String, dynamic>.from(raw),
+        );
+        if (steadyTimers.containsKey(timer.blockId)) {
+          throw const FormatException('Duplicate steady-state timer.');
+        }
+        steadyTimers[timer.blockId] = timer;
+      }
+    }
     if (json.containsKey('structured_running') && structuredRaw is! Map) {
       throw const FormatException('invalid structured running cursor payload');
     }
@@ -91,8 +124,9 @@ class ProductionSessionUiCursor {
               Map<String, dynamic>.from(structuredRaw),
             )
           : null,
+      steadyStateTimers: Map.unmodifiable(steadyTimers),
     );
-    if (cursor.hasInvalidStructuredScope) {
+    if (cursor.hasInvalidStructuredScope || cursor.hasInvalidSteadyStateScope) {
       throw const FormatException('invalid structured running cursor scope');
     }
     return cursor;

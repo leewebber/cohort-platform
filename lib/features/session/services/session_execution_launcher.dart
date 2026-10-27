@@ -162,6 +162,8 @@ class SessionExecutionLauncher {
       trainingSessionId: trainingSessionId,
     );
     var envelopeCorrupt = false;
+    var hasSteadyStateTimerData =
+        envelope?.cursor?.steadyStateTimers.isNotEmpty == true;
     if (envelope == null && AthletePersistence.isInitialized) {
       final payload = await AthletePersistence.repository
           .readProductionRestoreEnvelope(
@@ -169,6 +171,9 @@ class SessionExecutionLauncher {
             trainingSessionId: trainingSessionId,
           );
       if (payload != null) {
+        final rawCursor = payload['cursor'];
+        hasSteadyStateTimerData =
+            rawCursor is Map && rawCursor.containsKey('steady_state_timers');
         try {
           envelope = ProductionRestoreEnvelope.fromJson(payload);
           _restoreEnvelopeStore.write(envelope);
@@ -178,7 +183,8 @@ class SessionExecutionLauncher {
         }
       }
     }
-    if (envelope?.cursor?.hasInvalidStructuredScope == true) {
+    if (envelope?.cursor?.hasInvalidStructuredScope == true ||
+        envelope?.cursor?.hasInvalidSteadyStateScope == true) {
       envelopeCorrupt = true;
     }
 
@@ -235,6 +241,42 @@ class SessionExecutionLauncher {
     );
 
     final structuredCursor = decision.cursor?.structuredRunning;
+    final steadyTimers = decision.cursor?.steadyStateTimers ?? const {};
+    try {
+      if (steadyTimers.isNotEmpty &&
+          !plan.blocks.any(
+            (block) => block.blockId == decision.cursor?.activeBlockId,
+          )) {
+        throw const FormatException('The saved active block is unavailable.');
+      }
+      for (final timer in steadyTimers.values) {
+        final blocks = plan.blocks.where(
+          (block) => block.blockId == timer.blockId,
+        );
+        if (blocks.length != 1 || !blocks.single.hasTimer) {
+          throw const FormatException('The saved timer block is unavailable.');
+        }
+        CircuitBlockTimerBridge.restoredState(
+          block: blocks.single,
+          result: null,
+          steadyStateTimer: timer,
+        );
+      }
+    } on FormatException {
+      if (!context.mounted) return;
+      await _showSteadyStateRecovery(
+        context: context,
+        athleteId: athleteId,
+        trainingSessionId: trainingSessionId,
+        decision: ProductionRestoreDecision(
+          outcome: ProductionRestoreOutcome.conflict,
+          athleteMessage: ProductionRestoreAthleteCopy.message(
+            ProductionRestoreOutcome.conflict,
+          ),
+        ),
+      );
+      return;
+    }
     if (structuredCursor != null) {
       if (structuredRunningExecution == null) {
         throw _structuredRestoreFailure();
@@ -307,6 +349,16 @@ class SessionExecutionLauncher {
       throw _restoreFailure(decision);
     } else {
       if (!context.mounted) throw _restoreFailure(decision);
+      if (hasSteadyStateTimerData &&
+          ProductionRestoreAthleteCopy.offersDiscard(decision.outcome)) {
+        await _showSteadyStateRecovery(
+          context: context,
+          athleteId: athleteId,
+          trainingSessionId: trainingSessionId,
+          decision: decision,
+        );
+        return;
+      }
       await Navigator.of(context).push(
         MaterialPageRoute<void>(
           builder: (_) => ProductionRestoreBlockedScreen(decision: decision),
@@ -322,20 +374,26 @@ class SessionExecutionLauncher {
 
     var openRestoredTimer = false;
     if (decision.mayEnterWithRestoredActuals) {
-      if (structuredCursor != null) {
-        openRestoredTimer = true;
-      }
-      for (final block in plan.blocks) {
-        final result = performanceController.draft
-            .blockDraftFor(block.blockId)
-            ?.resultData;
-        if (CircuitBlockTimerBridge.restoredState(
-              block: block,
-              result: result,
-            ) !=
-            null) {
-          openRestoredTimer = true;
-          break;
+      // Prior blocks may also have timer evidence. Open only the active step.
+      final activeBlock = controller.state.activeBlock;
+      if (activeBlock != null) {
+        final block = activeBlock;
+        if (performanceController.draft.blockDraftFor(block.blockId)?.status ==
+            TrainingBlockResultStatus.completed) {
+          openRestoredTimer = false;
+        } else {
+          final result = performanceController.draft
+              .blockDraftFor(block.blockId)
+              ?.resultData;
+          if (structuredCursor?.sessionBlockId == block.blockId ||
+              CircuitBlockTimerBridge.restoredState(
+                    block: block,
+                    result: result,
+                    steadyStateTimer: steadyTimers[block.blockId],
+                  ) !=
+                  null) {
+            openRestoredTimer = true;
+          }
         }
       }
     }
@@ -355,11 +413,49 @@ class SessionExecutionLauncher {
           openRestoredTimer: openRestoredTimer,
           structuredRunningExecution: structuredRunningExecution,
           restoredStructuredRunningCursor: structuredCursor,
+          restoredSteadyStateTimers: steadyTimers,
           onSessionCompleted: onSessionCompleted,
         ),
       ),
     );
   }
+
+  Future<void> _showSteadyStateRecovery({
+    required BuildContext context,
+    required String athleteId,
+    required int trainingSessionId,
+    required ProductionRestoreDecision decision,
+  }) => Navigator.of(context).push(
+    MaterialPageRoute<void>(
+      builder: (recoveryContext) => ProductionRestoreBlockedScreen(
+        decision: decision,
+        onDiscardDraft: () async {
+          try {
+            if (AthletePersistence.isInitialized) {
+              await AthletePersistence.repository
+                  .clearProductionRestoreEnvelope(
+                    athleteId: athleteId,
+                    trainingSessionId: trainingSessionId,
+                  );
+            }
+            _restoreEnvelopeStore.clear(
+              athleteId: athleteId,
+              trainingSessionId: trainingSessionId,
+            );
+            if (recoveryContext.mounted) Navigator.of(recoveryContext).pop();
+          } catch (_) {
+            if (recoveryContext.mounted) {
+              ScaffoldMessenger.of(recoveryContext).showSnackBar(
+                const SnackBar(
+                  content: Text('Could not clear saved timer. Retry.'),
+                ),
+              );
+            }
+          }
+        },
+      ),
+    ),
+  );
 
   ProductionRestoreDecision _decideRestore({
     required String athleteId,
@@ -370,7 +466,7 @@ class SessionExecutionLauncher {
     required bool hostedCompleted,
     bool envelopeCorrupt = false,
   }) {
-    if (envelopeCorrupt) {
+    if (envelopeCorrupt && !hostedCompleted) {
       return ProductionRestoreDecision(
         outcome: ProductionRestoreOutcome.corrupt,
         athleteMessage: ProductionRestoreAthleteCopy.message(

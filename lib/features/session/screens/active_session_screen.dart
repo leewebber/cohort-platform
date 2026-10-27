@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../../../core/accessibility/journey_interaction.dart';
 import '../../../core/errors/user_facing_error_messages.dart';
 import '../../../core/persistence/athlete_persistence.dart';
+import '../../auth/services/current_user_session.dart';
 import '../../../core/presentation/athlete_safe_error_presenter.dart';
 import '../../../core/theme/spacing.dart';
 import '../../../core/widgets/cohort_button.dart';
@@ -33,6 +34,7 @@ import '../models/production_session_draft.dart';
 import '../models/production_session_ui_cursor.dart';
 import '../models/session_execution_plan.dart';
 import '../models/structured_running_execution.dart';
+import '../models/steady_state_timer_cursor.dart';
 import '../models/workout_session_launch_context.dart';
 import '../services/production_restore_envelope_store.dart';
 import '../services/production_restore_resolver.dart';
@@ -63,6 +65,7 @@ class ActiveSessionScreen extends StatefulWidget {
     this.structuredRunningExecution,
     this.restoredStructuredRunningCursor,
     this.onSessionCompleted,
+    this.restoredSteadyStateTimers = const {},
   });
 
   final SessionExecutionController controller;
@@ -81,6 +84,7 @@ class ActiveSessionScreen extends StatefulWidget {
   final VerifiedStructuredRunningExecution? structuredRunningExecution;
   final StructuredRunningCursor? restoredStructuredRunningCursor;
   final VoidCallback? onSessionCompleted;
+  final Map<String, SteadyStateTimerCursor> restoredSteadyStateTimers;
 
   @override
   State<ActiveSessionScreen> createState() => _ActiveSessionScreenState();
@@ -106,6 +110,11 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen>
   late final PreviousStrengthPerformanceService _previousStrengthService;
   late final ProductionRestoreEnvelopeStore _restoreEnvelopeStore;
   StructuredRunningCursor? _structuredRunningCursor;
+  late final _steadyStateTimers = Map<String, SteadyStateTimerCursor>.of(
+    widget.restoredSteadyStateTimers,
+  );
+  final _authenticatedAthleteAtEntry = CurrentUserSession.maybeInstance?.athleteId;
+  Future<void> _envelopeWrites = Future.value();
 
   @override
   void initState() {
@@ -257,7 +266,19 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen>
     }
   }
 
-  Future<void> _persistRestoreEnvelope() async {
+  Future<void> _persistRestoreEnvelope() {
+    // Timer checkpoints and actuals saves share one ordered local writer.
+    final operation = _envelopeWrites.then((_) => _writeRestoreEnvelope());
+    _envelopeWrites = operation.then<void>((_) {}, onError: (Object _) {});
+    return operation;
+  }
+
+  Future<void> _writeRestoreEnvelope() async {
+    if (_authenticatedAthleteAtEntry != null &&
+        (widget.athleteId != _authenticatedAthleteAtEntry ||
+         CurrentUserSession.maybeInstance?.athleteId != _authenticatedAthleteAtEntry)) {
+      throw StateError('The workout account has changed.');
+    }
     final athleteId = widget.athleteId;
     final trainingSessionId = widget.trainingSessionId;
     final programmeContext = widget.programmeContext;
@@ -295,16 +316,25 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen>
         expandedBlockIds: state.expandedBlockIds,
         savedAt: DateTime.now().toUtc(),
         structuredRunning: _structuredRunningCursor,
+        steadyStateTimers: Map.unmodifiable(_steadyStateTimers),
       ),
     );
-    _restoreEnvelopeStore.write(envelope);
     if (AthletePersistence.isInitialized) {
       await AthletePersistence.repository.saveProductionRestoreEnvelope(
         athleteId: athleteId,
         trainingSessionId: trainingSessionId,
         payload: envelope.toJson(),
       );
+      if (_authenticatedAthleteAtEntry != null &&
+          CurrentUserSession.maybeInstance?.athleteId != _authenticatedAthleteAtEntry) {
+        // A sign-out may have cleared this key while the write was pending.
+        await AthletePersistence.repository.clearProductionRestoreEnvelope(
+          athleteId: athleteId, trainingSessionId: trainingSessionId,
+        );
+        throw StateError('The workout account has changed.');
+      }
     }
+    _restoreEnvelopeStore.write(envelope);
   }
 
   Future<void> _reconcileForeground() async {
@@ -432,6 +462,9 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen>
       return;
     }
 
+    _controller.goToBlock(_controller.state.plan.blocks.indexOf(block));
+    _performanceController.setActiveBlock(block.blockId);
+
     final structured = widget.structuredRunningExecution;
     if (structured != null && block.blockId == structured.sessionBlockId) {
       final popped = await Navigator.of(context).push<StructuredRunningCursor>(
@@ -446,6 +479,7 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen>
           ),
         ),
       );
+      if (!mounted) return;
       if (popped != null) {
         _structuredRunningCursor = popped;
         await _persistDraft();
@@ -466,6 +500,7 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen>
           block: block,
           result: existing,
           stationLabels: labels,
+          steadyStateTimer: _steadyStateTimers[block.blockId],
         );
     final popped = await Navigator.of(context).push<BlockTimerState>(
       MaterialPageRoute(
@@ -483,10 +518,15 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen>
               ? existing.remainingWorkNote
               : null,
           onCheckpoint: (state) => _persistTimerEvidence(block, state),
+          onSaveCheckpoint: block.workoutFormat == WorkoutFormat.steadyState &&
+                  widget.programmeContext?.isProgrammeBacked == true
+              ? (state) => _saveSteadyStateTimer(block, state)
+              : null,
           initialState: initialState,
         ),
       ),
     );
+    if (!mounted) return;
     if (popped != null) {
       _persistTimerEvidence(block, popped);
       if (block.workoutFormat == WorkoutFormat.emom) {
@@ -495,6 +535,39 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen>
       }
     }
     _refresh();
+  }
+
+  Future<bool> _saveSteadyStateTimer(
+    SessionExecutionBlock block,
+    BlockTimerState state,
+  ) async {
+    if (!mounted || !AthletePersistence.isInitialized ||
+        widget.athleteId != _performanceController.draft.athleteId ||
+        widget.trainingSessionId != _performanceController.draft.trainingSessionId) {
+      return false;
+    }
+    try {
+      if (state.format != WorkoutFormat.steadyState ||
+          state.phase != BlockTimerPhase.countdown ||
+          block.timerConfiguration?.durationSeconds == null) {
+        return false;
+      }
+      final cursor = SteadyStateTimerCursor(
+        blockId: block.blockId,
+        durationSeconds: block.timerConfiguration!.durationSeconds!,
+        remainingSeconds: state.primarySeconds,
+        state: state.isFinished ? SteadyStateTimerStatus.finished
+            : state.isPaused ? SteadyStateTimerStatus.paused
+            : SteadyStateTimerStatus.running,
+      );
+      cursor.validate();
+      _steadyStateTimers[block.blockId] = cursor;
+      // This is UI progress, not an actuals or hosted performance write.
+      await _persistRestoreEnvelope();
+      return true;
+    } catch (_) {
+      return false;
+    }
   }
 
   void _persistTimerEvidence(
