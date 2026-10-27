@@ -1,3 +1,5 @@
+import '../programme_acquisition/acquisition_test_support.dart';
+import 'package:cohort_platform/features/programme_acquisition/acquisition_store.dart';
 import 'dart:async';
 
 import 'package:cohort_platform/features/auth/controllers/auth_controller.dart';
@@ -175,7 +177,7 @@ void main() {
 
       await controller.signIn(email: 'alex@example.com', password: 'wrong');
 
-        expect(controller.state.status, AuthStatus.unauthenticated);
+      expect(controller.state.status, AuthStatus.unauthenticated);
       expect(controller.state.errorMessage, isNotNull);
       expect(profiles.getProfileCallCount, 0);
     });
@@ -245,7 +247,16 @@ void main() {
       );
 
       await tester.pumpWidget(
-        MaterialApp(home: AuthGate(controller: controller)),
+        MaterialApp(
+          home: AuthGate(
+            controller: controller,
+            acquisitionStore: FakeAcquisitionStore()
+              ..setup = const TrainingSetup(
+                timezone: 'Europe/London',
+                complete: true,
+              ),
+          ),
+        ),
       );
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 100));
@@ -267,7 +278,7 @@ void main() {
       expect(find.text('Welcome back'), findsNothing);
       expect(find.text('COHORT'), findsOneWidget);
       expect(find.text('Home'), findsWidgets);
-      expect(find.textContaining('Alex'), findsWidgets);
+      expect(find.text('Programmes'), findsWidgets);
       expect(controller.state.status, AuthStatus.authenticated);
       expect(profiles.getProfileCallCount, 1);
     });
@@ -283,7 +294,16 @@ void main() {
       );
 
       await tester.pumpWidget(
-        MaterialApp(home: AuthGate(controller: controller)),
+        MaterialApp(
+          home: AuthGate(
+            controller: controller,
+            acquisitionStore: FakeAcquisitionStore()
+              ..setup = const TrainingSetup(
+                timezone: 'Europe/London',
+                complete: true,
+              ),
+          ),
+        ),
       );
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 100));

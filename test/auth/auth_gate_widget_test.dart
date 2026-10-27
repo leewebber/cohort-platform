@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../support/in_memory_profile_repository.dart';
+import '../programme_acquisition/acquisition_test_support.dart';
+import 'package:cohort_platform/features/programme_acquisition/acquisition_store.dart';
 import 'auth_controller_test.dart' show FakeAuthSessionPort;
 
 void main() {
@@ -22,7 +24,16 @@ void main() {
     );
 
     await tester.pumpWidget(
-      MaterialApp(home: AuthGate(controller: controller)),
+      MaterialApp(
+        home: AuthGate(
+          controller: controller,
+          acquisitionStore: FakeAcquisitionStore()
+            ..setup = const TrainingSetup(
+              timezone: 'Europe/London',
+              complete: true,
+            ),
+        ),
+      ),
     );
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 100));
@@ -46,7 +57,16 @@ void main() {
     );
 
     await tester.pumpWidget(
-      MaterialApp(home: AuthGate(controller: controller)),
+      MaterialApp(
+        home: AuthGate(
+          controller: controller,
+          acquisitionStore: FakeAcquisitionStore()
+            ..setup = const TrainingSetup(
+              timezone: 'Europe/London',
+              complete: true,
+            ),
+        ),
+      ),
     );
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 100));
@@ -78,13 +98,22 @@ void main() {
     );
 
     await tester.pumpWidget(
-      MaterialApp(home: AuthGate(controller: controller)),
+      MaterialApp(
+        home: AuthGate(
+          controller: controller,
+          acquisitionStore: FakeAcquisitionStore()
+            ..setup = const TrainingSetup(
+              timezone: 'Europe/London',
+              complete: true,
+            ),
+        ),
+      ),
     );
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 200));
 
     expect(find.text('COHORT'), findsOneWidget);
     expect(find.text('Home'), findsWidgets);
-    expect(find.textContaining('Lee'), findsWidgets);
+    expect(find.text('Programmes'), findsWidgets);
   });
 }

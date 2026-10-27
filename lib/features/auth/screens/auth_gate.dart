@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../../../core/access/app_access_role.dart';
@@ -8,6 +10,8 @@ import '../../../core/persistence/athlete_state_hydrator.dart';
 import '../../../core/theme/colors.dart';
 import '../../../core/theme/text_styles.dart';
 import '../../app_shell/athlete_app_shell.dart';
+import '../../programme_acquisition/training_setup_gate.dart';
+import '../../programme_acquisition/acquisition_store.dart';
 import '../../app_shell/founder_workspace_shell.dart';
 import '../controllers/auth_controller.dart';
 import '../models/production_auth_phase.dart';
@@ -19,9 +23,10 @@ import 'login_screen.dart';
 import 'profile_setup_screen.dart';
 
 class AuthGate extends StatefulWidget {
-  const AuthGate({super.key, required this.controller});
+  const AuthGate({super.key, required this.controller, this.acquisitionStore});
 
   final AuthController controller;
+  final AcquisitionStore? acquisitionStore;
 
   @override
   State<AuthGate> createState() => _AuthGateState();
@@ -32,6 +37,7 @@ class _AuthGateState extends State<AuthGate> {
   final _authority = const ProductionAuthAuthority();
   bool _hydrating = true;
   AthleteHydrationResult? _hydration;
+  String? _hydratedAthleteId;
 
   @override
   void initState() {
@@ -57,10 +63,14 @@ class _AuthGateState extends State<AuthGate> {
       return;
     }
     try {
-      _hydration = await AthletePersistence.hydrate(
+      final hydration = await AthletePersistence.hydrate(
         preferredAthleteId: athleteId,
         allowRegenerate: false,
       );
+      if (CurrentUserSession.maybeInstance?.athleteId == athleteId) {
+        _hydration = hydration;
+        _hydratedAthleteId = athleteId;
+      }
     } catch (e, st) {
       debugPrint('[AuthGate] athlete hydration failed: $e');
       debugPrint('$st');
@@ -77,9 +87,23 @@ class _AuthGateState extends State<AuthGate> {
     if (!mounted) return;
 
     final phase = _phase;
+    final athleteId = CurrentUserSession.maybeInstance?.athleteId;
+    if (athleteId != _hydratedAthleteId) {
+      _hydration = null;
+      _hydratedAthleteId = athleteId;
+      if (athleteId != null) {
+        unawaited(
+          _hydrateForAuthenticatedIdentity().then((_) {
+            if (mounted) setState(() {});
+          }),
+        );
+      }
+    }
     if (phase == ProductionAuthPhase.authenticatedOnline ||
         phase == ProductionAuthPhase.authenticatedOffline ||
-        phase == ProductionAuthPhase.profileRequired) {
+        phase == ProductionAuthPhase.profileRequired ||
+        phase == ProductionAuthPhase.unauthenticated ||
+        phase == ProductionAuthPhase.invalidIdentity) {
       Navigator.of(context).popUntil((route) => route.isFirst);
     }
 
@@ -109,10 +133,17 @@ class _AuthGateState extends State<AuthGate> {
     if (session == null || !session.isAthlete) {
       return const _AthleteAccessDeniedScreen();
     }
-    return AthleteAppShell(
-      authController: widget.controller,
-      pendingWorkoutProgress: _hydration?.pendingWorkoutProgress,
-      planDefinitionMissing: _hydration?.planDefinitionMissing ?? false,
+    return TrainingSetupGate(
+      key: ValueKey(session.athleteId),
+      athleteId: session.athleteId,
+      store: widget.acquisitionStore,
+      onSignOut: widget.controller.signOut,
+      child: AthleteAppShell(
+        initialTab: 2,
+        authController: widget.controller,
+        pendingWorkoutProgress: _hydration?.pendingWorkoutProgress,
+        planDefinitionMissing: _hydration?.planDefinitionMissing ?? false,
+      ),
     );
   }
 

@@ -13,6 +13,7 @@ import '../presentation/athlete_programme_decision_facts.dart';
 import '../services/athlete_catalogue_enrolment_services.dart';
 import '../widgets/athlete_programme_fact_list.dart';
 import 'athlete_programme_comparison_screen.dart';
+import '../../programme_acquisition/private_programme_catalogue.dart';
 import 'athlete_programme_detail_screen.dart';
 
 /// Athlete catalogue: discover, inspect, compare, and enrol when unassigned.
@@ -93,7 +94,25 @@ class _AthleteProgrammeSelectionScreenState
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(CohortSpacing.lg),
-          child: _buildBody(),
+          child: Column(
+            children: [
+              ConstrainedBox(
+                constraints: const BoxConstraints(maxHeight: 240),
+                child: SingleChildScrollView(
+                  child: PrivateProgrammeCatalogue(
+                    athleteId: widget.athleteId,
+                    onAcquired: () {
+                      widget.refreshController?.requestRefresh(
+                        source: 'private_programme_acquisition',
+                      );
+                      if (mounted) Navigator.of(context).pop(true);
+                    },
+                  ),
+                ),
+              ),
+              Expanded(child: _buildBody()),
+            ],
+          ),
         ),
       ),
     );

@@ -16,6 +16,7 @@ import '../exercises/exercise_library/exercise_library_screen.dart';
 import '../internal_tools/internal_tools_screen.dart';
 import '../protocols/protocol_library_screen.dart';
 import 'athlete_app_shell.dart';
+import '../programme_acquisition/training_setup_gate.dart';
 
 /// Founder Workspace — authorised founder tools only.
 ///
@@ -174,8 +175,14 @@ class _FounderOverview extends StatelessWidget {
           onPressed: () {
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (_) =>
-                    AthleteAppShell(authController: authController),
+                builder: (_) => TrainingSetupGate(
+                  athleteId: athleteId,
+                  onSignOut: authController?.signOut,
+                  child: AthleteAppShell(
+                    authController: authController,
+                    initialTab: 2,
+                  ),
+                ),
               ),
             );
           },
@@ -278,9 +285,7 @@ class _KnowledgeTab extends StatelessWidget {
         CohortCard(
           onTap: () {
             Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (_) => const ProtocolLibraryScreen(),
-              ),
+              MaterialPageRoute(builder: (_) => const ProtocolLibraryScreen()),
             );
           },
           child: const _Row(
@@ -328,8 +333,7 @@ class _SettingsTab extends StatelessWidget {
               onTap: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (_) =>
-                        AccountScreen(controller: authController!),
+                    builder: (_) => AccountScreen(controller: authController!),
                   ),
                 );
               },

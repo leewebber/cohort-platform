@@ -35,12 +35,14 @@ class AuthController extends ChangeNotifier {
 
   final AuthSessionPort _authService;
   final ProfileProvisioningService _profileProvisioningService;
-  final AuthFailureClassifier _failureClassifier = const AuthFailureClassifier();
+  final AuthFailureClassifier _failureClassifier =
+      const AuthFailureClassifier();
 
   AuthViewState _state;
   StreamSubscription<AuthState>? _authSubscription;
   Future<void>? _sessionRefreshInFlight;
   Future<void>? _userBootstrapInFlight;
+  String? _bootstrapUserId;
 
   AuthViewState get state => _state;
 
@@ -189,7 +191,8 @@ class AuthController extends ChangeNotifier {
 
   Future<void> signOut() async {
     // Capture before clearing sessions (guest athletes use profile session id).
-    final athleteId = CurrentUserSession.maybeInstance?.athleteId ??
+    final athleteId =
+        CurrentUserSession.maybeInstance?.athleteId ??
         AthleteProfileSession.profile?.athleteId;
     await _authService.signOut();
     CurrentUserSession.clear();
@@ -282,17 +285,26 @@ class AuthController extends ChangeNotifier {
     await _resolveAuthenticatedUser(user);
   }
 
-  Future<void> _resolveAuthenticatedUser(User user) {
+  Future<void> _resolveAuthenticatedUser(User user) async {
     final inFlight = _userBootstrapInFlight;
     if (inFlight != null) {
-      return inFlight;
+      if (_bootstrapUserId == user.id) return inFlight;
+      await inFlight;
+      if (_authService.currentUser?.id != user.id ||
+          _state.profile?.id == user.id) {
+        return;
+      }
+      return _resolveAuthenticatedUser(user);
     }
+    if (_authService.currentUser?.id != user.id) return;
 
     final bootstrap = _performUserBootstrap(user);
     _userBootstrapInFlight = bootstrap;
+    _bootstrapUserId = user.id;
     return bootstrap.whenComplete(() {
       if (identical(_userBootstrapInFlight, bootstrap)) {
         _userBootstrapInFlight = null;
+        _bootstrapUserId = null;
       }
     });
   }
@@ -300,6 +312,7 @@ class AuthController extends ChangeNotifier {
   Future<void> _performUserBootstrap(User user) async {
     try {
       final profile = await _profileProvisioningService.loadProfile(user.id);
+      if (_authService.currentUser?.id != user.id) return;
       if (profile == null) {
         CurrentUserSession.clear();
         _state = _state.copyWith(
@@ -324,6 +337,7 @@ class AuthController extends ChangeNotifier {
       );
       notifyListeners();
     } catch (error) {
+      if (_authService.currentUser?.id != user.id) return;
       final failure = _failureClassifier.classify(error);
       final cached = LastVerifiedAuthProfileStore.readIfMatches(user.id);
       if (failure == AuthIdentityFailure.network && cached != null) {
@@ -369,6 +383,7 @@ class AuthController extends ChangeNotifier {
         roles: roles,
       );
 
+      if (_authService.currentUser?.id != userId) return;
       CurrentUserSession.bind(profile);
       LastVerifiedAuthProfileStore.remember(profile);
       _state = _state.copyWith(
@@ -380,6 +395,7 @@ class AuthController extends ChangeNotifier {
       );
       notifyListeners();
     } catch (error) {
+      if (_authService.currentUser?.id != userId) return;
       _state = _state.copyWith(
         status: AuthStatus.profileRequired,
         errorMessage: error.toString(),

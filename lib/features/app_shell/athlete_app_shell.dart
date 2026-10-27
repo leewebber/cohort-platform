@@ -40,6 +40,7 @@ class AthleteAppShell extends StatefulWidget {
   const AthleteAppShell({
     super.key,
     this.authController,
+    this.initialTab = 0,
     this.pendingWorkoutProgress,
     this.planDefinitionMissing = false,
     this.programmeScreenController,
@@ -56,6 +57,7 @@ class AthleteAppShell extends StatefulWidget {
   });
 
   final AuthController? authController;
+  final int initialTab;
   final WorkoutProgressSnapshot? pendingWorkoutProgress;
   final bool planDefinitionMissing;
 
@@ -105,7 +107,7 @@ class AthleteAppShell extends StatefulWidget {
 }
 
 class _AthleteAppShellState extends State<AthleteAppShell> {
-  int _index = 0;
+  late int _index = widget.initialTab;
   int _progressEpoch = 0;
   bool _recoveryPromptShown = false;
   final HomeTodaySessionRefreshController _surfaceRefresh =

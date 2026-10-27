@@ -19,6 +19,8 @@ class ProfileProvisioningService {
       throw ArgumentError('At least one role must be selected.');
     }
 
+    final existing = await _profileRepository.getProfile(userId);
+    if (existing != null) return existing;
     final profile = UserProfile(
       id: userId,
       displayName: displayName.trim(),
