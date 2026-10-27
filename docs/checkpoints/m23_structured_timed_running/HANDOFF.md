@@ -4,7 +4,7 @@
 Overall **M2.3 PARTIAL**: approved personal target rules/admission and authenticated
 real-device acceptance remain open. Gate A remains open.
 
-Base `dade09f5e40a87768bb23b62b805022d4fb4461c`; implementation `618c53f`.
+Base `dade09f5e40a87768bb23b62b805022d4fb4461c`; implementation `618c53f`, with whole-second admission review fix `544a3bb`.
 The earlier `341fbad`, `632ff83`, `2710185` and `dade09f` remain linear ancestors
 after the founder-reported published base `1cca598ae1eb879405171114f5dced83cb04bb5a`.
 No rewrite, replacement branch, new clone/worktree or cleanup.
@@ -66,7 +66,9 @@ no new Studio authoring UI or automatic import of coaching prose was added.
   and existing projection vectors remain compatible.
 - The block keeps the existing `steady_state` storage/capture container and an exact
   `durationSeconds` equal to the complete repeated body's time sum. UI calls it a
-  structured run. Conflicting scalar settings, ranges, unsupported endings, invalid
+  structured run. Positive whole-second phases match the existing one-second runner; sub-second
+  phases fail closed rather than being rounded or hidden. Conflicting scalar
+  settings, ranges, unsupported endings, invalid
   IDs/targets/repeats and more than 512 expanded phases fail closed. Repeat groups
   retain the existing maximum 32 repetitions and no nesting.
 - The projector preserves this body. A small derived adapter owns an immutable copy
@@ -115,7 +117,10 @@ capability, export compatibility or approved benchmark formula is claimed.
   completion/correction round-trip, failures, stale state and account isolation.
 - **1,124 affected tests pass**, including existing steady-state restart, B3,
   programme launch, performance/completion/correction/History, auth, private source
-  and Studio regressions. All **six mandatory safety groups pass**.
+  and Studio regressions. All **six mandatory safety groups pass**. After the final whole-second admission
+  review, 113 focused running/source regressions (including the 23 new checks),
+  all six safety groups and the identical analysis baseline pass again. The
+  1,124-test broad run precedes that narrow validation-only review fix.
 - Fresh full analysis before/after: **362 identical inherited findings**, zero
   errors, zero changed-file findings. Full analysis remains non-green (exit 1).
   No suppression or analysis/dependency configuration changes.
@@ -133,7 +138,8 @@ added. Do not publish this source to an unverified client population.
 No hosted schema/data/account/assignment/programme changes, build/install,
 distribution, real programme approval or browser/desktop control occurred. M1.2's
 [separate migration proposal](../m12_acquisition/DEPLOYMENT.md) remains unapplied.
-Normal GitHub main lookup failed DNS; remote freshness is unknown and stale cached
+Normal GitHub main lookup and the authorised `git push origin main:main` failed
+DNS (`Could not resolve host: github.com`); remote freshness is unknown and stale cached
 `origin/main` is not evidence of remote main. Only ordinary main push is authorised;
 no alternate route or network escalation.
 

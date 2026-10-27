@@ -49,7 +49,12 @@
     "ordinary_lookup": "Could not resolve host: github.com",
     "freshness": "unknown; cached origin/main is stale",
     "normal_main_push_authorised": true,
-    "network_escalation_or_alternate_route": false
+    "network_escalation_or_alternate_route": false,
+    "ordinary_push": {
+      "command": "git push origin main:main",
+      "exit_code": 128,
+      "result": "Could not resolve host: github.com"
+    }
   },
   "preservation": {
     "existing_checkouts": 23,
@@ -128,11 +133,11 @@
     },
     {
       "path": "lib/models/timer_configuration.dart",
-      "sha256": "dbbe86beb23db66a73de5b5d506f6e140d1593c2a5ee725e4413751300091565"
+      "sha256": "5126825204993681f79d993655905771817386a625d06a0fa8d8c5f895a1fac4"
     },
     {
       "path": "test/session/authored_timed_running_test.dart",
-      "sha256": "50f6c5dea3ac16f6138ae1c7ef32682fad99ac1d04dfb54acdad65699c2aaa0a"
+      "sha256": "cbc58dbf2093b960144c6ead08438356334e33d1a0371cf0b0457e67b459090a"
     },
     {
       "path": "test/session/fixtures/authored_timed_protocol_graph.json",
@@ -175,6 +180,32 @@
     {
       "path": "/private/tmp/cohort_m23_final_analysis.log",
       "sha256": "551671beab5b332ea68bb75b5150fc92a41431c6ba5dd4e39cdd1b618ee48d8e"
+    },
+    {
+      "path": "/private/tmp/cohort_m23_precision_regressions.log",
+      "sha256": "9a6f383889922026521888d00a10f05ead3955f581898f4e729413523fac0a12"
+    },
+    {
+      "path": "/private/tmp/cohort_m23_precision_safety.log",
+      "sha256": "d6dbd8918d86db74c2e1ba7f3913bd5426ded4c02a8ee3beb15f221884768102"
+    },
+    {
+      "path": "/private/tmp/cohort_m23_precision_analysis.log",
+      "sha256": "0eec26b2cbd1e7ba20474c3c0ace53930172f15d080bf3058c30f1edf0eafd44"
     }
-  ]
+  ],
+  "implementation_review_fix": "544a3bbd7fc6ba1c6afd6fe3e68448636369d2b5",
+  "post_review_validation": {
+    "command": "flutter test --no-pub test/session/authored_timed_running_test.dart test/running_workout test/programmes",
+    "passed": 113,
+    "includes_new_focused_checks": 23,
+    "safety_groups": 6,
+    "analysis_identities_equal": true,
+    "broad_run_precedes_validation_only_review_fix": true,
+    "exit_codes": {
+      "regressions": 0,
+      "safety": 0,
+      "analysis": 1
+    }
+  }
 }
