@@ -3,6 +3,7 @@ import '../models/session_execution_plan.dart';
 import '../models/running_target_admission.dart';
 import '../../programme/models/programme_execution_context.dart';
 import '../services/running_target_admission_store.dart';
+import 'quality_target_review_screen.dart';
 
 class RunningTargetReviewScreen extends StatefulWidget {
   const RunningTargetReviewScreen({
@@ -11,8 +12,10 @@ class RunningTargetReviewScreen extends StatefulWidget {
     required this.plan,
     required this.programmeContext,
     required this.store,
+    this.onQualitySourceAccepted,
   });
   final String athleteId;
+  final ValueChanged<String>? onQualitySourceAccepted;
   final SessionExecutionPlan plan;
   final ProgrammeExecutionContext programmeContext;
   final RunningTargetAdmissionStore store;
@@ -29,7 +32,7 @@ class _RunningTargetReviewScreenState extends State<RunningTargetReviewScreen> {
   @override
   void initState() {
     super.initState();
-    _load();
+    if (!requiresQualityAdmission(widget.plan)) _load();
   }
 
   @override
@@ -133,71 +136,95 @@ class _RunningTargetReviewScreenState extends State<RunningTargetReviewScreen> {
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(title: const Text('Review running targets')),
-    body: ListView(
-      padding: const EdgeInsets.all(24),
-      children: [
-        const Text(
-          'Enter your confirmed Zone 2 heart-rate limits. Cohort does not calculate a zone from your age or a universal formula.',
-        ),
-        TextField(
-          key: const ValueKey('zone2-lower'),
-          controller: lower,
-          enabled: !busy,
-          keyboardType: TextInputType.number,
-          decoration: const InputDecoration(
-            labelText: 'Lower heart rate (bpm)',
+  Widget build(BuildContext context) {
+    if (requiresQualityAdmission(widget.plan)) {
+      final store = widget.store;
+      if (store is! QualityRunningTargetAdmissionStore) {
+        return const Scaffold(
+          body: Text(
+            'Quality input review is unavailable. Return to the workout.',
           ),
-          onChanged: (_) => setState(() => review = null),
-        ),
-        TextField(
-          key: const ValueKey('zone2-upper'),
-          controller: upper,
-          enabled: !busy,
-          keyboardType: TextInputType.number,
-          decoration: const InputDecoration(
-            labelText: 'Upper heart rate (bpm)',
-          ),
-          onChanged: (_) => setState(() => review = null),
-        ),
-        FilledButton(
-          onPressed: busy ? null : () => _save(),
-          child: const Text('Confirm these Zone 2 limits'),
-        ),
-        TextButton(
-          onPressed: busy ? null : () => _save(withdraw: true),
-          child: const Text('Withdraw Zone 2 input'),
-        ),
-        if (message != null) Text(message!),
-        if (review?['document'] case final Map doc) ...[
-          const Text('Review before accepting this workout'),
-          for (final block in widget.plan.blocks)
-            if (block.timerConfiguration?.runningWorkout case final workout?)
-              for (final step in runningAtomicSteps(workout))
-                Text(
-                  '${step.label ?? step.role.name}: ${step.target.heartRateZoneRef == confirmedZone2Reference ? '${doc['zone2']['lower_bpm']}–${doc['zone2']['upper_bpm']} bpm (confirmed Zone 2)' : 'Unchanged authored target / guidance'}',
-                ),
+        );
+      }
+      return QualityTargetReviewScreen(
+        athleteId: widget.athleteId,
+        plan: widget.plan,
+        programmeContext: widget.programmeContext,
+        store: store as QualityRunningTargetAdmissionStore,
+        onAccepted: (source, hash) {
+          widget.onQualitySourceAccepted?.call(source);
+          Navigator.pop(context, hash);
+        },
+      );
+    }
+    return Scaffold(
+      appBar: AppBar(title: const Text('Review running targets')),
+      body: ListView(
+        padding: const EdgeInsets.all(24),
+        children: [
           const Text(
-            'Accepting starts this workout with these targets frozen. Later input changes affect future starts only. Recorded performance remains separate.',
+            'Enter your confirmed Zone 2 heart-rate limits. Cohort does not calculate a zone from your age or a universal formula.',
+          ),
+          TextField(
+            key: const ValueKey('zone2-lower'),
+            controller: lower,
+            enabled: !busy,
+            keyboardType: TextInputType.number,
+            decoration: const InputDecoration(
+              labelText: 'Lower heart rate (bpm)',
+            ),
+            onChanged: (_) => setState(() => review = null),
+          ),
+          TextField(
+            key: const ValueKey('zone2-upper'),
+            controller: upper,
+            enabled: !busy,
+            keyboardType: TextInputType.number,
+            decoration: const InputDecoration(
+              labelText: 'Upper heart rate (bpm)',
+            ),
+            onChanged: (_) => setState(() => review = null),
           ),
           FilledButton(
-            onPressed: busy
-                ? null
-                : () =>
-                      Navigator.pop(context, review!['review_hash'] as String),
-            child: const Text('Accept targets and start'),
+            onPressed: busy ? null : () => _save(),
+            child: const Text('Confirm these Zone 2 limits'),
+          ),
+          TextButton(
+            onPressed: busy ? null : () => _save(withdraw: true),
+            child: const Text('Withdraw Zone 2 input'),
+          ),
+          if (message != null) Text(message!),
+          if (review?['document'] case final Map doc) ...[
+            const Text('Review before accepting this workout'),
+            for (final block in widget.plan.blocks)
+              if (block.timerConfiguration?.runningWorkout case final workout?)
+                for (final step in runningAtomicSteps(workout))
+                  Text(
+                    '${step.label ?? step.role.name}: ${step.target.heartRateZoneRef == confirmedZone2Reference ? '${doc['zone2']['lower_bpm']}–${doc['zone2']['upper_bpm']} bpm (confirmed Zone 2)' : 'Unchanged authored target / guidance'}',
+                  ),
+            const Text(
+              'Accepting starts this workout with these targets frozen. Later input changes affect future starts only. Recorded performance remains separate.',
+            ),
+            FilledButton(
+              onPressed: busy
+                  ? null
+                  : () => Navigator.pop(
+                      context,
+                      review!['review_hash'] as String,
+                    ),
+              child: const Text('Accept targets and start'),
+            ),
+          ],
+          TextButton(
+            onPressed: busy ? null : _load,
+            child: const Text('Retry target review'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
           ),
         ],
-        TextButton(
-          onPressed: busy ? null : _load,
-          child: const Text('Retry target review'),
-        ),
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: const Text('Cancel'),
-        ),
-      ],
-    ),
-  );
+      ),
+    );
+  }
 }

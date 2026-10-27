@@ -19,6 +19,8 @@ class ProgrammeTrainingSessionStartSupabaseStore
         'create_or_resume_fixed_programme_occurrence_session',
         params: {
           'p_occurrence_id': occurrenceId,
+          if (payload.containsKey('target_source'))
+            'p_running_target_source': payload['target_source'],
           if (payload.containsKey('target_review_hash'))
             'p_target_review_hash': payload['target_review_hash'],
           if (payload.containsKey('duration_choices'))

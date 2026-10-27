@@ -273,6 +273,11 @@ class RunningWorkoutCodec {
 
   Map<String, dynamic> _targetMap(RunningTarget target) {
     return switch (target.kind) {
+      RunningTargetKind.qualityPaceRef => {
+        'kind': 'alpha_quality_pace_v1',
+        'category': target.qualityCategory,
+        if (target.fallbackRpe != null) 'fallback_rpe': target.fallbackRpe,
+      },
       RunningTargetKind.none => {'kind': 'none'},
       RunningTargetKind.pace => {
         'kind': 'pace',
@@ -325,6 +330,18 @@ class RunningWorkoutCodec {
   RunningTarget _decodeTarget(Map<String, dynamic> json, String path) {
     final kind = json['kind'];
     switch (kind) {
+      case 'alpha_quality_pace_v1':
+        _rejectUnknown(json, const {
+          'kind',
+          'category',
+          'fallback_rpe',
+        }, '$path.target');
+        return RunningTarget.qualityPaceRef(
+          _optionalString(json['category']) ?? '',
+          fallbackRpe: json['fallback_rpe'] == null
+              ? null
+              : _requireInt(json['fallback_rpe'], '$path.target.fallback_rpe'),
+        );
       case 'none':
         _rejectUnknown(json, const {'kind'}, '$path.target');
         return const RunningTarget.none();

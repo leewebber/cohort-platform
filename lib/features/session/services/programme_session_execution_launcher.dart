@@ -298,10 +298,13 @@ class ProgrammeSessionExecutionLauncher {
       if (error.code ==
           ProgrammeSessionExecutionFailureCode.runningTargetReviewRequired) {
         if (!context.mounted) throw const _DurationChoiceCancelled();
+        String? selectedQualitySource;
         final hash = await Navigator.of(context).push<String>(
           MaterialPageRoute(
             builder: (_) => RunningTargetReviewScreen(
               athleteId: athleteId,
+              onQualitySourceAccepted: (source) =>
+                  selectedQualitySource = source,
               plan: package.plan,
               programmeContext: programmeContext,
               store:
@@ -318,6 +321,7 @@ class ProgrammeSessionExecutionLauncher {
           programmeContext: programmeContext,
           package: package,
           targetReviewHash: hash,
+          targetSource: selectedQualitySource,
         );
       }
       if (error.code !=
@@ -359,6 +363,7 @@ class ProgrammeSessionExecutionLauncher {
     required PreparedExecutionPackage package,
     Map<String, int>? durationChoices,
     String? targetReviewHash,
+    String? targetSource,
   }) async {
     _validatePreparedIdentity(
       athleteId: athleteId,
@@ -374,14 +379,14 @@ class ProgrammeSessionExecutionLauncher {
         'This programme requires its exact supported authored session. Re-prepare the original session.',
       );
     }
-    final needsZone2 = requiresZone2Admission(package.plan);
-    if (needsZone2 &&
+    final needsAdmission = requiresRunningTargetAdmission(package.plan);
+    if (needsAdmission &&
         (programmeContext.occurrenceId == null ||
             ![1, 2].contains(programmeContext.packageSchemaVersion) ||
             package.hasAcceptedAdaptation)) {
       throw const ProgrammeSessionExecutionException(
         ProgrammeSessionExecutionFailureCode.unsupportedAuthoredBlock,
-        'Confirmed Zone 2 requires the original fixed v1/v2 running session.',
+        'Personalised running targets require the original fixed v1/v2 session.',
       );
     }
     final runningAuthority = _runningAuthority(package);
@@ -413,7 +418,8 @@ class ProgrammeSessionExecutionLauncher {
           'bound_consent_id': programmeContext.boundConsentId,
         if (durationWindows.isNotEmpty)
           'duration_choices': durationChoices ?? <String, int>{},
-        if (needsZone2) 'target_review_hash': targetReviewHash,
+        if (needsAdmission) 'target_review_hash': targetReviewHash,
+        'target_source': ?targetSource,
         'assignment_id': programmeContext.assignmentId,
         'session_slot_id': programmeContext.sessionSlotId,
         'programme_version_id': programmeContext.programmeVersionId,
@@ -439,7 +445,7 @@ class ProgrammeSessionExecutionLauncher {
     if (response['code'] == 'running_target_review_required') {
       throw const ProgrammeSessionExecutionException(
         ProgrammeSessionExecutionFailureCode.runningTargetReviewRequired,
-        'Review and accept your current Zone 2 targets before starting.',
+        'Review and accept your current running targets before starting.',
       );
     }
     if (response['code'] == 'duration_choice_unavailable' &&
@@ -537,7 +543,7 @@ class ProgrammeSessionExecutionLauncher {
         );
       }
       final admitted = response['running_target_admission_snapshot'];
-      if (needsZone2) {
+      if (needsAdmission) {
         if (admitted is! Map || admitted['training_session_id'] != session.id) {
           throw const FormatException(
             'The frozen running target snapshot is missing.',

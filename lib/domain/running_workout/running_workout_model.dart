@@ -18,6 +18,7 @@ enum RunningTargetKind {
   cadenceRange,
   rpe,
   rpeRange,
+  qualityPaceRef,
 }
 
 /// Canonical distance: millimetres. Canonical pace: ms / km.
@@ -72,7 +73,16 @@ class RunningTarget {
     this.rpeCr10,
     this.rpeCr10Low,
     this.rpeCr10High,
+    this.qualityCategory,
+    this.fallbackRpe,
   });
+
+  const RunningTarget.qualityPaceRef(String category, {int? fallbackRpe})
+    : this._(
+        kind: RunningTargetKind.qualityPaceRef,
+        qualityCategory: category,
+        fallbackRpe: fallbackRpe,
+      );
 
   const RunningTarget.none() : this._(kind: RunningTargetKind.none);
 
@@ -133,6 +143,8 @@ class RunningTarget {
       );
 
   final RunningTargetKind kind;
+  final String? qualityCategory;
+  final int? fallbackRpe;
   final int? paceMillisecondsPerKilometre;
   final int? paceMillisecondsPerKilometreLow;
   final int? paceMillisecondsPerKilometreHigh;
@@ -153,6 +165,8 @@ class RunningTarget {
   bool operator ==(Object other) {
     return other is RunningTarget &&
         other.kind == kind &&
+        other.qualityCategory == qualityCategory &&
+        other.fallbackRpe == fallbackRpe &&
         other.paceMillisecondsPerKilometre == paceMillisecondsPerKilometre &&
         other.paceMillisecondsPerKilometreLow ==
             paceMillisecondsPerKilometreLow &&
@@ -175,6 +189,8 @@ class RunningTarget {
   @override
   int get hashCode => Object.hashAll([
     kind,
+    qualityCategory,
+    fallbackRpe,
     paceMillisecondsPerKilometre,
     paceMillisecondsPerKilometreLow,
     paceMillisecondsPerKilometreHigh,

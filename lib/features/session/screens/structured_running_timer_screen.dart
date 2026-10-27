@@ -312,6 +312,9 @@ class _StructuredRunningTimerScreenState
   }
 
   static String _authoredTarget(RunningTarget target) => switch (target.kind) {
+    RunningTargetKind.qualityPaceRef => throw const FormatException(
+      'Quality target acceptance is required.',
+    ),
     RunningTargetKind.none => 'Follow the authored guidance',
     RunningTargetKind.pace =>
       '${_exactPace(target.paceMillisecondsPerKilometre!)} /km',

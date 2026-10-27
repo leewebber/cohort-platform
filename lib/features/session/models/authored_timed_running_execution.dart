@@ -44,7 +44,7 @@ class AuthoredTimedRunningExecution extends TimedRunningExecution {
       throw const FormatException('This authored timed run is not executable.');
     }
     const codec = RunningWorkoutCodec();
-    final decoded = resolveAdmittedZone2(
+    final decoded = resolveAdmittedRunningTargets(
       codec.decode(codec.encode(config!.runningWorkout!)),
       block.blockId,
       admission,
@@ -87,6 +87,8 @@ class AuthoredTimedRunningExecution extends TimedRunningExecution {
       block.coachNotes,
       workout.intent,
       workout.notes,
+      if (admission?['quality'] is Map)
+        _qualityGuidance(admission!['quality'] as Map),
     ].whereType<String>().where((s) => s.trim().isNotEmpty).join('\n');
     return AuthoredTimedRunningExecution._(
       sessionBlockId: block.blockId,
@@ -106,3 +108,13 @@ Object? _orderedAdmission(Object? value) {
   if (value is List) return value.map(_orderedAdmission).toList();
   return value;
 }
+
+String _qualityGuidance(Map q) => switch (q['selected_source']) {
+  'five_k' =>
+    'Target source: representative sustained 5K estimate (${q['rule_id']}). Estimated alpha coaching targets, not measured physiological thresholds or guaranteed race predictions.',
+  'manual_threshold' =>
+    'Target source: manually entered threshold pace, ±2% (${q['input']['manual_origin']}). No automatic Garmin connection.',
+  'authored_rpe' =>
+    'Target source: athlete-selected authored RPE. No pace was fabricated.',
+  _ => throw const FormatException('Unknown accepted target source.'),
+};

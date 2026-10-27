@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "workout_id": "SOFTWARE-FIXTURE-QUALITY-V1",
+  "title": "[SOFTWARE FIXTURE ONLY] Threshold development",
+  "notes": "Not an approved Hybrid 10K prescription. Do not publish or train from this fixture.",
+  "steps": [
+    {
+      "kind": "atomic",
+      "step_id": "warm",
+      "role": "warm_up",
+      "duration": {
+        "kind": "time",
+        "milliseconds": 300000
+      },
+      "target": {
+        "kind": "none"
+      },
+      "label": "Gradual warm-up",
+      "notes": "Fixture warm-up instruction"
+    },
+    {
+      "kind": "repeat",
+      "group_id": "quality",
+      "count": 3,
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "effort",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 120000
+          },
+          "target": {
+            "kind": "alpha_quality_pace_v1",
+            "category": "threshold",
+            "fallback_rpe": 7
+          },
+          "label": "Threshold development [fixture only]"
+        },
+        {
+          "kind": "atomic",
+          "step_id": "recover",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 60000
+          },
+          "target": {
+            "kind": "rpe",
+            "scale": "rpe_cr10",
+            "value": 2
+          },
+          "label": "Easy recovery"
+        }
+      ]
+    },
+    {
+      "kind": "atomic",
+      "step_id": "cool",
+      "role": "cool_down",
+      "duration": {
+        "kind": "time",
+        "milliseconds": 300000
+      },
+      "target": {
+        "kind": "none"
+      },
+      "label": "Very easy cool-down"
+    }
+  ]
+}

@@ -131,6 +131,14 @@ class RunningWorkoutValidator {
           );
         }
         _validateDuration(node.duration, path, error);
+        if (node.target.kind == RunningTargetKind.qualityPaceRef &&
+            node.role != RunningStepRole.work) {
+          error(
+            'invalid_quality_role',
+            'Alpha quality references require an authored work step.',
+            path,
+          );
+        }
         _validateTarget(node.target, path, error);
         _warnProse(node.notes, path, warning);
       case RunningRepeatGroup():
@@ -244,6 +252,21 @@ class RunningWorkoutValidator {
     }
 
     switch (target.kind) {
+      case RunningTargetKind.qualityPaceRef:
+        if (!{
+              'threshold',
+              '10k_specific',
+              'short_5k',
+            }.contains(target.qualityCategory) ||
+            (target.fallbackRpe != null &&
+                (target.fallbackRpe! < 1 || target.fallbackRpe! > 10))) {
+          error(
+            'invalid_quality_target',
+            'Unsupported alpha quality category or authored RPE fallback.',
+            path,
+          );
+        }
+
       case RunningTargetKind.none:
         return;
       case RunningTargetKind.pace:

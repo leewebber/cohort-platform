@@ -7,7 +7,7 @@ abstract class RunningTargetAdmissionStore {
 }
 
 class SupabaseRunningTargetAdmissionStore
-    implements RunningTargetAdmissionStore {
+    implements RunningTargetAdmissionStore, QualityRunningTargetAdmissionStore {
   SupabaseRunningTargetAdmissionStore({
     required this.athleteId,
     SupabaseClient? client,
@@ -52,4 +52,61 @@ class SupabaseRunningTargetAdmissionStore
     );
     _owner();
   }
+
+  @override
+  Future<Map<String, dynamic>> reviewQuality(
+    String occurrenceId,
+    String source,
+  ) async {
+    _owner();
+    final raw = await _client.rpc(
+      'review_running_quality_targets',
+      params: {'p_occurrence_id': occurrenceId, 'p_target_source': source},
+    );
+    _owner();
+    if (raw is! Map) {
+      throw const FormatException('Quality target review is unavailable.');
+    }
+    return Map<String, dynamic>.from(raw);
+  }
+
+  @override
+  Future<void> confirmQuality({
+    required String kind,
+    int? seconds,
+    String? date,
+    bool? sustained,
+    bool withdraw = false,
+    String? manualOrigin,
+  }) async {
+    _owner();
+    await _client.rpc(
+      'confirm_running_quality_input',
+      params: {
+        'p_expected_athlete_id': athleteId,
+        'p_input_kind': kind,
+        'p_seconds': seconds,
+        'p_result_date': date,
+        'p_sustained': sustained,
+        'p_withdraw': withdraw,
+        'p_manual_origin': manualOrigin,
+      },
+    );
+    _owner();
+  }
+}
+
+abstract class QualityRunningTargetAdmissionStore {
+  Future<Map<String, dynamic>> reviewQuality(
+    String occurrenceId,
+    String source,
+  );
+  Future<void> confirmQuality({
+    required String kind,
+    int? seconds,
+    String? date,
+    bool? sustained,
+    bool withdraw = false,
+    String? manualOrigin,
+  });
 }
