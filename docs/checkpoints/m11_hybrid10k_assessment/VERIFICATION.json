@@ -1,0 +1,173 @@
+{
+  "format": "cohort.m11-hybrid10k-assessment.verification.v1",
+  "recorded_date": "2026-10-27",
+  "timezone": "Asia/Makassar",
+  "base": "341fbad192c7d85074189af9ce10c8103ebc061b",
+  "prior_base_parent": "1cca598ae1eb879405171114f5dced83cb04bb5a",
+  "status": "PARTIAL_GENUINE_DIRECTION_RECEIVED_COMPLETE_PRESCRIPTIONS_AND_APPROVAL_MISSING",
+  "source_state": {
+    "original_request_sha256": "c0acbf2018f35bf246abc11d714d73e375b65beae552883cd9de7be515b6be07",
+    "raw_brief_matches_original_excerpt": true,
+    "current_authority": "docs/programmes/hybrid_10k/CURRENT_BRIEF.md",
+    "latest_raw_correction": "docs/programmes/hybrid_10k/FOUNDER_CORRECTION_2026_10_27.txt",
+    "general_programme": "fit competent runner ten-week 10K PB; four runs two strength; Zone 2 HR easy; 5K-based quality pace",
+    "withdrawn": "All eight proposed Week 1 and 2 running durations; none used in a candidate",
+    "not_approved": [
+      "entry standard",
+      "exact durations",
+      "per-session workouts and progression",
+      "phase durations",
+      "HR zone configuration/resolution",
+      "pace formulas and qualifying 5K evidence rules",
+      "Lee-specific alpha adjustment",
+      "real content publication"
+    ]
+  },
+  "tests": {
+    "passed": 114,
+    "exit_code": 0,
+    "command": "flutter test --no-pub --reporter expanded test/running_workout/running_workout_domain_test.dart test/running_workout/running_workout_projection_test.dart test/running_workout/running_workout_compatibility_test.dart test/running_workout/running_benchmark_policy_test.dart test/session/structured_running_controller_test.dart test/performance/structured_running_targets_actuals_test.dart test/endurance/endurance_duration_capture_test.dart test/performance/previous_strength_performance_test.dart test/session/production_restore_lifecycle_test.dart test/session/production_restore_resolver_test.dart test/programme_studio/programme_studio_structured_running_test.dart",
+    "files": [
+      "test/running_workout/running_workout_domain_test.dart",
+      "test/running_workout/running_workout_projection_test.dart",
+      "test/running_workout/running_workout_compatibility_test.dart",
+      "test/running_workout/running_benchmark_policy_test.dart",
+      "test/session/structured_running_controller_test.dart",
+      "test/performance/structured_running_targets_actuals_test.dart",
+      "test/endurance/endurance_duration_capture_test.dart",
+      "test/performance/previous_strength_performance_test.dart",
+      "test/session/production_restore_lifecycle_test.dart",
+      "test/session/production_restore_resolver_test.dart",
+      "test/programme_studio/programme_studio_structured_running_test.dart"
+    ],
+    "log_sha256": "481ad3a7d3076d5f7197a3bc4de1139131eae12d3a403d5a2030d3b3f6e7bf4a",
+    "scope": "Existing local component/widget/codec/capture and restore tests; no new programme or hosted proof"
+  },
+  "analysis": {
+    "command": "flutter analyze --no-pub",
+    "exit_code": 1,
+    "prepared_findings": 362,
+    "errors": 0,
+    "diagnostic_identities_equal_to_retained_m12_final_log": true,
+    "prepared_log_sha256": "676e553e4902654361ef75f816c228ec75f636e04fc3bc5777edee26020fb8ad",
+    "retained_m12_log_sha256": "aabc86a6541eec1b828c7a8f861794e8de6a43c32ee9828d2dd1592ecc9aee6b",
+    "initial_unprepared_scan": {
+      "findings": 1312,
+      "adopted_as_baseline": false,
+      "reason": "Missing nested-package dependency preparation in task-owned clone",
+      "log_sha256": "5982d2e4a5a13fdd9cb44c188790ebd300da8be239eb73fa4b3c7e92564d284a"
+    },
+    "remediation": "Offline cached pub get in package/importer/server only; no dependency source or analysis configuration changes",
+    "green_claim": false
+  },
+  "technical_change": {
+    "runtime_patch": false,
+    "schema_change": false,
+    "executable_programme_created": false,
+    "reason": "Current request is representation/execution assessment. Workouts/zone/phase/pace authority remains incomplete; no invented prescriptions or large new running path.",
+    "concrete_follow_up": "Ordinary steady-state countdown has no EnduranceResultData timer cursor/checkpoint/restore handling; inspected, not device reproduced or fixed here"
+  },
+  "garmin": "UNVERIFIED delivery AND activity return; no API/provider/account work. Neutral model and future required mappings only.",
+  "source_hashes": [
+    {
+      "file": "lib/domain/running_workout/running_workout_model.dart",
+      "sha256": "6d5bb6cb54d1782bc394f05f4fcdff1fd4ba524501280a3f9d9f3466557174ae"
+    },
+    {
+      "file": "lib/domain/running_workout/running_workout_codec.dart",
+      "sha256": "3580c7f0ee93d327e93fdb3f2f59b0b990cd427fee2144699cd61ccaebd71723"
+    },
+    {
+      "file": "lib/domain/running_workout/running_workout_projection.dart",
+      "sha256": "00225686b2d5ae58b47973df92fb15d65b79402dcf23140b90d9ffa040a373a0"
+    },
+    {
+      "file": "lib/domain/running_workout/running_execution_authority.dart",
+      "sha256": "3386e7ddd0dbdc763733b0f28841ba91c8c5e0ce6cc3787962182aa1e5bec699"
+    },
+    {
+      "file": "lib/domain/running_workout/running_benchmark_policy.dart",
+      "sha256": "d32949f68a5445642052ada6dbdbeb4f3be736aa6a1ccf8e378f64c9cdb43cf2"
+    },
+    {
+      "file": "packages/cohort_plan_package/lib/src/plan_package_validator.dart",
+      "sha256": "e96a59a8c323689baf851cd72bc269e9d536b3e77f8ced15360537693bc3d387"
+    },
+    {
+      "file": "lib/features/session/models/structured_running_execution.dart",
+      "sha256": "debfe31525ba46fae6737f87793c9fc7e55f3fc9ecb4b3b8f286fa6f6929a6c5"
+    },
+    {
+      "file": "lib/features/session/services/structured_running_controller.dart",
+      "sha256": "605e2a0ed8f3ea8ea348f0b054a98b06e5cfeea5b8d5ab0882f1de57d6c5a64b"
+    },
+    {
+      "file": "lib/features/session/screens/structured_running_timer_screen.dart",
+      "sha256": "7a19b06568b1a71b2803a2c6bc5501939ce2f08366a50c6707728831697c20ed"
+    },
+    {
+      "file": "lib/features/session/screens/active_session_screen.dart",
+      "sha256": "1d38c6954dbd23417726eb431f9463e242b848c42142cfdc2989b75c70d51114"
+    },
+    {
+      "file": "lib/features/session/services/circuit_block_timer_bridge.dart",
+      "sha256": "cfe14c2708764044f5d0f401d1d119b5e482c77060f86f58c08fe9addd59f1c2"
+    },
+    {
+      "file": "lib/features/performance/models/performance_result_data.dart",
+      "sha256": "964d54d4fa1ebe72fdbd5dad14c164872c79dcd8715ef3af26eed52f79df0f5d"
+    },
+    {
+      "file": "lib/features/performance/models/interval_work_result.dart",
+      "sha256": "39c27b8fc12542584f4f42e8b9784375e37682d6a7e26b81443cccc9420e3693"
+    },
+    {
+      "file": "lib/features/internal_tools/b3_device_benchmark_entry.dart",
+      "sha256": "820bd41092fc6fa0ab3537140515a6e8df0950d46e4addae53bf9c75532b9361"
+    }
+  ],
+  "retained_content": [
+    {
+      "file": "docs/programmes/hybrid_10k/CURRENT_BRIEF.md",
+      "sha256": "9731dbff836b8d1170d4484c97d7d316d05c99da64e53ca2de15192345f9f0a0"
+    },
+    {
+      "file": "docs/programmes/hybrid_10k/FOUNDER_BRIEF_2026_10_27.txt",
+      "sha256": "7de445cf0ac8d7e9082cb158c356b9f29c778b1df24da12c0090f7d7efb1c44a"
+    },
+    {
+      "file": "docs/programmes/hybrid_10k/FOUNDER_CORRECTION_2026_10_27.txt",
+      "sha256": "c679d7c313cfb4b9d470f1944183945c9dd107c5cc79e90d71dd3e86ba58d412"
+    }
+  ],
+  "m12_implementation_hashes_match": 22,
+  "preservation": {
+    "equal": true,
+    "existing_checkouts": 23,
+    "registered_absent": 28,
+    "before_sha256": "a462c64486b147a5ba26d8eb7affe687bf5b4ccc9911bda3fc94f745f7cbfacd",
+    "after_sha256": "a462c64486b147a5ba26d8eb7affe687bf5b4ccc9911bda3fc94f745f7cbfacd",
+    "scope": "Original roots, registered worktrees and prior M1.2 clone: HEADs/branches/raw indices/status/files/.env/.temp; raw inventory retained outside Git",
+    "worktrees_created_archived_pruned": 0,
+    "additional_clones": 0,
+    "global_setting_changes": 0
+  },
+  "git": {
+    "working_copy": "/private/tmp/cohort_m11_sources",
+    "branch": "main",
+    "prior_341fbad_preserved": true,
+    "live_main_check": "One ordinary git ls-remote retry failed: Could not resolve host github.com",
+    "alternate_route_or_network_escalation": false,
+    "fetch_or_push": false,
+    "publication": "Local only; no current remote equality or publication claim"
+  },
+  "not_performed": [
+    "runtime implementation",
+    "canonical source compilation/admission of a complete real programme",
+    "content approval",
+    "full safety gate or DB replay",
+    "hosted queries/migrations/publication/accounts/recipients/athlete writes",
+    "device distribution/acceptance",
+    "browser/desktop/AppleScript/equivalent UI control"
+  ]
+}

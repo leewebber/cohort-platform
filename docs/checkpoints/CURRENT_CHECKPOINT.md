@@ -1,5 +1,18 @@
 # Current repository checkpoint
 
+> **M1.1 Hybrid 10K assessment — source incomplete, 2026-10-27:**
+> [Current corrected brief](../programmes/hybrid_10k/CURRENT_BRIEF.md) defines the general
+> fit-runner ten-week 10K PB plan, not Lee's undesigned personal return-to-running adjustment.
+> Earlier proposed Week 1–2 durations are withdrawn. Zone 2 HR guides easy running;
+> quality pace derives from 5K evidence, with entry standard, all exact workouts/durations,
+> zone configuration and formulas still unapproved. [Week/execution assessment](./m11_hybrid10k_assessment/HANDOFF.md)
+> retains provisional material without runnable placeholders or content approval. 114 focused
+> checks pass; no runtime/schema patch. HR-zone resolution, full phased v2 mapping, distance/
+> lap/tests and ordinary steady-state countdown restart remain gaps. Next point: M1.1 entry
+> standard and exact first-two-week general-plan source. Father's plan, hosted enablement,
+> Garmin both ways, adaptation, distribution and device acceptance remain open. Prior `341fbad`
+> preserved, old checkouts/indices/.temp unchanged; ordinary GitHub retry still fails DNS.
+
 > **M1.1 source admission — partial, 2026-10-27:**
 > [M1.1 handoff](./m11_alpha_sources/HANDOFF.md) traces both genuine alpha paths
 > from base `1cca598`, retaining private v2 for Hybrid 10K and v1 where suitable for father.

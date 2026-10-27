@@ -1,5 +1,10 @@
 # Programme inputs — ask in order, only for gaps in the supplied source
 
+**Continuation:** Hybrid 10K direction is now received; use the [current corrected
+brief and prioritised decisions](../m11_hybrid10k_assessment/HANDOFF.md) rather than
+asking for the same brief again. Withdrawn Week 1–2 durations are not candidates.
+Father's source/questions below remain outstanding.
+
 2026-10-27. [M1.1 decision and path](HANDOFF.md).
 Founder supplies both plans; agents may transcribe and verify, not prescribe or
 approve them. No questionnaire answers are inferred from old programme fixtures.

@@ -1,5 +1,10 @@
 # M1.1 — genuine alpha programme sources and admission
 
+**Continuation:** [2026-10-27 corrected PB brief and week/execution assessment](../m11_hybrid10k_assessment/HANDOFF.md)
+supersedes the source-absence finding below for Hybrid 10K: genuine direction is now
+received, complete prescriptions/approval remain absent. Earlier proposed Week 1–2
+durations are withdrawn. The older trace/verification below remains dated evidence.
+
 2026-10-27 (Asia/Makassar). Inspected base:
 `1cca598ae1eb879405171114f5dced83cb04bb5a`.
 **M1.1 PARTIAL: supported v1/v2 path confirmed; real source admission blocked
