@@ -1,5 +1,23 @@
 # Cohort Platform repository guidance
 
+> **M1.2 acquisition — locally implemented/verified, 2026-10-27:**
+> [M1.2 handoff](docs/checkpoints/m12_acquisition/HANDOFF.md) implements normal authenticated training setup
+> (persisted timezone draft/confirmation), private catalogue/detail/free acquisition and exact
+> assignment schedule through existing v1/v2 Programme Athlete authority. Exact operator-managed
+> recipient eligibility is server-enforced; no replacement parameter, billing, generated plan or
+> invented tester content. Local GoTrue/PostgREST fresh/replay proof and 95 affected tests pass;
+> six safety groups pass; analysis remains 362 identical inherited findings, zero errors or
+> changed-file diagnostics. One [M1.2 migration/deployment handoff](docs/checkpoints/m12_acquisition/DEPLOYMENT.md) is **LOCAL ONLY**;
+> no hosted apply/recipient provision/publication/athlete write/device acceptance. The separate
+> producer schema remains deferred and was omitted from the local proof.
+> Under the [controlling M0–M10 plan](docs/planning/Founder_Release_Plan_M0_M10_v1.md), M1.2 acquisition implementation is complete locally;
+> hosted/device and genuine-programme benchmark adoption remain open. Next exact point is
+> **M1.1 real alpha source approval/admission**, blocked on genuine Hybrid10K/father sources;
+> M1.3 real-programme progress continuity and all later Gate A requirements remain. No next
+> implementation or real-content/hosted/device action starts automatically. Older task notices
+> below retain their historical scope; preserve all older checkout files/indices/HEADs/.temp.
+
+
 > **Controlling founder release reset — 2026-10-26:**
 > [M0–M10 plan](docs/planning/Founder_Release_Plan_M0_M10_v1.md) now controls product priorities;
 > [M0 audit](docs/checkpoints/m0_alpha_baseline/HANDOFF.md) completes baseline inspection/allocation only.

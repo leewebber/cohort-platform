@@ -1,0 +1,186 @@
+{
+  "M1.2_product_gate": "PARTIAL: genuine content/benchmarks, hosted enablement and device acceptance remain",
+  "analysis": {
+    "after": 362,
+    "errors": 0,
+    "identities_equal": true,
+    "new_or_changed_file_diagnostics": 0,
+    "prepared_before": 362,
+    "suppression_or_configuration_changes": false,
+    "unprepared_missing_nested_package_scan": "Not used as baseline; dependencies prepared before implementation"
+  },
+  "base": "2a0957fe48c738b048e273c852bb1a4359829be0",
+  "device_usability": "NOT_VERIFIED",
+  "format": "cohort.m12-acquisition.verification.v1",
+  "hosted": "NOT_DEPLOYED_NO_APPLICATION_HOSTED_CONTACT",
+  "implementation_files": [
+    {
+      "file": "docs/checkpoints/m12_acquisition/SCOPE.md",
+      "sha256": "77628be7f1deb61054fea9986106be81da03ff627920026dd6e34aa17ee94fdf"
+    },
+    {
+      "file": "lib/features/app_shell/athlete_app_shell.dart",
+      "sha256": "d5aac1abcc695e4603b1cec85895550a134c8f7edb51f55cde3a181e00eaa4a3"
+    },
+    {
+      "file": "lib/features/app_shell/founder_workspace_shell.dart",
+      "sha256": "38d09c6545ce27413af1bed80cfc8a58faaa9e7a808e0f83c6c93b0ca60bead9"
+    },
+    {
+      "file": "lib/features/auth/controllers/auth_controller.dart",
+      "sha256": "5de98c7657ef999b519b76d6156787b0347ff31ecaa313dde3a6df0a2b14220d"
+    },
+    {
+      "file": "lib/features/auth/repositories/supabase_profile_repository.dart",
+      "sha256": "74846c8e716c428f3fba42e184f1fbe72fb3b22e0f66f13e77ec3370cbddb07d"
+    },
+    {
+      "file": "lib/features/auth/screens/auth_gate.dart",
+      "sha256": "52ad2da0db8559f5924fde64210cce560aee67ad0571fa6a195d064a2d3419e3"
+    },
+    {
+      "file": "lib/features/auth/services/profile_provisioning_service.dart",
+      "sha256": "724ac968eba9a6f8a681a3bdc1935a87099f94c707253c4d807be9c1cbaa9fbd"
+    },
+    {
+      "file": "lib/features/programme/screens/athlete_programme_screen.dart",
+      "sha256": "afc7b99460fff85ed1aed2e1cd0dc4df567a744cdfcb9dcd8a8eba4d03f1ce44"
+    },
+    {
+      "file": "lib/features/programme/screens/athlete_programme_selection_screen.dart",
+      "sha256": "35908b1e7f1774ed876b53af09c140d47fe6351a059aa30e2e240fa67aa02f06"
+    },
+    {
+      "file": "lib/features/programme_acquisition/acquisition_controller.dart",
+      "sha256": "4020c06898b3e461cff40817b588448ac7f0443cf78ed68a8a9784f6de309c07"
+    },
+    {
+      "file": "lib/features/programme_acquisition/acquisition_store.dart",
+      "sha256": "6b991211e9bc4a2cf2cc5772ab7a4e84993f8b844ee4bdebcfae9723764685c9"
+    },
+    {
+      "file": "lib/features/programme_acquisition/private_programme_catalogue.dart",
+      "sha256": "eb80958dd274b8dee2f9d18a6b9974d66558990ea4525dedb55d1bbcc961c828"
+    },
+    {
+      "file": "lib/features/programme_acquisition/training_setup_gate.dart",
+      "sha256": "c7c6783361e1d49aa6bca917307870bcc18b28c005a28ea40e50a2b88f6c5f75"
+    },
+    {
+      "file": "supabase/migrations/20261026110000_training_setup_private_alpha_acquisition.sql",
+      "sha256": "59cb7a97e5c5bcd6e5bc230631a1c34942ce4cd7610aa253b1556510df7248f5"
+    },
+    {
+      "file": "supabase/tests/run_m12_acquisition_gate.sh",
+      "sha256": "d36b381f331f2c5ea4924640d739d55b411036e2a0613a9e02ba6da5e5014010"
+    },
+    {
+      "file": "test/auth/auth_gate_widget_test.dart",
+      "sha256": "0fa32d7ffae5b2411d082290071a9634668c32f9ecd57760951c7b77e66fd13b"
+    },
+    {
+      "file": "test/auth/auth_sign_in_transition_test.dart",
+      "sha256": "52afd8629a81ccdc9a88163830d82b7e0da002223481a3776509d730346d5038"
+    },
+    {
+      "file": "test/programme_acquisition/acquisition_controller_test.dart",
+      "sha256": "348d75123843ad17cb7b0be8cae3a31490bb4cbd77238aa1f5520d21ef7200b2"
+    },
+    {
+      "file": "test/programme_acquisition/acquisition_test_support.dart",
+      "sha256": "bd30872795dde77b590289255cc1f44fe0c1252a5fa4e7cf110dd11f6937a052"
+    },
+    {
+      "file": "test/programme_acquisition/acquisition_widget_test.dart",
+      "sha256": "f4cc666ca252d1b03d0489324101addd58fddd88b5f3d9a726d497153adfb5df"
+    },
+    {
+      "file": "test/programme_acquisition/auth_identity_race_test.dart",
+      "sha256": "84b85f6aeabb0a29e1cf2422313f6aff3bffef00a480bb212a8a1d745af365f2"
+    },
+    {
+      "file": "test/programme_acquisition/authenticated_local_test.dart",
+      "sha256": "42f1f8af9839ad97a2f147cfa222377337e3bb5a096ae03624511c01b94019c6"
+    }
+  ],
+  "implementation_sha": "a59438554072c1413c51acb95f245ca7375675fb",
+  "local_resources": {
+    "deferred_producer_migration_excluded_in_local_copy": true,
+    "disposable_stack_and_private_config_removed": true,
+    "original_131_migration_files_unchanged": true
+  },
+  "logs": [
+    {
+      "label": "affected_95",
+      "raw_logs_not_committed": true,
+      "sha256": "63383a580ffd65e53730900da76bc11dbac43f895c8ece8064d0091b08207076"
+    },
+    {
+      "label": "refresh_42_overlapping",
+      "raw_logs_not_committed": true,
+      "sha256": "595532737f4a89ca5e368acac245fbe48f3639ef6989acfee5c8737ce5b02e15"
+    },
+    {
+      "label": "safety_6_groups",
+      "raw_logs_not_committed": true,
+      "sha256": "768c0e0185f8005c87d6f60de0397e3fc5b116dc463b05658bf11ed7ca85ea57"
+    },
+    {
+      "label": "analysis_prepared_before",
+      "raw_logs_not_committed": true,
+      "sha256": "6eea4391cb5bcb1e011f4a815d7b79c01fe28dd87a2e1371eb1d1125c2966ffc"
+    },
+    {
+      "label": "analysis_final",
+      "raw_logs_not_committed": true,
+      "sha256": "aabc86a6541eec1b828c7a8f861794e8de6a43c32ee9828d2dd1592ecc9aee6b"
+    },
+    {
+      "label": "authenticated_fresh_replay",
+      "raw_logs_not_committed": true,
+      "sha256": "335039f256229fcf8ad9f1aed094cda42176d102b0a28605a6f9adf17e9ee88c"
+    }
+  ],
+  "operations_not_performed": [
+    "hosted apply/provisioning",
+    "real accounts or athlete writes",
+    "programme publication/assignment hosted",
+    "paid-account changes",
+    "device distribution",
+    "app/browser/AppleScript control",
+    "next milestone implementation"
+  ],
+  "preservation": {
+    "after_sha256": "302f1c22f384ff1a7d79a208253b2a8b89e4efce68c70385683069646507b18d",
+    "before_sha256": "302f1c22f384ff1a7d79a208253b2a8b89e4efce68c70385683069646507b18d",
+    "coverage": "HEADs, branches, raw indices, statuses, tracked/nonignored outstanding files, .env and supabase/.temp",
+    "equal": true,
+    "existing_checkouts": 22,
+    "git_resets_stashes_cleanup": 0,
+    "global_setting_changes": 0,
+    "historical_index_exceptions": "Prior exceptions unchanged; equality is against this task starting inventory",
+    "indices_recreated": 0,
+    "managed_worktree_lifecycle_operations": 0,
+    "original_files_staged": false,
+    "registered_absent_unchanged": 28
+  },
+  "publication": "Authorised normal main-only fast-forward of two reviewed linear commits; exact final checkpoint SHA and remote equality reported after push.",
+  "recorded_local_date": "2026-10-27",
+  "status": "ACQUISITION_IMPLEMENTATION_COMPLETE_LOCAL_VERIFIED",
+  "tests": {
+    "additional_refresh_subset": 42,
+    "additional_subset_overlaps_affected": true,
+    "affected": 95,
+    "authenticated_local_passes": [
+      "fresh",
+      "reset_replay"
+    ],
+    "authentication": "Actual local GoTrue-issued sessions and actual AuthController/profile/acquisition store; local email confirmation disabled, PKCE storage supplied; no raw signed-JWT substitution",
+    "concurrency": "six acquisition requests return one assignment; concurrent duplicate profile creation recovers original profile",
+    "partial_failure": "injected materialisation failure leaves no assignment; subsequent retry succeeds",
+    "safety_groups_passed": 6,
+    "scope": "setup draft/complete recovery; eligible facts/detail; guessed/cross-athlete/identity mismatch denial; expiry/revocation; valid alpha grant cannot use old replacement RPC; existing active preserved; exact schedule/restart; logout; effective role/RLS/table/column/RPC and original function ACL/owner preservation",
+    "v1_v2_success": true
+  },
+  "timezone": "Asia/Makassar"
+}

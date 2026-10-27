@@ -1,0 +1,21 @@
+{
+  "apply_authorised": false,
+  "deferred_excluded_file": "supabase/migrations/20261026120000_durable_publication_approval_events.sql",
+  "existing_source_files_unchanged": 131,
+  "format": "cohort.m12-acquisition.migrations.v1",
+  "limits": "No hosted application contact or mutation. Exact one-file deployment requires separate authority and fresh preflight. Repository has two pending source files, not one; exclude deferred producer only in a reviewed scoped deployment copy.",
+  "new_file": {
+    "file": "supabase/migrations/20261026110000_training_setup_private_alpha_acquisition.sql",
+    "sha256": "59cb7a97e5c5bcd6e5bc230631a1c34942ce4cd7610aa253b1556510df7248f5"
+  },
+  "proposed_post_apply": {
+    "ledger_count": 131,
+    "tip": "20261026110000"
+  },
+  "recorded_hosted_base": {
+    "fresh_in_this_task": false,
+    "ledger_count": 130,
+    "tip": "20261024130000"
+  },
+  "source_base": "2a0957fe48c738b048e273c852bb1a4359829be0"
+}
