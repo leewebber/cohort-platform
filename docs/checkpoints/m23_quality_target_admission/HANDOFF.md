@@ -129,9 +129,11 @@ The [exact proposal](DEPLOYMENT.md) separates scoped schema approval from compat
 client distribution, real content approval/publication, eligibility and athlete tests.
 No hosted contact or hosted data/account/programme/assignment changes occurred.
 
-Ordinary GitHub lookup fails DNS; remote main freshness remains unverified. All prior
-commits remain ancestors. A normal main-only push is authorised and will be attempted;
-no force push, alternate route or network permission bypass is authorised.
+Ordinary lookup and `git push origin main:main` failed with **Could not resolve
+host: github.com** (exit 128), including push of documentation checkpoint `0caee79`.
+Remote main freshness remains unverified; cached origin/main is not current remote
+proof. All prior commits remain ancestors. No force push, alternate route or network
+permission bypass was attempted. The local implementation/docs commits remain retained.
 
 **Next single build point: M2.4 terminal completion retry/idempotence**, preserving
 one canonical result and truthful feedback after interruption. No next build starts

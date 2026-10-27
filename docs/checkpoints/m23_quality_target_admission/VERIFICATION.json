@@ -97,7 +97,14 @@
     "prior_ten_local_commits_preserved": true,
     "rewritten_or_merged": false,
     "normal_main_push_authorised": true,
-    "alternate_network_route_or_permission_bypass": false
+    "alternate_network_route_or_permission_bypass": false,
+    "normal_push": {
+      "command": "git push origin main:main",
+      "attempted_head": "0caee79",
+      "exit_code": 128,
+      "result": "Could not resolve host: github.com",
+      "remote_advancement": "UNVERIFIED"
+    }
   },
   "earlier_attempts_not_counted": [
     "Initial SQL reserved identifier fixed before final successful fresh/repeat proof",
