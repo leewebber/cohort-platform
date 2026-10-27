@@ -1,0 +1,180 @@
+{
+  "format": "cohort.m23-structured-timed-running.verification.v1",
+  "date": "2026-10-27",
+  "timezone": "Asia/Makassar",
+  "status": "BOUNDED_TIMED_EXECUTION_LOCAL_VERIFIED_OVERALL_M23_PARTIAL",
+  "base": "dade09f5e40a87768bb23b62b805022d4fb4461c",
+  "implementation": "618c53f9c26565a2509bf79be81dafb348333315",
+  "preserved_earlier_commits": [
+    "341fbad192c7d85074189af9ce10c8103ebc061b",
+    "632ff8393b8bd07c5b2297517a9ba2728fc4c0c6",
+    "2710185c43c36892f032358ca2ce2f5c0b3ba4b9",
+    "dade09f5e40a87768bb23b62b805022d4fb4461c"
+  ],
+  "new_focused_tests": 23,
+  "affected_tests": 1124,
+  "focused_is_subset_of_affected": true,
+  "safety_groups": 6,
+  "commands": {
+    "focused": "flutter test --no-pub test/session/authored_timed_running_test.dart",
+    "affected": "flutter test --no-pub test/session test/performance test/endurance test/persistence test/running_workout test/programmes test/programme_studio test/auth test/features/home/programme_session_execution_launcher_test.dart test/programme/athlete_programme_completion_self_test_2_test.dart",
+    "safety": "bash tool/testing/run_phase2_consolidation_safety_gate.sh",
+    "analysis": "flutter analyze --no-pub"
+  },
+  "exit_codes": {
+    "focused": 0,
+    "affected": 0,
+    "safety": 0,
+    "analysis": 1
+  },
+  "analysis": {
+    "baseline": 362,
+    "final": 362,
+    "identities_equal": true,
+    "errors": 0,
+    "changed_file_diagnostics": []
+  },
+  "earlier_attempts_not_counted": [
+    "fixture required package fields and target encoding corrected",
+    "legacy controller typed getter compatibility retained through generic controller",
+    "retry test awaited transient snackbar dismissal",
+    "interim style and unused import findings removed"
+  ],
+  "migration_required": false,
+  "hosted_or_device_proof": false,
+  "browser_desktop_control": false,
+  "publication_or_athlete_data_changes": false,
+  "remote": {
+    "url": "https://github.com/leewebber/cohort-platform.git",
+    "ordinary_lookup": "Could not resolve host: github.com",
+    "freshness": "unknown; cached origin/main is stale",
+    "normal_main_push_authorised": true,
+    "network_escalation_or_alternate_route": false
+  },
+  "preservation": {
+    "existing_checkouts": 23,
+    "registered_absent": 28,
+    "before_after_identical": true,
+    "sha256": "a462c64486b147a5ba26d8eb7affe687bf5b4ccc9911bda3fc94f745f7cbfacd"
+  },
+  "limitations": [
+    "Last successful local write durability, no cross-device timer sync",
+    "HR references are unresolved; no live HR",
+    "No approved personal target formulas or full-body B2 admission",
+    "Distance/manual laps and benchmark ingestion absent",
+    "Compatible client acceptance required before new-body publication",
+    "No Garmin delivery/activity return, device acceptance or hosted proof"
+  ],
+  "files": [
+    {
+      "path": "lib/domain/running_workout/running_workout_codec.dart",
+      "sha256": "e575ec57de7abfd16b5b2fbd36a61d0dfeb5ad45b6bf6b16d06387a758d0b4fb"
+    },
+    {
+      "path": "lib/domain/running_workout/running_workout_model.dart",
+      "sha256": "f6e7e39a8ff0747adbe032345cad1b1d48cd946a23e513a82c08f5637669143d"
+    },
+    {
+      "path": "lib/domain/running_workout/running_workout_projection.dart",
+      "sha256": "1fc2f8cc9cf88cbc1a04a074454b56c8efe3321d271aae6c8508489b6df9457f"
+    },
+    {
+      "path": "lib/domain/running_workout/running_workout_validation.dart",
+      "sha256": "7e7e472843c9c95c306a2d1ccec5bb77ecfa87091bbba851241651d44e7dd01d"
+    },
+    {
+      "path": "lib/features/performance/models/performance_snapshot.dart",
+      "sha256": "d74ae2f758fa83befc2df7c1d0ee010ca6a77cac5cdf494af3e5747af6686f21"
+    },
+    {
+      "path": "lib/features/performance/services/performance_snapshot_builder.dart",
+      "sha256": "a184c4aac8c3066e2d38b0d0eb5c536e28a031ae54d8fd6138e578c13d6da660"
+    },
+    {
+      "path": "lib/features/private_programme/reviewed_protocol_graph_artifact.dart",
+      "sha256": "a610aa4c25c97f9271ca7bf9233014dca5784c844c8b48a416bb8a16a3564a07"
+    },
+    {
+      "path": "lib/features/session/models/authored_timed_running_execution.dart",
+      "sha256": "20768079206e0d83f3c822a61f8b8553ef4d639e00882b1fac46a41694338618"
+    },
+    {
+      "path": "lib/features/session/models/production_session_ui_cursor.dart",
+      "sha256": "dbd1f8ef6ccd84e54d5e53f662e0d474b860c5fcd9739e486fdb4d46024dac4e"
+    },
+    {
+      "path": "lib/features/session/models/session_execution_plan.dart",
+      "sha256": "814bb40eb43900c73d51a2143dd2da3a6e84c33912f80acd36b2c8c54c96507b"
+    },
+    {
+      "path": "lib/features/session/models/structured_running_execution.dart",
+      "sha256": "407e91da190518fcdb1c9d6730e760a9dcdf744536ddb59be3ffb44c970dd527"
+    },
+    {
+      "path": "lib/features/session/screens/active_session_screen.dart",
+      "sha256": "bf934def81aae7dfaf37f841e6017e160df0142bdc577ff139e0b4fe3352eb8c"
+    },
+    {
+      "path": "lib/features/session/screens/structured_running_timer_screen.dart",
+      "sha256": "1a45414096dc757c45f1f94d9bf4367d96b25ecf3c152b460fa22df66df91c1b"
+    },
+    {
+      "path": "lib/features/session/services/session_execution_launcher.dart",
+      "sha256": "8fe54179d721f1a3f2d8880420202193e3a7cec84c05421d7f74acdc38a7572b"
+    },
+    {
+      "path": "lib/features/session/services/structured_running_controller.dart",
+      "sha256": "0f3588d310313d9205f7077c905bf21f6c31721a780fa25c821cfafda6412479"
+    },
+    {
+      "path": "lib/models/timer_configuration.dart",
+      "sha256": "dbbe86beb23db66a73de5b5d506f6e140d1593c2a5ee725e4413751300091565"
+    },
+    {
+      "path": "test/session/authored_timed_running_test.dart",
+      "sha256": "50f6c5dea3ac16f6138ae1c7ef32682fad99ac1d04dfb54acdad65699c2aaa0a"
+    },
+    {
+      "path": "test/session/fixtures/authored_timed_protocol_graph.json",
+      "sha256": "2910db48fe8212fce5c5f9043dc3a533b5af034c66073d36adf1e83def00c861"
+    },
+    {
+      "path": "test/session/fixtures/authored_timed_run.json",
+      "sha256": "72f68d9fae6ea1f4e450fe92382e0c2c6095d7add1aae933a19d2909df8f9f1e"
+    },
+    {
+      "path": "test/session/fixtures/authored_timed_run_v1.yaml",
+      "sha256": "03eff969592dd639159462dfa2054687e0019d64f67d9bce909c6afcd784b421"
+    },
+    {
+      "path": "test/session/fixtures/authored_timed_run_v2.yaml",
+      "sha256": "aee7528c7eb61538dc81582dfba1cc1041557859f88a2a8e5ef155e43bf10170"
+    },
+    {
+      "path": "test/session/steady_state_restart_test.dart",
+      "sha256": "c2d8d1aaae6e40fca86c4b8cafe0150ae5be0e44689afd8047496604840d8cf3"
+    }
+  ],
+  "local_logs": [
+    {
+      "path": "/private/tmp/cohort_m23_final_focused.log",
+      "sha256": "53a566cc3a57c096f63489d0c3356657320b9ff02909e18d745ac8a2a5e9e2ac"
+    },
+    {
+      "path": "/private/tmp/cohort_m23_final_regressions.log",
+      "sha256": "e3ee0f0bbcfe15aad291b99c1d408ad46f744ebb49a931e79374c0ecffec0500"
+    },
+    {
+      "path": "/private/tmp/cohort_m23_final_safety.log",
+      "sha256": "2fcca86aad21be6ea1b8050277c3bd87529791dba3e6dd37c7826e3ec1578902"
+    },
+    {
+      "path": "/private/tmp/cohort_m23_analysis_before.log",
+      "sha256": "d6d3658fa615d43440d960c9dba540abdda9f36bc62da9ce251371de17238703"
+    },
+    {
+      "path": "/private/tmp/cohort_m23_final_analysis.log",
+      "sha256": "551671beab5b332ea68bb75b5150fc92a41431c6ba5dd4e39cdd1b618ee48d8e"
+    }
+  ]
+}

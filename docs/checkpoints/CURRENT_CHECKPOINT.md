@@ -1,5 +1,21 @@
 # Current repository checkpoint
 
+> **M2.3 complete timed running — locally verified, 2026-10-27:**
+> [Timed-run handoff](./m23_structured_timed_running/HANDOFF.md) at `618c53f` reuses
+> Programme Athlete and the existing runner for complete authored warm-up/main/repeated
+> work-recovery/cooldown bodies, exact labels/durations/supported fixed targets and manual
+> endurance actuals. UI cursor v4 preserves each run's step/repeat and remaining time,
+> restores paused without closed-time catch-up, guards save/recovery and pins the full body
+> independently of disposable UI state. Existing v1/v2 sources, M1.3 and B3 remain compatible.
+> 23 focused / 1,124 affected tests and six safety groups pass; 362 inherited analysis
+> identities unchanged, zero errors/changed-file findings. No migration/hosted/device action.
+> Overall M2.3 remains partial: Zone 2 configuration, approved 5K rules and full-body personal
+> target admission are open. Next single point: M2.3 personalised target admission with one
+> exact approved representative workout. New-body publication needs compatible-client
+> acceptance. M1.1 genuine content, M1.2 enablement, Garmin both ways, adaptation and M4
+> distribution/device acceptance remain open. Prior main commits and old checkouts/indices/
+> .temp preserved; normal GitHub DNS lookup fails and remote freshness remains unknown.
+
 > **M1.3 steady-state restart — locally verified, 2026-10-27:**
 > [Countdown handoff](./m13_steady_state_restart/HANDOFF.md) fixes the canonical
 > Programme Athlete countdown gap at `2710185`: per-block timer progress in the existing
