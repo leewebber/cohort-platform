@@ -478,7 +478,10 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen>
     _performanceController.setActiveBlock(block.blockId);
 
     if (block.timerConfiguration?.runningWorkout != null) {
-      final execution = AuthoredTimedRunningExecution.fromBlock(block);
+      final execution = AuthoredTimedRunningExecution.fromBlock(
+        block,
+        admission: _controller.state.plan.runningTargetAdmissionSnapshot,
+      );
       await Navigator.of(context).push<StructuredRunningCursor>(
         MaterialPageRoute(
           builder: (_) => StructuredRunningTimerScreen(
@@ -579,7 +582,10 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen>
     }
     try {
       StructuredRunningController.restore(
-        execution: AuthoredTimedRunningExecution.fromBlock(block),
+        execution: AuthoredTimedRunningExecution.fromBlock(
+          block,
+          admission: _controller.state.plan.runningTargetAdmissionSnapshot,
+        ),
         cursor: cursor,
       ).dispose();
       _timedRunning[block.blockId] = cursor;

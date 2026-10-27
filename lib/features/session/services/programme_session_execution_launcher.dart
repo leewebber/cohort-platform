@@ -4,6 +4,9 @@ import '../../../domain/hyrox_base/programme_prescription.dart';
 import '../../../application/hyrox_base/programme_prescription_repository.dart';
 import '../../programme/screens/programme_prescription_review_screen.dart';
 import '../models/bound_programme_execution.dart';
+import '../models/running_target_admission.dart';
+import '../screens/running_target_review_screen.dart';
+import 'running_target_admission_store.dart';
 
 import '../../../models/block_performance_capture_mode.dart';
 import '../../../models/training_session.dart';
@@ -23,6 +26,7 @@ import 'session_execution_launcher.dart';
 
 enum ProgrammeSessionExecutionFailureCode {
   prescriptionConsentRequired,
+  runningTargetReviewRequired,
   durationChoiceRequired,
   invalidPreparedIdentity,
   missingPreparedProvenance,
@@ -64,6 +68,7 @@ class ProgrammeTrainingSessionLaunchResult {
     this.runningExecutionAuthority,
     this.boundPrescriptionSnapshot,
     this.durationChoiceSnapshot,
+    this.runningTargetAdmissionSnapshot,
   });
 
   final TrainingSession trainingSession;
@@ -72,6 +77,7 @@ class ProgrammeTrainingSessionLaunchResult {
   /// Immutable server-frozen v3 source/consent/target handoff; never client math.
   final Map<String, dynamic>? boundPrescriptionSnapshot;
   final Map<String, dynamic>? durationChoiceSnapshot;
+  final Map<String, dynamic>? runningTargetAdmissionSnapshot;
   final RunningTargetSnapshotAggregate? runningTargetSnapshot;
   final AuthoredRunningExecutionAuthority? runningExecutionAuthority;
 
@@ -89,6 +95,7 @@ class ProgrammeSessionExecutionLauncher {
     ProgrammeTrainingSessionStartStore? startStore,
     SessionExecutionLauncher? sessionExecutionLauncher,
     ProgrammePrescriptionRepository? prescriptions,
+    this.runningTargets,
   }) : _prescriptions = prescriptions ?? ProgrammePrescriptionRepository(),
        _startStore =
            startStore ?? const ProgrammeTrainingSessionStartSupabaseStore(),
@@ -96,6 +103,7 @@ class ProgrammeSessionExecutionLauncher {
            sessionExecutionLauncher ?? SessionExecutionLauncher();
 
   final ProgrammePrescriptionRepository _prescriptions;
+  final RunningTargetAdmissionStore? runningTargets;
   final ProgrammeTrainingSessionStartStore _startStore;
   final SessionExecutionLauncher _sessionExecution;
 
@@ -232,6 +240,9 @@ class ProgrammeSessionExecutionLauncher {
         frozenDuration,
       );
     }
+    if (launchResult.runningTargetAdmissionSnapshot case final admitted?) {
+      executablePlan = applyRunningTargetAdmission(executablePlan, admitted);
+    }
     final trainingSession = launchResult.trainingSession;
     VerifiedStructuredRunningExecution? structuredRunningExecution;
     if (launchResult.isStructuredRunningReady) {
@@ -284,6 +295,31 @@ class ProgrammeSessionExecutionLauncher {
         package: package,
       );
     } on ProgrammeSessionExecutionException catch (error) {
+      if (error.code ==
+          ProgrammeSessionExecutionFailureCode.runningTargetReviewRequired) {
+        if (!context.mounted) throw const _DurationChoiceCancelled();
+        final hash = await Navigator.of(context).push<String>(
+          MaterialPageRoute(
+            builder: (_) => RunningTargetReviewScreen(
+              athleteId: athleteId,
+              plan: package.plan,
+              programmeContext: programmeContext,
+              store:
+                  runningTargets ??
+                  SupabaseRunningTargetAdmissionStore(athleteId: athleteId),
+            ),
+          ),
+        );
+        if (hash == null || !context.mounted) {
+          throw const _DurationChoiceCancelled();
+        }
+        return createOrResumeLaunchResult(
+          athleteId: athleteId,
+          programmeContext: programmeContext,
+          package: package,
+          targetReviewHash: hash,
+        );
+      }
       if (error.code !=
           ProgrammeSessionExecutionFailureCode.durationChoiceRequired) {
         rethrow;
@@ -322,6 +358,7 @@ class ProgrammeSessionExecutionLauncher {
     required ProgrammeExecutionContext programmeContext,
     required PreparedExecutionPackage package,
     Map<String, int>? durationChoices,
+    String? targetReviewHash,
   }) async {
     _validatePreparedIdentity(
       athleteId: athleteId,
@@ -335,6 +372,16 @@ class ProgrammeSessionExecutionLauncher {
       throw const ProgrammeSessionExecutionException(
         ProgrammeSessionExecutionFailureCode.unsupportedAuthoredBlock,
         'This programme requires its exact supported authored session. Re-prepare the original session.',
+      );
+    }
+    final needsZone2 = requiresZone2Admission(package.plan);
+    if (needsZone2 &&
+        (programmeContext.occurrenceId == null ||
+            ![1, 2].contains(programmeContext.packageSchemaVersion) ||
+            package.hasAcceptedAdaptation)) {
+      throw const ProgrammeSessionExecutionException(
+        ProgrammeSessionExecutionFailureCode.unsupportedAuthoredBlock,
+        'Confirmed Zone 2 requires the original fixed v1/v2 running session.',
       );
     }
     final runningAuthority = _runningAuthority(package);
@@ -366,6 +413,7 @@ class ProgrammeSessionExecutionLauncher {
           'bound_consent_id': programmeContext.boundConsentId,
         if (durationWindows.isNotEmpty)
           'duration_choices': durationChoices ?? <String, int>{},
+        if (needsZone2) 'target_review_hash': targetReviewHash,
         'assignment_id': programmeContext.assignmentId,
         'session_slot_id': programmeContext.sessionSlotId,
         'programme_version_id': programmeContext.programmeVersionId,
@@ -388,6 +436,12 @@ class ProgrammeSessionExecutionLauncher {
     }
 
     final status = response['status']?.toString();
+    if (response['code'] == 'running_target_review_required') {
+      throw const ProgrammeSessionExecutionException(
+        ProgrammeSessionExecutionFailureCode.runningTargetReviewRequired,
+        'Review and accept your current Zone 2 targets before starting.',
+      );
+    }
     if (response['code'] == 'duration_choice_unavailable' &&
         response['reason'] == 'explicit_duration_choice_required') {
       throw const ProgrammeSessionExecutionException(
@@ -482,7 +536,29 @@ class ProgrammeSessionExecutionLauncher {
           'Unexpected duration choice snapshot.',
         );
       }
+      final admitted = response['running_target_admission_snapshot'];
+      if (needsZone2) {
+        if (admitted is! Map || admitted['training_session_id'] != session.id) {
+          throw const FormatException(
+            'The frozen running target snapshot is missing.',
+          );
+        }
+        validateRunningTargetDocument(
+          package.plan,
+          Map<String, dynamic>.from(admitted),
+          athleteId: athleteId,
+          occurrenceId: programmeContext.occurrenceId!,
+          assignmentId: programmeContext.assignmentId,
+          versionId: programmeContext.programmeVersionId,
+          packageHash: programmeContext.packageContentHash!,
+        );
+      } else if (admitted != null) {
+        throw const FormatException('Unexpected running target admission.');
+      }
       return ProgrammeTrainingSessionLaunchResult(
+        runningTargetAdmissionSnapshot: admitted is Map
+            ? _freezeBoundSnapshot(admitted)
+            : null,
         durationChoiceSnapshot: duration is Map
             ? _freezeBoundSnapshot(duration)
             : null,

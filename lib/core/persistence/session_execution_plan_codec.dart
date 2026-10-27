@@ -19,6 +19,8 @@ class SessionExecutionPlanCodec {
         'boundPrescriptionV1': plan.boundPrescriptionSnapshot,
       if (plan.durationChoiceSnapshot != null)
         'durationChoiceV1': plan.durationChoiceSnapshot,
+      if (plan.runningTargetAdmissionSnapshot != null)
+        'runningTargetAdmissionV1': plan.runningTargetAdmissionSnapshot,
       if (plan.authoredSource != null) 'authoredSourceV1': plan.authoredSource,
       'sessionId': plan.sessionId,
       'sessionTitle': plan.sessionTitle,
@@ -54,6 +56,10 @@ class SessionExecutionPlanCodec {
       durationChoiceSnapshot: map['durationChoiceV1'] == null
           ? null
           : freezePrescriptionJson(map['durationChoiceV1'])
+                as Map<String, dynamic>,
+      runningTargetAdmissionSnapshot: map['runningTargetAdmissionV1'] == null
+          ? null
+          : freezePrescriptionJson(map['runningTargetAdmissionV1'])
                 as Map<String, dynamic>,
       authoredSource: map['authoredSourceV1'] == null
           ? null

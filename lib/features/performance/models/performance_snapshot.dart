@@ -357,6 +357,7 @@ class SessionPerformanceSnapshot {
     this.blocks = const [],
     this.boundPrescription,
     this.durationChoiceSnapshot,
+    this.runningTargetAdmissionSnapshot,
     this.authoredSource,
   });
 
@@ -373,6 +374,7 @@ class SessionPerformanceSnapshot {
   final List<BlockPerformanceSnapshot> blocks;
   final ProgrammePrescription? boundPrescription;
   final Map<String, dynamic>? durationChoiceSnapshot;
+  final Map<String, dynamic>? runningTargetAdmissionSnapshot;
   final Map<String, dynamic>? authoredSource;
 
   Map<String, dynamic> toJson() => {
@@ -380,6 +382,8 @@ class SessionPerformanceSnapshot {
     if (durationChoiceSnapshot != null)
       'durationChoiceV1': durationChoiceSnapshot,
     if (authoredSource != null) 'authoredSourceV1': authoredSource,
+    if (runningTargetAdmissionSnapshot != null)
+      'runningTargetAdmissionV1': runningTargetAdmissionSnapshot,
     'sourceProtocolId': sourceProtocolId,
     'sessionTitle': sessionTitle,
     if (sessionDescription != null) 'sessionDescription': sessionDescription,
@@ -407,6 +411,10 @@ class SessionPerformanceSnapshot {
       durationChoiceSnapshot: json['durationChoiceV1'] == null
           ? null
           : freezePrescriptionJson(json['durationChoiceV1'])
+                as Map<String, dynamic>,
+      runningTargetAdmissionSnapshot: json['runningTargetAdmissionV1'] == null
+          ? null
+          : freezePrescriptionJson(json['runningTargetAdmissionV1'])
                 as Map<String, dynamic>,
       authoredSource: json['authoredSourceV1'] == null
           ? null

@@ -1,9 +1,11 @@
 import '../../../core/services/supabase_service.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'programme_training_session_start_store.dart';
 
 class ProgrammeTrainingSessionStartSupabaseStore
     implements ProgrammeTrainingSessionStartStore {
-  const ProgrammeTrainingSessionStartSupabaseStore();
+  const ProgrammeTrainingSessionStartSupabaseStore({this.client});
+  final SupabaseClient? client;
 
   static const rpcName = 'create_or_resume_programme_training_session';
 
@@ -13,10 +15,12 @@ class ProgrammeTrainingSessionStartSupabaseStore
   ) async {
     final occurrenceId = payload['occurrence_id']?.toString().trim();
     if (occurrenceId != null && occurrenceId.isNotEmpty) {
-      final response = await SupabaseService.client.rpc(
+      final response = await (client ?? SupabaseService.client).rpc(
         'create_or_resume_fixed_programme_occurrence_session',
         params: {
           'p_occurrence_id': occurrenceId,
+          if (payload.containsKey('target_review_hash'))
+            'p_target_review_hash': payload['target_review_hash'],
           if (payload.containsKey('duration_choices'))
             'p_duration_choices': payload['duration_choices'],
           if (payload['bound_consent_id'] != null ||
@@ -27,7 +31,7 @@ class ProgrammeTrainingSessionStartSupabaseStore
       if (response is Map) return Map<String, dynamic>.from(response);
       throw StateError('Unexpected fixed programme occurrence start response');
     }
-    final response = await SupabaseService.client.rpc(
+    final response = await (client ?? SupabaseService.client).rpc(
       rpcName,
       params: {'payload': payload},
     );

@@ -50,6 +50,11 @@ class PerformanceSnapshotBuilder {
           ? null
           : freezePrescriptionJson(plan.durationChoiceSnapshot)
                 as Map<String, dynamic>,
+      runningTargetAdmissionSnapshot:
+          plan.runningTargetAdmissionSnapshot == null
+          ? null
+          : freezePrescriptionJson(plan.runningTargetAdmissionSnapshot)
+                as Map<String, dynamic>,
       authoredSource: plan.authoredSource == null
           ? null
           : freezePrescriptionJson(plan.authoredSource) as Map<String, dynamic>,

@@ -166,6 +166,7 @@ class SessionExecutionPlan {
     this.prescriptionLoadOverrides = const {},
     this.boundPrescriptionSnapshot,
     this.durationChoiceSnapshot,
+    this.runningTargetAdmissionSnapshot,
     this.authoredSource,
   });
 
@@ -179,6 +180,7 @@ class SessionExecutionPlan {
   final Map<String, String> prescriptionLoadOverrides;
   final Map<String, dynamic>? boundPrescriptionSnapshot;
   final Map<String, dynamic>? durationChoiceSnapshot;
+  final Map<String, dynamic>? runningTargetAdmissionSnapshot;
   final Map<String, dynamic>? authoredSource;
 
   bool get hasExecutableBlocks =>

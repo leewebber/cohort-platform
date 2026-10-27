@@ -18,6 +18,7 @@ import '../models/production_session_draft.dart';
 import '../models/session_execution_plan.dart';
 import '../models/structured_running_execution.dart';
 import '../models/authored_timed_running_execution.dart';
+import '../models/running_target_admission.dart';
 import '../models/workout_session_launch_context.dart';
 import '../presentation/production_restore_athlete_copy.dart';
 import '../screens/active_session_screen.dart';
@@ -214,6 +215,10 @@ class SessionExecutionLauncher {
               plan.boundPrescriptionSnapshot,
             ) ||
             !samePrescription(
+              existingRecord.sessionSnapshot.runningTargetAdmissionSnapshot,
+              plan.runningTargetAdmissionSnapshot,
+            ) ||
+            !samePrescription(
               existingRecord.sessionSnapshot.durationChoiceSnapshot,
               plan.durationChoiceSnapshot,
             ) ||
@@ -226,11 +231,32 @@ class SessionExecutionLauncher {
       );
     }
 
+    if (plan.runningTargetAdmissionSnapshot case final admitted?) {
+      if (programmeContext?.occurrenceId == null ||
+          admitted['training_session_id'] != trainingSessionId) {
+        throw const FormatException(
+          'Frozen running targets do not match this session.',
+        );
+      }
+      validateRunningTargetDocument(
+        plan,
+        admitted,
+        athleteId: athleteId,
+        occurrenceId: programmeContext!.occurrenceId!,
+        assignmentId: programmeContext.assignmentId,
+        versionId: programmeContext.programmeVersionId,
+        packageHash: programmeContext.packageContentHash!,
+      );
+    }
+
     // Pin the complete authored body independently of the disposable UI cursor.
     // Discarding a damaged timer must never admit a changed prescription.
     for (final block in plan.blocks) {
       if (block.timerConfiguration?.runningWorkout != null) {
-        AuthoredTimedRunningExecution.fromBlock(block);
+        AuthoredTimedRunningExecution.fromBlock(
+          block,
+          admission: plan.runningTargetAdmissionSnapshot,
+        );
         if (structuredRunningExecution?.sessionBlockId == block.blockId) {
           throw const FormatException(
             'Conflicting running execution authorities.',
@@ -296,7 +322,10 @@ class SessionExecutionLauncher {
         final block = blocks.single;
         try {
           StructuredRunningController.restore(
-            execution: AuthoredTimedRunningExecution.fromBlock(block),
+            execution: AuthoredTimedRunningExecution.fromBlock(
+              block,
+              admission: plan.runningTargetAdmissionSnapshot,
+            ),
             cursor: cursor,
           ).dispose();
         } on StructuredRunningExecutionException {

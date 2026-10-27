@@ -4,6 +4,7 @@ import 'package:crypto/crypto.dart';
 import '../../../domain/running_workout/running_workout.dart';
 import '../../../models/block_performance_capture_mode.dart';
 import 'session_execution_plan.dart';
+import 'running_target_admission.dart';
 import 'structured_running_execution.dart';
 
 /// Derives execution from an exact physical block body, not a benchmark policy.
@@ -28,7 +29,10 @@ class AuthoredTimedRunningExecution extends TimedRunningExecution {
   @override
   bool get pauseOnInterruption => true;
 
-  factory AuthoredTimedRunningExecution.fromBlock(SessionExecutionBlock block) {
+  factory AuthoredTimedRunningExecution.fromBlock(
+    SessionExecutionBlock block, {
+    Map<String, dynamic>? admission,
+  }) {
     final config = block.timerConfiguration;
     if (config?.runningWorkout == null ||
         !block.hasTimer ||
@@ -40,7 +44,11 @@ class AuthoredTimedRunningExecution extends TimedRunningExecution {
       throw const FormatException('This authored timed run is not executable.');
     }
     const codec = RunningWorkoutCodec();
-    final decoded = codec.decode(codec.encode(config!.runningWorkout!));
+    final decoded = resolveAdmittedZone2(
+      codec.decode(codec.encode(config!.runningWorkout!)),
+      block.blockId,
+      admission,
+    );
     // Own an immutable source snapshot for the lifetime of this execution.
     final workout = RunningWorkout(
       schemaVersion: decoded.schemaVersion,
@@ -67,6 +75,7 @@ class AuthoredTimedRunningExecution extends TimedRunningExecution {
           utf8.encode(
             jsonEncode({
               'session_block_id': block.blockId,
+              if (admission != null) 'admission': _orderedAdmission(admission),
               'duration_seconds': config.durationSeconds,
               'running_workout': codec.toJson(workout),
             }),
@@ -86,4 +95,14 @@ class AuthoredTimedRunningExecution extends TimedRunningExecution {
       authoredGuidance: guidance.isEmpty ? null : guidance,
     );
   }
+}
+
+// JSON object order is not part of the accepted prescription identity.
+Object? _orderedAdmission(Object? value) {
+  if (value is Map) {
+    final keys = value.keys.cast<String>().toList()..sort();
+    return {for (final key in keys) key: _orderedAdmission(value[key])};
+  }
+  if (value is List) return value.map(_orderedAdmission).toList();
+  return value;
 }
