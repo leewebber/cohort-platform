@@ -1,5 +1,24 @@
 # Current repository checkpoint
 
+> **M2.3 quality-target admission — locally verified, 2026-10-27:**
+> [Quality handoff](./m23_quality_target_admission/HANDOFF.md) at `ce9ec89`
+> admits founder-approved representative sustained 5K estimates and explicitly selected
+> manual-threshold ±2% or authored-RPE alternatives through the same v1/v2 Programme
+> Athlete start/runner/freeze. [Rules](./m23_quality_target_admission/DECISIONS.md):
+> 0..56 inclusive local civil days, seconds/km, nearest-second exact halves upward.
+> Explicit confirmation/review/acceptance; started/completed input/source/rule/targets
+> remain frozen after later updates/withdrawal; restart paused with no closed-time catch-up.
+> 24 new / 103 focused / 650 affected checks, fresh/repeat real local-auth quality plus
+> retained Zone 2/legacy proof and six safety groups pass. Analysis retains 362 identical
+> inherited findings, zero errors/new/changed-file diagnostics. One [quality migration](./m23_quality_target_admission/DEPLOYMENT.md) plus Zone 2/M1.2 prerequisites remain
+> LOCAL ONLY / UNDEPLOYED. No genuine programme approval/publication or hosted/device
+> action. Earlier unapproved-formula notes below are historical and superseded by these
+> approved rules only. Next single build: M2.4 terminal completion retry/idempotence;
+> existing fixed_assignment_ineligible refusal creates no duplicate. Real sources,
+> Garmin both ways, accepted adaptation, distribution and device acceptance remain open.
+> Prior commits and original/retained checkouts, indices and .temp are preserved;
+> GitHub DNS lookup still fails and remote freshness remains unknown.
+
 > **M2.3 confirmed Zone 2 admission — locally verified, 2026-10-27:**
 > [Target-admission handoff](./m23_personalised_target_admission/HANDOFF.md) at `eb8fe4e`
 > adds explicit owner-confirmed BPM input, exact per-workout review and immutable targets

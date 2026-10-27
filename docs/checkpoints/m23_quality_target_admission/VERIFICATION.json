@@ -1,0 +1,208 @@
+{
+  "format": "cohort.m23-quality-target-admission.verification.v1",
+  "recorded_date": "2026-10-27",
+  "timezone": "Asia/Makassar",
+  "base": "5d260bca7490bbc62d890d3aebc90b35ec5d000b",
+  "implementation": "ce9ec89b79cb5c2fe6dcb4b7eb556bec73fff1fb",
+  "status": "QUALITY_TARGET_ADMISSION_LOCAL_VERIFIED_OVERALL_M23_DEVICE_ADOPTION_OPEN",
+  "approved_rule_ids": [
+    "alpha_5k_8w_riegel_1_06_v1",
+    "alpha_manual_threshold_pm2_v1",
+    "authored_rpe_v1"
+  ],
+  "manual_pm2_explicit_founder_reply_approved": true,
+  "source_marker": "alpha_quality_pace_v1",
+  "source_scope": "Original fixed-schedule v1/v2 full timed bodies, quality work steps; no v3/accepted-adapted/nonfixed adoption",
+  "date_rule": {
+    "age_local_civil_days_inclusive": [
+      0,
+      56
+    ],
+    "timezone": "matching confirmed training/assignment IANA timezone",
+    "clock": "server transaction timestamp",
+    "future_rejected": true,
+    "mismatch_rejected": true
+  },
+  "rounding": "positive floor(x+0.5), nearest second, exact halves up; seconds_per_kilometre",
+  "new_tests": 24,
+  "final_focused_passed": 103,
+  "affected_passed": 650,
+  "affected_opt_in_skips": 3,
+  "focused_is_subset_of_affected": true,
+  "authenticated_local_fresh_and_repeat": "PASS: four quality synthetic GoTrue athletes/v1/v2, manual/5K/authored-RPE; separate retained Zone2/legacy v1/B2-v2 proof each fresh and repeat",
+  "exit_codes": {
+    "focused": 0,
+    "affected": 0,
+    "authenticated": 0,
+    "safety": 0,
+    "analysis": 1
+  },
+  "commands": {
+    "focused": "flutter test --no-pub test/session/quality_target_admission_test.dart test/session/zone2_target_admission_test.dart test/session/authored_timed_running_test.dart test/session/steady_state_restart_test.dart test/features/home/programme_session_execution_launcher_test.dart",
+    "affected": "flutter test --no-pub test/session test/performance test/endurance test/persistence test/running_workout test/programmes test/programme_acquisition test/auth test/features/home/programme_session_execution_launcher_test.dart test/programme/athlete_programme_completion_self_test_2_test.dart",
+    "authenticated": "bash supabase/tests/run_quality_target_admission_gate.sh",
+    "safety": "bash tool/testing/run_phase2_consolidation_safety_gate.sh",
+    "analysis": "flutter analyze --no-pub"
+  },
+  "safety_groups": 6,
+  "analysis": {
+    "baseline": 362,
+    "final": 362,
+    "identities_equal": true,
+    "errors": 0,
+    "changed_file_diagnostics": []
+  },
+  "existing_completion_limit": {
+    "case": "Terminal one-session completion retry",
+    "status": "validation_failure",
+    "code": "fixed_assignment_ineligible",
+    "one_unchanged_record_and_snapshot": true,
+    "completion_protocol_modified": false,
+    "idempotent_success_not_claimed": true
+  },
+  "migration": {
+    "path": "supabase/migrations/20261027130000_alpha_quality_running_targets.sql",
+    "sha256": "5c49656c6fa85f6ef0c4524491d61dc53ff42a0bb7e61bbfe33a24ab0dc3b520",
+    "new_table": "athlete_running_quality_inputs",
+    "reuses_freeze_table": "programme_occurrence_zone2_targets",
+    "prior_zone2_and_m12_migrations_unchanged": true,
+    "hosted_applied": false,
+    "existing_fixed_generic_start_oids_acl_preserved": true,
+    "existing_b2_evidence_rules_unchanged": true,
+    "deferred_producer_not_prerequisite": true
+  },
+  "boundaries": {
+    "hosted_contact": false,
+    "real_content_or_athlete_changes": false,
+    "browser_desktop_control": false,
+    "device_acceptance": false,
+    "garmin_delivery_or_return": false,
+    "adaptation_adoption": false,
+    "full_default_flutter_or_aggregate_db_gate": false,
+    "only_disposable_replay_copy_omits_deferred_producer": true
+  },
+  "preservation": {
+    "existing_checkouts": 23,
+    "registered_absent": 28,
+    "before_after_equal": true,
+    "sha256": "a462c64486b147a5ba26d8eb7affe687bf5b4ccc9911bda3fc94f745f7cbfacd",
+    "original_dirty_checkout_indices_temp_preserved": true,
+    "managed_lifecycle_called": false
+  },
+  "git": {
+    "branch": "main",
+    "remote": "https://github.com/leewebber/cohort-platform.git",
+    "lookup": "Could not resolve host: github.com",
+    "remote_freshness": "UNVERIFIED; cached origin/main is not remote truth",
+    "prior_ten_local_commits_preserved": true,
+    "rewritten_or_merged": false,
+    "normal_main_push_authorised": true,
+    "alternate_network_route_or_permission_bypass": false
+  },
+  "earlier_attempts_not_counted": [
+    "Initial SQL reserved identifier fixed before final successful fresh/repeat proof",
+    "Widget lazy-list scrolling fixed before final successful run",
+    "Decimal intermediate JSON precision loss fixed by preserving decimal strings; exact guard retained",
+    "Intermediate task-file brace/style diagnostics fixed without suppression"
+  ],
+  "files": [
+    {
+      "path": "lib/domain/running_workout/alpha_quality_targets.dart",
+      "sha256": "b8e5f22c9c75adcaa3201a2cf1f9b768b2b30474b2b1a92b5e6a180dcb49c1ec"
+    },
+    {
+      "path": "lib/domain/running_workout/running_workout_codec.dart",
+      "sha256": "61b82f6623b31e34250774ccbda30108dc80e9f5f509e33a415c631a53e5ff46"
+    },
+    {
+      "path": "lib/domain/running_workout/running_workout_model.dart",
+      "sha256": "28b5c0e89ce842043b96a8f6d2c5dab4245330be75fa789cff5f588b4a26a59d"
+    },
+    {
+      "path": "lib/domain/running_workout/running_workout_validation.dart",
+      "sha256": "6ea53a443d8e2b75d40f51b7da2768d2f1d47d50ab473d2f3a81e1e5468c9a53"
+    },
+    {
+      "path": "lib/features/session/models/authored_timed_running_execution.dart",
+      "sha256": "425cc9af46d5a715a0446444a5b505dfba4f7f4aab13205fd0db1ef522b633be"
+    },
+    {
+      "path": "lib/features/session/models/running_target_admission.dart",
+      "sha256": "729046caec3f8ec3827ac21c1034af2ad343c4a69eae4dc7fa41391e97492c89"
+    },
+    {
+      "path": "lib/features/session/screens/quality_target_review_screen.dart",
+      "sha256": "67a036ab707a7a5e05cc49c5c38ee9f91e1c4f953dfa16c62fddc34ff31e6fc4"
+    },
+    {
+      "path": "lib/features/session/screens/running_target_review_screen.dart",
+      "sha256": "92a422506d68e87a744b2ad177aef6729770ec80c2101489ed20356a5ed39c3e"
+    },
+    {
+      "path": "lib/features/session/screens/structured_running_timer_screen.dart",
+      "sha256": "be6a4c02cad8c33670a4059c20a2dfc5575ddc00a9dea17aa5300f164d83e121"
+    },
+    {
+      "path": "lib/features/session/services/programme_session_execution_launcher.dart",
+      "sha256": "621b805dd33304c2ace9d88d62503649290efc8e0f6981f8a5708b0664b30fe1"
+    },
+    {
+      "path": "lib/features/session/services/programme_training_session_start_supabase_store.dart",
+      "sha256": "9d66c9f76881e2f23fe3da5620c3a929f07eb38dd4230eef72ec5bb525bdc7bc"
+    },
+    {
+      "path": "lib/features/session/services/running_target_admission_store.dart",
+      "sha256": "27dd3e60b60207d8c297b6da36d0d5116e10c477d5a9d42012a299f0a19433c3"
+    },
+    {
+      "path": "supabase/migrations/20261027130000_alpha_quality_running_targets.sql",
+      "sha256": "5c49656c6fa85f6ef0c4524491d61dc53ff42a0bb7e61bbfe33a24ab0dc3b520"
+    },
+    {
+      "path": "supabase/tests/fixtures/quality_publication_fixture.dart",
+      "sha256": "018d755fa9bcc62a68bb3bf96057f633c38b8680826aad300fbdeb1688ad25d5"
+    },
+    {
+      "path": "supabase/tests/run_quality_target_admission_gate.sh",
+      "sha256": "6f6f89f23ff1f32e7b778032fa371484c97960822e8f716a1ef446e92729ae84"
+    },
+    {
+      "path": "test/session/fixtures/quality_admission/quality_run.json",
+      "sha256": "9d0e1888178095796130c3ca43d113f586c41f527495493c991fe508010b3081"
+    },
+    {
+      "path": "test/session/quality_authenticated_local_test.dart",
+      "sha256": "c44b07e8c89b75bf17ee0bc3ce3d8e83502a06e37512b8ae52960513184e95a0"
+    },
+    {
+      "path": "test/session/quality_target_admission_test.dart",
+      "sha256": "5e39051461dfd407c4c7ad16e0cb715f078a0ba0caf0e82e50e801ef8999c797"
+    }
+  ],
+  "local_logs": [
+    {
+      "path": "/private/tmp/cohort_quality_final_focused.log",
+      "sha256": "7ae7b537b260c78dec39cd7efdec5438022cad52b1a5457bc8314bf9ca525568"
+    },
+    {
+      "path": "/private/tmp/cohort_quality_regressions.log",
+      "sha256": "bf4e29a094cb1629bb4b882103b588ac4c98c889e24f01f6e6304581700ce23f"
+    },
+    {
+      "path": "/private/tmp/cohort_quality_db_final.log",
+      "sha256": "7e9225b5a2098ad53028cb2103630baff24d3a7057eed08bc155d2928bb34ae8"
+    },
+    {
+      "path": "/private/tmp/cohort_quality_safety.log",
+      "sha256": "f551e69a7132de2eb88d6517a894668b130243406d085285a777d28945577688"
+    },
+    {
+      "path": "/private/tmp/cohort_quality_analysis_before.log",
+      "sha256": "cf64366a956e523036190370660fd81c601844132a1fab262986f1233e26ef39"
+    },
+    {
+      "path": "/private/tmp/cohort_quality_analysis_final.log",
+      "sha256": "05cfe5572ecd6f1545536a868e5fb13a624e6bbd941979c26093c913411c0c40"
+    }
+  ]
+}
