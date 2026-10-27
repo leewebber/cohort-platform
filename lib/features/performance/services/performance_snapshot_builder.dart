@@ -144,6 +144,12 @@ class PerformanceSnapshotBuilder {
       workSeconds: block.timerConfiguration?.workSeconds,
       recoverySeconds: block.timerConfiguration?.restSeconds,
       tracking: block.timerConfiguration?.tracking ?? const [],
+      timedRunningWorkout: block.timerConfiguration?.runningWorkout == null
+          ? null
+          : freezePrescriptionJson(
+                  block.timerConfiguration!.toJson()['running_workout'],
+                )
+                as Map<String, dynamic>,
       comparisonFamily: CircuitCaptureContract.hasAuthoredStations(block)
           ? CircuitCaptureContract.comparisonFamily(block)
           : result.comparisonFamily,

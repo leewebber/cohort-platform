@@ -74,8 +74,11 @@ class SessionExecutionBlock {
   final BlockPerformanceCaptureMode performanceCaptureMode;
 
   String get blockTypeLabel => blockType.displayLabel;
-  String? get workoutFormatLabel =>
-      workoutFormat == WorkoutFormat.none ? null : workoutFormat.displayLabel;
+  String? get workoutFormatLabel => timerConfiguration?.runningWorkout != null
+      ? 'Structured run'
+      : workoutFormat == WorkoutFormat.none
+      ? null
+      : workoutFormat.displayLabel;
 
   bool get hasTimer =>
       workoutFormat.supportsTimer &&

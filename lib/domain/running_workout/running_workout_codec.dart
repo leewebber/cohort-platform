@@ -18,6 +18,8 @@ class RunningWorkoutCodec {
 
   static const schemaVersion = 1;
 
+  Map<String, dynamic> toJson(RunningWorkout workout) => _workoutMap(workout);
+
   String encode(RunningWorkout workout) {
     return jsonEncode(_workoutMap(workout));
   }
@@ -149,6 +151,7 @@ class RunningWorkoutCodec {
           'duration': _durationMap(node.duration),
           'target': _targetMap(node.target),
           if (node.notes != null) 'notes': node.notes,
+          if (node.label != null) 'label': node.label,
         };
       case RunningRepeatGroup():
         return {
@@ -170,6 +173,7 @@ class RunningWorkoutCodec {
         'duration',
         'target',
         'notes',
+        'label',
       }, path);
       final stepId = json['step_id'];
       if (stepId is! String) {
@@ -181,20 +185,19 @@ class RunningWorkoutCodec {
       return RunningAtomicStep(
         stepId: stepId,
         role: _roleFromName(json['role'], path),
-        duration: _decodeDuration(_asMap(json['duration'], '$path.duration'), path),
+        duration: _decodeDuration(
+          _asMap(json['duration'], '$path.duration'),
+          path,
+        ),
         target: json['target'] == null
             ? const RunningTarget.none()
             : _decodeTarget(_asMap(json['target'], '$path.target'), path),
         notes: _optionalString(json['notes']),
+        label: _optionalString(json['label']),
       );
     }
     if (kind == 'repeat') {
-      _rejectUnknown(json, const {
-        'kind',
-        'group_id',
-        'count',
-        'steps',
-      }, path);
+      _rejectUnknown(json, const {'kind', 'group_id', 'count', 'steps'}, path);
       final groupId = json['group_id'];
       final count = json['count'];
       final stepsRaw = json['steps'];
@@ -209,7 +212,10 @@ class RunningWorkoutCodec {
         count: count,
         steps: [
           for (var i = 0; i < stepsRaw.length; i++)
-            _decodeAtomicChild(_asMap(stepsRaw[i], '$path.steps[$i]'), '$path.steps[$i]'),
+            _decodeAtomicChild(
+              _asMap(stepsRaw[i], '$path.steps[$i]'),
+              '$path.steps[$i]',
+            ),
         ],
       );
     }
@@ -251,7 +257,9 @@ class RunningWorkoutCodec {
       'millimetres',
     }, '$path.duration');
     return switch (json['kind']) {
-      'time' => RunningDuration.time(_requireInt(json['milliseconds'], '$path.duration.milliseconds')),
+      'time' => RunningDuration.time(
+        _requireInt(json['milliseconds'], '$path.duration.milliseconds'),
+      ),
       'distance' => RunningDuration.distance(
         _requireInt(json['millimetres'], '$path.duration.millimetres'),
       ),
@@ -336,7 +344,9 @@ class RunningWorkoutCodec {
         );
       case 'heart_rate':
         _rejectUnknown(json, const {'kind', 'bpm'}, '$path.target');
-        return RunningTarget.heartRate(_requireInt(json['bpm'], '$path.target'));
+        return RunningTarget.heartRate(
+          _requireInt(json['bpm'], '$path.target'),
+        );
       case 'heart_rate_range':
         _rejectUnknown(json, const {'kind', 'low', 'high'}, '$path.target');
         return RunningTarget.heartRateRange(
@@ -474,9 +484,6 @@ class RunningWorkoutCodec {
   String? _optionalString(Object? value) {
     if (value == null) return null;
     if (value is String) return value;
-    throw RunningWorkoutCodecException(
-      'invalid_string',
-      'Expected a string.',
-    );
+    throw RunningWorkoutCodecException('invalid_string', 'Expected a string.');
   }
 }

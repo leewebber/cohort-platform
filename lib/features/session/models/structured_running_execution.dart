@@ -33,29 +33,15 @@ class StructuredRunningWorkRepetition {
   final RunningLaunchTarget? target;
 }
 
-/// Identity-bound authority for the opt-in B3 structured runner.
-///
-/// It is constructed only from the already validated B3 slice 1 launch result
-/// and independently rechecks the exact B1 projection. Titles and positions
-/// are deliberately absent from this contract.
-class VerifiedStructuredRunningExecution {
-  const VerifiedStructuredRunningExecution._({
-    required this.sessionBlockId,
-    required this.executionMappingSha256,
-    required this.workout,
-    required this.frozenSnapshot,
-    required this.authoredGuidance,
-    required this.targetsByStepId,
-    required this.workRepetitions,
-  });
-
-  final String sessionBlockId;
-  final String executionMappingSha256;
-  final RunningWorkout workout;
-  final RunningTargetSnapshotAggregate frozenSnapshot;
-  final String? authoredGuidance;
-  final Map<String, RunningLaunchTarget> targetsByStepId;
-  final List<StructuredRunningWorkRepetition> workRepetitions;
+/// A derived timed execution view; source authority remains the pinned block.
+abstract class TimedRunningExecution {
+  const TimedRunningExecution();
+  String get sessionBlockId;
+  String get executionMappingSha256;
+  RunningWorkout get workout;
+  String? get authoredGuidance;
+  Map<String, RunningLaunchTarget> get targetsByStepId => const {};
+  bool get pauseOnInterruption => false;
 
   RunningAtomicStep stepForCursor(StructuredRunningCursor cursor) {
     for (final node in workout.steps) {
@@ -73,6 +59,36 @@ class VerifiedStructuredRunningExecution {
       'The saved running step is not present in the pinned workout.',
     );
   }
+}
+
+/// Identity-bound authority for the opt-in B3 structured runner.
+///
+/// It is constructed only from the already validated B3 slice 1 launch result
+/// and independently rechecks the exact B1 projection. Titles and positions
+/// are deliberately absent from this contract.
+class VerifiedStructuredRunningExecution extends TimedRunningExecution {
+  const VerifiedStructuredRunningExecution._({
+    required this.sessionBlockId,
+    required this.executionMappingSha256,
+    required this.workout,
+    required this.frozenSnapshot,
+    required this.authoredGuidance,
+    required this.targetsByStepId,
+    required this.workRepetitions,
+  });
+
+  @override
+  final String sessionBlockId;
+  @override
+  final String executionMappingSha256;
+  @override
+  final RunningWorkout workout;
+  final RunningTargetSnapshotAggregate frozenSnapshot;
+  @override
+  final String? authoredGuidance;
+  @override
+  final Map<String, RunningLaunchTarget> targetsByStepId;
+  final List<StructuredRunningWorkRepetition> workRepetitions;
 
   factory VerifiedStructuredRunningExecution.fromLaunch({
     required SessionExecutionPlan plan,

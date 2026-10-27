@@ -1,0 +1,39 @@
+package_schema_version: 2
+programme:
+  lineage_code: M23-SOFTWARE-FIXTURE-ONLY
+  version_number: 1
+  name: "[SOFTWARE FIXTURE ONLY] Phased timed run"
+  description: "Not approved training content. Never publish or assign."
+  library_scope: coach_private
+  owner_type: coach
+  coaching_intent: "Local execution verification only"
+  duration_weeks: 1
+  sessions_per_week: 1
+sessions:
+  - session_key: SES-M23-FIXTURE
+    protocol_id: M23-FIXTURE-R1
+    session_lineage_id: b3d00000-0000-4000-8000-000000000023
+    revision_number: 1
+    title: "[SOFTWARE FIXTURE ONLY] Phased timed run"
+phases: []
+weeks:
+  - week_number: 1
+    title: "Software fixture"
+    days:
+      - day_key: day_1
+        day_order: 1
+        day_type: training
+        title: "Software fixture"
+        slots:
+          - slot_key: W1D1S1
+            session_order: 1
+            session_key: SES-M23-FIXTURE
+            progression:
+              prescription_summary: "Software fixture only; not an approved prescription"
+            display_title: "[SOFTWARE FIXTURE ONLY] Phased timed run"
+
+adaptation_permissions: []
+protected_invariants: []
+assessments: []
+performance_evidence_requirements: []
+comparison_identities: []

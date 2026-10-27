@@ -214,6 +214,7 @@ class BlockPerformanceSnapshot {
     this.tracking = const [],
     this.comparisonFamily,
     this.structuredRunning,
+    this.timedRunningWorkout,
   });
 
   final String sourceBlockId;
@@ -231,6 +232,7 @@ class BlockPerformanceSnapshot {
   final List<String> tracking;
   final String? comparisonFamily;
   final StructuredRunningPerformanceSnapshot? structuredRunning;
+  final Map<String, dynamic>? timedRunningWorkout;
 
   Map<String, dynamic> toJson() => {
     'schemaVersion': 1,
@@ -250,6 +252,8 @@ class BlockPerformanceSnapshot {
     if (comparisonFamily != null) 'comparisonFamily': comparisonFamily,
     if (structuredRunning != null)
       'structuredRunningV1': structuredRunning!.toJson(),
+    if (timedRunningWorkout != null)
+      'timedRunningWorkoutV1': timedRunningWorkout,
     'exercises': exercises.map((e) => e.toJson()).toList(),
   };
 
@@ -280,6 +284,10 @@ class BlockPerformanceSnapshot {
               Map<String, dynamic>.from(json['structuredRunningV1'] as Map),
             )
           : null,
+      timedRunningWorkout: json['timedRunningWorkoutV1'] == null
+          ? null
+          : freezePrescriptionJson(json['timedRunningWorkoutV1'])
+                as Map<String, dynamic>,
       exercises: exercisesJson is List
           ? exercisesJson
                 .whereType<Map>()
@@ -311,6 +319,7 @@ class BlockPerformanceSnapshot {
     tracking: tracking,
     comparisonFamily: comparisonFamily,
     structuredRunning: structuredRunning,
+    timedRunningWorkout: timedRunningWorkout,
   );
 
   static String? _trim(dynamic value) {

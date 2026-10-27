@@ -17,6 +17,7 @@ import '../models/production_restore_outcome.dart';
 import '../models/production_session_draft.dart';
 import '../models/session_execution_plan.dart';
 import '../models/structured_running_execution.dart';
+import '../models/authored_timed_running_execution.dart';
 import '../models/workout_session_launch_context.dart';
 import '../presentation/production_restore_athlete_copy.dart';
 import '../screens/active_session_screen.dart';
@@ -163,7 +164,8 @@ class SessionExecutionLauncher {
     );
     var envelopeCorrupt = false;
     var hasSteadyStateTimerData =
-        envelope?.cursor?.steadyStateTimers.isNotEmpty == true;
+        (envelope?.cursor?.steadyStateTimers.isNotEmpty == true ||
+        envelope?.cursor?.timedRunning.isNotEmpty == true);
     if (envelope == null && AthletePersistence.isInitialized) {
       final payload = await AthletePersistence.repository
           .readProductionRestoreEnvelope(
@@ -173,7 +175,9 @@ class SessionExecutionLauncher {
       if (payload != null) {
         final rawCursor = payload['cursor'];
         hasSteadyStateTimerData =
-            rawCursor is Map && rawCursor.containsKey('steady_state_timers');
+            rawCursor is Map &&
+            (rawCursor.containsKey('steady_state_timers') ||
+                rawCursor.containsKey('authored_timed_runs'));
         try {
           envelope = ProductionRestoreEnvelope.fromJson(payload);
           _restoreEnvelopeStore.write(envelope);
@@ -184,7 +188,8 @@ class SessionExecutionLauncher {
       }
     }
     if (envelope?.cursor?.hasInvalidStructuredScope == true ||
-        envelope?.cursor?.hasInvalidSteadyStateScope == true) {
+        envelope?.cursor?.hasInvalidSteadyStateScope == true ||
+        envelope?.cursor?.hasInvalidTimedRunningScope == true) {
       envelopeCorrupt = true;
     }
 
@@ -221,6 +226,37 @@ class SessionExecutionLauncher {
       );
     }
 
+    // Pin the complete authored body independently of the disposable UI cursor.
+    // Discarding a damaged timer must never admit a changed prescription.
+    for (final block in plan.blocks) {
+      if (block.timerConfiguration?.runningWorkout != null) {
+        AuthoredTimedRunningExecution.fromBlock(block);
+        if (structuredRunningExecution?.sessionBlockId == block.blockId) {
+          throw const FormatException(
+            'Conflicting running execution authorities.',
+          );
+        }
+      }
+    }
+    if (existingRecord != null &&
+        !samePrescription(
+          {
+            for (final block in existingRecord.sessionSnapshot.blocks)
+              if (block.timedRunningWorkout != null)
+                block.sourceBlockId: block.timedRunningWorkout,
+          },
+          {
+            for (final block in plan.blocks)
+              if (block.timerConfiguration?.runningWorkout != null)
+                block.blockId: block.timerConfiguration!
+                    .toJson()['running_workout'],
+          },
+        )) {
+      throw const FormatException(
+        'The saved running workout has changed. Reopen the original session.',
+      );
+    }
+
     final actuals = existingRecord == null
         ? null
         : _saveCoordinator.restoreControllerFromRecord(existingRecord).draft;
@@ -242,18 +278,40 @@ class SessionExecutionLauncher {
 
     final structuredCursor = decision.cursor?.structuredRunning;
     final steadyTimers = decision.cursor?.steadyStateTimers ?? const {};
+    final timedRuns = decision.cursor?.timedRunning ?? const {};
     try {
-      if (steadyTimers.isNotEmpty &&
+      if ((steadyTimers.isNotEmpty || timedRuns.isNotEmpty) &&
           !plan.blocks.any(
             (block) => block.blockId == decision.cursor?.activeBlockId,
           )) {
         throw const FormatException('The saved active block is unavailable.');
       }
+      for (final cursor in timedRuns.values) {
+        final blocks = plan.blocks
+            .where((block) => block.blockId == cursor.sessionBlockId)
+            .toList();
+        if (blocks.length != 1) {
+          throw const FormatException('The saved run is unavailable.');
+        }
+        final block = blocks.single;
+        try {
+          StructuredRunningController.restore(
+            execution: AuthoredTimedRunningExecution.fromBlock(block),
+            cursor: cursor,
+          ).dispose();
+        } on StructuredRunningExecutionException {
+          throw const FormatException(
+            'The saved run no longer matches its source.',
+          );
+        }
+      }
       for (final timer in steadyTimers.values) {
         final blocks = plan.blocks.where(
           (block) => block.blockId == timer.blockId,
         );
-        if (blocks.length != 1 || !blocks.single.hasTimer) {
+        if (blocks.length != 1 ||
+            !blocks.single.hasTimer ||
+            blocks.single.timerConfiguration?.runningWorkout != null) {
           throw const FormatException('The saved timer block is unavailable.');
         }
         CircuitBlockTimerBridge.restoredState(
@@ -385,7 +443,8 @@ class SessionExecutionLauncher {
           final result = performanceController.draft
               .blockDraftFor(block.blockId)
               ?.resultData;
-          if (structuredCursor?.sessionBlockId == block.blockId ||
+          if (timedRuns.containsKey(block.blockId) ||
+              structuredCursor?.sessionBlockId == block.blockId ||
               CircuitBlockTimerBridge.restoredState(
                     block: block,
                     result: result,
@@ -414,6 +473,7 @@ class SessionExecutionLauncher {
           structuredRunningExecution: structuredRunningExecution,
           restoredStructuredRunningCursor: structuredCursor,
           restoredSteadyStateTimers: steadyTimers,
+          restoredTimedRunning: timedRuns,
           onSessionCompleted: onSessionCompleted,
         ),
       ),

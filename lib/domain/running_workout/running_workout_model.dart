@@ -23,7 +23,11 @@ enum RunningTargetKind {
 /// Canonical distance: millimetres. Canonical pace: ms / km.
 /// Cadence: steps per minute. RPE: CR10 integer 1–10.
 class RunningDuration {
-  const RunningDuration._({required this.kind, this.milliseconds, this.millimetres});
+  const RunningDuration._({
+    required this.kind,
+    this.milliseconds,
+    this.millimetres,
+  });
 
   const RunningDuration.time(int milliseconds)
     : this._(kind: RunningDurationKind.time, milliseconds: milliseconds);
@@ -31,7 +35,8 @@ class RunningDuration {
   const RunningDuration.distance(int millimetres)
     : this._(kind: RunningDurationKind.distance, millimetres: millimetres);
 
-  const RunningDuration.manualLap() : this._(kind: RunningDurationKind.manualLap);
+  const RunningDuration.manualLap()
+    : this._(kind: RunningDurationKind.manualLap);
 
   final RunningDurationKind kind;
   final int? milliseconds;
@@ -77,14 +82,12 @@ class RunningTarget {
         paceMillisecondsPerKilometre: paceMillisecondsPerKilometre,
       );
 
-  const RunningTarget.paceRange({
-    required int low,
-    required int high,
-  }) : this._(
-         kind: RunningTargetKind.paceRange,
-         paceMillisecondsPerKilometreLow: low,
-         paceMillisecondsPerKilometreHigh: high,
-       );
+  const RunningTarget.paceRange({required int low, required int high})
+    : this._(
+        kind: RunningTargetKind.paceRange,
+        paceMillisecondsPerKilometreLow: low,
+        paceMillisecondsPerKilometreHigh: high,
+      );
 
   const RunningTarget.heartRate(int heartRateBpm)
     : this._(kind: RunningTargetKind.heartRate, heartRateBpm: heartRateBpm);
@@ -201,6 +204,7 @@ class RunningAtomicStep extends RunningWorkoutNode {
     required this.duration,
     this.target = const RunningTarget.none(),
     this.notes,
+    this.label,
   });
 
   final String stepId;
@@ -208,6 +212,7 @@ class RunningAtomicStep extends RunningWorkoutNode {
   final RunningDuration duration;
   final RunningTarget target;
   final String? notes;
+  final String? label;
 
   @override
   bool operator ==(Object other) {
@@ -216,11 +221,12 @@ class RunningAtomicStep extends RunningWorkoutNode {
         other.role == role &&
         other.duration == duration &&
         other.target == target &&
-        other.notes == notes;
+        other.notes == notes &&
+        other.label == label;
   }
 
   @override
-  int get hashCode => Object.hash(stepId, role, duration, target, notes);
+  int get hashCode => Object.hash(stepId, role, duration, target, notes, label);
 }
 
 class RunningRepeatGroup extends RunningWorkoutNode {

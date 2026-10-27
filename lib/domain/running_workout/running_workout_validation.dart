@@ -82,7 +82,11 @@ class RunningWorkoutValidator {
         return;
       }
       if (!ids.add(id)) {
-        error('duplicate_id', 'ID "$id" is not unique within the workout.', path);
+        error(
+          'duplicate_id',
+          'ID "$id" is not unique within the workout.',
+          path,
+        );
       }
     }
 
@@ -119,6 +123,13 @@ class RunningWorkoutValidator {
     switch (node) {
       case RunningAtomicStep():
         takeId(node.stepId, '$path.step_id');
+        if (node.label != null && node.label!.trim().isEmpty) {
+          error(
+            'invalid_label',
+            'An authored step label must not be empty.',
+            path,
+          );
+        }
         _validateDuration(node.duration, path, error);
         _validateTarget(node.target, path, error);
         _warnProse(node.notes, path, warning);
@@ -266,7 +277,11 @@ class RunningWorkoutValidator {
         }
       case RunningTargetKind.power:
         if (!positive(target.powerWatts)) {
-          error('invalid_target', 'Power must be a positive integer in watts.', path);
+          error(
+            'invalid_target',
+            'Power must be a positive integer in watts.',
+            path,
+          );
         }
       case RunningTargetKind.powerRange:
         range(target.powerWattsLow, target.powerWattsHigh, 'Power');
@@ -280,7 +295,11 @@ class RunningWorkoutValidator {
         if (target.rpeCr10 == null ||
             target.rpeCr10! < 1 ||
             target.rpeCr10! > 10) {
-          error('invalid_target', 'RPE must be an integer 1–10 on scale rpe_cr10.', path);
+          error(
+            'invalid_target',
+            'RPE must be an integer 1–10 on scale rpe_cr10.',
+            path,
+          );
         }
       case RunningTargetKind.rpeRange:
         range(target.rpeCr10Low, target.rpeCr10High, 'RPE');

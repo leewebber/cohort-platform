@@ -19,9 +19,10 @@ class ProductionSessionUiCursor {
     this.savedAt,
     this.structuredRunning,
     this.steadyStateTimers = const {},
+    this.timedRunning = const {},
   });
 
-  static const currentSchemaVersion = 3;
+  static const currentSchemaVersion = 4;
 
   final int schemaVersion;
   final String athleteId;
@@ -38,6 +39,7 @@ class ProductionSessionUiCursor {
   final DateTime? savedAt;
   final StructuredRunningCursor? structuredRunning;
   final Map<String, SteadyStateTimerCursor> steadyStateTimers;
+  final Map<String, StructuredRunningCursor> timedRunning;
 
   bool get isUnsupportedFutureVersion => schemaVersion > currentSchemaVersion;
 
@@ -49,8 +51,19 @@ class ProductionSessionUiCursor {
 
   bool get hasInvalidSteadyStateScope =>
       steadyStateTimers.isNotEmpty &&
-      (schemaVersion != currentSchemaVersion ||
+      (schemaVersion < 3 ||
+          isUnsupportedFutureVersion ||
           activeBlockId?.isNotEmpty != true);
+
+  bool get hasInvalidTimedRunningScope =>
+      timedRunning.isNotEmpty &&
+      (schemaVersion != currentSchemaVersion ||
+          activeBlockId?.isNotEmpty != true ||
+          timedRunning.keys.any(steadyStateTimers.containsKey) ||
+          timedRunning.entries.any(
+            (entry) => entry.key != entry.value.sessionBlockId,
+          ) ||
+          timedRunning.containsKey(structuredRunning?.sessionBlockId));
 
   Map<String, dynamic> toJson() {
     return {
@@ -74,6 +87,10 @@ class ProductionSessionUiCursor {
         'steady_state_timers': [
           for (final timer in steadyStateTimers.values) timer.toJson(),
         ],
+      if (timedRunning.isNotEmpty)
+        'authored_timed_runs': [
+          for (final cursor in timedRunning.values) cursor.toJson(),
+        ],
     };
   }
 
@@ -84,7 +101,8 @@ class ProductionSessionUiCursor {
     final steadyTimers = <String, SteadyStateTimerCursor>{};
     if (json.containsKey('steady_state_timers')) {
       if (steadyRaw is! List ||
-          json['schema_version'] != currentSchemaVersion) {
+          (json['schema_version'] != 3 &&
+              json['schema_version'] != currentSchemaVersion)) {
         throw const FormatException('Invalid steady-state timer scope.');
       }
       for (final raw in steadyRaw) {
@@ -98,6 +116,25 @@ class ProductionSessionUiCursor {
           throw const FormatException('Duplicate steady-state timer.');
         }
         steadyTimers[timer.blockId] = timer;
+      }
+    }
+    final timed = <String, StructuredRunningCursor>{};
+    if (json.containsKey('authored_timed_runs')) {
+      final raw = json['authored_timed_runs'];
+      if (json['schema_version'] != currentSchemaVersion || raw is! List) {
+        throw const FormatException('Invalid authored timed run scope.');
+      }
+      for (final value in raw) {
+        if (value is! Map) {
+          throw const FormatException('Invalid authored timed run.');
+        }
+        final cursor = StructuredRunningCursor.fromJson(
+          Map<String, dynamic>.from(value),
+        );
+        if (timed.containsKey(cursor.sessionBlockId)) {
+          throw const FormatException('Duplicate authored timed run.');
+        }
+        timed[cursor.sessionBlockId] = cursor;
       }
     }
     if (json.containsKey('structured_running') && structuredRaw is! Map) {
@@ -125,8 +162,11 @@ class ProductionSessionUiCursor {
             )
           : null,
       steadyStateTimers: Map.unmodifiable(steadyTimers),
+      timedRunning: Map.unmodifiable(timed),
     );
-    if (cursor.hasInvalidStructuredScope || cursor.hasInvalidSteadyStateScope) {
+    if (cursor.hasInvalidStructuredScope ||
+        cursor.hasInvalidSteadyStateScope ||
+        cursor.hasInvalidTimedRunningScope) {
       throw const FormatException('invalid structured running cursor scope');
     }
     return cursor;

@@ -35,6 +35,21 @@ class RunningWorkoutProjector {
     String? notes,
     String? untypedGuidance,
   }) {
+    if (configuration.runningWorkout != null) {
+      final errors = configuration.validateForFormat(format);
+      return RunningWorkoutProjectionResult(
+        workout: errors.isEmpty ? configuration.runningWorkout : null,
+        errors: [
+          for (final message in errors)
+            RunningWorkoutIssue(
+              code: 'unsupported_authored_timed_run',
+              message: message,
+              severity: RunningWorkoutIssueSeverity.error,
+            ),
+        ],
+        warnings: const [],
+      );
+    }
     final warnings = <RunningWorkoutIssue>[];
     final errors = <RunningWorkoutIssue>[];
 
@@ -210,7 +225,10 @@ class RunningWorkoutProjector {
       'n=${configuration.rounds ?? ''}',
       'src=${sourceRef ?? ''}',
     ].join('|');
-    final digest = sha256.convert(utf8.encode(token)).toString().substring(0, 16);
+    final digest = sha256
+        .convert(utf8.encode(token))
+        .toString()
+        .substring(0, 16);
     return 'rw1:p:$digest';
   }
 }

@@ -147,7 +147,31 @@ class ReviewedProtocolGraphArtifact {
           'Reviewed graph revision does not match the compiled package.',
         );
       }
-      _blocks(graph);
+      for (final block in _blocks(graph)) {
+        final rawTimer = block['timer_config'];
+        if (rawTimer is Map && rawTimer.containsKey('running_workout')) {
+          try {
+            final timer = TimerConfiguration.fromJson(
+              Map<String, dynamic>.from(rawTimer),
+            );
+            final errors = timer.validateForFormat(
+              WorkoutFormatDb.fromDb(block['workout_format']?.toString()),
+            );
+            if (errors.isNotEmpty ||
+                ![
+                  'auto',
+                  'endurance',
+                ].contains(block['performance_capture_mode'] ?? 'auto')) {
+              throw const FormatException('Unsupported timed running body.');
+            }
+          } catch (_) {
+            throw const ReviewedProtocolGraphArtifactException(
+              'unsupported_timed_running_body',
+              'The exact timed running body must be executable without conversion.',
+            );
+          }
+        }
+      }
     }
     final projections = <ReviewedRunningProjection>[];
     final projectionKeys = <String>{};
@@ -217,6 +241,12 @@ class ReviewedProtocolGraphArtifact {
       throw const ReviewedProtocolGraphArtifactException(
         'missing_running_timer',
         'The mapped running block requires a timer configuration.',
+      );
+    }
+    if (timerRaw.containsKey('running_workout')) {
+      throw const ReviewedProtocolGraphArtifactException(
+        'unsupported_advisory_body_mix',
+        'Whole timed bodies cannot use the legacy B2 SQL step-mapping contract.',
       );
     }
     final projected = const RunningWorkoutProjector().project(

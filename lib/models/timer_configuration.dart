@@ -1,4 +1,7 @@
 import '../core/utils/frozen_json.dart';
+import '../domain/running_workout/running_workout_model.dart';
+import '../domain/running_workout/running_workout_codec.dart';
+import '../domain/running_workout/running_workout_validation.dart';
 import 'authored_int_range.dart';
 import 'circuit_capture_strategy.dart';
 import 'workout_format.dart';
@@ -25,6 +28,7 @@ class TimerConfiguration {
     this.tracking = const [],
     this.stations = const [],
     this.captureStrategy,
+    this.runningWorkout,
   });
 
   final int? durationSeconds;
@@ -44,6 +48,9 @@ class TimerConfiguration {
   final List<String> tracking;
   final List<TimerStationSpec> stations;
   final CircuitCaptureStrategy? captureStrategy;
+
+  /// Exact authored body, distinct from the optional B2 advisory policy.
+  final RunningWorkout? runningWorkout;
 
   int? get emomTotalSeconds =>
       totalDurationSeconds ??
@@ -90,6 +97,7 @@ class TimerConfiguration {
       tracking: tracking ?? this.tracking,
       stations: stations ?? this.stations,
       captureStrategy: captureStrategy ?? this.captureStrategy,
+      runningWorkout: runningWorkout,
     );
   }
 
@@ -117,6 +125,8 @@ class TimerConfiguration {
       if (stations.isNotEmpty)
         'stations': stations.map((station) => station.toJson()).toList(),
       if (captureStrategy != null) 'capture_strategy': captureStrategy!.dbValue,
+      if (runningWorkout != null)
+        'running_workout': const RunningWorkoutCodec().toJson(runningWorkout!),
     };
   }
 
@@ -130,6 +140,10 @@ class TimerConfiguration {
       json['totalDurationSeconds'] ?? json['total_duration_seconds'],
     );
     final authoredRounds = _int(json['rounds']);
+    final runningRaw = json['running_workout'];
+    if (json.containsKey('running_workout') && runningRaw is! Map) {
+      throw const FormatException('Invalid authored running workout.');
+    }
     return TimerConfiguration(
       omitFinalRecovery: json['omitFinalRecovery'] == true,
       durationSecondsRange: json['durationRangeSeconds'] == null
@@ -164,6 +178,11 @@ class TimerConfiguration {
       captureStrategy: CircuitCaptureStrategyDb.tryParse(
         (json['capture_strategy'] ?? json['captureStrategy'])?.toString(),
       ),
+      runningWorkout: runningRaw is Map
+          ? const RunningWorkoutCodec().decodeMap(
+              Map<String, dynamic>.from(runningRaw),
+            )
+          : null,
     );
   }
 
@@ -190,11 +209,18 @@ class TimerConfiguration {
     WorkoutFormat format,
     TimerConfiguration? current,
   ) {
+    final base = current ?? const TimerConfiguration();
+    if (base.runningWorkout != null) {
+      if (format != WorkoutFormat.steadyState) {
+        throw const FormatException(
+          'Authored running cannot be converted to this timer format.',
+        );
+      }
+      return base;
+    }
     if (format == WorkoutFormat.none) {
       return const TimerConfiguration();
     }
-
-    final base = current ?? const TimerConfiguration();
 
     return switch (format) {
       WorkoutFormat.amrap => TimerConfiguration(
@@ -253,6 +279,62 @@ class TimerConfiguration {
 
   List<String> validateForFormat(WorkoutFormat format) {
     final messages = <String>[];
+    if (runningWorkout case final workout?) {
+      messages.addAll(
+        const RunningWorkoutValidator()
+            .validate(workout)
+            .errors
+            .map((e) => e.message),
+      );
+      var total = 0;
+      var frames = 0;
+      void step(RunningAtomicStep step, int count) {
+        final ms = step.duration.milliseconds;
+        if (step.duration.kind != RunningDurationKind.time ||
+            ms == null ||
+            ms <= 0) {
+          messages.add('Only positive time-ended running steps are supported.');
+        } else {
+          total += ms * count;
+          frames += count;
+        }
+      }
+
+      for (final node in workout.steps) {
+        switch (node) {
+          case RunningAtomicStep():
+            step(node, 1);
+          case RunningRepeatGroup():
+            for (final child in node.steps) {
+              step(child, node.count);
+            }
+        }
+      }
+      if (format != WorkoutFormat.steadyState ||
+          durationSeconds == null ||
+          durationSeconds! * 1000 != total ||
+          frames > 512 ||
+          durationSecondsRange != null ||
+          omitFinalRecovery ||
+          workSeconds != null ||
+          restSeconds != null ||
+          rounds != null ||
+          preparationSeconds != null ||
+          timeCapSeconds != null ||
+          intervalSeconds != null ||
+          stations.isNotEmpty ||
+          captureStrategy != null ||
+          restBetweenRoundsSeconds != null ||
+          targetRounds != null ||
+          stopwatchEnabled ||
+          (totalDurationSeconds != null &&
+              totalDurationSeconds != durationSeconds)) {
+        messages.add(
+          'Authored running requires one exact total duration and no conflicting timer settings.',
+        );
+      }
+      return messages;
+    }
 
     switch (format) {
       case WorkoutFormat.none:
@@ -308,6 +390,9 @@ class TimerConfiguration {
       validateForFormat(format).isEmpty;
 
   String summaryForFormat(WorkoutFormat format) {
+    if (runningWorkout != null) {
+      return 'Structured timed run · ${durationSeconds ?? 0}s total';
+    }
     return switch (format) {
       WorkoutFormat.none => 'No timer',
       WorkoutFormat.amrap =>

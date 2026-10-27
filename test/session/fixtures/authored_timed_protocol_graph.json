@@ -1,0 +1,106 @@
+[
+  {
+    "protocol_id": "M23-FIXTURE-R1",
+    "revision_number": 1,
+    "blocks": [
+      {
+        "position": 1,
+        "block_type": "conditioning",
+        "title": "[SOFTWARE FIXTURE ONLY] Phased timed run",
+        "content": "Never publish or train from this fixture",
+        "workout_format": "steady_state",
+        "performance_capture_mode": "endurance",
+        "timer_config": {
+          "durationSeconds": 1740,
+          "running_workout": {
+            "schema_version": 1,
+            "workout_id": "TEST-ONLY-M23-TIMED",
+            "title": "[SOFTWARE FIXTURE ONLY] Phased run",
+            "notes": "Not an approved Hybrid 10K prescription. Do not publish or train from this fixture.",
+            "steps": [
+              {
+                "kind": "atomic",
+                "step_id": "warm",
+                "role": "warm_up",
+                "duration": {
+                  "kind": "time",
+                  "milliseconds": 300000
+                },
+                "target": {
+                  "kind": "none"
+                },
+                "label": "Gradual warm-up",
+                "notes": "Fixture warm-up instruction"
+              },
+              {
+                "kind": "atomic",
+                "step_id": "main",
+                "role": "work",
+                "duration": {
+                  "kind": "time",
+                  "milliseconds": 600000
+                },
+                "target": {
+                  "kind": "heart_rate_zone_ref",
+                  "zone_ref": "fixture-zone-2"
+                },
+                "label": "Aerobic main"
+              },
+              {
+                "kind": "repeat",
+                "group_id": "quality",
+                "count": 3,
+                "steps": [
+                  {
+                    "kind": "atomic",
+                    "step_id": "effort",
+                    "role": "work",
+                    "duration": {
+                      "kind": "time",
+                      "milliseconds": 120000
+                    },
+                    "target": {
+                      "kind": "pace_range",
+                      "low": 280250,
+                      "high": 295750
+                    },
+                    "label": "Controlled effort"
+                  },
+                  {
+                    "kind": "atomic",
+                    "step_id": "recover",
+                    "role": "recovery",
+                    "duration": {
+                      "kind": "time",
+                      "milliseconds": 60000
+                    },
+                    "target": {
+                      "kind": "rpe",
+                      "scale": "rpe_cr10",
+                      "value": 2
+                    },
+                    "label": "Easy recovery"
+                  }
+                ]
+              },
+              {
+                "kind": "atomic",
+                "step_id": "cool",
+                "role": "cool_down",
+                "duration": {
+                  "kind": "time",
+                  "milliseconds": 300000
+                },
+                "target": {
+                  "kind": "none"
+                },
+                "label": "Very easy cool-down"
+              }
+            ]
+          }
+        },
+        "exercises": []
+      }
+    ]
+  }
+]

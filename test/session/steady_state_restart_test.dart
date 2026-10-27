@@ -155,7 +155,7 @@ void main() {
       expect(
         () => ProductionSessionUiCursor.fromJson({
           ...encoded,
-          'schema_version': 4,
+          'schema_version': ProductionSessionUiCursor.currentSchemaVersion + 1,
         }),
         throwsFormatException,
       );
@@ -361,7 +361,8 @@ void main() {
         if (corruption == 'active') {
           cursor['active_block_id'] = 'missing-step';
         } else if (corruption == 'future') {
-          cursor['schema_version'] = 4;
+          cursor['schema_version'] =
+              ProductionSessionUiCursor.currentSchemaVersion + 1;
         } else {
           final timer = (cursor['steady_state_timers'] as List).single as Map;
           if (corruption == 'duration') timer['duration_seconds'] = 13;

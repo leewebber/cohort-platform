@@ -6,9 +6,9 @@ import '../models/structured_running_execution.dart';
 typedef StructuredRunningElapsedTime = Duration Function();
 typedef StructuredRunningWallClock = DateTime Function();
 
-class StructuredRunningController {
+class StructuredRunningController<T extends TimedRunningExecution> {
   StructuredRunningController.fresh({
-    required VerifiedStructuredRunningExecution execution,
+    required T execution,
     this.onCheckpoint,
     StructuredRunningElapsedTime? elapsedTime,
     StructuredRunningWallClock? wallClock,
@@ -26,7 +26,7 @@ class StructuredRunningController {
        _lastReconciledAtUtc = null;
 
   StructuredRunningController.restore({
-    required VerifiedStructuredRunningExecution execution,
+    required T execution,
     required StructuredRunningCursor cursor,
     this.onCheckpoint,
     StructuredRunningElapsedTime? elapsedTime,
@@ -52,6 +52,10 @@ class StructuredRunningController {
         'The saved running time does not match the pinned workout.',
       );
     }
+    if (execution.pauseOnInterruption) {
+      _isPaused = true;
+      _lastReconciledAtUtc = null;
+    }
     if (!_isPaused && !_isFinished) {
       _reconcilePersistedElapsed();
       if (!_isPaused && !_isFinished) {
@@ -66,7 +70,7 @@ class StructuredRunningController {
   static Duration _defaultElapsedTime() => _monotonicClock.elapsed;
   static DateTime _defaultWallClock() => DateTime.now().toUtc();
 
-  final VerifiedStructuredRunningExecution _execution;
+  final T _execution;
   final List<_StructuredRunningFrame> _frames;
   final StructuredRunningElapsedTime _elapsedTime;
   final StructuredRunningWallClock _wallClock;
@@ -81,7 +85,11 @@ class StructuredRunningController {
   DateTime? _lastReconciledAtUtc;
   bool _isBackgrounded = false;
 
-  VerifiedStructuredRunningExecution get execution => _execution;
+  T get execution => _execution;
+  int get stepIndex => _frameIndex;
+  int get totalSteps => _frames.length;
+  RunningAtomicStep? get nextStep =>
+      _frameIndex + 1 < _frames.length ? _frames[_frameIndex + 1].step : null;
   StructuredRunningCursor get cursor {
     final frame = _frames[_frameIndex];
     return StructuredRunningCursor(
@@ -109,6 +117,10 @@ class StructuredRunningController {
   void pause() => _pause();
 
   void background() {
+    if (_execution.pauseOnInterruption) {
+      _pause();
+      return;
+    }
     if (_isBackgrounded) return;
     if (!_isPaused && !_isFinished) {
       _consumeClockElapsed();
@@ -249,7 +261,7 @@ class StructuredRunningController {
   void _checkpoint() => onCheckpoint?.call(cursor);
 
   static int _restoreIndex(
-    VerifiedStructuredRunningExecution execution,
+    TimedRunningExecution execution,
     StructuredRunningCursor cursor,
   ) {
     if (cursor.workoutId != execution.workout.workoutId ||

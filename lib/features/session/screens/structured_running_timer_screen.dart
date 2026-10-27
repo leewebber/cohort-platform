@@ -16,7 +16,7 @@ class StructuredRunningTimerScreen extends StatefulWidget {
     this.wallClock,
   });
 
-  final VerifiedStructuredRunningExecution execution;
+  final TimedRunningExecution execution;
   final StructuredRunningCursor? initialCursor;
   final Future<bool> Function(StructuredRunningCursor cursor) onCheckpoint;
   final StructuredRunningElapsedTime? elapsedTime;
@@ -32,6 +32,7 @@ class _StructuredRunningTimerScreenState
     with WidgetsBindingObserver {
   late final StructuredRunningController _controller;
   bool _isExiting = false;
+  bool _saveFailed = false;
 
   @override
   void initState() {
@@ -39,7 +40,7 @@ class _StructuredRunningTimerScreenState
     WidgetsBinding.instance.addObserver(this);
     void checkpoint(StructuredRunningCursor cursor) {
       if (mounted) setState(() {});
-      unawaited(widget.onCheckpoint(cursor));
+      if (!_saveFailed) unawaited(_saveCheckpoint(cursor));
     }
 
     final initial = widget.initialCursor;
@@ -79,11 +80,38 @@ class _StructuredRunningTimerScreenState
     super.dispose();
   }
 
+  Future<void> _saveCheckpoint(StructuredRunningCursor cursor) async {
+    bool saved;
+    try {
+      saved = await widget.onCheckpoint(cursor);
+    } catch (_) {
+      saved = false;
+    }
+    if (!mounted || saved || !widget.execution.pauseOnInterruption) return;
+    setState(() => _saveFailed = true);
+    _controller.pause();
+  }
+
+  Future<void> _retrySave() async {
+    bool saved;
+    try {
+      saved = await widget.onCheckpoint(_controller.cursor);
+    } catch (_) {
+      saved = false;
+    }
+    if (mounted) setState(() => _saveFailed = !saved);
+  }
+
   Future<void> _exit() async {
     if (_isExiting) return;
     setState(() => _isExiting = true);
     _controller.exit(emitCheckpoint: false);
-    final saved = await widget.onCheckpoint(_controller.cursor);
+    bool saved;
+    try {
+      saved = await widget.onCheckpoint(_controller.cursor);
+    } catch (_) {
+      saved = false;
+    }
     if (!mounted) return;
     if (saved) {
       Navigator.of(context).pop(_controller.cursor);
@@ -132,15 +160,29 @@ class _StructuredRunningTimerScreenState
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          _roleLabel(step.role),
+                          step.label ?? _roleLabel(step.role),
                           style: Theme.of(context).textTheme.headlineMedium,
                         ),
                         const SizedBox(height: 12),
                         Text(
-                          _positionLabel(step.role, cursor.repeatOrdinal),
+                          widget.execution.pauseOnInterruption
+                              ? 'Step ${_controller.stepIndex + 1} of ${_controller.totalSteps} · ${_positionLabel(step.role, cursor.repeatOrdinal)}'
+                              : _positionLabel(step.role, cursor.repeatOrdinal),
                           key: const ValueKey('structured-running-position'),
                           textAlign: TextAlign.center,
                         ),
+                        if (step.notes case final notes?) ...[
+                          const SizedBox(height: 8),
+                          Text(notes, textAlign: TextAlign.center),
+                        ],
+                        if (widget.execution.pauseOnInterruption &&
+                            _controller.nextStep != null) ...[
+                          const SizedBox(height: 8),
+                          Text(
+                            'Next: ${_controller.nextStep!.label ?? _roleLabel(_controller.nextStep!.role)}',
+                            key: const ValueKey('structured-running-next'),
+                          ),
+                        ],
                         if (widget.execution.authoredGuidance
                             case final guidance?) ...[
                           const SizedBox(height: 12),
@@ -155,17 +197,44 @@ class _StructuredRunningTimerScreenState
                         const SizedBox(height: 24),
                         Text(
                           cursor.isFinished ? 'Timer finished' : '$seconds s',
+                          key: const ValueKey('structured-running-clock'),
                           style: Theme.of(context).textTheme.displayMedium,
                         ),
                         const SizedBox(height: 24),
                         FilledButton(
-                          onPressed: cursor.isFinished
+                          onPressed:
+                              cursor.isFinished || _saveFailed || _isExiting
                               ? null
                               : cursor.isPaused
                               ? _controller.start
                               : _controller.pause,
-                          child: Text(cursor.isPaused ? 'Start' : 'Pause'),
+                          child: Text(
+                            cursor.isPaused
+                                ? (widget.execution.pauseOnInterruption
+                                      ? 'Start / resume'
+                                      : 'Start')
+                                : 'Pause',
+                          ),
                         ),
+                        if (widget.execution.pauseOnInterruption &&
+                            cursor.isPaused &&
+                            !cursor.isFinished) ...[
+                          const SizedBox(height: 12),
+                          const Text(
+                            'Paused. Start / resume when ready. Time away does not count as training.',
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                        if (_saveFailed) ...[
+                          const Text(
+                            'Could not save this timer. Keep the app open and retry.',
+                            textAlign: TextAlign.center,
+                          ),
+                          TextButton(
+                            onPressed: _retrySave,
+                            child: const Text('Retry saving timer'),
+                          ),
+                        ],
                         if (cursor.isFinished) ...[
                           const SizedBox(height: 12),
                           const Text(
@@ -176,7 +245,11 @@ class _StructuredRunningTimerScreenState
                           FilledButton(
                             key: const ValueKey('review-running-repetitions'),
                             onPressed: _isExiting ? null : _exit,
-                            child: const Text('Review repetitions'),
+                            child: Text(
+                              widget.execution.pauseOnInterruption
+                                  ? 'Record run results'
+                                  : 'Review repetitions',
+                            ),
                           ),
                         ],
                       ],
@@ -195,6 +268,15 @@ class _StructuredRunningTimerScreenState
     required RunningAtomicStep step,
     required RunningLaunchTarget? target,
   }) {
+    if (widget.execution.pauseOnInterruption) {
+      return [
+        Text(
+          _authoredTarget(step.target),
+          key: const ValueKey('authored-running-target'),
+          textAlign: TextAlign.center,
+        ),
+      ];
+    }
     if (step.role != RunningStepRole.work || target == null) {
       return const [Text('No pace target')];
     }
@@ -227,6 +309,34 @@ class _StructuredRunningTimerScreenState
         key: const ValueKey('structured-running-target-range'),
       ),
     ];
+  }
+
+  static String _authoredTarget(RunningTarget target) => switch (target.kind) {
+    RunningTargetKind.none => 'Follow the authored guidance',
+    RunningTargetKind.pace =>
+      '${_exactPace(target.paceMillisecondsPerKilometre!)} /km',
+    RunningTargetKind.paceRange =>
+      '${_exactPace(target.paceMillisecondsPerKilometreLow!)}–${_exactPace(target.paceMillisecondsPerKilometreHigh!)} /km',
+    RunningTargetKind.heartRate => '${target.heartRateBpm} bpm',
+    RunningTargetKind.heartRateRange =>
+      '${target.heartRateBpmLow}–${target.heartRateBpmHigh} bpm',
+    RunningTargetKind.heartRateZoneRef =>
+      'Heart-rate zone: ${target.heartRateZoneRef}\nUse your configured zone. Cohort has not resolved its BPM limits.',
+    RunningTargetKind.power => '${target.powerWatts} W',
+    RunningTargetKind.powerRange =>
+      '${target.powerWattsLow}–${target.powerWattsHigh} W',
+    RunningTargetKind.cadenceRange =>
+      '${target.cadenceStepsPerMinuteLow}–${target.cadenceStepsPerMinuteHigh} steps/min',
+    RunningTargetKind.rpe => 'RPE ${target.rpeCr10}/10',
+    RunningTargetKind.rpeRange =>
+      'RPE ${target.rpeCr10Low}–${target.rpeCr10High}/10',
+  };
+
+  static String _exactPace(int ms) {
+    final minutes = ms ~/ 60000;
+    final seconds = ((ms % 60000) ~/ 1000).toString().padLeft(2, '0');
+    final fraction = ms % 1000;
+    return '$minutes:$seconds${fraction == 0 ? '' : '.${fraction.toString().padLeft(3, '0')}'}';
   }
 
   static String _roleLabel(RunningStepRole role) => switch (role) {
