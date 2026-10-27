@@ -1,5 +1,18 @@
 # Current repository checkpoint
 
+> **M1.3 steady-state restart — locally verified, 2026-10-27:**
+> [Countdown handoff](./m13_steady_state_restart/HANDOFF.md) fixes the canonical
+> Programme Athlete countdown gap at `2710185`: per-block timer progress in the existing
+> athlete/session UI envelope, restore paused without counting closed time, finished clocks
+> without automatic actuals/completion, guarded save/exit/recovery and account isolation.
+> 488 affected tests (including 23 focused checks), six safety groups and unchanged 362
+> inherited analysis identities pass their scoped gates; zero errors/changed-file diagnostics.
+> No migration/hosted deployment required by this fix; no hosted data, content or device action.
+> Overall M1.3 remains partial pending genuine-programme/authenticated-device acceptance.
+> M1.1 content, M1.2 hosted enablement, Garmin both ways, adaptation and distribution remain
+> open. `341fbad`/`632ff83` preserved; old checkouts/indices/.temp unchanged. GitHub DNS still
+> fails; new main commits are local only, with no alternate network route or UI control.
+
 > **M1.1 Hybrid 10K assessment — source incomplete, 2026-10-27:**
 > [Current corrected brief](../programmes/hybrid_10k/CURRENT_BRIEF.md) defines the general
 > fit-runner ten-week 10K PB plan, not Lee's undesigned personal return-to-running adjustment.

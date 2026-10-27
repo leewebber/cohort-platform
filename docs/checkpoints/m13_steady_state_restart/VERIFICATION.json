@@ -1,0 +1,187 @@
+{
+  "format": "cohort.m13-steady-state-restart.verification.v1",
+  "recorded_date": "2026-10-27",
+  "timezone": "Asia/Makassar",
+  "base": "632ff8393b8bd07c5b2297517a9ba2728fc4c0c6",
+  "implementation": "2710185c43c36892f032358ca2ce2f5c0b3ba4b9",
+  "status": "BOUNDED_COUNTDOWN_FIX_IMPLEMENTED_LOCAL_VERIFIED_OVERALL_M13_DEVICE_GATE_OPEN",
+  "workflow": "Programme Athlete occurrence -> atomic start/resume -> SessionExecutionLauncher -> ProductionRestoreResolver -> ActiveSessionScreen -> BlockTimerScreen -> existing athlete/session local restore envelope",
+  "timer_policy": {
+    "storage": "Existing ProductionRestoreEnvelope; nested UI cursor v3 with strict per-block steady-state cursors. Existing v1/v2 cursors remain readable.",
+    "running_after_cold_open": "Paused at last successfully saved whole-second checkpoint",
+    "paused_after_cold_open": "Same remaining seconds; explicit Resume",
+    "finished_after_cold_open": "Finished at zero; no block/session completion or fabricated actuals",
+    "closed_elapsed_time": "Not counted; no clock-derived catch-up",
+    "save_failures": "Pause unfinished timer; actionable Retry; exit blocked until successful save",
+    "invalid_state": "Fail closed. Return Home or explicitly confirm local UI-envelope removal; actuals preserved.",
+    "scope": "Per-block UI progress, exact selected duration and current assignment/version/occurrence authority; no new prescription or result authority"
+  },
+  "tests": {
+    "focused_passed": 23,
+    "affected_passed": 488,
+    "focused_is_subset_of_affected": true,
+    "exit_codes": {
+      "focused": 0,
+      "affected": 0,
+      "safety": 0
+    },
+    "affected_command": "flutter test --no-pub --reporter expanded test/session/ test/performance/ test/endurance/ test/persistence/ test/auth/ test/features/home/programme_session_execution_launcher_test.dart test/programme/athlete_programme_completion_self_test_2_test.dart",
+    "focused_command": "flutter test --no-pub --reporter expanded test/session/steady_state_restart_test.dart test/persistence/shared_preferences_failure_test.dart",
+    "safety_command": "bash tool/testing/run_phase2_consolidation_safety_gate.sh",
+    "safety_groups_passed": 6,
+    "coverage": [
+      "fresh JSON and dependency-graph restart",
+      "active/paused/finished timer states",
+      "two hours closed without fabricated training",
+      "pause/resume/reset",
+      "lifecycle background/foreground",
+      "correct active block and step boundaries",
+      "stale duration/block/active step/future/malformed state",
+      "explicit recovery confirmation and cancellation",
+      "manual endurance-result compatibility",
+      "serialized local I/O ordering",
+      "write failure and exit retry",
+      "native preferences false-return failure",
+      "foreign account lookup",
+      "account switch during timer",
+      "pending write after sign-out",
+      "sign-out route disposal",
+      "authoritative completion over corrupt timer"
+    ],
+    "proof_type": "Local unit/widget/port tests. Synthetic labelled software fixtures; no genuine programme or installed-device proof.",
+    "earlier_attempts_not_counted": [
+      "initial harness button label and compile issues corrected",
+      "first affected run used missing test/core/persistence directory; final uses existing test/persistence",
+      "interim brace-style analysis findings removed before final measurement"
+    ]
+  },
+  "analysis": {
+    "command": "flutter analyze --no-pub",
+    "before": 362,
+    "final": 362,
+    "diagnostic_identities_equal": true,
+    "errors": 0,
+    "changed_file_diagnostics": 0,
+    "exit_code": 1,
+    "classification": "NON_GREEN_INHERITED",
+    "suppressions_or_analysis_configuration_changes": false
+  },
+  "implementation_files": [
+    {
+      "file": "lib/core/persistence/local_kv_store.dart",
+      "sha256": "7d1f6502d45cc748789fb656a8803f53f5b92f831c1af2f57fa8330a0a47787d"
+    },
+    {
+      "file": "lib/features/session/models/production_session_ui_cursor.dart",
+      "sha256": "c95a53f5c6fb98716bd2893c4c2775cce99a6d97907eda63e4090a1773fdb1ab"
+    },
+    {
+      "file": "lib/features/session/models/steady_state_timer_cursor.dart",
+      "sha256": "bf1389b43de9cc30e752ab58abb492af1254b95d6620bc9e73fd7914b850b9ee"
+    },
+    {
+      "file": "lib/features/session/screens/active_session_screen.dart",
+      "sha256": "6250d5aeedb361df9afe3850712c9977e180237e91b68101cef6e754fa1b2611"
+    },
+    {
+      "file": "lib/features/session/screens/block_timer_screen.dart",
+      "sha256": "3df1cb384e1be697f60efd23f58fd12ebb186e13c94dd1e41237b12741f6c350"
+    },
+    {
+      "file": "lib/features/session/services/circuit_block_timer_bridge.dart",
+      "sha256": "62ce0567e8aede43224136ede15cdef14bf1bdf0bc4bd679889d26fd230349cc"
+    },
+    {
+      "file": "lib/features/session/services/session_execution_launcher.dart",
+      "sha256": "f0afc7893de7030296138cc26b051f553e51835ff60a2876fa16ea6325dd35e1"
+    },
+    {
+      "file": "test/persistence/shared_preferences_failure_test.dart",
+      "sha256": "fc457a7e970e99790ea1cfae3ef345cec416bc667c8ad0a574055c998148b10d"
+    },
+    {
+      "file": "test/session/steady_state_restart_test.dart",
+      "sha256": "968ccee6f48d0747c8e9ff821eb4ab67bb960f0dc3432816eb0f682b2b3f8294"
+    }
+  ],
+  "logs": [
+    {
+      "label": "reproduced_gap",
+      "sha256": "afdeda39363e23e04330953ebd8dd78c8ee7b887124b69b317a42d5a44b86f3b",
+      "raw_log_committed": false
+    },
+    {
+      "label": "focused",
+      "sha256": "1b820fa40ae22237b55d4c9f1cce8caf6e293c3101ab6b526ce7620a74018143",
+      "raw_log_committed": false
+    },
+    {
+      "label": "affected",
+      "sha256": "01808a4d41303327065dad30c35899222de3061ae5ca90ad0d0718316cf21b37",
+      "raw_log_committed": false
+    },
+    {
+      "label": "safety",
+      "sha256": "a8a8d05cd070466f07e84a184837fad7bacefcafe993061b6bf01be9ec44b80f",
+      "raw_log_committed": false
+    },
+    {
+      "label": "analysis_before",
+      "sha256": "6374f3f71ae040537569bbc82e38420f0896f5b5fd813223bb79a81cb3aa1224",
+      "raw_log_committed": false
+    },
+    {
+      "label": "analysis_final",
+      "sha256": "6e341844d22cf71abc9ab44ab79bcef4a5478effb87271a3ebacaa7f274887e1",
+      "raw_log_committed": false
+    }
+  ],
+  "protected_sources": {
+    "files": 178,
+    "all_bytes_match_base": true,
+    "manifest_sha256": "af439ca942993e6544c91dce5954a89d72665f4f99caa8b13575ef845bf50672",
+    "scope": [
+      "all migrations",
+      "content",
+      "tool/programmes",
+      "docs/programmes"
+    ]
+  },
+  "preservation": {
+    "equal": true,
+    "existing_checkouts": 23,
+    "registered_absent": 28,
+    "before_sha256": "a462c64486b147a5ba26d8eb7affe687bf5b4ccc9911bda3fc94f745f7cbfacd",
+    "after_sha256": "a462c64486b147a5ba26d8eb7affe687bf5b4ccc9911bda3fc94f745f7cbfacd",
+    "scope": "Original Developer and Field Manual checkouts, their registered worktrees, M1.2 clone: HEADs/branches/raw indices/status/tracked and nonignored files/.env/supabase .temp. Existing task-owned clone is the authorised implementation workspace.",
+    "new_worktrees_or_clones": 0,
+    "managed_cleanup": 0,
+    "global_settings_changed": 0
+  },
+  "deployment": {
+    "migration_required": false,
+    "hosted_schema_or_data_changed": false,
+    "client_update_required_for_device_use": true,
+    "M12_deployment_status": "Still separately scoped and pending; not enabled by this Git commit"
+  },
+  "git": {
+    "working_copy": "/private/tmp/cohort_m11_sources",
+    "branch": "main",
+    "prior_341fbad_and_632ff83_preserved": true,
+    "merges_in_task_range": 0,
+    "remote": "https://github.com/leewebber/cohort-platform.git",
+    "remote_check": "One normal ls-remote retry failed DNS resolution; no alternate route or network escalation",
+    "fetch_or_push": false,
+    "publication": "Local implementation plus following evidence commit only; remote main freshness/equality unknown"
+  },
+  "limits": [
+    "Last accepted local checkpoint only; pending tail may be lost if OS kills before write completion",
+    "Existing SharedPreferences platform durability limits",
+    "No full default Flutter suite or DB replay",
+    "No installed-device interaction or usability acceptance",
+    "No hosted mutation, programme publication, accounts, assignments or athlete writes",
+    "No browser/desktop/AppleScript/equivalent UI control",
+    "No Garmin/distance running/content authoring/producer expansion",
+    "M1.1 real sources and complete M1.3 release-candidate continuity remain open"
+  ]
+}
