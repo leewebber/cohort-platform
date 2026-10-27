@@ -1,5 +1,19 @@
 # Current repository checkpoint
 
+> **M1.1 source admission — partial, 2026-10-27:**
+> [M1.1 handoff](./m11_alpha_sources/HANDOFF.md) traces both genuine alpha paths
+> from base `1cca598`, retaining private v2 for Hybrid 10K and v1 where suitable for father.
+> Founder will supply both plans; Hybrid 10K is mostly built externally. Father's confirmed
+> home strength brief and remaining [inputs](./m11_alpha_sources/FOUNDER_INPUTS.md)
+> are recorded without invented prescriptions or suitability approval. Neither complete source
+> has been admitted. 103 focused existing checks pass; no runtime/schema/content change is
+> justified before source inspection. [M1.2 exact deployment proposal](./m11_alpha_sources/DEPLOYMENT_PROPOSAL.md)
+> remains unapplied; publication/recipients/accounts/athlete writes/device work stay separate.
+> Next single point remains M1.1 real-source admission, then actual benchmark adoption/M1.3.
+> Gate A Garmin delivery plus activity return, adaptation, distribution and device acceptance
+> remain open. Older checkouts/indices/.temp preserved; no computer/browser control or managed
+> worktree lifecycle. Evidence is local; GitHub freshness/publication blocked by DNS failure.
+
 > **M1.2 acquisition — locally implemented/verified, 2026-10-27:**
 > [M1.2 handoff](./m12_acquisition/HANDOFF.md) implements normal authenticated training setup
 > (persisted timezone draft/confirmation), private catalogue/detail/free acquisition and exact

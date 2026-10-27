@@ -1,0 +1,285 @@
+{
+  "format": "cohort.m11-alpha-sources.verification.v1",
+  "recorded_local_date": "2026-10-27",
+  "timezone": "Asia/Makassar",
+  "base": "1cca598ae1eb879405171114f5dced83cb04bb5a",
+  "M1.1_status": "PARTIAL_SOURCE_SUPPLY_AND_APPROVAL_PENDING",
+  "runtime_schema_content_changes": false,
+  "technical_change_decision": "No content-independent runtime change justified before actual source admission",
+  "new_content_admitted": 0,
+  "founder_input": "Founder will supply both plans; Hybrid 10K mostly built externally; father home experienced strength 3 days and spinning 3 days; no prescriptions or suitability inferred",
+  "tests": {
+    "command": "flutter test --no-pub --reporter expanded test/programmes/private_protocol_graph_builder_test.dart test/programmes/b3_device_validation_fixture_test.dart test/programme_studio/programme_studio_structured_running_test.dart test/running_workout/running_benchmark_policy_test.dart test/running_workout/running_pace_b2_golden_vectors_test.dart test/session/structured_running_controller_test.dart test/performance/previous_strength_performance_test.dart test/session/production_restore_lifecycle_test.dart test/session/production_restore_resolver_test.dart test/features/programme/programme_schedule_restore_service_test.dart test/programme/athlete_programme_completion_self_test_2_test.dart test/programme_acquisition/acquisition_controller_test.dart test/programme_acquisition/acquisition_widget_test.dart test/programme_acquisition/auth_identity_race_test.dart",
+    "exit_code": 0,
+    "passed": 103,
+    "files": [
+      "test/programmes/private_protocol_graph_builder_test.dart",
+      "test/programmes/b3_device_validation_fixture_test.dart",
+      "test/programme_studio/programme_studio_structured_running_test.dart",
+      "test/running_workout/running_benchmark_policy_test.dart",
+      "test/running_workout/running_pace_b2_golden_vectors_test.dart",
+      "test/session/structured_running_controller_test.dart",
+      "test/performance/previous_strength_performance_test.dart",
+      "test/session/production_restore_lifecycle_test.dart",
+      "test/session/production_restore_resolver_test.dart",
+      "test/features/programme/programme_schedule_restore_service_test.dart",
+      "test/programme/athlete_programme_completion_self_test_2_test.dart",
+      "test/programme_acquisition/acquisition_controller_test.dart",
+      "test/programme_acquisition/acquisition_widget_test.dart",
+      "test/programme_acquisition/auth_identity_race_test.dart"
+    ],
+    "log_sha256": "677bb781c509915b84ddb79831aa8cb635f92ab8dab0f3ba04d4c6b35ff3dc0f",
+    "proof": "Local component/widget/model tests on unchanged base implementation; no DB/HTTP/device proof in this task"
+  },
+  "dependency_preparation": {
+    "mode": "flutter pub get --offline",
+    "exit_code": 0,
+    "initial_attempt": "Sandbox denied SDK cache write; normal SDK cache access authorised for offline preparation and local tests",
+    "network_workaround": false
+  },
+  "m12_evidence": {
+    "immutable_checkpoint": "1cca598ae1eb879405171114f5dced83cb04bb5a",
+    "implementation_sha": "a59438554072c1413c51acb95f245ca7375675fb",
+    "all_implementation_file_hashes_match": 22,
+    "reused_not_rerun": [
+      "GoTrue/PostgREST fresh/reset replay",
+      "six safety groups",
+      "362 inherited full-analysis findings; zero errors and changed-file diagnostics"
+    ]
+  },
+  "source_search": {
+    "scope": [
+      "tool/programmes",
+      "content/programmes",
+      "docs/programmes",
+      "Studio registry/coverage",
+      "actual compiler/importer/publisher/graph source"
+    ],
+    "genuine_Hybrid10K_or_father_complete_source_found": false,
+    "limits": "Bounded repository finding; founder reports external partially built Hybrid 10K. External personal material and hosted athlete data not searched. No automatic reuse of retained programmes."
+  },
+  "inventory": [
+    {
+      "file": "content/programmes/b3_device_validation/v1/b3_device_validation.publication.json",
+      "sha256": "c3b122f25cefeb274060399d5895eda7bd2335695a8c32fd7a3121a3c652cea8"
+    },
+    {
+      "file": "content/programmes/b3_device_validation/v1/protocol_graphs.json",
+      "sha256": "44e00cacd3e86d6c440279c58aca44f50d46d1af102020bdd6636310ca1f4a17"
+    },
+    {
+      "file": "content/programmes/bali_hybrid_base/v1/bali_hybrid_base.publication.json",
+      "sha256": "9bbe27b8c7a40ebd9720d9fb0637f91605764158ff4a8b75d29d28e4f251489e"
+    },
+    {
+      "file": "content/programmes/bali_hybrid_base/v1/package.sha256",
+      "sha256": "f25857a2ee64b3f411bb7dba6daa4d900336a7973d9986af50922f9943868724"
+    },
+    {
+      "file": "content/programmes/bali_hybrid_base/v1/source_manifest.json",
+      "sha256": "7be6aac55ab8ed0e602b5f8463e05ca4003e8442e927d51fd03ef1ebe755ca6f"
+    },
+    {
+      "file": "docs/programmes/hyrox_base/APPROVAL_2026_10_24.txt",
+      "sha256": "85cb3915a22d27fe09437bd59317c5c10c5449eb19713e4599c2451cac3c5fd4"
+    },
+    {
+      "file": "docs/programmes/hyrox_base/APPROVAL_2026_10_25.txt",
+      "sha256": "fcf0937115b988f356ee860d3ee8cca472781e9b1dc897056c4e2e73b35696c9"
+    },
+    {
+      "file": "docs/programmes/hyrox_base/AUDIT.json",
+      "sha256": "bc4a021a2608ad74c560fca815d91328caf90d30ed12711e463ee7e1d4bc245d"
+    },
+    {
+      "file": "docs/programmes/hyrox_base/CAPTURE_AND_PREPARATION.md",
+      "sha256": "4482f8ef31c6610d4fd1a79fce603d07ff3e022368d533b3f39b385837c03ab4"
+    },
+    {
+      "file": "docs/programmes/hyrox_base/CONTRACT.md",
+      "sha256": "03daf8f81970bd645016adc0078d0c80b10162ec57bbfc30448c908dd269905b"
+    },
+    {
+      "file": "docs/programmes/hyrox_base/COVERAGE.md",
+      "sha256": "0f36ea9953557e44821fe7298b8754ad1d6e654129535394a3da56c158f1f7a3"
+    },
+    {
+      "file": "docs/programmes/hyrox_base/DECISIONS.md",
+      "sha256": "79109e3686279bd457332025dddd90f01046a0cdf7cfd7b400244ba78d25b2e7"
+    },
+    {
+      "file": "docs/programmes/hyrox_base/EXERCISE_CANDIDATES.json",
+      "sha256": "a1db71d3f984b87e6c99e6a516d498897096a7dd67426d5900f21a6b4449d514"
+    },
+    {
+      "file": "docs/programmes/hyrox_base/EXERCISE_CANDIDATES.md",
+      "sha256": "7d395fa7e8ddada6acf6fcd7fec2d140f3bdbdea1db98a73663ee3837905ef7c"
+    },
+    {
+      "file": "docs/programmes/hyrox_base/EXERCISE_DEFINITION_PROPOSALS.json",
+      "sha256": "1012e323ffd7839e53298eb75265ad025f473c9ece3e855fa51411910d08c438"
+    },
+    {
+      "file": "docs/programmes/hyrox_base/FOUNDER_DECISION_PACKET.md",
+      "sha256": "468e71f790ea6cf054f95b2dce46b6677b028b6e0739fe4e1e7a1b107fc5dd50"
+    },
+    {
+      "file": "docs/programmes/hyrox_base/MANIFEST.json",
+      "sha256": "c270ad2e41fe75cd91be6a043b27add919e96250f9b4417f78329c931fccb2ac"
+    },
+    {
+      "file": "docs/programmes/hyrox_base/MASTER.md",
+      "sha256": "63448a6084d7a31a3f77dfba74ca87d7bad612a6e5589b14dd075a4552d7b29f"
+    },
+    {
+      "file": "docs/programmes/hyrox_base/PREPARATION_PROPOSALS.json",
+      "sha256": "46638b63c213a48088c5d33d0eecdf6cd1e7b369d01a035a60590c030866a0bd"
+    },
+    {
+      "file": "docs/programmes/hyrox_base/PRODUCER_REVIEW_BUNDLE.json",
+      "sha256": "540c323d058351eef345ee5519cfc9fa22e99fa345b404899e8ea925a7cca330"
+    },
+    {
+      "file": "docs/programmes/hyrox_base/PROGRESSION.json",
+      "sha256": "4c0281b9c6b6cbb0d43211ebe0b6be30bb2d1c0c518624de62693c78975bfa46"
+    },
+    {
+      "file": "docs/programmes/hyrox_base/REVIEW_EXPORT.json",
+      "sha256": "2a867ac18b3d797babe0a9391c7918a5a6c968ff78f7a55f4ab0021d1518114d"
+    },
+    {
+      "file": "docs/programmes/hyrox_base/SESSIONS.json",
+      "sha256": "cc7f2ae47f447f81970e7370054e47d7f86e4bbde478c451003e7290ed340f5e"
+    },
+    {
+      "file": "docs/programmes/hyrox_base/TRANSFER_BRIEF.txt",
+      "sha256": "21344747b34909af82073f669865fdc1d23b37d00339c0d8a1b4b3b8375bbe0e"
+    },
+    {
+      "file": "tool/programmes/apollo_build_12_week_implementation_source.md",
+      "sha256": "72ec0f3131860c79f887e696146887f434b747ea702117f30a003466d1fe1f7c"
+    },
+    {
+      "file": "tool/programmes/apollo_build_12_week_v1.plan-package.yaml",
+      "sha256": "dfd7d1faec93d236fc127b654575fcd0a290914145590d482cc7f98dd4192f43"
+    },
+    {
+      "file": "tool/programmes/b3_device_validation_v1.plan-package.yaml",
+      "sha256": "74603ffdc933c81ff0faa529742b66cf2d2b39a1e84624d530d1510e60bf0642"
+    },
+    {
+      "file": "tool/programmes/bali/emit_bali_hybrid_base.py",
+      "sha256": "7a4a3764eb74659591a0a19db7b0968e4a852555715efb7088cb7286c0565726"
+    },
+    {
+      "file": "tool/programmes/bali_hybrid_base_v1.founder.yaml",
+      "sha256": "38db2e9753994ff8b6f69765cc9ca1d6e0acc9fe9e59e7edc807c5d7317d02cb"
+    },
+    {
+      "file": "tool/programmes/bali_hybrid_base_v1.plan-package.yaml",
+      "sha256": "94c172bcfb99faa06185e9305fc64c1944367908231a53c0fd0ebbaafbc3e30f"
+    },
+    {
+      "file": "tool/programmes/bin/publish_private_exact_version.dart",
+      "sha256": "63163451b2e007ea4d3f9ba047753717a289c53820b3895d14d2e46e4c9ade6f"
+    },
+    {
+      "file": "tool/programmes/bin/repair_incomplete_private_graph.dart",
+      "sha256": "b1b30741f39e4dc89e94a48257b4bee7df69511234556aee388494bf2c229e8c"
+    },
+    {
+      "file": "tool/programmes/bin/repair_private_exercise_capture.dart",
+      "sha256": "41d414b5e5b8bc78f8a59a2cfc493a19764a491e70fed8f38a6cb8b99e5be286"
+    },
+    {
+      "file": "tool/programmes/spartan_physique_block1_week1.plan-package.yaml",
+      "sha256": "f54f230cdfe1df65cafe7744d5ba9c148350966d00fc20ee0ba97513fd89f6f5"
+    },
+    {
+      "file": "tool/programmes/spartan_physique_block1_week1.yaml",
+      "sha256": "9451adfbcd34a218f6f339cbffe6efdff641d8d663fb43eed4026e794367e948"
+    }
+  ],
+  "implementation_anchors": [
+    {
+      "file": "tool/import_programme.dart",
+      "sha256": "39b652df5663cd52fe75bef67b91f355559699868bfb0f9e3e49501416359f91"
+    },
+    {
+      "file": "packages/cohort_plan_package/lib/src/plan_package_compiler.dart",
+      "sha256": "b396fc68c717e5e57287c405caa37d59b540165308bf81bbbe12badc5e70691e"
+    },
+    {
+      "file": "lib/features/private_programme/private_protocol_graph_builder.dart",
+      "sha256": "0c31fdc4910386867bcd02946fd62f4bd104cd18ad7272dac276b8cc0c1e03b7"
+    },
+    {
+      "file": "lib/features/private_programme/reviewed_protocol_graph_artifact.dart",
+      "sha256": "8f8cda007e9da1933e12f6258973118e159e344fe795f75ecb124ec9a0857b68"
+    },
+    {
+      "file": "lib/features/session/services/structured_running_controller.dart",
+      "sha256": "605e2a0ed8f3ea8ea348f0b054a98b06e5cfeea5b8d5ab0882f1de57d6c5a64b"
+    },
+    {
+      "file": "lib/features/session/models/structured_running_execution.dart",
+      "sha256": "debfe31525ba46fae6737f87793c9fc7e55f3fc9ecb4b3b8f286fa6f6929a6c5"
+    },
+    {
+      "file": "lib/features/programme_acquisition/acquisition_store.dart",
+      "sha256": "6b991211e9bc4a2cf2cc5772ab7a4e84993f8b844ee4bdebcfae9723764685c9"
+    },
+    {
+      "file": "lib/features/internal_tools/b3_device_benchmark_entry.dart",
+      "sha256": "820bd41092fc6fa0ab3537140515a6e8df0950d46e4addae53bf9c75532b9361"
+    },
+    {
+      "file": "lib/features/programme_studio/protocol_authoring/founder_strength_source_guard.dart",
+      "sha256": "4910e3d3177a377f9d77795ee72de4499891cbf88e0cedb2783f4c75af1ebd14"
+    },
+    {
+      "file": "lib/features/performance/services/previous_strength_performance_selector.dart",
+      "sha256": "8634f31b2751d21c3aa84739139e6f06ec2458128934ce66ae14d6978172d7b5"
+    },
+    {
+      "file": "supabase/migrations/20261005140000_tracking_publication_artifact_retention.sql",
+      "sha256": "b0380ba02c0e778b505019a7dc55e62a7d2c7a7642c4c9b454d5b595a62c4cdb"
+    },
+    {
+      "file": "supabase/migrations/20261026110000_training_setup_private_alpha_acquisition.sql",
+      "sha256": "59cb7a97e5c5bcd6e5bc230631a1c34942ce4cd7610aa253b1556510df7248f5"
+    }
+  ],
+  "m12_migration": {
+    "file": "supabase/migrations/20261026110000_training_setup_private_alpha_acquisition.sql",
+    "sha256": "59cb7a97e5c5bcd6e5bc230631a1c34942ce4cd7610aa253b1556510df7248f5"
+  },
+  "preservation": {
+    "equal": true,
+    "existing_checkouts": 23,
+    "registered_absent": 28,
+    "before_sha256": "a462c64486b147a5ba26d8eb7affe687bf5b4ccc9911bda3fc94f745f7cbfacd",
+    "after_sha256": "a462c64486b147a5ba26d8eb7affe687bf5b4ccc9911bda3fc94f745f7cbfacd",
+    "scope": "Original Developer and Field Manual roots, registered worktrees and M1.2 clone: HEAD/branch/raw index/status/tracked and nonignored files/.env/supabase .temp. Raw hash inventories retained only in task temp files.",
+    "managed_lifecycle_cleanup_operations": 0
+  },
+  "git": {
+    "local_working_copy": "/private/tmp/cohort_m11_sources",
+    "branch": "main",
+    "base_locally_verified": true,
+    "prior_m12_clone_head_and_cached_origin_main": "1cca598ae1eb879405171114f5dced83cb04bb5a",
+    "live_remote_check": "Ordinary git ls-remote origin refs/heads/main failed: Could not resolve host github.com. No retry, alternate route or network escalation.",
+    "publication": "Local commit only; remote freshness and push unverified; no remote refs changed"
+  },
+  "not_performed": [
+    "real source/content approval",
+    "hosted application contact/query/mutation",
+    "schema deployment",
+    "programme publication",
+    "accounts/eligibility/assignment/athlete writes",
+    "full DB/analysis/safety rerun",
+    "Garmin access or provider actions",
+    "device distribution or device validation",
+    "browser/desktop/AppleScript/equivalent UI control"
+  ]
+}
