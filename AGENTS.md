@@ -1,5 +1,22 @@
 # Cohort Platform repository guidance
 
+> **M2.3 confirmed Zone 2 admission — locally verified, 2026-10-27:**
+> [Target-admission handoff](docs/checkpoints/m23_personalised_target_admission/HANDOFF.md) at `eb8fe4e`
+> adds explicit owner-confirmed BPM input, exact per-workout review and immutable targets
+> around the existing fixed v1/v2 Programme Athlete start/runner. Input revision/source
+> changes invalidate unstarted reviews; later changes/withdrawal preserve started/completed
+> targets. Paused restart, actuals/corrections/History and legacy B2 remain separate.
+> 14 new / 79 focused / 626 affected checks, fresh/repeat authenticated local SQL proof and
+> six safety groups pass; 362 inherited analysis identities unchanged, zero errors/changed-file
+> findings. One [new migration/proposal](docs/checkpoints/m23_personalised_target_admission/DEPLOYMENT.md)
+> is LOCAL ONLY / UNDEPLOYED; M1.2 also remains held. No real content/athlete/hosted/device
+> action. Existing terminal one-session completion retry returns fixed_assignment_ineligible
+> without duplication; retain for M2.4. Overall M2.3 remains partial: approve exact 5K evidence,
+> formula/windows/rounding/fallback rules for one quality workout, then admit its targets.
+> Genuine sources, Garmin both ways, adaptation and distribution/device acceptance remain
+> open. All prior commits/old checkout inventories/indices/.temp are preserved; ordinary
+> GitHub DNS lookup fails, so remote freshness remains unknown.
+
 > **M1.3 steady-state restart — locally verified, 2026-10-27:**
 > [Countdown handoff](docs/checkpoints/m13_steady_state_restart/HANDOFF.md) fixes the canonical
 > Programme Athlete countdown gap at `2710185`: per-block timer progress in the existing

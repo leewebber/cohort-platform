@@ -1,0 +1,194 @@
+{
+  "format": "cohort.m23-personalised-target-admission.verification.v1",
+  "recorded_date": "2026-10-27",
+  "timezone": "Asia/Makassar",
+  "base": "1963338cff87fc6165c2f9fb754afe153547f279",
+  "implementation": "eb8fe4efde2c97ffa6fc545fadb2f563fdd50e0f",
+  "status": "ZONE2_ADMISSION_LOCAL_VERIFIED_OVERALL_M23_PARTIAL",
+  "source_marker": "athlete_confirmed_zone_2",
+  "source_scope": "Original fixed-schedule private v1/v2 whole timed running bodies; no v3/accepted-adapted/nonfixed adoption",
+  "new_focused_tests": 14,
+  "final_focused_passed": 79,
+  "affected_passed": 626,
+  "affected_opt_in_skips": 2,
+  "focused_is_subset_of_affected": true,
+  "authenticated_local_fresh_and_repeat": "PASS; real GoTrue/PostgREST, two synthetic owners/v1/v2 plus retained legacy v1/B2-v2 start/resume",
+  "exit_codes": {
+    "focused": 0,
+    "affected": 0,
+    "authenticated_gate": 0,
+    "safety": 0,
+    "analysis": 1
+  },
+  "commands": {
+    "focused": "flutter test --no-pub test/session/zone2_target_admission_test.dart test/session/authored_timed_running_test.dart test/session/steady_state_restart_test.dart test/features/home/programme_session_execution_launcher_test.dart",
+    "affected": "flutter test --no-pub test/session test/performance test/endurance test/persistence test/running_workout test/programmes test/programme_acquisition test/auth test/features/home/programme_session_execution_launcher_test.dart test/programme/athlete_programme_completion_self_test_2_test.dart",
+    "authenticated": "bash supabase/tests/run_zone2_target_admission_gate.sh",
+    "safety": "bash tool/testing/run_phase2_consolidation_safety_gate.sh",
+    "analysis": "flutter analyze --no-pub"
+  },
+  "safety_groups": 6,
+  "analysis": {
+    "baseline": 362,
+    "final": 362,
+    "identities_equal": true,
+    "errors": 0,
+    "changed_file_diagnostics": []
+  },
+  "existing_completion_limit": {
+    "case": "Retry after terminal one-session programme completion",
+    "response_status": "validation_failure",
+    "response_code": "fixed_assignment_ineligible",
+    "record_count": 1,
+    "snapshot_unchanged": true,
+    "idempotent_success_not_claimed": true,
+    "completion_protocol_modified": false
+  },
+  "migration": {
+    "path": "supabase/migrations/20261027120000_confirmed_running_zone_targets.sql",
+    "sha256": "26038e82bae21130982ccaed65be14ee49ad4581256f99476ccb5ba071b0de6a",
+    "hosted_applied": false,
+    "new_tables": [
+      "athlete_running_zone2_inputs",
+      "programme_occurrence_zone2_targets"
+    ],
+    "existing_start_oids_preserved": true,
+    "existing_b2_rules_or_policies_changed": false,
+    "direct_hyrox_auth_helper_or_deferred_producer_dependency": false
+  },
+  "boundaries": {
+    "quality_5k_policy_approved": false,
+    "unapproved_formula_added": false,
+    "real_content_or_athlete_changes": false,
+    "hosted_contact": false,
+    "browser_or_desktop_control": false,
+    "device_acceptance": false,
+    "garmin_delivery_or_return": false,
+    "aggregate_db_gate_run": false
+  },
+  "preservation": {
+    "existing_checkouts": 23,
+    "registered_absent": 28,
+    "before_after_equal": true,
+    "sha256": "a462c64486b147a5ba26d8eb7affe687bf5b4ccc9911bda3fc94f745f7cbfacd",
+    "original_dirty_checkout_indices_temp_preserved": true,
+    "managed_lifecycle_called": false
+  },
+  "git": {
+    "branch": "main",
+    "remote": "https://github.com/leewebber/cohort-platform.git",
+    "normal_lookup": "Could not resolve host: github.com",
+    "remote_freshness": "UNVERIFIED; cached origin/main is stale",
+    "prior_eight_commits_unchanged": true,
+    "rewritten_commits_or_merges": false,
+    "normal_main_push_authorised": true,
+    "alternate_network_route_or_escalation": false
+  },
+  "earlier_attempts_not_counted": [
+    "new fixture file absent on initial database launch; subsequently completed",
+    "synthetic setup used unsupported UTC alias, changed fixture to existing supported Europe/London",
+    "list-identity matcher and missing test import/pump corrected",
+    "completion replay expectation corrected to observed existing terminal refusal; no protocol change",
+    "interim brace/style diagnostics removed without suppression"
+  ],
+  "files": [
+    {
+      "path": "lib/core/persistence/session_execution_plan_codec.dart",
+      "sha256": "d6c069bf68ca379ef44a6e357f85682735cc691f9caff5759f6e2828a88486d8"
+    },
+    {
+      "path": "lib/features/performance/models/performance_snapshot.dart",
+      "sha256": "0e9c8c54d8e4a83ab46469919a0f3bcc727332912ca2dccfbf5f6302ddf4c159"
+    },
+    {
+      "path": "lib/features/performance/services/performance_snapshot_builder.dart",
+      "sha256": "468d6d620e20bd9e3ee4e6c5c562f26af96c4f8e03e1c335cbab37fcfc1f0ab4"
+    },
+    {
+      "path": "lib/features/session/models/authored_timed_running_execution.dart",
+      "sha256": "2cacb1eb134a1a26be2e1d3c491d5e549a0b73c6ec4dd96d84e752705befa11f"
+    },
+    {
+      "path": "lib/features/session/models/running_target_admission.dart",
+      "sha256": "5e141baf02f68262dfe65505f8901c16bf9594d36e8cf865edf8d93d39c07b02"
+    },
+    {
+      "path": "lib/features/session/models/session_execution_plan.dart",
+      "sha256": "e643f005ea663d7e70dfdaa2afe2bfe1035fb6b4d0202830c6f654b161005420"
+    },
+    {
+      "path": "lib/features/session/screens/active_session_screen.dart",
+      "sha256": "0e7320fb1375e194ae8b540431156a80f955064f90f770417a43017a20080a84"
+    },
+    {
+      "path": "lib/features/session/screens/running_target_review_screen.dart",
+      "sha256": "4013c30705a8f894a9d67686be253e8bb3d9b594be77eaacdfb65ec5ff694e2e"
+    },
+    {
+      "path": "lib/features/session/services/programme_session_execution_launcher.dart",
+      "sha256": "f1ae2d839d4baa5d6b1b1720ce145cd5ab4abd009bb79b29ad5335e999bb4091"
+    },
+    {
+      "path": "lib/features/session/services/programme_training_session_start_supabase_store.dart",
+      "sha256": "b84682699e0cee8208ba9c95e52f243f9864088b88cf63f401bd725be73dd6ce"
+    },
+    {
+      "path": "lib/features/session/services/running_target_admission_store.dart",
+      "sha256": "c2b0d2861f319d7f2889e0f720566f9a6b62c91a7af2aca4e66594ac711e7e13"
+    },
+    {
+      "path": "lib/features/session/services/session_execution_launcher.dart",
+      "sha256": "fe9dda160c89453b76e85d8fb0dc25077d923f5a85857f06db950d820fc246ed"
+    },
+    {
+      "path": "supabase/migrations/20261027120000_confirmed_running_zone_targets.sql",
+      "sha256": "26038e82bae21130982ccaed65be14ee49ad4581256f99476ccb5ba071b0de6a"
+    },
+    {
+      "path": "supabase/tests/fixtures/zone2_publication_fixture.dart",
+      "sha256": "fb992e60713a7fbe948e6a756ee4a6079404ba998b048a0efd35c5de0dd2b1dd"
+    },
+    {
+      "path": "supabase/tests/run_zone2_target_admission_gate.sh",
+      "sha256": "495b479bc78e7bb8ffbef126b9ee75baa0b737b9c29c3d024f4f8cfb004678e2"
+    },
+    {
+      "path": "test/session/fixtures/zone2_admission/easy_run.json",
+      "sha256": "bcdaaaac0e4abade9d5e6f672e3478f222833546f20192d5452c2698a2e0ca78"
+    },
+    {
+      "path": "test/session/zone2_authenticated_local_test.dart",
+      "sha256": "19942570e9c65d7d2eb6d48cd8fef1047c7c1c6c613a55e3c5214c7e2596c3a4"
+    },
+    {
+      "path": "test/session/zone2_target_admission_test.dart",
+      "sha256": "653b76be319cf0d9bbf5e77a3c0619bf0e0abb602fc62d47d6ee12249b696119"
+    }
+  ],
+  "local_logs": [
+    {
+      "path": "/private/tmp/cohort_zone2_final_regressions.log",
+      "sha256": "bae788e799186ffa596031d6df08bfdea9f00f2f5599ce008decc13b2dd778e5"
+    },
+    {
+      "path": "/private/tmp/cohort_zone2_final_focused.log",
+      "sha256": "b900c15b69a13a39d1def6f86a20747f91949484db2aa25b1d0d58bd83fa17ce"
+    },
+    {
+      "path": "/private/tmp/cohort_zone2_db_final.log",
+      "sha256": "15c85cbee007f1fd91a7d90671539436ec4ece455d23705829fcc5b56b83cde9"
+    },
+    {
+      "path": "/private/tmp/cohort_zone2_safety.log",
+      "sha256": "7ac5ba810f188bc1ecb9773636715bfc7094b82187c8cc35d6c0497aba84a8ec"
+    },
+    {
+      "path": "/private/tmp/cohort_target_analysis_before.log",
+      "sha256": "727da722176665a54a4166306aec2366b35658029ca646f458300fbffd353893"
+    },
+    {
+      "path": "/private/tmp/cohort_target_analysis_final.log",
+      "sha256": "e515f649ba3392239d6622b3b4986b9ebec4f7c6affb97224f4bdfd96bb93f86"
+    }
+  ]
+}
