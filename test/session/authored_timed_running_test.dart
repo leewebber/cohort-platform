@@ -472,6 +472,18 @@ void main() {
         final config = TimerConfiguration.fromJson({...raw, ...patch});
         expect(config.isValidForFormat(WorkoutFormat.steadyState), isFalse);
       }
+      final fractional = jsonDecode(jsonEncode(raw)) as Map<String, dynamic>;
+      // Same exact whole-workout total, but the one-second UI cannot faithfully
+      // present half-second boundaries. Reject rather than round or skip them.
+      final phases = fractional['running_workout']['steps'] as List;
+      phases[0]['duration']['milliseconds'] = 300500;
+      phases[1]['duration']['milliseconds'] = 599500;
+      expect(
+        TimerConfiguration.fromJson(
+          fractional,
+        ).isValidForFormat(WorkoutFormat.steadyState),
+        isFalse,
+      );
       final changed = jsonDecode(jsonEncode(raw)) as Map<String, dynamic>;
       ((changed['running_workout']['steps'] as List).first as Map)['duration'] =
           {'kind': 'distance', 'millimetres': 1000000};

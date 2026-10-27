@@ -292,8 +292,11 @@ class TimerConfiguration {
         final ms = step.duration.milliseconds;
         if (step.duration.kind != RunningDurationKind.time ||
             ms == null ||
-            ms <= 0) {
-          messages.add('Only positive time-ended running steps are supported.');
+            ms <= 0 ||
+            ms % 1000 != 0) {
+          messages.add(
+            'Only positive whole-second time-ended running steps are supported.',
+          );
         } else {
           total += ms * count;
           frames += count;
