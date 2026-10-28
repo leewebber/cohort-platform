@@ -6,6 +6,32 @@ This plan controls delivery priorities. It preserves technical authority contrac
 it does not grant implementation, content, hosted, account or release authority.
 [M0 findings and critical path](../checkpoints/m0_alpha_baseline/HANDOFF.md).
 
+## Current single point — M2.5 (2026-10-28)
+
+**Access UNKNOWN / not verified; integration missing; Gate A OPEN.** The bounded
+[Garmin access/feasibility audit](../checkpoints/m25_garmin_round_trip/HANDOFF.md)
+is complete as documentation. Current public Garmin Business Starter lists Training
+and Activity APIs; this establishes a supported route, not Cohort entitlement or a
+round-trip proof. The portal contracts and founder watch model are unavailable.
+Founder must confirm application/app status or obtain Training + Activity access,
+current terms/capacity and device details; no application/account action occurred.
+See [official dated sources/actions](../checkpoints/m25_garmin_round_trip/SOURCES.md).
+
+Smallest next implementation **proposed, not started**: local network-free conversion
+of one accepted/frozen timed running body and deterministic delivery/association
+fixtures against documented FIT semantics. [Plan and acceptance criteria](../checkpoints/m25_garmin_round_trip/PLAN.md).
+No guessed HTTP adapter. Live work also requires a reviewed pre-delivery commitment
+shared with canonical start; current personalised targets freeze only at phone start.
+Both workout delivery and activity return with correct reviewed association remain
+alpha requirements. No ambiguous external activity may silently complete training.
+
+M2.4 terminal retry is locally verified within its retained scope; the inherited
+AuthGate bootstrap failure at `athlete_runtime_capability_bootstrap_test.dart:124`
+remains open for alpha-path triage. Genuine programme admission, held migrations,
+personalisation adoption, adaptation, movement/feedback/distribution and authenticated
+installed-device acceptance remain outstanding. No Gate A point is closed end to end
+by this audit. No next build, hosted/account/content/device action is authorised.
+
 ## Gate A — tiny friends-and-family alpha
 
 Approximately three athletes, including the founder:

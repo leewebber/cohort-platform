@@ -1,5 +1,20 @@
 # Cohort Platform repository guidance
 
+> **M2.5 Garmin access/feasibility — audit complete, 2026-10-28:**
+> [Dated checkpoint](docs/checkpoints/m25_garmin_round_trip/HANDOFF.md) records **ACCESS UNKNOWN / NOT VERIFIED; INTEGRATION MISSING**.
+> Current official Garmin Business Starter lists Training + Activity; Cohort entitlement,
+> gated OAuth/workout/callback contracts, reliable correlation and founder watch model
+> remain unproved. Founder actions and official sources are retained; no application,
+> account, credential, watch or hosted action occurred. Smallest next build is proposed
+> local accepted-workout conversion/association fixture proof, without guessed APIs.
+> Live delivery needs reviewed pre-export freeze shared with canonical start; webhook
+> evidence cannot silently complete/advance training. Both real Garmin directions,
+> programme admission, held migrations, adaptation, distribution and authenticated device
+> acceptance stay open. M2.4's inherited bootstrap failure remains for alpha-path triage.
+> All prior local commits remain ancestors. GitHub DNS still blocks ordinary fetch;
+> stale cached origin/main is not remote truth. Documentation only; Gate A remains OPEN.
+
+
 > **M2.4 terminal completion retry — locally verified, 2026-10-28:**
 > [Retry handoff](docs/checkpoints/m24_terminal_completion_retry/HANDOFF.md) at `7cc471b` recovers an exact committed programme
 > completion through the existing guarded canonical RPC after terminal assignment
