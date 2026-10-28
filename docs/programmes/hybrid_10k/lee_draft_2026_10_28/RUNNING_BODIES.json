@@ -1,0 +1,3554 @@
+[
+  {
+    "source_session_id": "LW10K-W01-D02",
+    "source_week": 1,
+    "source_day": 2,
+    "fixed_seconds": 1500,
+    "distance_metres": 0,
+    "workout": {
+      "schema_version": 1,
+      "workout_id": "LW10K-W01-D02",
+      "title": "Main run",
+      "notes": "DRAFT / NOT APPROVED. Shared run rules in SOURCE.md apply. Treadmill until 13 November inclusive; 15 November Korea outdoor if conditions permit.",
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W01-D02-P01",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 1500000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 3,
+            "high": 4
+          },
+          "label": "Continuous run; first 5 minutes particularly gentle",
+          "notes": "Source effort: EASY; source step 1. RPE 3–4/10; full sentences, relaxed gait, slow down as needed; not fixed pace."
+        }
+      ]
+    }
+  },
+  {
+    "source_session_id": "LW10K-W01-D03",
+    "source_week": 1,
+    "source_day": 3,
+    "fixed_seconds": 1500,
+    "distance_metres": 0,
+    "workout": {
+      "schema_version": 1,
+      "workout_id": "LW10K-W01-D03",
+      "title": "Easy run",
+      "notes": "DRAFT / NOT APPROVED. Shared run rules in SOURCE.md apply. Treadmill until 13 November inclusive; 15 November Korea outdoor if conditions permit.",
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W01-D03-P01",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 1500000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 3,
+            "high": 4
+          },
+          "label": "Continuous run; first 5 minutes particularly gentle",
+          "notes": "Source effort: EASY; source step 1. RPE 3–4/10; full sentences, relaxed gait, slow down as needed; not fixed pace."
+        }
+      ]
+    }
+  },
+  {
+    "source_session_id": "LW10K-W01-D05",
+    "source_week": 1,
+    "source_day": 5,
+    "fixed_seconds": 1500,
+    "distance_metres": 0,
+    "workout": {
+      "schema_version": 1,
+      "workout_id": "LW10K-W01-D05",
+      "title": "Easy run / strides",
+      "notes": "DRAFT / NOT APPROVED. Shared run rules in SOURCE.md apply. Treadmill until 13 November inclusive; 15 November Korea outdoor if conditions permit.",
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W01-D05-P01",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 1500000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 3,
+            "high": 4
+          },
+          "label": "Continuous run; first 5 minutes particularly gentle",
+          "notes": "Source effort: EASY; source step 1. RPE 3–4/10; full sentences, relaxed gait, slow down as needed; not fixed pace."
+        }
+      ]
+    }
+  },
+  {
+    "source_session_id": "LW10K-W01-D07",
+    "source_week": 1,
+    "source_day": 7,
+    "fixed_seconds": 2100,
+    "distance_metres": 0,
+    "workout": {
+      "schema_version": 1,
+      "workout_id": "LW10K-W01-D07",
+      "title": "Long easy run",
+      "notes": "DRAFT / NOT APPROVED. Shared run rules in SOURCE.md apply. Treadmill until 13 November inclusive; 15 November Korea outdoor if conditions permit.",
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W01-D07-P01",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 2100000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 3,
+            "high": 4
+          },
+          "label": "Continuous run; first 5 minutes particularly gentle",
+          "notes": "Source effort: EASY; source step 1. RPE 3–4/10; full sentences, relaxed gait, slow down as needed; not fixed pace."
+        }
+      ]
+    }
+  },
+  {
+    "source_session_id": "LW10K-W02-D02",
+    "source_week": 2,
+    "source_day": 2,
+    "fixed_seconds": 1800,
+    "distance_metres": 0,
+    "workout": {
+      "schema_version": 1,
+      "workout_id": "LW10K-W02-D02",
+      "title": "Main run",
+      "notes": "DRAFT / NOT APPROVED. Shared run rules in SOURCE.md apply. Treadmill until 13 November inclusive; 15 November Korea outdoor if conditions permit.",
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W02-D02-P01",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 1200000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 3,
+            "high": 4
+          },
+          "label": "Easy run",
+          "notes": "Source effort: EASY; source step 1. RPE 3–4/10; full sentences, relaxed gait, slow down as needed; not fixed pace."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W02-D02-P02",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 300000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 5,
+            "high": 6
+          },
+          "label": "Controlled steady segment",
+          "notes": "Source effort: STEADY; source step 2. RPE 5–6/10; controlled moderate effort, short sentences, below threshold."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W02-D02-P03",
+          "role": "cool_down",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 300000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 3,
+            "high": 4
+          },
+          "label": "Easy cooldown jog",
+          "notes": "Source effort: EASY; source step 3. RPE 3–4/10; full sentences, relaxed gait, slow down as needed; not fixed pace."
+        }
+      ]
+    }
+  },
+  {
+    "source_session_id": "LW10K-W02-D03",
+    "source_week": 2,
+    "source_day": 3,
+    "fixed_seconds": 1500,
+    "distance_metres": 0,
+    "workout": {
+      "schema_version": 1,
+      "workout_id": "LW10K-W02-D03",
+      "title": "Easy run",
+      "notes": "DRAFT / NOT APPROVED. Shared run rules in SOURCE.md apply. Treadmill until 13 November inclusive; 15 November Korea outdoor if conditions permit.",
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W02-D03-P01",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 1500000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 3,
+            "high": 4
+          },
+          "label": "Continuous run; first 5 minutes particularly gentle",
+          "notes": "Source effort: EASY; source step 1. RPE 3–4/10; full sentences, relaxed gait, slow down as needed; not fixed pace."
+        }
+      ]
+    }
+  },
+  {
+    "source_session_id": "LW10K-W02-D05",
+    "source_week": 2,
+    "source_day": 5,
+    "fixed_seconds": 1500,
+    "distance_metres": 0,
+    "workout": {
+      "schema_version": 1,
+      "workout_id": "LW10K-W02-D05",
+      "title": "Easy run / strides",
+      "notes": "DRAFT / NOT APPROVED. Shared run rules in SOURCE.md apply. Treadmill until 13 November inclusive; 15 November Korea outdoor if conditions permit.",
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W02-D05-P01",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 1500000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 3,
+            "high": 4
+          },
+          "label": "Continuous run; first 5 minutes particularly gentle",
+          "notes": "Source effort: EASY; source step 1. RPE 3–4/10; full sentences, relaxed gait, slow down as needed; not fixed pace."
+        }
+      ]
+    }
+  },
+  {
+    "source_session_id": "LW10K-W02-D07",
+    "source_week": 2,
+    "source_day": 7,
+    "fixed_seconds": 2400,
+    "distance_metres": 0,
+    "workout": {
+      "schema_version": 1,
+      "workout_id": "LW10K-W02-D07",
+      "title": "Long easy run",
+      "notes": "DRAFT / NOT APPROVED. Shared run rules in SOURCE.md apply. Treadmill until 13 November inclusive; 15 November Korea outdoor if conditions permit. Travel variant: 25 minutes EASY, or rest, if travel fatigue/poor sleep. Athlete explicitly accepts; no make-up minutes.",
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W02-D07-P01",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 2400000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 3,
+            "high": 4
+          },
+          "label": "Continuous run; first 5 minutes particularly gentle",
+          "notes": "Source effort: EASY; source step 1. RPE 3–4/10; full sentences, relaxed gait, slow down as needed; not fixed pace."
+        }
+      ]
+    }
+  },
+  {
+    "source_session_id": "LW10K-W03-D02",
+    "source_week": 3,
+    "source_day": 2,
+    "fixed_seconds": 2160,
+    "distance_metres": 0,
+    "workout": {
+      "schema_version": 1,
+      "workout_id": "LW10K-W03-D02",
+      "title": "Main run",
+      "notes": "DRAFT / NOT APPROVED. Shared run rules in SOURCE.md apply. ",
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W03-D02-P01",
+          "role": "warm_up",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 720000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 3,
+            "high": 4
+          },
+          "label": "Easy warm-up jog",
+          "notes": "Source effort: EASY; source step 1. RPE 3–4/10; full sentences, relaxed gait, slow down as needed; not fixed pace."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W03-D02-P02",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 240000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 7,
+            "high": 8
+          },
+          "label": "Threshold repetitions",
+          "notes": "Source effort: THRESHOLD; source step 2; repetition 1. RPE 7/10 initially, up to 8 at the end; strong and repeatable, not a time trial; finish able to do one more repetition."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W03-D02-P03",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 120000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 2,
+            "high": 3
+          },
+          "label": "Recovery",
+          "notes": "Source effort: RECOVERY; source step 2; repetition 1. RPE 2–3/10; very easy jog, walking allowed if needed."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W03-D02-P04",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 240000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 7,
+            "high": 8
+          },
+          "label": "Threshold repetitions",
+          "notes": "Source effort: THRESHOLD; source step 2; repetition 2. RPE 7/10 initially, up to 8 at the end; strong and repeatable, not a time trial; finish able to do one more repetition."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W03-D02-P05",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 120000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 2,
+            "high": 3
+          },
+          "label": "Recovery",
+          "notes": "Source effort: RECOVERY; source step 2; repetition 2. RPE 2–3/10; very easy jog, walking allowed if needed."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W03-D02-P06",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 240000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 7,
+            "high": 8
+          },
+          "label": "Threshold repetitions",
+          "notes": "Source effort: THRESHOLD; source step 2; repetition 3. RPE 7/10 initially, up to 8 at the end; strong and repeatable, not a time trial; finish able to do one more repetition."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W03-D02-P07",
+          "role": "cool_down",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 480000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 3,
+            "high": 4
+          },
+          "label": "Easy cooldown jog",
+          "notes": "Source effort: EASY; source step 3. RPE 3–4/10; full sentences, relaxed gait, slow down as needed; not fixed pace."
+        }
+      ]
+    }
+  },
+  {
+    "source_session_id": "LW10K-W03-D03",
+    "source_week": 3,
+    "source_day": 3,
+    "fixed_seconds": 1800,
+    "distance_metres": 0,
+    "workout": {
+      "schema_version": 1,
+      "workout_id": "LW10K-W03-D03",
+      "title": "Easy run",
+      "notes": "DRAFT / NOT APPROVED. Shared run rules in SOURCE.md apply. ",
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W03-D03-P01",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 1800000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 3,
+            "high": 4
+          },
+          "label": "Continuous run; first 5 minutes particularly gentle",
+          "notes": "Source effort: EASY; source step 1. RPE 3–4/10; full sentences, relaxed gait, slow down as needed; not fixed pace."
+        }
+      ]
+    }
+  },
+  {
+    "source_session_id": "LW10K-W03-D05",
+    "source_week": 3,
+    "source_day": 5,
+    "fixed_seconds": 1800,
+    "distance_metres": 0,
+    "workout": {
+      "schema_version": 1,
+      "workout_id": "LW10K-W03-D05",
+      "title": "Easy run / strides",
+      "notes": "DRAFT / NOT APPROVED. Shared run rules in SOURCE.md apply. ",
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W03-D05-P01",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 1320000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 3,
+            "high": 4
+          },
+          "label": "Easy run",
+          "notes": "Source effort: EASY; source step 1. RPE 3–4/10; full sentences, relaxed gait, slow down as needed; not fixed pace."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W03-D05-P02",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 7,
+            "high": 8
+          },
+          "label": "Strides",
+          "notes": "Source effort: STRIDE; source step 2; repetition 1. RPE about 7–8, relaxed; smooth acceleration, quick running, never all-out sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W03-D05-P03",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 100000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 2,
+            "high": 3
+          },
+          "label": "Recovery",
+          "notes": "Source effort: RECOVERY; source step 2; repetition 1. RPE 2–3/10; very easy jog, walking allowed if needed."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W03-D05-P04",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 7,
+            "high": 8
+          },
+          "label": "Strides",
+          "notes": "Source effort: STRIDE; source step 2; repetition 2. RPE about 7–8, relaxed; smooth acceleration, quick running, never all-out sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W03-D05-P05",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 100000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 2,
+            "high": 3
+          },
+          "label": "Recovery",
+          "notes": "Source effort: RECOVERY; source step 2; repetition 2. RPE 2–3/10; very easy jog, walking allowed if needed."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W03-D05-P06",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 7,
+            "high": 8
+          },
+          "label": "Strides",
+          "notes": "Source effort: STRIDE; source step 2; repetition 3. RPE about 7–8, relaxed; smooth acceleration, quick running, never all-out sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W03-D05-P07",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 100000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 2,
+            "high": 3
+          },
+          "label": "Recovery",
+          "notes": "Source effort: RECOVERY; source step 2; repetition 3. RPE 2–3/10; very easy jog, walking allowed if needed."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W03-D05-P08",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 7,
+            "high": 8
+          },
+          "label": "Strides",
+          "notes": "Source effort: STRIDE; source step 2; repetition 4. RPE about 7–8, relaxed; smooth acceleration, quick running, never all-out sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W03-D05-P09",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 100000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 2,
+            "high": 3
+          },
+          "label": "Recovery",
+          "notes": "Source effort: RECOVERY; source step 2; repetition 4. RPE 2–3/10; very easy jog, walking allowed if needed."
+        }
+      ]
+    }
+  },
+  {
+    "source_session_id": "LW10K-W03-D07",
+    "source_week": 3,
+    "source_day": 7,
+    "fixed_seconds": 2700,
+    "distance_metres": 0,
+    "workout": {
+      "schema_version": 1,
+      "workout_id": "LW10K-W03-D07",
+      "title": "Long easy run",
+      "notes": "DRAFT / NOT APPROVED. Shared run rules in SOURCE.md apply. ",
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W03-D07-P01",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 2700000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 3,
+            "high": 4
+          },
+          "label": "Continuous run; first 5 minutes particularly gentle",
+          "notes": "Source effort: EASY; source step 1. RPE 3–4/10; full sentences, relaxed gait, slow down as needed; not fixed pace."
+        }
+      ]
+    }
+  },
+  {
+    "source_session_id": "LW10K-W04-D02",
+    "source_week": 4,
+    "source_day": 2,
+    "fixed_seconds": 1800,
+    "distance_metres": 5000,
+    "workout": {
+      "schema_version": 1,
+      "workout_id": "LW10K-W04-D02",
+      "title": "5K benchmark",
+      "notes": "DRAFT / NOT APPROVED. Shared run rules in SOURCE.md apply. Flat measured course or track preferred. Record elapsed time, exact distance, route/surface, weather, splits, RPE and environment. Disable auto-pause. First kilometre controlled; settle into sustainable effort; build only in final 1–2 km. If not ready for maximal running, replace WHOLE running session with 35 minutes EASY and leave benchmark unavailable.",
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W04-D02-P01",
+          "role": "warm_up",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 720000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 3,
+            "high": 4
+          },
+          "label": "Easy warm-up jog",
+          "notes": "Source effort: EASY; source step 1. RPE 3–4/10; full sentences, relaxed gait, slow down as needed; not fixed pace."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W04-D02-P02",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 7,
+            "high": 8
+          },
+          "label": "Warm-up strides",
+          "notes": "Source effort: STRIDE; source step 2; repetition 1. RPE about 7–8, relaxed; smooth acceleration, quick running, never all-out sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W04-D02-P03",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 100000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 2,
+            "high": 3
+          },
+          "label": "Recovery",
+          "notes": "Source effort: RECOVERY; source step 2; repetition 1. RPE 2–3/10; very easy jog, walking allowed if needed."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W04-D02-P04",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 7,
+            "high": 8
+          },
+          "label": "Warm-up strides",
+          "notes": "Source effort: STRIDE; source step 2; repetition 2. RPE about 7–8, relaxed; smooth acceleration, quick running, never all-out sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W04-D02-P05",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 100000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 2,
+            "high": 3
+          },
+          "label": "Recovery",
+          "notes": "Source effort: RECOVERY; source step 2; repetition 2. RPE 2–3/10; very easy jog, walking allowed if needed."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W04-D02-P06",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 7,
+            "high": 8
+          },
+          "label": "Warm-up strides",
+          "notes": "Source effort: STRIDE; source step 2; repetition 3. RPE about 7–8, relaxed; smooth acceleration, quick running, never all-out sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W04-D02-P07",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 100000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 2,
+            "high": 3
+          },
+          "label": "Recovery",
+          "notes": "Source effort: RECOVERY; source step 2; repetition 3. RPE 2–3/10; very easy jog, walking allowed if needed."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W04-D02-P08",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 120000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 2,
+            "high": 3
+          },
+          "label": "Very easy settle jog",
+          "notes": "Source effort: RECOVERY; source step 3. RPE 2–3/10; very easy jog, walking allowed if needed."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W04-D02-P09",
+          "role": "work",
+          "duration": {
+            "kind": "distance",
+            "millimetres": 5000000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Measured time trial",
+          "notes": "Source effort: Best sustainable evenly paced effort; no early sprint; source step 4. Best sustainable evenly paced effort; no early sprint"
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W04-D02-P10",
+          "role": "cool_down",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 600000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 3,
+            "high": 4
+          },
+          "label": "Easy cooldown jog",
+          "notes": "Source effort: EASY; source step 5. RPE 3–4/10; full sentences, relaxed gait, slow down as needed; not fixed pace."
+        }
+      ]
+    }
+  },
+  {
+    "source_session_id": "LW10K-W04-D03",
+    "source_week": 4,
+    "source_day": 3,
+    "fixed_seconds": 1500,
+    "distance_metres": 0,
+    "workout": {
+      "schema_version": 1,
+      "workout_id": "LW10K-W04-D03",
+      "title": "Easy run",
+      "notes": "DRAFT / NOT APPROVED. Shared run rules in SOURCE.md apply. ",
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W04-D03-P01",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 1500000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 3,
+            "high": 4
+          },
+          "label": "Continuous run; first 5 minutes particularly gentle",
+          "notes": "Source effort: EASY; source step 1. RPE 3–4/10; full sentences, relaxed gait, slow down as needed; not fixed pace."
+        }
+      ]
+    }
+  },
+  {
+    "source_session_id": "LW10K-W04-D05",
+    "source_week": 4,
+    "source_day": 5,
+    "fixed_seconds": 1800,
+    "distance_metres": 0,
+    "workout": {
+      "schema_version": 1,
+      "workout_id": "LW10K-W04-D05",
+      "title": "Easy run / strides",
+      "notes": "DRAFT / NOT APPROVED. Shared run rules in SOURCE.md apply. ",
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W04-D05-P01",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 1320000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 3,
+            "high": 4
+          },
+          "label": "Easy run",
+          "notes": "Source effort: EASY; source step 1. RPE 3–4/10; full sentences, relaxed gait, slow down as needed; not fixed pace."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W04-D05-P02",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 7,
+            "high": 8
+          },
+          "label": "Strides",
+          "notes": "Source effort: STRIDE; source step 2; repetition 1. RPE about 7–8, relaxed; smooth acceleration, quick running, never all-out sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W04-D05-P03",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 100000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 2,
+            "high": 3
+          },
+          "label": "Recovery",
+          "notes": "Source effort: RECOVERY; source step 2; repetition 1. RPE 2–3/10; very easy jog, walking allowed if needed."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W04-D05-P04",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 7,
+            "high": 8
+          },
+          "label": "Strides",
+          "notes": "Source effort: STRIDE; source step 2; repetition 2. RPE about 7–8, relaxed; smooth acceleration, quick running, never all-out sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W04-D05-P05",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 100000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 2,
+            "high": 3
+          },
+          "label": "Recovery",
+          "notes": "Source effort: RECOVERY; source step 2; repetition 2. RPE 2–3/10; very easy jog, walking allowed if needed."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W04-D05-P06",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 7,
+            "high": 8
+          },
+          "label": "Strides",
+          "notes": "Source effort: STRIDE; source step 2; repetition 3. RPE about 7–8, relaxed; smooth acceleration, quick running, never all-out sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W04-D05-P07",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 100000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 2,
+            "high": 3
+          },
+          "label": "Recovery",
+          "notes": "Source effort: RECOVERY; source step 2; repetition 3. RPE 2–3/10; very easy jog, walking allowed if needed."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W04-D05-P08",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 7,
+            "high": 8
+          },
+          "label": "Strides",
+          "notes": "Source effort: STRIDE; source step 2; repetition 4. RPE about 7–8, relaxed; smooth acceleration, quick running, never all-out sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W04-D05-P09",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 100000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 2,
+            "high": 3
+          },
+          "label": "Recovery",
+          "notes": "Source effort: RECOVERY; source step 2; repetition 4. RPE 2–3/10; very easy jog, walking allowed if needed."
+        }
+      ]
+    }
+  },
+  {
+    "source_session_id": "LW10K-W04-D07",
+    "source_week": 4,
+    "source_day": 7,
+    "fixed_seconds": 2400,
+    "distance_metres": 0,
+    "workout": {
+      "schema_version": 1,
+      "workout_id": "LW10K-W04-D07",
+      "title": "Long easy run",
+      "notes": "DRAFT / NOT APPROVED. Shared run rules in SOURCE.md apply. ",
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W04-D07-P01",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 2400000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 3,
+            "high": 4
+          },
+          "label": "Continuous run; first 5 minutes particularly gentle",
+          "notes": "Source effort: EASY; source step 1. RPE 3–4/10; full sentences, relaxed gait, slow down as needed; not fixed pace."
+        }
+      ]
+    }
+  },
+  {
+    "source_session_id": "LW10K-W05-D02",
+    "source_week": 5,
+    "source_day": 2,
+    "fixed_seconds": 2640,
+    "distance_metres": 0,
+    "workout": {
+      "schema_version": 1,
+      "workout_id": "LW10K-W05-D02",
+      "title": "Main run",
+      "notes": "DRAFT / NOT APPROVED. Shared run rules in SOURCE.md apply. ",
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W05-D02-P01",
+          "role": "warm_up",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 720000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 3,
+            "high": 4
+          },
+          "label": "Easy warm-up jog",
+          "notes": "Source effort: EASY; source step 1. RPE 3–4/10; full sentences, relaxed gait, slow down as needed; not fixed pace."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W05-D02-P02",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 360000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 7,
+            "high": 8
+          },
+          "label": "Threshold repetitions",
+          "notes": "Source effort: THRESHOLD; source step 2; repetition 1. RPE 7/10 initially, up to 8 at the end; strong and repeatable, not a time trial; finish able to do one more repetition."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W05-D02-P03",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 120000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 2,
+            "high": 3
+          },
+          "label": "Recovery",
+          "notes": "Source effort: RECOVERY; source step 2; repetition 1. RPE 2–3/10; very easy jog, walking allowed if needed."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W05-D02-P04",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 360000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 7,
+            "high": 8
+          },
+          "label": "Threshold repetitions",
+          "notes": "Source effort: THRESHOLD; source step 2; repetition 2. RPE 7/10 initially, up to 8 at the end; strong and repeatable, not a time trial; finish able to do one more repetition."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W05-D02-P05",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 120000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 2,
+            "high": 3
+          },
+          "label": "Recovery",
+          "notes": "Source effort: RECOVERY; source step 2; repetition 2. RPE 2–3/10; very easy jog, walking allowed if needed."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W05-D02-P06",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 360000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 7,
+            "high": 8
+          },
+          "label": "Threshold repetitions",
+          "notes": "Source effort: THRESHOLD; source step 2; repetition 3. RPE 7/10 initially, up to 8 at the end; strong and repeatable, not a time trial; finish able to do one more repetition."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W05-D02-P07",
+          "role": "cool_down",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 600000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 3,
+            "high": 4
+          },
+          "label": "Easy cooldown jog",
+          "notes": "Source effort: EASY; source step 3. RPE 3–4/10; full sentences, relaxed gait, slow down as needed; not fixed pace."
+        }
+      ]
+    }
+  },
+  {
+    "source_session_id": "LW10K-W05-D03",
+    "source_week": 5,
+    "source_day": 3,
+    "fixed_seconds": 2100,
+    "distance_metres": 0,
+    "workout": {
+      "schema_version": 1,
+      "workout_id": "LW10K-W05-D03",
+      "title": "Easy run",
+      "notes": "DRAFT / NOT APPROVED. Shared run rules in SOURCE.md apply. ",
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W05-D03-P01",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 2100000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 3,
+            "high": 4
+          },
+          "label": "Continuous run; first 5 minutes particularly gentle",
+          "notes": "Source effort: EASY; source step 1. RPE 3–4/10; full sentences, relaxed gait, slow down as needed; not fixed pace."
+        }
+      ]
+    }
+  },
+  {
+    "source_session_id": "LW10K-W05-D05",
+    "source_week": 5,
+    "source_day": 5,
+    "fixed_seconds": 2100,
+    "distance_metres": 0,
+    "workout": {
+      "schema_version": 1,
+      "workout_id": "LW10K-W05-D05",
+      "title": "Easy run / strides",
+      "notes": "DRAFT / NOT APPROVED. Shared run rules in SOURCE.md apply. ",
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W05-D05-P01",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 1620000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 3,
+            "high": 4
+          },
+          "label": "Easy run",
+          "notes": "Source effort: EASY; source step 1. RPE 3–4/10; full sentences, relaxed gait, slow down as needed; not fixed pace."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W05-D05-P02",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 7,
+            "high": 8
+          },
+          "label": "Strides",
+          "notes": "Source effort: STRIDE; source step 2; repetition 1. RPE about 7–8, relaxed; smooth acceleration, quick running, never all-out sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W05-D05-P03",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 100000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 2,
+            "high": 3
+          },
+          "label": "Recovery",
+          "notes": "Source effort: RECOVERY; source step 2; repetition 1. RPE 2–3/10; very easy jog, walking allowed if needed."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W05-D05-P04",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 7,
+            "high": 8
+          },
+          "label": "Strides",
+          "notes": "Source effort: STRIDE; source step 2; repetition 2. RPE about 7–8, relaxed; smooth acceleration, quick running, never all-out sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W05-D05-P05",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 100000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 2,
+            "high": 3
+          },
+          "label": "Recovery",
+          "notes": "Source effort: RECOVERY; source step 2; repetition 2. RPE 2–3/10; very easy jog, walking allowed if needed."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W05-D05-P06",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 7,
+            "high": 8
+          },
+          "label": "Strides",
+          "notes": "Source effort: STRIDE; source step 2; repetition 3. RPE about 7–8, relaxed; smooth acceleration, quick running, never all-out sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W05-D05-P07",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 100000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 2,
+            "high": 3
+          },
+          "label": "Recovery",
+          "notes": "Source effort: RECOVERY; source step 2; repetition 3. RPE 2–3/10; very easy jog, walking allowed if needed."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W05-D05-P08",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 7,
+            "high": 8
+          },
+          "label": "Strides",
+          "notes": "Source effort: STRIDE; source step 2; repetition 4. RPE about 7–8, relaxed; smooth acceleration, quick running, never all-out sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W05-D05-P09",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 100000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 2,
+            "high": 3
+          },
+          "label": "Recovery",
+          "notes": "Source effort: RECOVERY; source step 2; repetition 4. RPE 2–3/10; very easy jog, walking allowed if needed."
+        }
+      ]
+    }
+  },
+  {
+    "source_session_id": "LW10K-W05-D07",
+    "source_week": 5,
+    "source_day": 7,
+    "fixed_seconds": 3000,
+    "distance_metres": 0,
+    "workout": {
+      "schema_version": 1,
+      "workout_id": "LW10K-W05-D07",
+      "title": "Long easy run",
+      "notes": "DRAFT / NOT APPROVED. Shared run rules in SOURCE.md apply. ",
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W05-D07-P01",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 3000000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 3,
+            "high": 4
+          },
+          "label": "Continuous run; first 5 minutes particularly gentle",
+          "notes": "Source effort: EASY; source step 1. RPE 3–4/10; full sentences, relaxed gait, slow down as needed; not fixed pace."
+        }
+      ]
+    }
+  },
+  {
+    "source_session_id": "LW10K-W06-D02",
+    "source_week": 6,
+    "source_day": 2,
+    "fixed_seconds": 3000,
+    "distance_metres": 0,
+    "workout": {
+      "schema_version": 1,
+      "workout_id": "LW10K-W06-D02",
+      "title": "Main run",
+      "notes": "DRAFT / NOT APPROVED. Shared run rules in SOURCE.md apply. ",
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W06-D02-P01",
+          "role": "warm_up",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 720000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 3,
+            "high": 4
+          },
+          "label": "Easy warm-up jog",
+          "notes": "Source effort: EASY; source step 1. RPE 3–4/10; full sentences, relaxed gait, slow down as needed; not fixed pace."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W06-D02-P02",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 480000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 7,
+            "high": 8
+          },
+          "label": "Threshold repetitions",
+          "notes": "Source effort: THRESHOLD; source step 2; repetition 1. RPE 7/10 initially, up to 8 at the end; strong and repeatable, not a time trial; finish able to do one more repetition."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W06-D02-P03",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 120000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 2,
+            "high": 3
+          },
+          "label": "Recovery",
+          "notes": "Source effort: RECOVERY; source step 2; repetition 1. RPE 2–3/10; very easy jog, walking allowed if needed."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W06-D02-P04",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 480000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 7,
+            "high": 8
+          },
+          "label": "Threshold repetitions",
+          "notes": "Source effort: THRESHOLD; source step 2; repetition 2. RPE 7/10 initially, up to 8 at the end; strong and repeatable, not a time trial; finish able to do one more repetition."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W06-D02-P05",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 120000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 2,
+            "high": 3
+          },
+          "label": "Recovery",
+          "notes": "Source effort: RECOVERY; source step 2; repetition 2. RPE 2–3/10; very easy jog, walking allowed if needed."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W06-D02-P06",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 480000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 7,
+            "high": 8
+          },
+          "label": "Threshold repetitions",
+          "notes": "Source effort: THRESHOLD; source step 2; repetition 3. RPE 7/10 initially, up to 8 at the end; strong and repeatable, not a time trial; finish able to do one more repetition."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W06-D02-P07",
+          "role": "cool_down",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 600000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 3,
+            "high": 4
+          },
+          "label": "Easy cooldown jog",
+          "notes": "Source effort: EASY; source step 3. RPE 3–4/10; full sentences, relaxed gait, slow down as needed; not fixed pace."
+        }
+      ]
+    }
+  },
+  {
+    "source_session_id": "LW10K-W06-D03",
+    "source_week": 6,
+    "source_day": 3,
+    "fixed_seconds": 2100,
+    "distance_metres": 0,
+    "workout": {
+      "schema_version": 1,
+      "workout_id": "LW10K-W06-D03",
+      "title": "Easy run",
+      "notes": "DRAFT / NOT APPROVED. Shared run rules in SOURCE.md apply. ",
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W06-D03-P01",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 2100000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 3,
+            "high": 4
+          },
+          "label": "Continuous run; first 5 minutes particularly gentle",
+          "notes": "Source effort: EASY; source step 1. RPE 3–4/10; full sentences, relaxed gait, slow down as needed; not fixed pace."
+        }
+      ]
+    }
+  },
+  {
+    "source_session_id": "LW10K-W06-D05",
+    "source_week": 6,
+    "source_day": 5,
+    "fixed_seconds": 2100,
+    "distance_metres": 0,
+    "workout": {
+      "schema_version": 1,
+      "workout_id": "LW10K-W06-D05",
+      "title": "Easy run / strides",
+      "notes": "DRAFT / NOT APPROVED. Shared run rules in SOURCE.md apply. ",
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W06-D05-P01",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 1380000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 3,
+            "high": 4
+          },
+          "label": "Easy run",
+          "notes": "Source effort: EASY; source step 1. RPE 3–4/10; full sentences, relaxed gait, slow down as needed; not fixed pace."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W06-D05-P02",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 7,
+            "high": 8
+          },
+          "label": "Strides",
+          "notes": "Source effort: STRIDE; source step 2; repetition 1. RPE about 7–8, relaxed; smooth acceleration, quick running, never all-out sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W06-D05-P03",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 100000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 2,
+            "high": 3
+          },
+          "label": "Recovery",
+          "notes": "Source effort: RECOVERY; source step 2; repetition 1. RPE 2–3/10; very easy jog, walking allowed if needed."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W06-D05-P04",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 7,
+            "high": 8
+          },
+          "label": "Strides",
+          "notes": "Source effort: STRIDE; source step 2; repetition 2. RPE about 7–8, relaxed; smooth acceleration, quick running, never all-out sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W06-D05-P05",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 100000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 2,
+            "high": 3
+          },
+          "label": "Recovery",
+          "notes": "Source effort: RECOVERY; source step 2; repetition 2. RPE 2–3/10; very easy jog, walking allowed if needed."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W06-D05-P06",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 7,
+            "high": 8
+          },
+          "label": "Strides",
+          "notes": "Source effort: STRIDE; source step 2; repetition 3. RPE about 7–8, relaxed; smooth acceleration, quick running, never all-out sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W06-D05-P07",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 100000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 2,
+            "high": 3
+          },
+          "label": "Recovery",
+          "notes": "Source effort: RECOVERY; source step 2; repetition 3. RPE 2–3/10; very easy jog, walking allowed if needed."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W06-D05-P08",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 7,
+            "high": 8
+          },
+          "label": "Strides",
+          "notes": "Source effort: STRIDE; source step 2; repetition 4. RPE about 7–8, relaxed; smooth acceleration, quick running, never all-out sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W06-D05-P09",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 100000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 2,
+            "high": 3
+          },
+          "label": "Recovery",
+          "notes": "Source effort: RECOVERY; source step 2; repetition 4. RPE 2–3/10; very easy jog, walking allowed if needed."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W06-D05-P10",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 7,
+            "high": 8
+          },
+          "label": "Strides",
+          "notes": "Source effort: STRIDE; source step 2; repetition 5. RPE about 7–8, relaxed; smooth acceleration, quick running, never all-out sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W06-D05-P11",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 100000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 2,
+            "high": 3
+          },
+          "label": "Recovery",
+          "notes": "Source effort: RECOVERY; source step 2; repetition 5. RPE 2–3/10; very easy jog, walking allowed if needed."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W06-D05-P12",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 7,
+            "high": 8
+          },
+          "label": "Strides",
+          "notes": "Source effort: STRIDE; source step 2; repetition 6. RPE about 7–8, relaxed; smooth acceleration, quick running, never all-out sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W06-D05-P13",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 100000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 2,
+            "high": 3
+          },
+          "label": "Recovery",
+          "notes": "Source effort: RECOVERY; source step 2; repetition 6. RPE 2–3/10; very easy jog, walking allowed if needed."
+        }
+      ]
+    }
+  },
+  {
+    "source_session_id": "LW10K-W06-D07",
+    "source_week": 6,
+    "source_day": 7,
+    "fixed_seconds": 3300,
+    "distance_metres": 0,
+    "workout": {
+      "schema_version": 1,
+      "workout_id": "LW10K-W06-D07",
+      "title": "Long easy run",
+      "notes": "DRAFT / NOT APPROVED. Shared run rules in SOURCE.md apply. ",
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W06-D07-P01",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 3300000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 3,
+            "high": 4
+          },
+          "label": "Continuous run; first 5 minutes particularly gentle",
+          "notes": "Source effort: EASY; source step 1. RPE 3–4/10; full sentences, relaxed gait, slow down as needed; not fixed pace."
+        }
+      ]
+    }
+  },
+  {
+    "source_session_id": "LW10K-W07-D02",
+    "source_week": 7,
+    "source_day": 2,
+    "fixed_seconds": 2460,
+    "distance_metres": 0,
+    "workout": {
+      "schema_version": 1,
+      "workout_id": "LW10K-W07-D02",
+      "title": "Main run",
+      "notes": "DRAFT / NOT APPROVED. Shared run rules in SOURCE.md apply. ",
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W07-D02-P01",
+          "role": "warm_up",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 720000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 3,
+            "high": 4
+          },
+          "label": "Easy warm-up jog",
+          "notes": "Source effort: EASY; source step 1. RPE 3–4/10; full sentences, relaxed gait, slow down as needed; not fixed pace."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W07-D02-P02",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 480000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 7,
+            "high": 8
+          },
+          "label": "Threshold repetitions",
+          "notes": "Source effort: THRESHOLD; source step 2; repetition 1. RPE 7/10 initially, up to 8 at the end; strong and repeatable, not a time trial; finish able to do one more repetition."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W07-D02-P03",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 180000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 2,
+            "high": 3
+          },
+          "label": "Recovery",
+          "notes": "Source effort: RECOVERY; source step 2; repetition 1. RPE 2–3/10; very easy jog, walking allowed if needed."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W07-D02-P04",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 480000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 7,
+            "high": 8
+          },
+          "label": "Threshold repetitions",
+          "notes": "Source effort: THRESHOLD; source step 2; repetition 2. RPE 7/10 initially, up to 8 at the end; strong and repeatable, not a time trial; finish able to do one more repetition."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W07-D02-P05",
+          "role": "cool_down",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 600000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 3,
+            "high": 4
+          },
+          "label": "Easy cooldown jog",
+          "notes": "Source effort: EASY; source step 3. RPE 3–4/10; full sentences, relaxed gait, slow down as needed; not fixed pace."
+        }
+      ]
+    }
+  },
+  {
+    "source_session_id": "LW10K-W07-D03",
+    "source_week": 7,
+    "source_day": 3,
+    "fixed_seconds": 1800,
+    "distance_metres": 0,
+    "workout": {
+      "schema_version": 1,
+      "workout_id": "LW10K-W07-D03",
+      "title": "Easy run",
+      "notes": "DRAFT / NOT APPROVED. Shared run rules in SOURCE.md apply. ",
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W07-D03-P01",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 1800000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 3,
+            "high": 4
+          },
+          "label": "Continuous run; first 5 minutes particularly gentle",
+          "notes": "Source effort: EASY; source step 1. RPE 3–4/10; full sentences, relaxed gait, slow down as needed; not fixed pace."
+        }
+      ]
+    }
+  },
+  {
+    "source_session_id": "LW10K-W07-D05",
+    "source_week": 7,
+    "source_day": 5,
+    "fixed_seconds": 1800,
+    "distance_metres": 0,
+    "workout": {
+      "schema_version": 1,
+      "workout_id": "LW10K-W07-D05",
+      "title": "Easy run / strides",
+      "notes": "DRAFT / NOT APPROVED. Shared run rules in SOURCE.md apply. ",
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W07-D05-P01",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 1320000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 3,
+            "high": 4
+          },
+          "label": "Easy run",
+          "notes": "Source effort: EASY; source step 1. RPE 3–4/10; full sentences, relaxed gait, slow down as needed; not fixed pace."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W07-D05-P02",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 7,
+            "high": 8
+          },
+          "label": "Strides",
+          "notes": "Source effort: STRIDE; source step 2; repetition 1. RPE about 7–8, relaxed; smooth acceleration, quick running, never all-out sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W07-D05-P03",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 100000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 2,
+            "high": 3
+          },
+          "label": "Recovery",
+          "notes": "Source effort: RECOVERY; source step 2; repetition 1. RPE 2–3/10; very easy jog, walking allowed if needed."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W07-D05-P04",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 7,
+            "high": 8
+          },
+          "label": "Strides",
+          "notes": "Source effort: STRIDE; source step 2; repetition 2. RPE about 7–8, relaxed; smooth acceleration, quick running, never all-out sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W07-D05-P05",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 100000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 2,
+            "high": 3
+          },
+          "label": "Recovery",
+          "notes": "Source effort: RECOVERY; source step 2; repetition 2. RPE 2–3/10; very easy jog, walking allowed if needed."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W07-D05-P06",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 7,
+            "high": 8
+          },
+          "label": "Strides",
+          "notes": "Source effort: STRIDE; source step 2; repetition 3. RPE about 7–8, relaxed; smooth acceleration, quick running, never all-out sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W07-D05-P07",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 100000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 2,
+            "high": 3
+          },
+          "label": "Recovery",
+          "notes": "Source effort: RECOVERY; source step 2; repetition 3. RPE 2–3/10; very easy jog, walking allowed if needed."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W07-D05-P08",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 7,
+            "high": 8
+          },
+          "label": "Strides",
+          "notes": "Source effort: STRIDE; source step 2; repetition 4. RPE about 7–8, relaxed; smooth acceleration, quick running, never all-out sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W07-D05-P09",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 100000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 2,
+            "high": 3
+          },
+          "label": "Recovery",
+          "notes": "Source effort: RECOVERY; source step 2; repetition 4. RPE 2–3/10; very easy jog, walking allowed if needed."
+        }
+      ]
+    }
+  },
+  {
+    "source_session_id": "LW10K-W07-D07",
+    "source_week": 7,
+    "source_day": 7,
+    "fixed_seconds": 2700,
+    "distance_metres": 0,
+    "workout": {
+      "schema_version": 1,
+      "workout_id": "LW10K-W07-D07",
+      "title": "Long easy run",
+      "notes": "DRAFT / NOT APPROVED. Shared run rules in SOURCE.md apply. ",
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W07-D07-P01",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 2700000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 3,
+            "high": 4
+          },
+          "label": "Continuous run; first 5 minutes particularly gentle",
+          "notes": "Source effort: EASY; source step 1. RPE 3–4/10; full sentences, relaxed gait, slow down as needed; not fixed pace."
+        }
+      ]
+    }
+  },
+  {
+    "source_session_id": "LW10K-W08-D02",
+    "source_week": 8,
+    "source_day": 2,
+    "fixed_seconds": 1860,
+    "distance_metres": 4000,
+    "workout": {
+      "schema_version": 1,
+      "workout_id": "LW10K-W08-D02",
+      "title": "Main run",
+      "notes": "DRAFT / NOT APPROVED. Shared run rules in SOURCE.md apply. Use current fitness/accepted benchmark estimate, never aspirational sub-40 pace. No exact total duration can be known before run pace is available.",
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W08-D02-P01",
+          "role": "warm_up",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 900000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 3,
+            "high": 4
+          },
+          "label": "Easy warm-up jog",
+          "notes": "Source effort: EASY; source step 1. RPE 3–4/10; full sentences, relaxed gait, slow down as needed; not fixed pace."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W08-D02-P02",
+          "role": "work",
+          "duration": {
+            "kind": "distance",
+            "millimetres": 1000000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 7,
+            "high": 9
+          },
+          "label": "Current 10K-effort repetitions",
+          "notes": "Source effort: TEN_K; source step 2; repetition 1. RPE about 7–8 early, at most 9 at end; current realistic 10K effort, repeatable output and controlled mechanics."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W08-D02-P03",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 120000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 2,
+            "high": 3
+          },
+          "label": "Recovery",
+          "notes": "Source effort: RECOVERY; source step 2; repetition 1. RPE 2–3/10; very easy jog, walking allowed if needed."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W08-D02-P04",
+          "role": "work",
+          "duration": {
+            "kind": "distance",
+            "millimetres": 1000000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 7,
+            "high": 9
+          },
+          "label": "Current 10K-effort repetitions",
+          "notes": "Source effort: TEN_K; source step 2; repetition 2. RPE about 7–8 early, at most 9 at end; current realistic 10K effort, repeatable output and controlled mechanics."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W08-D02-P05",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 120000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 2,
+            "high": 3
+          },
+          "label": "Recovery",
+          "notes": "Source effort: RECOVERY; source step 2; repetition 2. RPE 2–3/10; very easy jog, walking allowed if needed."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W08-D02-P06",
+          "role": "work",
+          "duration": {
+            "kind": "distance",
+            "millimetres": 1000000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 7,
+            "high": 9
+          },
+          "label": "Current 10K-effort repetitions",
+          "notes": "Source effort: TEN_K; source step 2; repetition 3. RPE about 7–8 early, at most 9 at end; current realistic 10K effort, repeatable output and controlled mechanics."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W08-D02-P07",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 120000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 2,
+            "high": 3
+          },
+          "label": "Recovery",
+          "notes": "Source effort: RECOVERY; source step 2; repetition 3. RPE 2–3/10; very easy jog, walking allowed if needed."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W08-D02-P08",
+          "role": "work",
+          "duration": {
+            "kind": "distance",
+            "millimetres": 1000000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 7,
+            "high": 9
+          },
+          "label": "Current 10K-effort repetitions",
+          "notes": "Source effort: TEN_K; source step 2; repetition 4. RPE about 7–8 early, at most 9 at end; current realistic 10K effort, repeatable output and controlled mechanics."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W08-D02-P09",
+          "role": "cool_down",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 600000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 3,
+            "high": 4
+          },
+          "label": "Easy cooldown jog",
+          "notes": "Source effort: EASY; source step 3. RPE 3–4/10; full sentences, relaxed gait, slow down as needed; not fixed pace."
+        }
+      ]
+    }
+  },
+  {
+    "source_session_id": "LW10K-W08-D03",
+    "source_week": 8,
+    "source_day": 3,
+    "fixed_seconds": 2400,
+    "distance_metres": 0,
+    "workout": {
+      "schema_version": 1,
+      "workout_id": "LW10K-W08-D03",
+      "title": "Easy run",
+      "notes": "DRAFT / NOT APPROVED. Shared run rules in SOURCE.md apply. ",
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W08-D03-P01",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 2400000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 3,
+            "high": 4
+          },
+          "label": "Continuous run; first 5 minutes particularly gentle",
+          "notes": "Source effort: EASY; source step 1. RPE 3–4/10; full sentences, relaxed gait, slow down as needed; not fixed pace."
+        }
+      ]
+    }
+  },
+  {
+    "source_session_id": "LW10K-W08-D05",
+    "source_week": 8,
+    "source_day": 5,
+    "fixed_seconds": 2100,
+    "distance_metres": 0,
+    "workout": {
+      "schema_version": 1,
+      "workout_id": "LW10K-W08-D05",
+      "title": "Easy run / strides",
+      "notes": "DRAFT / NOT APPROVED. Shared run rules in SOURCE.md apply. ",
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W08-D05-P01",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 1380000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 3,
+            "high": 4
+          },
+          "label": "Easy run",
+          "notes": "Source effort: EASY; source step 1. RPE 3–4/10; full sentences, relaxed gait, slow down as needed; not fixed pace."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W08-D05-P02",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 7,
+            "high": 8
+          },
+          "label": "Strides",
+          "notes": "Source effort: STRIDE; source step 2; repetition 1. RPE about 7–8, relaxed; smooth acceleration, quick running, never all-out sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W08-D05-P03",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 100000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 2,
+            "high": 3
+          },
+          "label": "Recovery",
+          "notes": "Source effort: RECOVERY; source step 2; repetition 1. RPE 2–3/10; very easy jog, walking allowed if needed."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W08-D05-P04",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 7,
+            "high": 8
+          },
+          "label": "Strides",
+          "notes": "Source effort: STRIDE; source step 2; repetition 2. RPE about 7–8, relaxed; smooth acceleration, quick running, never all-out sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W08-D05-P05",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 100000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 2,
+            "high": 3
+          },
+          "label": "Recovery",
+          "notes": "Source effort: RECOVERY; source step 2; repetition 2. RPE 2–3/10; very easy jog, walking allowed if needed."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W08-D05-P06",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 7,
+            "high": 8
+          },
+          "label": "Strides",
+          "notes": "Source effort: STRIDE; source step 2; repetition 3. RPE about 7–8, relaxed; smooth acceleration, quick running, never all-out sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W08-D05-P07",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 100000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 2,
+            "high": 3
+          },
+          "label": "Recovery",
+          "notes": "Source effort: RECOVERY; source step 2; repetition 3. RPE 2–3/10; very easy jog, walking allowed if needed."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W08-D05-P08",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 7,
+            "high": 8
+          },
+          "label": "Strides",
+          "notes": "Source effort: STRIDE; source step 2; repetition 4. RPE about 7–8, relaxed; smooth acceleration, quick running, never all-out sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W08-D05-P09",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 100000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 2,
+            "high": 3
+          },
+          "label": "Recovery",
+          "notes": "Source effort: RECOVERY; source step 2; repetition 4. RPE 2–3/10; very easy jog, walking allowed if needed."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W08-D05-P10",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 7,
+            "high": 8
+          },
+          "label": "Strides",
+          "notes": "Source effort: STRIDE; source step 2; repetition 5. RPE about 7–8, relaxed; smooth acceleration, quick running, never all-out sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W08-D05-P11",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 100000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 2,
+            "high": 3
+          },
+          "label": "Recovery",
+          "notes": "Source effort: RECOVERY; source step 2; repetition 5. RPE 2–3/10; very easy jog, walking allowed if needed."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W08-D05-P12",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 7,
+            "high": 8
+          },
+          "label": "Strides",
+          "notes": "Source effort: STRIDE; source step 2; repetition 6. RPE about 7–8, relaxed; smooth acceleration, quick running, never all-out sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W08-D05-P13",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 100000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 2,
+            "high": 3
+          },
+          "label": "Recovery",
+          "notes": "Source effort: RECOVERY; source step 2; repetition 6. RPE 2–3/10; very easy jog, walking allowed if needed."
+        }
+      ]
+    }
+  },
+  {
+    "source_session_id": "LW10K-W08-D07",
+    "source_week": 8,
+    "source_day": 7,
+    "fixed_seconds": 3600,
+    "distance_metres": 0,
+    "workout": {
+      "schema_version": 1,
+      "workout_id": "LW10K-W08-D07",
+      "title": "Long easy run",
+      "notes": "DRAFT / NOT APPROVED. Shared run rules in SOURCE.md apply. ",
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W08-D07-P01",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 3600000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 3,
+            "high": 4
+          },
+          "label": "Continuous run; first 5 minutes particularly gentle",
+          "notes": "Source effort: EASY; source step 1. RPE 3–4/10; full sentences, relaxed gait, slow down as needed; not fixed pace."
+        }
+      ]
+    }
+  },
+  {
+    "source_session_id": "LW10K-W09-D02",
+    "source_week": 9,
+    "source_day": 2,
+    "fixed_seconds": 1860,
+    "distance_metres": 4800,
+    "workout": {
+      "schema_version": 1,
+      "workout_id": "LW10K-W09-D02",
+      "title": "Main run",
+      "notes": "DRAFT / NOT APPROVED. Shared run rules in SOURCE.md apply. Use current fitness/accepted benchmark estimate, never aspirational sub-40 pace. No exact total duration can be known before run pace is available.",
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W09-D02-P01",
+          "role": "warm_up",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 900000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 3,
+            "high": 4
+          },
+          "label": "Easy warm-up jog",
+          "notes": "Source effort: EASY; source step 1. RPE 3–4/10; full sentences, relaxed gait, slow down as needed; not fixed pace."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W09-D02-P02",
+          "role": "work",
+          "duration": {
+            "kind": "distance",
+            "millimetres": 1600000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 7,
+            "high": 9
+          },
+          "label": "Current 10K-effort repetitions",
+          "notes": "Source effort: TEN_K; source step 2; repetition 1. RPE about 7–8 early, at most 9 at end; current realistic 10K effort, repeatable output and controlled mechanics."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W09-D02-P03",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 180000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 2,
+            "high": 3
+          },
+          "label": "Recovery",
+          "notes": "Source effort: RECOVERY; source step 2; repetition 1. RPE 2–3/10; very easy jog, walking allowed if needed."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W09-D02-P04",
+          "role": "work",
+          "duration": {
+            "kind": "distance",
+            "millimetres": 1600000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 7,
+            "high": 9
+          },
+          "label": "Current 10K-effort repetitions",
+          "notes": "Source effort: TEN_K; source step 2; repetition 2. RPE about 7–8 early, at most 9 at end; current realistic 10K effort, repeatable output and controlled mechanics."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W09-D02-P05",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 180000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 2,
+            "high": 3
+          },
+          "label": "Recovery",
+          "notes": "Source effort: RECOVERY; source step 2; repetition 2. RPE 2–3/10; very easy jog, walking allowed if needed."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W09-D02-P06",
+          "role": "work",
+          "duration": {
+            "kind": "distance",
+            "millimetres": 1600000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 7,
+            "high": 9
+          },
+          "label": "Current 10K-effort repetitions",
+          "notes": "Source effort: TEN_K; source step 2; repetition 3. RPE about 7–8 early, at most 9 at end; current realistic 10K effort, repeatable output and controlled mechanics."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W09-D02-P07",
+          "role": "cool_down",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 600000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 3,
+            "high": 4
+          },
+          "label": "Easy cooldown jog",
+          "notes": "Source effort: EASY; source step 3. RPE 3–4/10; full sentences, relaxed gait, slow down as needed; not fixed pace."
+        }
+      ]
+    }
+  },
+  {
+    "source_session_id": "LW10K-W09-D03",
+    "source_week": 9,
+    "source_day": 3,
+    "fixed_seconds": 2100,
+    "distance_metres": 0,
+    "workout": {
+      "schema_version": 1,
+      "workout_id": "LW10K-W09-D03",
+      "title": "Easy run",
+      "notes": "DRAFT / NOT APPROVED. Shared run rules in SOURCE.md apply. ",
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W09-D03-P01",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 2100000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 3,
+            "high": 4
+          },
+          "label": "Continuous run; first 5 minutes particularly gentle",
+          "notes": "Source effort: EASY; source step 1. RPE 3–4/10; full sentences, relaxed gait, slow down as needed; not fixed pace."
+        }
+      ]
+    }
+  },
+  {
+    "source_session_id": "LW10K-W09-D05",
+    "source_week": 9,
+    "source_day": 5,
+    "fixed_seconds": 1800,
+    "distance_metres": 0,
+    "workout": {
+      "schema_version": 1,
+      "workout_id": "LW10K-W09-D05",
+      "title": "Easy run / strides",
+      "notes": "DRAFT / NOT APPROVED. Shared run rules in SOURCE.md apply. ",
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W09-D05-P01",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 1320000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 3,
+            "high": 4
+          },
+          "label": "Easy run",
+          "notes": "Source effort: EASY; source step 1. RPE 3–4/10; full sentences, relaxed gait, slow down as needed; not fixed pace."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W09-D05-P02",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 7,
+            "high": 8
+          },
+          "label": "Strides",
+          "notes": "Source effort: STRIDE; source step 2; repetition 1. RPE about 7–8, relaxed; smooth acceleration, quick running, never all-out sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W09-D05-P03",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 100000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 2,
+            "high": 3
+          },
+          "label": "Recovery",
+          "notes": "Source effort: RECOVERY; source step 2; repetition 1. RPE 2–3/10; very easy jog, walking allowed if needed."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W09-D05-P04",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 7,
+            "high": 8
+          },
+          "label": "Strides",
+          "notes": "Source effort: STRIDE; source step 2; repetition 2. RPE about 7–8, relaxed; smooth acceleration, quick running, never all-out sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W09-D05-P05",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 100000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 2,
+            "high": 3
+          },
+          "label": "Recovery",
+          "notes": "Source effort: RECOVERY; source step 2; repetition 2. RPE 2–3/10; very easy jog, walking allowed if needed."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W09-D05-P06",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 7,
+            "high": 8
+          },
+          "label": "Strides",
+          "notes": "Source effort: STRIDE; source step 2; repetition 3. RPE about 7–8, relaxed; smooth acceleration, quick running, never all-out sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W09-D05-P07",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 100000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 2,
+            "high": 3
+          },
+          "label": "Recovery",
+          "notes": "Source effort: RECOVERY; source step 2; repetition 3. RPE 2–3/10; very easy jog, walking allowed if needed."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W09-D05-P08",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 7,
+            "high": 8
+          },
+          "label": "Strides",
+          "notes": "Source effort: STRIDE; source step 2; repetition 4. RPE about 7–8, relaxed; smooth acceleration, quick running, never all-out sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W09-D05-P09",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 100000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 2,
+            "high": 3
+          },
+          "label": "Recovery",
+          "notes": "Source effort: RECOVERY; source step 2; repetition 4. RPE 2–3/10; very easy jog, walking allowed if needed."
+        }
+      ]
+    }
+  },
+  {
+    "source_session_id": "LW10K-W09-D07",
+    "source_week": 9,
+    "source_day": 7,
+    "fixed_seconds": 3000,
+    "distance_metres": 0,
+    "workout": {
+      "schema_version": 1,
+      "workout_id": "LW10K-W09-D07",
+      "title": "Long easy run",
+      "notes": "DRAFT / NOT APPROVED. Shared run rules in SOURCE.md apply. ",
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W09-D07-P01",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 3000000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 3,
+            "high": 4
+          },
+          "label": "Continuous run; first 5 minutes particularly gentle",
+          "notes": "Source effort: EASY; source step 1. RPE 3–4/10; full sentences, relaxed gait, slow down as needed; not fixed pace."
+        }
+      ]
+    }
+  },
+  {
+    "source_session_id": "LW10K-W10-D02",
+    "source_week": 10,
+    "source_day": 2,
+    "fixed_seconds": 1440,
+    "distance_metres": 2400,
+    "workout": {
+      "schema_version": 1,
+      "workout_id": "LW10K-W10-D02",
+      "title": "Main run",
+      "notes": "DRAFT / NOT APPROVED. Shared run rules in SOURCE.md apply. Use current fitness/accepted benchmark estimate, never aspirational sub-40 pace. No exact total duration can be known before run pace is available.",
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W10-D02-P01",
+          "role": "warm_up",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 720000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 3,
+            "high": 4
+          },
+          "label": "Easy warm-up jog",
+          "notes": "Source effort: EASY; source step 1. RPE 3–4/10; full sentences, relaxed gait, slow down as needed; not fixed pace."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W10-D02-P02",
+          "role": "work",
+          "duration": {
+            "kind": "distance",
+            "millimetres": 800000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 7,
+            "high": 9
+          },
+          "label": "Current 10K-effort repetitions",
+          "notes": "Source effort: TEN_K; source step 2; repetition 1. RPE about 7–8 early, at most 9 at end; current realistic 10K effort, repeatable output and controlled mechanics."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W10-D02-P03",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 120000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 2,
+            "high": 3
+          },
+          "label": "Recovery",
+          "notes": "Source effort: RECOVERY; source step 2; repetition 1. RPE 2–3/10; very easy jog, walking allowed if needed."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W10-D02-P04",
+          "role": "work",
+          "duration": {
+            "kind": "distance",
+            "millimetres": 800000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 7,
+            "high": 9
+          },
+          "label": "Current 10K-effort repetitions",
+          "notes": "Source effort: TEN_K; source step 2; repetition 2. RPE about 7–8 early, at most 9 at end; current realistic 10K effort, repeatable output and controlled mechanics."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W10-D02-P05",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 120000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 2,
+            "high": 3
+          },
+          "label": "Recovery",
+          "notes": "Source effort: RECOVERY; source step 2; repetition 2. RPE 2–3/10; very easy jog, walking allowed if needed."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W10-D02-P06",
+          "role": "work",
+          "duration": {
+            "kind": "distance",
+            "millimetres": 800000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 7,
+            "high": 9
+          },
+          "label": "Current 10K-effort repetitions",
+          "notes": "Source effort: TEN_K; source step 2; repetition 3. RPE about 7–8 early, at most 9 at end; current realistic 10K effort, repeatable output and controlled mechanics."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W10-D02-P07",
+          "role": "cool_down",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 480000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 3,
+            "high": 4
+          },
+          "label": "Easy cooldown jog",
+          "notes": "Source effort: EASY; source step 3. RPE 3–4/10; full sentences, relaxed gait, slow down as needed; not fixed pace."
+        }
+      ]
+    }
+  },
+  {
+    "source_session_id": "LW10K-W10-D03",
+    "source_week": 10,
+    "source_day": 3,
+    "fixed_seconds": 1500,
+    "distance_metres": 0,
+    "workout": {
+      "schema_version": 1,
+      "workout_id": "LW10K-W10-D03",
+      "title": "Easy run",
+      "notes": "DRAFT / NOT APPROVED. Shared run rules in SOURCE.md apply. ",
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W10-D03-P01",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 1500000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 3,
+            "high": 4
+          },
+          "label": "Continuous run; first 5 minutes particularly gentle",
+          "notes": "Source effort: EASY; source step 1. RPE 3–4/10; full sentences, relaxed gait, slow down as needed; not fixed pace."
+        }
+      ]
+    }
+  },
+  {
+    "source_session_id": "LW10K-W10-D05",
+    "source_week": 10,
+    "source_day": 5,
+    "fixed_seconds": 1200,
+    "distance_metres": 0,
+    "workout": {
+      "schema_version": 1,
+      "workout_id": "LW10K-W10-D05",
+      "title": "Easy run / strides",
+      "notes": "DRAFT / NOT APPROVED. Shared run rules in SOURCE.md apply. ",
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W10-D05-P01",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 720000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 3,
+            "high": 4
+          },
+          "label": "Easy run",
+          "notes": "Source effort: EASY; source step 1. RPE 3–4/10; full sentences, relaxed gait, slow down as needed; not fixed pace."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W10-D05-P02",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 7,
+            "high": 8
+          },
+          "label": "Strides",
+          "notes": "Source effort: STRIDE; source step 2; repetition 1. RPE about 7–8, relaxed; smooth acceleration, quick running, never all-out sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W10-D05-P03",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 100000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 2,
+            "high": 3
+          },
+          "label": "Recovery",
+          "notes": "Source effort: RECOVERY; source step 2; repetition 1. RPE 2–3/10; very easy jog, walking allowed if needed."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W10-D05-P04",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 7,
+            "high": 8
+          },
+          "label": "Strides",
+          "notes": "Source effort: STRIDE; source step 2; repetition 2. RPE about 7–8, relaxed; smooth acceleration, quick running, never all-out sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W10-D05-P05",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 100000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 2,
+            "high": 3
+          },
+          "label": "Recovery",
+          "notes": "Source effort: RECOVERY; source step 2; repetition 2. RPE 2–3/10; very easy jog, walking allowed if needed."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W10-D05-P06",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 7,
+            "high": 8
+          },
+          "label": "Strides",
+          "notes": "Source effort: STRIDE; source step 2; repetition 3. RPE about 7–8, relaxed; smooth acceleration, quick running, never all-out sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W10-D05-P07",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 100000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 2,
+            "high": 3
+          },
+          "label": "Recovery",
+          "notes": "Source effort: RECOVERY; source step 2; repetition 3. RPE 2–3/10; very easy jog, walking allowed if needed."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W10-D05-P08",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 7,
+            "high": 8
+          },
+          "label": "Strides",
+          "notes": "Source effort: STRIDE; source step 2; repetition 4. RPE about 7–8, relaxed; smooth acceleration, quick running, never all-out sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W10-D05-P09",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 100000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 2,
+            "high": 3
+          },
+          "label": "Recovery",
+          "notes": "Source effort: RECOVERY; source step 2; repetition 4. RPE 2–3/10; very easy jog, walking allowed if needed."
+        }
+      ]
+    }
+  },
+  {
+    "source_session_id": "LW10K-W10-D07",
+    "source_week": 10,
+    "source_day": 7,
+    "fixed_seconds": 1980,
+    "distance_metres": 10000,
+    "workout": {
+      "schema_version": 1,
+      "workout_id": "LW10K-W10-D07",
+      "title": "10K final assessment",
+      "notes": "DRAFT / NOT APPROVED. Shared run rules in SOURCE.md apply. Flat measured course or track preferred. Record elapsed time, exact distance, route/surface, weather, splits, RPE and environment. Disable auto-pause. First 2 km controlled; km 3–7 even sustainable effort; assess at 7 km and increase only if able; commit in final kilometre. Use training evidence to select pace. If unwell/in pain, do not force the assessment; retain an unavailable result and review timing.",
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W10-D07-P01",
+          "role": "warm_up",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 900000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 3,
+            "high": 4
+          },
+          "label": "Easy warm-up jog",
+          "notes": "Source effort: EASY; source step 1. RPE 3–4/10; full sentences, relaxed gait, slow down as needed; not fixed pace."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W10-D07-P02",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 7,
+            "high": 8
+          },
+          "label": "Warm-up strides",
+          "notes": "Source effort: STRIDE; source step 2; repetition 1. RPE about 7–8, relaxed; smooth acceleration, quick running, never all-out sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W10-D07-P03",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 100000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 2,
+            "high": 3
+          },
+          "label": "Recovery",
+          "notes": "Source effort: RECOVERY; source step 2; repetition 1. RPE 2–3/10; very easy jog, walking allowed if needed."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W10-D07-P04",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 7,
+            "high": 8
+          },
+          "label": "Warm-up strides",
+          "notes": "Source effort: STRIDE; source step 2; repetition 2. RPE about 7–8, relaxed; smooth acceleration, quick running, never all-out sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W10-D07-P05",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 100000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 2,
+            "high": 3
+          },
+          "label": "Recovery",
+          "notes": "Source effort: RECOVERY; source step 2; repetition 2. RPE 2–3/10; very easy jog, walking allowed if needed."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W10-D07-P06",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 7,
+            "high": 8
+          },
+          "label": "Warm-up strides",
+          "notes": "Source effort: STRIDE; source step 2; repetition 3. RPE about 7–8, relaxed; smooth acceleration, quick running, never all-out sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W10-D07-P07",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 100000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 2,
+            "high": 3
+          },
+          "label": "Recovery",
+          "notes": "Source effort: RECOVERY; source step 2; repetition 3. RPE 2–3/10; very easy jog, walking allowed if needed."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W10-D07-P08",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 120000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 2,
+            "high": 3
+          },
+          "label": "Very easy settle jog",
+          "notes": "Source effort: RECOVERY; source step 3. RPE 2–3/10; very easy jog, walking allowed if needed."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W10-D07-P09",
+          "role": "work",
+          "duration": {
+            "kind": "distance",
+            "millimetres": 10000000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Measured time trial",
+          "notes": "Source effort: Best sustainable evenly paced effort; no early sprint; source step 4. Best sustainable evenly paced effort; no early sprint"
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W10-D07-P10",
+          "role": "cool_down",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 600000
+          },
+          "target": {
+            "kind": "rpe_range",
+            "scale": "rpe_cr10",
+            "low": 3,
+            "high": 4
+          },
+          "label": "Easy cooldown jog",
+          "notes": "Source effort: EASY; source step 5. RPE 3–4/10; full sentences, relaxed gait, slow down as needed; not fixed pace."
+        }
+      ]
+    }
+  }
+]

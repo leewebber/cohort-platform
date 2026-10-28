@@ -1,0 +1,261 @@
+{
+  "status": "GENUINE_RETAINED_DRAFT_NOT_APPROVED_NOT_PUBLISHED",
+  "source_sha256": "d932e7103b03036e136249e0ab35d48378b0175c75feba84282386fc6ca00f40",
+  "counts": {
+    "strength": 19,
+    "running": 40,
+    "rest": 11
+  },
+  "strength_occurrences": 122,
+  "timing_discrepancies": [],
+  "weeks": [
+    {
+      "week": 1,
+      "focus": "Treadmill return: establish four easy runs",
+      "counts": {
+        "strength": 2,
+        "running": 4,
+        "rest": 1
+      },
+      "fixed_running_minutes": 110,
+      "distance_work_metres": 0,
+      "exact_weekly_running_minutes": 110,
+      "strength_work_sets": 25,
+      "strength_estimate_minutes": [
+        80,
+        120
+      ],
+      "additional_run_walk_minutes": [
+        24,
+        40
+      ],
+      "untimed_drills_and_transitions": "not included; duration unavailable"
+    },
+    {
+      "week": 2,
+      "focus": "Treadmill consistency; travel to Korea on Saturday",
+      "counts": {
+        "strength": 2,
+        "running": 4,
+        "rest": 1
+      },
+      "fixed_running_minutes": 120,
+      "distance_work_metres": 0,
+      "exact_weekly_running_minutes": 120,
+      "strength_work_sets": 25,
+      "strength_estimate_minutes": [
+        80,
+        120
+      ],
+      "additional_run_walk_minutes": [
+        24,
+        40
+      ],
+      "untimed_drills_and_transitions": "not included; duration unavailable"
+    },
+    {
+      "week": 3,
+      "focus": "Outdoor transition and first controlled threshold session",
+      "counts": {
+        "strength": 2,
+        "running": 4,
+        "rest": 1
+      },
+      "fixed_running_minutes": 141,
+      "distance_work_metres": 0,
+      "exact_weekly_running_minutes": 141,
+      "strength_work_sets": 32,
+      "strength_estimate_minutes": [
+        80,
+        120
+      ],
+      "additional_run_walk_minutes": [
+        24,
+        40
+      ],
+      "untimed_drills_and_transitions": "not included; duration unavailable"
+    },
+    {
+      "week": 4,
+      "focus": "Consolidate and establish a 5K benchmark",
+      "counts": {
+        "strength": 2,
+        "running": 4,
+        "rest": 1
+      },
+      "fixed_running_minutes": 125,
+      "distance_work_metres": 5000,
+      "exact_weekly_running_minutes": null,
+      "strength_work_sets": 23,
+      "strength_estimate_minutes": [
+        80,
+        120
+      ],
+      "additional_run_walk_minutes": [
+        24,
+        40
+      ],
+      "untimed_drills_and_transitions": "not included; duration unavailable"
+    },
+    {
+      "week": 5,
+      "focus": "Build threshold duration and aerobic endurance",
+      "counts": {
+        "strength": 2,
+        "running": 4,
+        "rest": 1
+      },
+      "fixed_running_minutes": 164,
+      "distance_work_metres": 0,
+      "exact_weekly_running_minutes": 164,
+      "strength_work_sets": 32,
+      "strength_estimate_minutes": [
+        80,
+        120
+      ],
+      "additional_run_walk_minutes": [
+        24,
+        40
+      ],
+      "untimed_drills_and_transitions": "not included; duration unavailable"
+    },
+    {
+      "week": 6,
+      "focus": "Extend repeatable threshold work",
+      "counts": {
+        "strength": 2,
+        "running": 4,
+        "rest": 1
+      },
+      "fixed_running_minutes": 175,
+      "distance_work_metres": 0,
+      "exact_weekly_running_minutes": 175,
+      "strength_work_sets": 32,
+      "strength_estimate_minutes": [
+        80,
+        120
+      ],
+      "additional_run_walk_minutes": [
+        24,
+        40
+      ],
+      "untimed_drills_and_transitions": "not included; duration unavailable"
+    },
+    {
+      "week": 7,
+      "focus": "Consolidation: reduce running and lifting volume",
+      "counts": {
+        "strength": 2,
+        "running": 4,
+        "rest": 1
+      },
+      "fixed_running_minutes": 146,
+      "distance_work_metres": 0,
+      "exact_weekly_running_minutes": 146,
+      "strength_work_sets": 23,
+      "strength_estimate_minutes": [
+        80,
+        120
+      ],
+      "additional_run_walk_minutes": [
+        24,
+        40
+      ],
+      "untimed_drills_and_transitions": "not included; duration unavailable"
+    },
+    {
+      "week": 8,
+      "focus": "10K-specific repetitions while retaining aerobic volume",
+      "counts": {
+        "strength": 2,
+        "running": 4,
+        "rest": 1
+      },
+      "fixed_running_minutes": 166,
+      "distance_work_metres": 4000,
+      "exact_weekly_running_minutes": null,
+      "strength_work_sets": 32,
+      "strength_estimate_minutes": [
+        80,
+        120
+      ],
+      "additional_run_walk_minutes": [
+        24,
+        40
+      ],
+      "untimed_drills_and_transitions": "not included; duration unavailable"
+    },
+    {
+      "week": 9,
+      "focus": "Final 10K-specific development; reduce lower-body lifting",
+      "counts": {
+        "strength": 2,
+        "running": 4,
+        "rest": 1
+      },
+      "fixed_running_minutes": 146,
+      "distance_work_metres": 4800,
+      "exact_weekly_running_minutes": null,
+      "strength_work_sets": 27,
+      "strength_estimate_minutes": [
+        80,
+        120
+      ],
+      "additional_run_walk_minutes": [
+        24,
+        40
+      ],
+      "untimed_drills_and_transitions": "not included; duration unavailable"
+    },
+    {
+      "week": 10,
+      "focus": "Freshen up, sharpen and test 10K on Sunday",
+      "counts": {
+        "strength": 1,
+        "running": 4,
+        "rest": 2
+      },
+      "fixed_running_minutes": 102,
+      "distance_work_metres": 12400,
+      "exact_weekly_running_minutes": null,
+      "strength_work_sets": 8,
+      "strength_estimate_minutes": [
+        25,
+        35
+      ],
+      "additional_run_walk_minutes": [
+        24,
+        40
+      ],
+      "untimed_drills_and_transitions": "not included; duration unavailable"
+    }
+  ],
+  "source_conflicts": [
+    {
+      "code": "week_10_template_conflict",
+      "sessions": [
+        "LW10K-W10-D04"
+      ],
+      "detail": "Week 10 has 4 runs / 1 strength / 2 rest; accepted template is 4 / 2 / 1."
+    },
+    {
+      "code": "easy_target_conflict",
+      "detail": "Draft EASY RPE 3–4; retained general direction requires confirmed Zone 2. No zone marker inserted into source."
+    },
+    {
+      "code": "threshold_target_conflict",
+      "detail": "Draft forbids mechanical threshold derivation; approved alpha five_k rule includes threshold P10 ×1.02..1.06. Rules remain unchanged."
+    },
+    {
+      "code": "personal_vs_general_scope",
+      "detail": "This is Lee-specific return-to-running/travel source; general fit-runner PB brief remains separate."
+    }
+  ],
+  "distance_session_ids": [
+    "LW10K-W04-D02",
+    "LW10K-W08-D02",
+    "LW10K-W09-D02",
+    "LW10K-W10-D02",
+    "LW10K-W10-D07"
+  ]
+}
