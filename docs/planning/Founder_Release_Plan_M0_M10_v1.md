@@ -8,29 +8,30 @@ it does not grant implementation, content, hosted, account or release authority.
 
 ## Current single point — M2.5 (2026-10-28)
 
-**Access UNKNOWN / not verified; integration missing; Gate A OPEN.** The bounded
-[Garmin access/feasibility audit](../checkpoints/m25_garmin_round_trip/HANDOFF.md)
-is complete as documentation. Current public Garmin Business Starter lists Training
-and Activity APIs; this establishes a supported route, not Cohort entitlement or a
-round-trip proof. The portal contracts and founder watch model are unavailable.
-Founder must confirm application/app status or obtain Training + Activity access,
-current terms/capacity and device details; no application/account action occurred.
-See [official dated sources/actions](../checkpoints/m25_garmin_round_trip/SOURCES.md).
+**Bounded local conversion/association harness verified; M2.5 and Gate A OPEN.**
+[Local checkpoint](../checkpoints/m25_local_harness/HANDOFF.md) records one accepted
+frozen v1/v2 timed-body conversion into documented raw FIT fields, immutable source/
+rule/target/scope identity and a separate synthetic activity-association harness.
+149 focused checks, independent Python field inspection/eight corruption controls
+and six safety groups pass; analysis retains 362 identical inherited findings.
+This is a representation, not a FIT binary or genuine Garmin round trip. Official
+SDK acquisition failed DNS; authoritative SDK parse remains open. No API transport,
+account connection, hosted/athlete mutation or production composition was added.
 
-Smallest next implementation **proposed, not started**: local network-free conversion
-of one accepted/frozen timed running body and deterministic delivery/association
-fixtures against documented FIT semantics. [Plan and acceptance criteria](../checkpoints/m25_garmin_round_trip/PLAN.md).
-No guessed HTTP adapter. Live work also requires a reviewed pre-delivery commitment
-shared with canonical start; current personalised targets freeze only at phone start.
-Both workout delivery and activity return with correct reviewed association remain
-alpha requirements. No ambiguous external activity may silently complete training.
+**Next single point: M2.5 access/contract verification for the live round trip.**
+Founder must confirm app/application status or obtain Training + Activity access,
+applicable terms/capacity and permitted portal contracts, plus exact watch/firmware/
+Connect platform/running profile/HR source. [Dated official sources/actions](../checkpoints/m25_garmin_round_trip/SOURCES.md).
+No speculative endpoints/identifiers/echo guarantees. SDK proof and reviewed shared
+pre-delivery commitment remain prerequisites for live implementation. Matching
+fixtures require explicit confirmation and never authorise programme completion.
 
-M2.4 terminal retry is locally verified within its retained scope; the inherited
-AuthGate bootstrap failure at `athlete_runtime_capability_bootstrap_test.dart:124`
-remains open for alpha-path triage. Genuine programme admission, held migrations,
-personalisation adoption, adaptation, movement/feedback/distribution and authenticated
-installed-device acceptance remain outstanding. No Gate A point is closed end to end
-by this audit. No next build, hosted/account/content/device action is authorised.
+Supabase's inactivity warning does not establish hosted status; no resumption or
+keep-alive was performed. Genuine programme admission, held migrations, actual
+personalisation/adaptation, movement/feedback/distribution, authenticated device
+acceptance and M2.4's recorded bootstrap failure remain outstanding. Both workout
+delivery and real activity return with correct reviewed association are still alpha
+requirements. No next build, hosted/account/content/device action follows automatically.
 
 ## Gate A — tiny friends-and-family alpha
 

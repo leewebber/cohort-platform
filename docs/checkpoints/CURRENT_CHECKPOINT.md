@@ -1,5 +1,21 @@
 # Current repository checkpoint
 
+> **M2.5 local conversion/association — locally verified, 2026-10-28:**
+> [Local handoff](./m25_local_harness/HANDOFF.md) at `7d53cbd` preserves accepted frozen v1/v2 scope/source/rule/targets
+> in documented timed FIT field representations and separate synthetic activity fixtures.
+> Warm-up/repeats/recovery/cooldown, pace/BPM ranges and explicit refusals are covered.
+> 149 focused checks, independent field inspection/eight corruption controls and six
+> safety groups pass; analysis retains 362 identical inherited findings, zero errors/new
+> diagnostics. No FIT binary or authoritative SDK parse: ordinary SDK acquisition failed
+> DNS, with no workaround. Documented file-reference candidates/proposed API IDs stay
+> distinct; confirmation never authorises completion. No delivery transport/production
+> wiring, Garmin access/watch proof, hosted/athlete mutation or Supabase keep-alive/resume.
+> Next single point: M2.5 legitimate Training + Activity contract/access verification and
+> founder watch details. M2.5/Gate A, held migrations, genuine programmes/adaptation/
+> distribution/device acceptance and bootstrap triage remain open. Old chain/checkouts/
+> indices/.temp are preserved. Ordinary fetch DNS still blocks live ancestry/publication.
+
+
 > **M2.5 Garmin access/feasibility — audit complete, 2026-10-28:**
 > [Dated checkpoint](./m25_garmin_round_trip/HANDOFF.md) records **ACCESS UNKNOWN / NOT VERIFIED; INTEGRATION MISSING**.
 > Current official Garmin Business Starter lists Training + Activity; Cohort entitlement,

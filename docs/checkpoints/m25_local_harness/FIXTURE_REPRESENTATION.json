@@ -1,0 +1,406 @@
+{
+  "fixture_only": true,
+  "evidence": "LOCAL SYNTHETIC REPRESENTATION; NOT A FIT BINARY OR GARMIN ROUND TRIP",
+  "export_digest": "523f59c960249232ec956b7d8aa429aa3073b6c66c9890cc3d028918a57e3991",
+  "export": {
+    "schema": "cohort_local_frozen_fit_export_v1",
+    "scope": {
+      "athlete_id": "fixture-owner-a",
+      "assignment_id": "fixture-assignment",
+      "programme_version_id": "fixture-version-1",
+      "package_schema_version": 2,
+      "package_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "protocol_id": "fixture-protocol",
+      "occurrence_id": "fixture-occurrence-1",
+      "session_slot_id": "fixture-slot",
+      "training_session_id": 17,
+      "block_id": "fixture-block",
+      "workout_id": "SOFTWARE-FIXTURE-M25"
+    },
+    "source_body_sha256": "78dbde27467ed85ca5095a3cb397df0664b215cfc7e254cd5357bc87ab29bc5d",
+    "accepted_snapshot_sha256": "0e37c80c62ef128925fc794e7b6c55807b5884688ab0de08c13cfbbd9d833bab",
+    "prescription": {
+      "source_body": {
+        "schema_version": 1,
+        "workout_id": "SOFTWARE-FIXTURE-M25",
+        "title": "[SOFTWARE FIXTURE ONLY] M25 mixed targets",
+        "notes": "Do not publish or train from this synthetic conversion fixture.",
+        "steps": [
+          {
+            "kind": "atomic",
+            "step_id": "warm",
+            "role": "warm_up",
+            "duration": {
+              "kind": "time",
+              "milliseconds": 300000
+            },
+            "target": {
+              "kind": "none"
+            }
+          },
+          {
+            "kind": "repeat",
+            "group_id": "repetitions",
+            "count": 3,
+            "steps": [
+              {
+                "kind": "atomic",
+                "step_id": "effort",
+                "role": "work",
+                "duration": {
+                  "kind": "time",
+                  "milliseconds": 120000
+                },
+                "target": {
+                  "kind": "alpha_quality_pace_v1",
+                  "category": "threshold"
+                }
+              },
+              {
+                "kind": "atomic",
+                "step_id": "recover",
+                "role": "recovery",
+                "duration": {
+                  "kind": "time",
+                  "milliseconds": 60000
+                },
+                "target": {
+                  "kind": "heart_rate_zone_ref",
+                  "zone_ref": "athlete_confirmed_zone_2"
+                }
+              }
+            ]
+          },
+          {
+            "kind": "atomic",
+            "step_id": "cool",
+            "role": "cool_down",
+            "duration": {
+              "kind": "time",
+              "milliseconds": 300000
+            },
+            "target": {
+              "kind": "none"
+            }
+          }
+        ]
+      },
+      "resolved_body": {
+        "schema_version": 1,
+        "workout_id": "SOFTWARE-FIXTURE-M25",
+        "title": "[SOFTWARE FIXTURE ONLY] M25 mixed targets",
+        "notes": "Do not publish or train from this synthetic conversion fixture.",
+        "steps": [
+          {
+            "kind": "atomic",
+            "step_id": "warm",
+            "role": "warm_up",
+            "duration": {
+              "kind": "time",
+              "milliseconds": 300000
+            },
+            "target": {
+              "kind": "none"
+            }
+          },
+          {
+            "kind": "repeat",
+            "group_id": "repetitions",
+            "count": 3,
+            "steps": [
+              {
+                "kind": "atomic",
+                "step_id": "effort",
+                "role": "work",
+                "duration": {
+                  "kind": "time",
+                  "milliseconds": 120000
+                },
+                "target": {
+                  "kind": "pace_range",
+                  "low": 294000,
+                  "high": 306000
+                }
+              },
+              {
+                "kind": "atomic",
+                "step_id": "recover",
+                "role": "recovery",
+                "duration": {
+                  "kind": "time",
+                  "milliseconds": 60000
+                },
+                "target": {
+                  "kind": "heart_rate_range",
+                  "low": 130,
+                  "high": 145
+                }
+              }
+            ]
+          },
+          {
+            "kind": "atomic",
+            "step_id": "cool",
+            "role": "cool_down",
+            "duration": {
+              "kind": "time",
+              "milliseconds": 300000
+            },
+            "target": {
+              "kind": "none"
+            }
+          }
+        ]
+      },
+      "accepted_snapshot": {
+        "schema_version": 1,
+        "athlete_id": "fixture-owner-a",
+        "assignment_id": "fixture-assignment",
+        "programme_version_id": "fixture-version-1",
+        "package_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "protocol_id": "fixture-protocol",
+        "occurrence_id": "fixture-occurrence-1",
+        "training_session_id": 17,
+        "review_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "accepted_at": "2026-10-28T00:00:00Z",
+        "blocks": [
+          {
+            "block_id": "fixture-block",
+            "workout": {
+              "schema_version": 1,
+              "workout_id": "SOFTWARE-FIXTURE-M25",
+              "title": "[SOFTWARE FIXTURE ONLY] M25 mixed targets",
+              "notes": "Do not publish or train from this synthetic conversion fixture.",
+              "steps": [
+                {
+                  "kind": "atomic",
+                  "step_id": "warm",
+                  "role": "warm_up",
+                  "duration": {
+                    "kind": "time",
+                    "milliseconds": 300000
+                  },
+                  "target": {
+                    "kind": "none"
+                  }
+                },
+                {
+                  "kind": "repeat",
+                  "group_id": "repetitions",
+                  "count": 3,
+                  "steps": [
+                    {
+                      "kind": "atomic",
+                      "step_id": "effort",
+                      "role": "work",
+                      "duration": {
+                        "kind": "time",
+                        "milliseconds": 120000
+                      },
+                      "target": {
+                        "kind": "alpha_quality_pace_v1",
+                        "category": "threshold"
+                      }
+                    },
+                    {
+                      "kind": "atomic",
+                      "step_id": "recover",
+                      "role": "recovery",
+                      "duration": {
+                        "kind": "time",
+                        "milliseconds": 60000
+                      },
+                      "target": {
+                        "kind": "heart_rate_zone_ref",
+                        "zone_ref": "athlete_confirmed_zone_2"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "kind": "atomic",
+                  "step_id": "cool",
+                  "role": "cool_down",
+                  "duration": {
+                    "kind": "time",
+                    "milliseconds": 300000
+                  },
+                  "target": {
+                    "kind": "none"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "zone2": {
+          "athlete_id": "fixture-owner-a",
+          "withdrawn": false,
+          "revision": "fixture-zone-1",
+          "confirmed_at": "2026-10-27T00:00:00Z",
+          "lower_bpm": 130,
+          "upper_bpm": 145
+        },
+        "quality": {
+          "rule_id": "alpha_manual_threshold_pm2_v1",
+          "rounding": "nearest_second_half_up",
+          "selected_source": "manual_threshold",
+          "input": {
+            "athlete_id": "fixture-owner-a",
+            "revision": "fixture-input-1",
+            "confirmed_at": "2026-10-27T00:00:00Z",
+            "manual_withdrawn": false,
+            "manual_seconds_per_km": 300,
+            "manual_origin": "manual_entry"
+          }
+        },
+        "quality_targets": [
+          {
+            "block_id": "fixture-block",
+            "step_id": "effort",
+            "category": "threshold",
+            "source": "manual_threshold",
+            "rule_id": "alpha_manual_threshold_pm2_v1",
+            "target": {
+              "unit": "seconds_per_kilometre",
+              "lower": 294,
+              "upper": 306
+            }
+          }
+        ]
+      }
+    },
+    "fit_fields": {
+      "representation": "local_fit_fields_v1",
+      "binary_fit": false,
+      "training_api_payload": false,
+      "rounding_policy": "outward_speed_0_001_mps_v1",
+      "workout": {
+        "sport": 1,
+        "num_valid_steps": 5,
+        "wkt_name": "[SOFTWARE FIXTURE ONLY] M25 mixed targets"
+      },
+      "workout_steps": [
+        {
+          "message_index": 0,
+          "duration_type": 0,
+          "duration_value": 300000,
+          "target_type": 2,
+          "target_value": 0,
+          "intensity": 2
+        },
+        {
+          "message_index": 1,
+          "duration_type": 0,
+          "duration_value": 120000,
+          "target_type": 0,
+          "target_value": 0,
+          "custom_target_value_low": 3267,
+          "custom_target_value_high": 3402,
+          "intensity": 0
+        },
+        {
+          "message_index": 2,
+          "duration_type": 0,
+          "duration_value": 60000,
+          "target_type": 1,
+          "target_value": 0,
+          "custom_target_value_low": 230,
+          "custom_target_value_high": 245,
+          "intensity": 4
+        },
+        {
+          "message_index": 3,
+          "duration_type": 6,
+          "duration_value": 1,
+          "target_type": 2,
+          "target_value": 3
+        },
+        {
+          "message_index": 4,
+          "duration_type": 0,
+          "duration_value": 300000,
+          "target_type": 2,
+          "target_value": 0,
+          "intensity": 3
+        }
+      ],
+      "expanded_source_steps": [
+        {
+          "step_id": "warm",
+          "message_index": 0
+        },
+        {
+          "step_id": "effort",
+          "message_index": 1,
+          "group_id": "repetitions",
+          "iteration": 1
+        },
+        {
+          "step_id": "recover",
+          "message_index": 2,
+          "group_id": "repetitions",
+          "iteration": 1
+        },
+        {
+          "step_id": "effort",
+          "message_index": 1,
+          "group_id": "repetitions",
+          "iteration": 2
+        },
+        {
+          "step_id": "recover",
+          "message_index": 2,
+          "group_id": "repetitions",
+          "iteration": 2
+        },
+        {
+          "step_id": "effort",
+          "message_index": 1,
+          "group_id": "repetitions",
+          "iteration": 3
+        },
+        {
+          "step_id": "recover",
+          "message_index": 2,
+          "group_id": "repetitions",
+          "iteration": 3
+        },
+        {
+          "step_id": "cool",
+          "message_index": 4
+        }
+      ],
+      "total_duration_milliseconds": 1140000
+    }
+  },
+  "activity_fixture": {
+    "fixture_only": true,
+    "athlete_id": "fixture-owner-a",
+    "activity_key": "SYNTHETIC-RETURN-1",
+    "training_file": {
+      "type": 5,
+      "manufacturer": 255,
+      "product": 1,
+      "serial_number": 1001,
+      "time_created": 1
+    },
+    "proposed_workout_id": null,
+    "proposed_schedule_id": null,
+    "name": null,
+    "started_at": null,
+    "actuals": {
+      "timer_milliseconds": 1100000,
+      "elapsed_milliseconds": 1200000,
+      "distance_millimetres": 4000000,
+      "average_heart_rate_bpm": null
+    }
+  },
+  "association_fixture": {
+    "before_delivery": "unmatched",
+    "after_delivery": "documentedFitReferenceCandidate",
+    "duplicate": true,
+    "after_explicit_fixture_confirmation": "confirmedByAthlete",
+    "authorises_programme_completion": false
+  }
+}

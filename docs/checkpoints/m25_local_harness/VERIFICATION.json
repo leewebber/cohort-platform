@@ -1,0 +1,161 @@
+{
+  "recorded_date": "2026-10-28",
+  "timezone": "Asia/Makassar",
+  "base": "125ad8d309aa78e8f21c42fafc34798a5e585156",
+  "implementation": "7d53cbd2212c6af451913455e420abe813e90311",
+  "status": {
+    "local_representation_harness": "VERIFIED",
+    "binary_fit": "NOT_IMPLEMENTED",
+    "authoritative_sdk_parse": "NOT_AVAILABLE_NOT_PROVED",
+    "garmin_access": "UNKNOWN_NOT_VERIFIED",
+    "real_round_trip": "NOT_PROVED",
+    "m25": "OPEN",
+    "gate_a": "OPEN",
+    "hosted_supabase": "UNKNOWN_NOT_CONTACTED"
+  },
+  "verification": {
+    "focused_checks": 149,
+    "new_unit_checks_included": 45,
+    "fixture_driver_included": 1,
+    "counts_overlap": true,
+    "focused_command": "flutter test --no-pub test/running_workout test/session/quality_target_admission_test.dart test/session/zone2_target_admission_test.dart test/session/authored_timed_running_test.dart tool/garmin_local/local_harness_test.dart --dart-define=M25_OUTPUT=/private/tmp/cohort_m25_build_representation_final.json",
+    "independent_command": "python3 tool/garmin_local/verify_representation.py /private/tmp/cohort_m25_build_representation_final.json",
+    "independent_result": {
+      "encoded_steps": 5,
+      "expanded_phases": 8,
+      "independent_sdk_parse": false,
+      "negative_controls_rejected": 8,
+      "proof": "independent documented-field inspection; not Garmin SDK/binary/transport proof",
+      "total_seconds": 1140
+    },
+    "safety_command": "./tool/testing/run_phase2_consolidation_safety_gate.sh",
+    "safety_groups_passed": 6,
+    "analysis": {
+      "before": 362,
+      "after": 362,
+      "diagnostic_identities_equal": true,
+      "errors": 0,
+      "changed_file_diagnostics": 0,
+      "full_analysis_exit": "1; inherited findings retained"
+    },
+    "full_flutter_or_db_or_hosted_or_device_tests": "NOT_RUN",
+    "initial_test_attempt": "Corrected two nonexistent test filenames and an exception-expectation mismatch; final bounded command passes without exclusions.",
+    "relative_links_checked": 287,
+    "diff_check": "PASS"
+  },
+  "sdk": {
+    "installed_parser_found": false,
+    "checked": "system Python modules, temporary/download/pub cache paths and bundled runtimes",
+    "official_acquisition_command": "curl --fail --location --connect-timeout 10 --max-time 20 https://github.com/garmin/fit-javascript-sdk/archive/refs/heads/main.zip --output /private/tmp/cohort_m25_official_fit_sdk.zip",
+    "acquisition_exit": 6,
+    "error": "Could not resolve host: github.com",
+    "alternate_route_or_dependency_install": false,
+    "proof_limit": "Python checker is independent custom field inspection, not Garmin SDK parsing."
+  },
+  "association": {
+    "documented_fit_reference": "candidate only; optional/provenance/echo not proven",
+    "workout_schedule_ids": "proposed synthetic IDs; portal verification required",
+    "stable_activity_key_and_owner": "fixture assumptions only; no provider authentication proof",
+    "similarity_automatic_matching": false,
+    "completion_or_advancement_port": false,
+    "conflicts": "quarantined without last-arrival winner",
+    "confirmed_binding": "explicit local fixture choice only"
+  },
+  "preservation": {
+    "existing_checkouts": 23,
+    "absent_registered_worktrees": 28,
+    "before_after_byte_equal": true,
+    "original_dirty_checkout_indices_heads_files_env_temp_unchanged": true,
+    "managed_worktree_or_clone_or_cleanup": false,
+    "all_preexisting_runtime_and_migration_and_dependency_files": "UNCHANGED",
+    "final_byte_equal": true,
+    "final_snapshot_sha256": "a462c64486b147a5ba26d8eb7affe687bf5b4ccc9911bda3fc94f745f7cbfacd"
+  },
+  "git": {
+    "branch": "main",
+    "working_checkout": "/private/tmp/cohort_m11_sources",
+    "prior_commits_after_1cca598": [
+      "341fbad192c7d85074189af9ce10c8103ebc061b",
+      "632ff8393b8bd07c5b2297517a9ba2728fc4c0c6",
+      "2710185c43c36892f032358ca2ce2f5c0b3ba4b9",
+      "dade09f5e40a87768bb23b62b805022d4fb4461c",
+      "618c53f9c26565a2509bf79be81dafb348333315",
+      "d53786aff61fe7768cbfb852410ebac0ebdadc3c",
+      "544a3bbd7fc6ba1c6afd6fe3e68448636369d2b5",
+      "1963338cff87fc6165c2f9fb754afe153547f279",
+      "eb8fe4efde2c97ffa6fc545fadb2f563fdd50e0f",
+      "5d260bca7490bbc62d890d3aebc90b35ec5d000b",
+      "ce9ec89b79cb5c2fe6dcb4b7eb556bec73fff1fb",
+      "0caee794e63c9d7ce79aebffc65898cef1f2db11",
+      "a67e69c1bbbb5edae4d3a802de9c5c910444841a",
+      "7cc471b71125cf516b17e8bda03256614b474bc3",
+      "25b641a78c17fb49349729bde04c2ff54dc6db51",
+      "125ad8d309aa78e8f21c42fafc34798a5e585156"
+    ],
+    "prior_base_is_ancestor": true,
+    "merges_since_1cca598": 0,
+    "cached_origin_main": "a331f52967e1887c4435cccc8f1ecfa192028cd6",
+    "cached_ahead_count_is_not_remote_proof": true,
+    "ordinary_fetch_attempts": 2,
+    "fetch_failure": "exit 128: Could not resolve host: github.com",
+    "publication": "PENDING; no push without live remote ancestry verification",
+    "force_push_or_alternate_network": false
+  },
+  "execution_limits": {
+    "flutter_default_sandbox": "SDK engine stamp cache write denied; normal command escalation approved through tool review; no SDK permissions/global settings/copy bypass",
+    "browser_or_equivalent_ui_control": false,
+    "hosted_contact_or_restore_or_keepalive": false,
+    "real_accounts_programmes_athletes_watch_actions": false,
+    "credentials_or_applications_messages_purchases": false
+  },
+  "retained_bootstrap_triage": {
+    "file": "test/programme/athlete_runtime_capability_bootstrap_test.dart",
+    "line": 124,
+    "symptom": "expected AthleteAppShell absent",
+    "prior_reproduction_base": "a67e69c1bbbb5edae4d3a802de9c5c910444841a",
+    "rerun_here": false,
+    "status": "OPEN_ALPHA_PATH_TRIAGE"
+  },
+  "logs": [
+    {
+      "path": "/private/tmp/cohort_m25_build_regressions_final.log",
+      "sha256": "9f3bb5d15c2ffcce23b4a85f960916373424ab07ea3df92f4117f160af7d6805"
+    },
+    {
+      "path": "/private/tmp/cohort_m25_build_final_local.log",
+      "sha256": "ac6589021a4be3c5b92da75cc09c31d219cc90a886dab92026a5f25b7e59e411"
+    },
+    {
+      "path": "/private/tmp/cohort_m25_build_analysis_before.log",
+      "sha256": "c82a8973f36798d9afca4fb84698b58db7daba12a8f39a6ae5694c6b4569d816"
+    },
+    {
+      "path": "/private/tmp/cohort_m25_build_analysis_final.log",
+      "sha256": "b6d976b026f740b4e197dce63b0abff408b4790109b64dc19ac88bc8e32f4d4d"
+    },
+    {
+      "path": "/private/tmp/cohort_m25_build_analysis_comparison.json",
+      "sha256": "16722f8e4c2d5073275c902c1b064da9808ef320822f2de6b32ba0f877d52c2b"
+    },
+    {
+      "path": "/private/tmp/cohort_m25_build_safety_final.log",
+      "sha256": "94b3ecae5d0d5cc46cdf8bda82826276566cb174379946ca62f37ca32d8edd66"
+    },
+    {
+      "path": "/private/tmp/cohort_m25_build_independent.json",
+      "sha256": "349cc4d8002a3db2135f21963aceb415b6e0267d99c4c2875bec409056239e3c"
+    },
+    {
+      "path": "/private/tmp/cohort_m25_build_preservation_before.json",
+      "sha256": "a462c64486b147a5ba26d8eb7affe687bf5b4ccc9911bda3fc94f745f7cbfacd"
+    },
+    {
+      "path": "/private/tmp/cohort_m25_build_preservation_after.json",
+      "sha256": "a462c64486b147a5ba26d8eb7affe687bf5b4ccc9911bda3fc94f745f7cbfacd"
+    },
+    {
+      "path": "/private/tmp/cohort_m25_build_preservation_final.json",
+      "sha256": "a462c64486b147a5ba26d8eb7affe687bf5b4ccc9911bda3fc94f745f7cbfacd"
+    }
+  ]
+}
