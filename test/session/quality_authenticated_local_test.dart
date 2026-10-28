@@ -559,7 +559,7 @@ void main() {
           ),
           throwsA(isA<PostgrestException>()),
         );
-        final completionStore = _CompletionStore(c);
+        final completionStore = _LostResponseCompletionStore(c, sql);
         final completed =
             await AthleteProgrammeCompletionService(
               store: completionStore,
@@ -578,11 +578,102 @@ void main() {
         final replay = await completionStore.completeAndAdvance(
           completionStore.last!,
         );
-        // Existing single-slot terminal programmes refuse retry after the
-        // assignment becomes ineligible. Preserve that behavior, one record,
-        // and the original target; do not claim idempotent success here.
-        expect(replay['status'], 'validation_failure');
-        expect(replay['code'], 'fixed_assignment_ineligible');
+        // M2.4: terminal success must be recoverable after a lost response.
+        expect(replay['status'], 'already_committed', reason: '$replay');
+        expect(
+          replay['code'],
+          anyOf('idempotent_replay', 'logical_completion_replay'),
+        );
+        final originalPayload = Map<String, dynamic>.from(
+          completionStore.last!,
+        );
+        final stateQuery =
+            "SELECT md5(jsonb_build_array("
+            "(SELECT to_jsonb(a) FROM public.programme_assignments a WHERE id='${ctx.assignmentId}'),"
+            "(SELECT to_jsonb(o) FROM public.programme_slot_outcomes o WHERE training_session_id=$sid),"
+            "(SELECT to_jsonb(r) FROM public.training_session_records r WHERE training_session_id=$sid),"
+            "(SELECT to_jsonb(o) FROM public.programme_schedule_occurrences o WHERE id='$oid'),"
+            "(SELECT jsonb_agg(b ORDER BY block_result_id) FROM public.training_block_results b WHERE session_record_id='${draftRecord.recordId}')"
+            ")::text);";
+        final stateAfterCommit = await sql(stateQuery);
+        final genericReplay = await c.rpc(
+          'complete_programme_session_and_advance',
+          params: {
+            'payload': Map<String, dynamic>.from(originalPayload)
+              ..remove('occurrence_id'),
+          },
+        );
+        expect(genericReplay['status'], 'already_committed');
+
+        // New transport identity, exact logical completion: same immutable result.
+        final logicalReplay = await _CompletionStore(c).completeAndAdvance({
+          ...originalPayload,
+          'idempotency_key': 'new-device-$oid',
+        });
+        expect(logicalReplay['code'], 'logical_completion_replay');
+        expect(logicalReplay['completion_record_id'], draftRecord.recordId);
+        for (final changed in [
+          {...originalPayload, 'actuals_fingerprint': 'different'},
+          {...originalPayload, 'status': 'partially_completed'},
+          {
+            ...originalPayload,
+            'completion_record': {
+              ...originalPayload['completion_record'] as Map,
+              'athlete_note': 'changed with copied fingerprint',
+            },
+          },
+          {
+            ...originalPayload,
+            'completion_record': {
+              ...originalPayload['completion_record'] as Map,
+              'session_snapshot': changedSnapshot,
+            },
+          },
+        ]) {
+          final conflict = await _CompletionStore(
+            c,
+          ).completeAndAdvance(changed);
+          expect(conflict['status'], 'conflict', reason: '$conflict');
+        }
+        final denied = await _CompletionStore(
+          other,
+        ).completeAndAdvance(originalPayload);
+        expect(denied['status'], 'authorization_failure');
+        final wrongRecord = await _CompletionStore(c).completeAndAdvance({
+          ...originalPayload,
+          'record_id': 'd2400000-0000-4000-8000-000000000099',
+        });
+        expect(wrongRecord['status'], 'authorization_failure');
+        // Re-created client/service after restart uses original server authority.
+        final recovered = await AthleteProgrammeCompletionService(
+          store: _CompletionStore(restart),
+        ).retrySamePayload(jsonDecode(jsonEncode(originalPayload)));
+        expect(recovered.isSuccess, true);
+        expect(recovered.terminalProgramme, true);
+        expect(recovered.record!.recordId, draftRecord.recordId);
+        expect(await sql(stateQuery), stateAfterCommit);
+        // Paused/reassigned assignments cannot be revived by replay.
+        for (final revokedStatus in ['paused', 'reassigned']) {
+          await sql(
+            "BEGIN; SET LOCAL cohort.allow_materialisation_write='on'; UPDATE public.programme_assignments SET status='$revokedStatus' WHERE id='${ctx.assignmentId}'; COMMIT;",
+          );
+          final refused = await _CompletionStore(
+            c,
+          ).completeAndAdvance(originalPayload);
+          expect(refused['status'], 'validation_failure');
+        }
+        await sql(
+          "BEGIN; SET LOCAL cohort.allow_materialisation_write='on'; UPDATE public.programme_assignments SET status='completed' WHERE id='${ctx.assignmentId}'; COMMIT;",
+        );
+        // A genuinely new request on this completed assignment remains denied.
+        expect(
+          (await _CompletionStore(c).completeAndAdvance({
+            ...originalPayload,
+            'training_session_id': sid + 999999,
+          }))['status'],
+          'authorization_failure',
+        );
+
         expect(
           await sql(
             "SELECT count(*) FROM public.training_session_records WHERE training_session_id=$sid;",
@@ -623,6 +714,23 @@ void main() {
             .single();
         expect(history['session_snapshot']['runningTargetAdmissionV1'], frozen);
         expect(history['athlete_note'], 'Corrected actual note');
+        final afterCorrection = await sql(stateQuery);
+        final correctedReplay = await _CompletionStore(
+          c,
+        ).completeAndAdvance(originalPayload);
+        expect(correctedReplay['status'], 'already_committed');
+        expect(
+          correctedReplay['completion_record']['athlete_note'],
+          'Corrected actual note',
+        );
+        expect(await sql(stateQuery), afterCorrection);
+        expect(
+          await sql(
+            "SELECT count(*) FROM public.performance_result_corrections WHERE record_id='${draftRecord.recordId}';",
+          ),
+          '1',
+        );
+
         final ended = await begin();
         expect(ended['status'], isNot(anyOf('created', 'resumed')));
         final guard = await sql(
@@ -667,5 +775,87 @@ class _CompletionStore implements AthleteProgrammeCompletionStore {
           )
           as Map,
     );
+  }
+}
+
+// Reproduces a real pre-commit validation rejection, then commits competing
+// requests while deliberately discarding every response before service retry.
+class _LostResponseCompletionStore extends _CompletionStore {
+  _LostResponseCompletionStore(super.client, this.sql);
+  final Future<String> Function(String) sql;
+  bool first = true;
+  @override
+  Future<Map<String, dynamic>> completeAndAdvance(
+    Map<String, dynamic> payload,
+  ) async {
+    if (!first) return super.completeAndAdvance(payload);
+    first = false;
+    last = payload;
+    final assignmentId = payload['assignment_id'];
+    await sql(
+      "BEGIN; SET LOCAL cohort.allow_materialisation_write='on'; UPDATE public.programme_assignments SET status='completed' WHERE id='$assignmentId'; COMMIT;",
+    );
+    final ineligible = await super.completeAndAdvance(payload);
+    expect(ineligible['code'], 'fixed_assignment_ineligible');
+    await sql(
+      "BEGIN; SET LOCAL cohort.allow_materialisation_write='on'; UPDATE public.programme_assignments SET status='active' WHERE id='$assignmentId'; COMMIT;",
+    );
+    final before = await sql(
+      "SELECT md5(jsonb_build_array((SELECT to_jsonb(a) FROM public.programme_assignments a WHERE id='${payload['assignment_id']}'),(SELECT to_jsonb(o) FROM public.programme_slot_outcomes o WHERE training_session_id=${payload['training_session_id']}),(SELECT to_jsonb(r) FROM public.training_session_records r WHERE record_id='${payload['record_id']}'))::text);",
+    );
+    final rejected = await super.completeAndAdvance({
+      ...payload,
+      'status': 'in_progress',
+    });
+    expect(rejected['status'], 'validation_failure');
+    final checkState =
+        "SELECT md5(jsonb_build_array((SELECT to_jsonb(a) FROM public.programme_assignments a WHERE id='${payload['assignment_id']}'),(SELECT to_jsonb(o) FROM public.programme_slot_outcomes o WHERE training_session_id=${payload['training_session_id']}),(SELECT to_jsonb(r) FROM public.training_session_records r WHERE record_id='${payload['record_id']}'))::text);";
+    expect(await sql(checkState), before);
+    // Force failure after the tentative terminal record update. PostgreSQL must
+    // roll the entire RPC back; the client must not infer success from progress.
+    final rejectId = payload['record_id'];
+    await sql(
+      "CREATE OR REPLACE FUNCTION public.m24_test_reject_commit() RETURNS trigger LANGUAGE plpgsql AS \$\$ BEGIN IF NEW.completion_record_id='$rejectId'::uuid THEN RAISE EXCEPTION 'm24_precommit_failure' USING ERRCODE='23514'; END IF; RETURN NEW; END \$\$; CREATE TRIGGER m24_test_reject_commit BEFORE UPDATE ON public.programme_slot_outcomes FOR EACH ROW EXECUTE FUNCTION public.m24_test_reject_commit();",
+    );
+    try {
+      await expectLater(
+        super.completeAndAdvance(payload),
+        throwsA(isA<PostgrestException>()),
+      );
+      expect(await sql(checkState), before);
+    } finally {
+      await sql(
+        'DROP TRIGGER m24_test_reject_commit ON public.programme_slot_outcomes; DROP FUNCTION public.m24_test_reject_commit();',
+      );
+    }
+    final sid = payload['training_session_id'];
+    expect(
+      await sql(
+        "SELECT count(*) FROM public.training_session_records WHERE training_session_id=$sid AND status<>'in_progress';",
+      ),
+      '0',
+    );
+    expect(
+      await sql(
+        "SELECT count(*) FROM public.programme_slot_outcomes WHERE training_session_id=$sid AND completion_record_id IS NOT NULL;",
+      ),
+      '0',
+    );
+    final responses = await Future.wait(
+      List.generate(
+        6,
+        (i) => _CompletionStore(client).completeAndAdvance({
+          ...payload,
+          if (i.isOdd) 'idempotency_key': 'concurrent-$i-$sid',
+        }),
+      ),
+    );
+    expect(responses.where((r) => r['status'] == 'committed'), hasLength(1));
+    expect(
+      responses.where((r) => r['status'] == 'already_committed'),
+      hasLength(5),
+    );
+    last = payload;
+    throw const SocketException('synthetic lost committed response');
   }
 }

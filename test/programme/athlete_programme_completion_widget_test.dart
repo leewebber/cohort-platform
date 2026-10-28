@@ -138,6 +138,8 @@ void main() {
             athleteId: 'founder-test-athlete',
             programmeContext: _programmeContext(),
             saveCoordinator: coordinator,
+            onAuthoritativeReload: () async =>
+                throw StateError('refresh offline'),
           ),
         ),
       );
@@ -160,6 +162,7 @@ void main() {
       expect(coordinator.idempotencyKeys[1], coordinator.idempotencyKeys[0]);
       expect(execution.state.sessionStatus, SessionExecutionStatus.completed);
       expect(find.text('SESSION COMPLETE'), findsOneWidget);
+      expect(find.text('Session saved'), findsOneWidget);
     },
   );
 
@@ -229,10 +232,7 @@ void main() {
     await tester.tap(find.text('Save and finish'));
     await tester.pumpAndSettle();
     expect(coordinator.calls, 0);
-    expect(
-      find.textContaining('couldn\'t save that yet'),
-      findsOneWidget,
-    );
+    expect(find.textContaining('couldn\'t save that yet'), findsOneWidget);
     expect(find.text('SESSION COMPLETE'), findsNothing);
     expect(find.text('Save and finish'), findsOneWidget);
   });

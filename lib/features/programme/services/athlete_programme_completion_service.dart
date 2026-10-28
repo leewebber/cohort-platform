@@ -143,11 +143,27 @@ class AthleteProgrammeCompletionService {
     // Persist athlete-entered actuals before authority transition. Keep the
     // durable row in_progress until the RPC commits terminal completion.
     if (_performanceStore != null) {
-      await _performanceStore.saveDraft(
-        controller.buildPersistableDraft(
-          status: TrainingSessionRecordStatus.inProgress,
-        ),
+      final existing = await _performanceStore.getById(
+        controller.draft.recordId,
       );
+      if (existing == null || !isTerminalRecordStatus(existing.status)) {
+        try {
+          await _performanceStore.saveDraft(
+            controller.buildPersistableDraft(
+              status: TrainingSessionRecordStatus.inProgress,
+            ),
+          );
+        } catch (_) {
+          // A competing completion may have committed between read and write.
+          // Only the canonical RPC below may confirm that exact request.
+          final terminal = await _performanceStore.getById(
+            controller.draft.recordId,
+          );
+          if (terminal == null || !isTerminalRecordStatus(terminal.status)) {
+            rethrow;
+          }
+        }
+      }
     }
 
     final draft = controller.buildPersistableDraft(status: terminalStatus);
@@ -209,9 +225,10 @@ class AthleteProgrammeCompletionService {
       status: result.status,
       code: result.code,
       message: result.message,
-      // The frozen local record contains the same authoritative payload plus
-      // its hydrated block/exercise/set actuals.
-      record: record,
+      // A recovered result may already have been corrected. Keep server truth.
+      record: result.status == AthleteProgrammeCompletionStatus.alreadyCommitted
+          ? await _recordAfterReplay(result.record, record)
+          : record,
       assignment: result.assignment,
       logicalCompletionKey: key,
       programmedSessionKey: key,
@@ -252,6 +269,20 @@ class AthleteProgrammeCompletionService {
     );
   }
 
+  Future<TrainingSessionRecord> _recordAfterReplay(
+    TrainingSessionRecord? authoritative,
+    TrainingSessionRecord local,
+  ) async {
+    try {
+      return await _performanceStore?.getById(local.recordId) ??
+          authoritative ??
+          local;
+    } catch (_) {
+      // Child hydration failure cannot undo an acknowledged canonical commit.
+      return authoritative ?? local;
+    }
+  }
+
   /// Re-submit the same frozen payload after uncertain transport.
   Future<AthleteProgrammeCompletionResult> retrySamePayload(
     Map<String, dynamic> frozenPayload,
@@ -290,44 +321,9 @@ class AthleteProgrammeCompletionService {
       );
     }
 
-    final cursorMoved =
-        assignment.currentWeek != programmeContext.weekNumber ||
-        assignment.currentDayKey != programmeContext.dayKey ||
-        assignment.currentSessionOrder != programmeContext.sessionOrder ||
-        assignment.status.dbValue == 'completed';
-
-    if (cursorMoved) {
-      final reconciledRecord = recordId == null
-          ? null
-          : await _performanceStore?.getById(recordId);
-      if (_performanceStore != null &&
-          (reconciledRecord == null ||
-              reconciledRecord.status ==
-                  TrainingSessionRecordStatus.inProgress)) {
-        return AthleteProgrammeCompletionResult(
-          status: AthleteProgrammeCompletionStatus.recovering,
-          code: 'completion_record_still_reconciling',
-          assignment: assignment,
-          logicalCompletionKey: logicalCompletionKey,
-          programmedSessionKey: logicalCompletionKey,
-          idempotencyKey: idempotencyKey,
-        );
-      }
-      return AthleteProgrammeCompletionResult(
-        status: AthleteProgrammeCompletionStatus.alreadyCommitted,
-        code: 'reconciled_after_uncertain',
-        record: reconciledRecord,
-        assignment: assignment,
-        logicalCompletionKey: logicalCompletionKey,
-        programmedSessionKey: logicalCompletionKey,
-        idempotencyKey: idempotencyKey,
-        nextWeek: assignment.currentWeek,
-        nextDayKey: assignment.currentDayKey,
-        nextSlotOrder: assignment.currentSessionOrder,
-        terminalProgramme: assignment.status.dbValue == 'completed',
-      );
-    }
-
+    // Assignment progress alone cannot prove this request committed. A retry
+    // must recover success from the canonical completion RPC, including after
+    // restart; do not infer it from another device's cursor movement.
     return AthleteProgrammeCompletionResult(
       status: AthleteProgrammeCompletionStatus.recovering,
       code: 'still_recovering',

@@ -3,6 +3,9 @@ import 'dart:async';
 import 'package:cohort_platform/core/persistence/athlete_local_repository.dart';
 import 'package:cohort_platform/core/persistence/local_kv_store.dart';
 import 'package:cohort_platform/core/persistence/session_execution_plan_codec.dart';
+import 'package:cohort_platform/features/performance/repositories/in_memory_performance_record_store.dart';
+import 'package:cohort_platform/features/performance/models/active_performance_draft.dart';
+import 'package:cohort_platform/features/performance/models/training_session_record.dart';
 import 'package:cohort_platform/features/performance/controllers/performance_capture_controller.dart';
 import 'package:cohort_platform/features/performance/mappers/performance_record_mapper.dart';
 import 'package:cohort_platform/features/performance/models/performance_result_data.dart';
@@ -34,6 +37,19 @@ class _FakeCompletionStore implements AthleteProgrammeCompletionStore {
   ) async {
     calls.add(Map<String, dynamic>.from(payload));
     return _handler(payload);
+  }
+}
+
+class _TerminalPerformanceStore extends InMemoryPerformanceRecordStore {
+  _TerminalPerformanceStore(this.terminal);
+  final TrainingSessionRecord terminal;
+  int draftWrites = 0;
+  @override
+  Future<TrainingSessionRecord?> getById(String recordId) async => terminal;
+  @override
+  Future<TrainingSessionRecord> saveDraft(ActivePerformanceDraft draft) async {
+    draftWrites++;
+    throw StateError('A terminal result must never be rewritten as a draft');
   }
 }
 
@@ -254,7 +270,7 @@ void main() {
     });
 
     test(
-      'reconciles an uncertain network response when cursor moved',
+      'cursor movement without a committed receipt stays uncertain',
       () async {
         final tables = InMemoryProgrammeTables()
           ..assignments.add(assignment(dayKey: 'day_2'));
@@ -273,10 +289,9 @@ void main() {
 
         expect(
           result.status,
-          AthleteProgrammeCompletionStatus.alreadyCommitted,
+          AthleteProgrammeCompletionStatus.networkUncertain,
         );
-        expect(result.code, 'reconciled_after_uncertain');
-        expect(result.nextDayKey, 'day_2');
+        expect(result.isSuccess, isFalse);
       },
     );
 
@@ -304,6 +319,45 @@ void main() {
         expect(result.record, isNotNull);
         expect(result.record!.blockResults, isNotEmpty);
         expect(result.record!.status, TrainingSessionRecordStatus.completed);
+      },
+    );
+
+    test(
+      'restart retry skips terminal draft writes and retains corrected server record',
+      () async {
+        final controller = completedController();
+        final original = const PerformanceRecordMapper().fromDraft(
+          controller.buildPersistableDraft(
+            status: TrainingSessionRecordStatus.completed,
+          ),
+        );
+        final corrected = original.copyWith(athleteNote: 'Corrected result');
+        final performance = _TerminalPerformanceStore(corrected);
+        final tables = InMemoryProgrammeTables()..assignments.add(assignment());
+        final store = _FakeCompletionStore(
+          (_) => {
+            'status': 'already_committed',
+            'code': 'logical_completion_replay',
+            'assignment': assignmentMap(assignment()),
+            'completion_record': corrected.toUpsertMap(),
+          },
+        );
+        final result =
+            await AthleteProgrammeCompletionService(
+              store: store,
+              performanceStore: performance,
+              assignmentStore: InMemoryProgrammeAssignmentStore(tables),
+            ).submit(
+              controller: controller,
+              programmeContext: context(),
+              trainingSessionId: 9001,
+              idempotencyKey: 'restart-new-key',
+            );
+        expect(result.isSuccess, true);
+        expect(result.record!.athleteNote, 'Corrected result');
+        expect(result.record!.recordId, original.recordId);
+        expect(performance.draftWrites, 0);
+        expect(store.calls, hasLength(1));
       },
     );
 

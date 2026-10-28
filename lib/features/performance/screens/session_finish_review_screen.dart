@@ -219,7 +219,13 @@ class _SessionFinishReviewScreenState extends State<SessionFinishReviewScreen> {
       }
 
       final reload = widget.onAuthoritativeReload?.call();
-      if (reload != null) await reload;
+      if (reload != null) {
+        try {
+          await reload;
+        } catch (_) {
+          // Completion is committed; surface refresh can be retried separately.
+        }
+      }
 
       ProductionRestoreEnvelopeStore.instance.clear(
         athleteId: widget.athleteId,
@@ -232,10 +238,14 @@ class _SessionFinishReviewScreenState extends State<SessionFinishReviewScreen> {
         ),
       );
       if (AthletePersistence.isInitialized) {
-        await AthletePersistence.repository.clearProductionRestoreEnvelope(
-          athleteId: widget.athleteId,
-          trainingSessionId: widget.trainingSessionId,
-        );
+        try {
+          await AthletePersistence.repository.clearProductionRestoreEnvelope(
+            athleteId: widget.athleteId,
+            trainingSessionId: widget.trainingSessionId,
+          );
+        } catch (_) {
+          // A retained restore envelope cannot override canonical completion.
+        }
       }
 
       if (!mounted) return;

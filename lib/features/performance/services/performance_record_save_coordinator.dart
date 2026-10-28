@@ -215,7 +215,13 @@ class PerformanceRecordSaveCoordinator {
       );
     }
 
-    final committed = await _store.getById(record.recordId) ?? record;
+    var committed = record;
+    try {
+      committed = await _store.getById(record.recordId) ?? record;
+    } catch (_) {
+      // The canonical RPC already acknowledged this commit. A failed History
+      // refresh must not turn a saved completion into an apparent save failure.
+    }
     PreviousStrengthPerformanceService.invalidateAfterWrite(athleteId);
     return PerformanceCompletionResult(
       record: committed,

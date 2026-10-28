@@ -437,11 +437,9 @@ void main() {
         final replay = await completionStore.completeAndAdvance(
           completionStore.last!,
         );
-        // Existing single-slot terminal programmes refuse retry after the
-        // assignment becomes ineligible. Preserve that behavior, one record,
-        // and the original target; do not claim idempotent success here.
-        expect(replay['status'], 'validation_failure');
-        expect(replay['code'], 'fixed_assignment_ineligible');
+        // M2.4 recovers the committed result without changing frozen targets.
+        expect(replay['status'], 'already_committed');
+        expect(replay['code'], 'idempotent_replay');
         expect(
           await sql(
             "SELECT count(*) FROM public.training_session_records WHERE training_session_id=$sid;",
