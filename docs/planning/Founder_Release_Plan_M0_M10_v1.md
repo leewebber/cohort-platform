@@ -6,7 +6,27 @@ This plan controls delivery priorities. It preserves technical authority contrac
 it does not grant implementation, content, hosted, account or release authority.
 [M0 findings and critical path](../checkpoints/m0_alpha_baseline/HANDOFF.md).
 
-## Current single point — M2.5 (2026-10-28)
+## Current single point — M1.1 (2026-10-28)
+
+**Consolidate genuine Hybrid 10K source and prepare local programme admission.**
+The founder returned Gate A's single point to M1.1 after the local M2.5 harness.
+[Consolidation checkpoint](../checkpoints/m11_hybrid10k_consolidation/HANDOFF.md)
+retains Lee's supplied ten-week draft and expanded order/arithmetic audit. Weekly
+template is accepted; exact detailed prescriptions are proposed. Approved M2.3
+quality rules retain their original versions and behaviour. Week 10 template,
+personal/general scope and source target wording need the concise founder review.
+Genuine full admission is blocked by exact identity evidence, five distance-ended
+workouts and complete graph/content review. No publication or athlete operation.
+
+**Next single milestone point: M1.1 source reconciliation and exact identity intake**
+against the retained draft, followed by a complete private v1/v2 graph admission
+attempt. M2.5 remains externally blocked; do not extend it against guessed contracts.
+Adaptation, distribution/device acceptance, held migrations and inherited bootstrap
+triage remain Gate A requirements. Supabase hosted status and remote ancestry remain
+unverified. The latest request authorises bounded local work and normal main-only
+publication only after live remote ancestry verification; no force or alternate route.
+
+## Retained M2.5 local checkpoint (2026-10-28)
 
 **Bounded local conversion/association harness verified; M2.5 and Gate A OPEN.**
 [Local checkpoint](../checkpoints/m25_local_harness/HANDOFF.md) records one accepted
@@ -18,7 +38,7 @@ This is a representation, not a FIT binary or genuine Garmin round trip. Officia
 SDK acquisition failed DNS; authoritative SDK parse remains open. No API transport,
 account connection, hosted/athlete mutation or production composition was added.
 
-**Next single point: M2.5 access/contract verification for the live round trip.**
+**External M2.5 dependency: access/contract verification for the live round trip.**
 Founder must confirm app/application status or obtain Training + Activity access,
 applicable terms/capacity and permitted portal contracts, plus exact watch/firmware/
 Connect platform/running profile/HR source. [Dated official sources/actions](../checkpoints/m25_garmin_round_trip/SOURCES.md).

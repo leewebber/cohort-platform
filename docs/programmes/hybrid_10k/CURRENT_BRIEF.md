@@ -1,4 +1,24 @@
-# Hybrid 10K — current founder direction, incomplete prescription
+# Hybrid 10K — retained direction and Lee-specific draft
+
+## Current M1.1 source intake — 2026-10-28
+
+The [new retained Lee draft](lee_draft_2026_10_28/README.md) supplies ten complete
+dated weeks of proposed coaching content. It is the single coaching source for
+this **Lee-specific draft**, with [expanded review](lee_draft_2026_10_28/EXPANDED_REVIEW.md)
+and [source decisions](../../checkpoints/m11_hybrid10k_consolidation/FOUNDER_REVIEW.md).
+Do not infer general PB-plan approval or detailed prescription acceptance from its
+receipt. Its new exact durations are retained draft content, not reinstatement of
+the earlier withdrawn proposal. The accepted weekly four-run/two-strength/one-rest
+template and approved M2.3 rules remain. Its Week 10 exception and easy/threshold
+wording require reconciliation with that authority. No published version, athlete
+assignment or genuine canonical execution has been created.
+
+The dated record below remains the controlling **general fit-runner PB direction**;
+the Lee draft must not silently redefine it. Its historical statements that no
+complete per-session source had been supplied are superseded only for the new
+Lee-specific retained draft, not for the general source or content approval.
+
+## Retained general direction — 2026-10-27
 
 Recorded 2026-10-27 (Asia/Makassar). **DIRECTION_RECEIVED; NOT_CONTENT_APPROVED;
 NOT_EXECUTABLE; NOT_PUBLISHED.**

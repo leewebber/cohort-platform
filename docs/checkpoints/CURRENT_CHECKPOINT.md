@@ -1,5 +1,26 @@
 # Current repository checkpoint
 
+> **M1.1 Hybrid 10K consolidation — partial, 2026-10-28:**
+> Gate A's current single point is M1.1 under the founder's latest request.
+> [Handoff](./m11_hybrid10k_consolidation/HANDOFF.md) retains the supplied genuine
+> Lee-specific ten-week draft, all 70 days, 40 runs, 19 strength sessions/259 work
+> sets and 11 rest days. Timed arithmetic matches; W10's four/one/two taper conflicts
+> with the accepted four/two/one template and remains a founder decision. Detailed
+> content is proposed; M2.3 rules remain approved and unchanged. Full v1/v2 schedule
+> candidates compile; complete graph admission fails exact scope. Individual pure
+> local graph/runner/paused-restore probes accept 35 timed runs and refuse all five
+> distance runs. 122 strength occurrences across 12 names lack explicit trusted
+> identity/catalogue evidence; none is invented. No genuine version was published,
+> acquired, started or completed. See [founder decisions](./m11_hybrid10k_consolidation/FOUNDER_REVIEW.md)
+> and [coverage/dependencies](./m11_hybrid10k_consolidation/COVERAGE.md).
+> M1.1/Gate A OPEN. Next single point: source reconciliation and exact identity intake.
+> M2.5 externally blocked; no harness extension. Held schemas, adaptation,
+> distribution/device acceptance and inherited bootstrap triage remain open.
+> Original dirty/retained checkouts and the full 18-commit unpushed chain through
+> d88acd9 are preserved; isolated clone holds this work. Normal GitHub DNS lookup
+> fails, so no remote ancestry or publication claim. Hosted status remains unknown;
+> no hosted/account/eligibility/athlete/device/UI operation.
+
 > **M2.5 local conversion/association — locally verified, 2026-10-28:**
 > [Local handoff](./m25_local_harness/HANDOFF.md) at `7d53cbd` preserves accepted frozen v1/v2 scope/source/rule/targets
 > in documented timed FIT field representations and separate synthetic activity fixtures.

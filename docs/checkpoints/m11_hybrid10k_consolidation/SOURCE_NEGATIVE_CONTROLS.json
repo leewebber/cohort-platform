@@ -1,0 +1,18 @@
+[
+  {
+    "control": "wrong_total",
+    "rejected": true
+  },
+  {
+    "control": "omitted_final_stride_recovery",
+    "rejected": true
+  },
+  {
+    "control": "duplicate_source_identity",
+    "rejected": true
+  },
+  {
+    "control": "wrong_calendar_date",
+    "rejected": true
+  }
+]

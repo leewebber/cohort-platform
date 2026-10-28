@@ -1,0 +1,1964 @@
+{
+  "classification": "PURE_LOCAL_SOURCE_CONTRACT_PROBE_NOT_SERVER_ADMISSION",
+  "base": "d88acd96b2647e94e70a8ee96d0f5bb18f078a7c",
+  "source_sha256": "d932e7103b03036e136249e0ab35d48378b0175c75feba84282386fc6ca00f40",
+  "publication": "NOT_ATTEMPTED_NOT_AUTHORISED",
+  "canonical_acquisition_start_completion": "NOT_ATTEMPTED_NO_PUBLISHED_GENUINE_VERSION",
+  "target_rules": [
+    "alpha_5k_8w_riegel_1_06_v1",
+    "alpha_manual_threshold_pm2_v1",
+    "authored_rpe_v1"
+  ],
+  "full_schedule": [
+    {
+      "schema": 1,
+      "schedule_valid": true,
+      "schedule_sha256": "becdd275b655f2f3970b6930ee4d694aefaf983394a7b123884d388b48e6a1aa",
+      "scheduled_sessions": 59,
+      "full_graph_admission": "protocol_graph_scope_mismatch",
+      "reason": "Only 40 running bodies exist; 19 strength graphs withheld for unresolved identities."
+    },
+    {
+      "schema": 2,
+      "schedule_valid": true,
+      "schedule_sha256": "f2955ef36a3775226fd412557abe62360fc2733f14c4d1bb0c19257fee4d4232",
+      "scheduled_sessions": 59,
+      "full_graph_admission": "protocol_graph_scope_mismatch",
+      "reason": "Only 40 running bodies exist; 19 strength graphs withheld for unresolved identities."
+    }
+  ],
+  "running_bodies": [
+    {
+      "source_session_id": "LW10K-W01-D02",
+      "v1_v2": [
+        "accepted_local_graph",
+        "accepted_local_graph"
+      ],
+      "running_seconds": 1500,
+      "restore": "serialized_plan_and_cursor_restore_paused",
+      "clock_finished": true,
+      "canonical_completion": "not_attempted"
+    },
+    {
+      "source_session_id": "LW10K-W01-D03",
+      "v1_v2": [
+        "accepted_local_graph",
+        "accepted_local_graph"
+      ],
+      "running_seconds": 1500,
+      "restore": "serialized_plan_and_cursor_restore_paused",
+      "clock_finished": true,
+      "canonical_completion": "not_attempted"
+    },
+    {
+      "source_session_id": "LW10K-W01-D05",
+      "v1_v2": [
+        "accepted_local_graph",
+        "accepted_local_graph"
+      ],
+      "running_seconds": 1500,
+      "restore": "serialized_plan_and_cursor_restore_paused",
+      "clock_finished": true,
+      "canonical_completion": "not_attempted"
+    },
+    {
+      "source_session_id": "LW10K-W01-D07",
+      "v1_v2": [
+        "accepted_local_graph",
+        "accepted_local_graph"
+      ],
+      "running_seconds": 2100,
+      "restore": "serialized_plan_and_cursor_restore_paused",
+      "clock_finished": true,
+      "canonical_completion": "not_attempted"
+    },
+    {
+      "source_session_id": "LW10K-W02-D02",
+      "v1_v2": [
+        "accepted_local_graph",
+        "accepted_local_graph"
+      ],
+      "running_seconds": 1800,
+      "restore": "serialized_plan_and_cursor_restore_paused",
+      "clock_finished": true,
+      "canonical_completion": "not_attempted"
+    },
+    {
+      "source_session_id": "LW10K-W02-D03",
+      "v1_v2": [
+        "accepted_local_graph",
+        "accepted_local_graph"
+      ],
+      "running_seconds": 1500,
+      "restore": "serialized_plan_and_cursor_restore_paused",
+      "clock_finished": true,
+      "canonical_completion": "not_attempted"
+    },
+    {
+      "source_session_id": "LW10K-W02-D05",
+      "v1_v2": [
+        "accepted_local_graph",
+        "accepted_local_graph"
+      ],
+      "running_seconds": 1500,
+      "restore": "serialized_plan_and_cursor_restore_paused",
+      "clock_finished": true,
+      "canonical_completion": "not_attempted"
+    },
+    {
+      "source_session_id": "LW10K-W02-D07",
+      "v1_v2": [
+        "accepted_local_graph",
+        "accepted_local_graph"
+      ],
+      "running_seconds": 2400,
+      "restore": "serialized_plan_and_cursor_restore_paused",
+      "clock_finished": true,
+      "canonical_completion": "not_attempted"
+    },
+    {
+      "source_session_id": "LW10K-W03-D02",
+      "v1_v2": [
+        "accepted_local_graph",
+        "accepted_local_graph"
+      ],
+      "running_seconds": 2160,
+      "restore": "serialized_plan_and_cursor_restore_paused",
+      "clock_finished": true,
+      "canonical_completion": "not_attempted"
+    },
+    {
+      "source_session_id": "LW10K-W03-D03",
+      "v1_v2": [
+        "accepted_local_graph",
+        "accepted_local_graph"
+      ],
+      "running_seconds": 1800,
+      "restore": "serialized_plan_and_cursor_restore_paused",
+      "clock_finished": true,
+      "canonical_completion": "not_attempted"
+    },
+    {
+      "source_session_id": "LW10K-W03-D05",
+      "v1_v2": [
+        "accepted_local_graph",
+        "accepted_local_graph"
+      ],
+      "running_seconds": 1800,
+      "restore": "serialized_plan_and_cursor_restore_paused",
+      "clock_finished": true,
+      "canonical_completion": "not_attempted"
+    },
+    {
+      "source_session_id": "LW10K-W03-D07",
+      "v1_v2": [
+        "accepted_local_graph",
+        "accepted_local_graph"
+      ],
+      "running_seconds": 2700,
+      "restore": "serialized_plan_and_cursor_restore_paused",
+      "clock_finished": true,
+      "canonical_completion": "not_attempted"
+    },
+    {
+      "source_session_id": "LW10K-W04-D02",
+      "v1_v2": [
+        "unsupported_timed_running_body",
+        "unsupported_timed_running_body"
+      ],
+      "distance_metres": 5000,
+      "restore": "not_executable_distance_ending_preserved"
+    },
+    {
+      "source_session_id": "LW10K-W04-D03",
+      "v1_v2": [
+        "accepted_local_graph",
+        "accepted_local_graph"
+      ],
+      "running_seconds": 1500,
+      "restore": "serialized_plan_and_cursor_restore_paused",
+      "clock_finished": true,
+      "canonical_completion": "not_attempted"
+    },
+    {
+      "source_session_id": "LW10K-W04-D05",
+      "v1_v2": [
+        "accepted_local_graph",
+        "accepted_local_graph"
+      ],
+      "running_seconds": 1800,
+      "restore": "serialized_plan_and_cursor_restore_paused",
+      "clock_finished": true,
+      "canonical_completion": "not_attempted"
+    },
+    {
+      "source_session_id": "LW10K-W04-D07",
+      "v1_v2": [
+        "accepted_local_graph",
+        "accepted_local_graph"
+      ],
+      "running_seconds": 2400,
+      "restore": "serialized_plan_and_cursor_restore_paused",
+      "clock_finished": true,
+      "canonical_completion": "not_attempted"
+    },
+    {
+      "source_session_id": "LW10K-W05-D02",
+      "v1_v2": [
+        "accepted_local_graph",
+        "accepted_local_graph"
+      ],
+      "running_seconds": 2640,
+      "restore": "serialized_plan_and_cursor_restore_paused",
+      "clock_finished": true,
+      "canonical_completion": "not_attempted"
+    },
+    {
+      "source_session_id": "LW10K-W05-D03",
+      "v1_v2": [
+        "accepted_local_graph",
+        "accepted_local_graph"
+      ],
+      "running_seconds": 2100,
+      "restore": "serialized_plan_and_cursor_restore_paused",
+      "clock_finished": true,
+      "canonical_completion": "not_attempted"
+    },
+    {
+      "source_session_id": "LW10K-W05-D05",
+      "v1_v2": [
+        "accepted_local_graph",
+        "accepted_local_graph"
+      ],
+      "running_seconds": 2100,
+      "restore": "serialized_plan_and_cursor_restore_paused",
+      "clock_finished": true,
+      "canonical_completion": "not_attempted"
+    },
+    {
+      "source_session_id": "LW10K-W05-D07",
+      "v1_v2": [
+        "accepted_local_graph",
+        "accepted_local_graph"
+      ],
+      "running_seconds": 3000,
+      "restore": "serialized_plan_and_cursor_restore_paused",
+      "clock_finished": true,
+      "canonical_completion": "not_attempted"
+    },
+    {
+      "source_session_id": "LW10K-W06-D02",
+      "v1_v2": [
+        "accepted_local_graph",
+        "accepted_local_graph"
+      ],
+      "running_seconds": 3000,
+      "restore": "serialized_plan_and_cursor_restore_paused",
+      "clock_finished": true,
+      "canonical_completion": "not_attempted"
+    },
+    {
+      "source_session_id": "LW10K-W06-D03",
+      "v1_v2": [
+        "accepted_local_graph",
+        "accepted_local_graph"
+      ],
+      "running_seconds": 2100,
+      "restore": "serialized_plan_and_cursor_restore_paused",
+      "clock_finished": true,
+      "canonical_completion": "not_attempted"
+    },
+    {
+      "source_session_id": "LW10K-W06-D05",
+      "v1_v2": [
+        "accepted_local_graph",
+        "accepted_local_graph"
+      ],
+      "running_seconds": 2100,
+      "restore": "serialized_plan_and_cursor_restore_paused",
+      "clock_finished": true,
+      "canonical_completion": "not_attempted"
+    },
+    {
+      "source_session_id": "LW10K-W06-D07",
+      "v1_v2": [
+        "accepted_local_graph",
+        "accepted_local_graph"
+      ],
+      "running_seconds": 3300,
+      "restore": "serialized_plan_and_cursor_restore_paused",
+      "clock_finished": true,
+      "canonical_completion": "not_attempted"
+    },
+    {
+      "source_session_id": "LW10K-W07-D02",
+      "v1_v2": [
+        "accepted_local_graph",
+        "accepted_local_graph"
+      ],
+      "running_seconds": 2460,
+      "restore": "serialized_plan_and_cursor_restore_paused",
+      "clock_finished": true,
+      "canonical_completion": "not_attempted"
+    },
+    {
+      "source_session_id": "LW10K-W07-D03",
+      "v1_v2": [
+        "accepted_local_graph",
+        "accepted_local_graph"
+      ],
+      "running_seconds": 1800,
+      "restore": "serialized_plan_and_cursor_restore_paused",
+      "clock_finished": true,
+      "canonical_completion": "not_attempted"
+    },
+    {
+      "source_session_id": "LW10K-W07-D05",
+      "v1_v2": [
+        "accepted_local_graph",
+        "accepted_local_graph"
+      ],
+      "running_seconds": 1800,
+      "restore": "serialized_plan_and_cursor_restore_paused",
+      "clock_finished": true,
+      "canonical_completion": "not_attempted"
+    },
+    {
+      "source_session_id": "LW10K-W07-D07",
+      "v1_v2": [
+        "accepted_local_graph",
+        "accepted_local_graph"
+      ],
+      "running_seconds": 2700,
+      "restore": "serialized_plan_and_cursor_restore_paused",
+      "clock_finished": true,
+      "canonical_completion": "not_attempted"
+    },
+    {
+      "source_session_id": "LW10K-W08-D02",
+      "v1_v2": [
+        "unsupported_timed_running_body",
+        "unsupported_timed_running_body"
+      ],
+      "distance_metres": 4000,
+      "restore": "not_executable_distance_ending_preserved"
+    },
+    {
+      "source_session_id": "LW10K-W08-D03",
+      "v1_v2": [
+        "accepted_local_graph",
+        "accepted_local_graph"
+      ],
+      "running_seconds": 2400,
+      "restore": "serialized_plan_and_cursor_restore_paused",
+      "clock_finished": true,
+      "canonical_completion": "not_attempted"
+    },
+    {
+      "source_session_id": "LW10K-W08-D05",
+      "v1_v2": [
+        "accepted_local_graph",
+        "accepted_local_graph"
+      ],
+      "running_seconds": 2100,
+      "restore": "serialized_plan_and_cursor_restore_paused",
+      "clock_finished": true,
+      "canonical_completion": "not_attempted"
+    },
+    {
+      "source_session_id": "LW10K-W08-D07",
+      "v1_v2": [
+        "accepted_local_graph",
+        "accepted_local_graph"
+      ],
+      "running_seconds": 3600,
+      "restore": "serialized_plan_and_cursor_restore_paused",
+      "clock_finished": true,
+      "canonical_completion": "not_attempted"
+    },
+    {
+      "source_session_id": "LW10K-W09-D02",
+      "v1_v2": [
+        "unsupported_timed_running_body",
+        "unsupported_timed_running_body"
+      ],
+      "distance_metres": 4800,
+      "restore": "not_executable_distance_ending_preserved"
+    },
+    {
+      "source_session_id": "LW10K-W09-D03",
+      "v1_v2": [
+        "accepted_local_graph",
+        "accepted_local_graph"
+      ],
+      "running_seconds": 2100,
+      "restore": "serialized_plan_and_cursor_restore_paused",
+      "clock_finished": true,
+      "canonical_completion": "not_attempted"
+    },
+    {
+      "source_session_id": "LW10K-W09-D05",
+      "v1_v2": [
+        "accepted_local_graph",
+        "accepted_local_graph"
+      ],
+      "running_seconds": 1800,
+      "restore": "serialized_plan_and_cursor_restore_paused",
+      "clock_finished": true,
+      "canonical_completion": "not_attempted"
+    },
+    {
+      "source_session_id": "LW10K-W09-D07",
+      "v1_v2": [
+        "accepted_local_graph",
+        "accepted_local_graph"
+      ],
+      "running_seconds": 3000,
+      "restore": "serialized_plan_and_cursor_restore_paused",
+      "clock_finished": true,
+      "canonical_completion": "not_attempted"
+    },
+    {
+      "source_session_id": "LW10K-W10-D02",
+      "v1_v2": [
+        "unsupported_timed_running_body",
+        "unsupported_timed_running_body"
+      ],
+      "distance_metres": 2400,
+      "restore": "not_executable_distance_ending_preserved"
+    },
+    {
+      "source_session_id": "LW10K-W10-D03",
+      "v1_v2": [
+        "accepted_local_graph",
+        "accepted_local_graph"
+      ],
+      "running_seconds": 1500,
+      "restore": "serialized_plan_and_cursor_restore_paused",
+      "clock_finished": true,
+      "canonical_completion": "not_attempted"
+    },
+    {
+      "source_session_id": "LW10K-W10-D05",
+      "v1_v2": [
+        "accepted_local_graph",
+        "accepted_local_graph"
+      ],
+      "running_seconds": 1200,
+      "restore": "serialized_plan_and_cursor_restore_paused",
+      "clock_finished": true,
+      "canonical_completion": "not_attempted"
+    },
+    {
+      "source_session_id": "LW10K-W10-D07",
+      "v1_v2": [
+        "unsupported_timed_running_body",
+        "unsupported_timed_running_body"
+      ],
+      "distance_metres": 10000,
+      "restore": "not_executable_distance_ending_preserved"
+    }
+  ],
+  "personalised_capability_reuse": [
+    {
+      "source_session_id": "LW10K-W01-D02",
+      "proposed_binding": "zone2",
+      "status": "marker_valid_missing_frozen_acceptance_refused",
+      "coaching_binding": "PENDING_SOURCE_RECONCILIATION_NOT_ADDED_TO_SOURCE",
+      "authored_scalar_fallback": null
+    },
+    {
+      "source_session_id": "LW10K-W03-D02",
+      "proposed_binding": "quality",
+      "status": "marker_valid_missing_frozen_acceptance_refused",
+      "coaching_binding": "PENDING_SOURCE_RECONCILIATION_NOT_ADDED_TO_SOURCE",
+      "authored_scalar_fallback": null
+    }
+  ],
+  "exercise_identity": {
+    "catalogue": "NO_RETAINED_PUBLISHED_RUNTIME_CATALOGUE_SUPPLIED",
+    "source_identity": "DISPLAY_NAMES_ONLY_NO_EXPLICIT_TRANSITIONAL_OR_VERSION_REFS",
+    "resolved_occurrences": 0,
+    "unresolved_occurrences": 122,
+    "distinct_authored_names": [
+      "Barbell Romanian deadlift",
+      "Barbell back squat",
+      "DB bench press",
+      "DB farmer carry",
+      "DB lateral raise",
+      "DB overhead press",
+      "DB reverse lunge",
+      "One-arm DB row",
+      "Pull-up",
+      "Reverse crunch",
+      "Side plank",
+      "Standing single-leg DB calf raise"
+    ],
+    "issues": [
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 1,
+        "day_number": 1,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 1,
+        "raw_reference": "DB reverse lunge",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 1,
+        "day_number": 1,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 2,
+        "raw_reference": "Pull-up",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 1,
+        "day_number": 1,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 3,
+        "raw_reference": "DB overhead press",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 1,
+        "day_number": 1,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 4,
+        "raw_reference": "One-arm DB row",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 1,
+        "day_number": 1,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 5,
+        "raw_reference": "DB lateral raise",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 1,
+        "day_number": 1,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 6,
+        "raw_reference": "Side plank",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 1,
+        "day_number": 4,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 1,
+        "raw_reference": "Barbell back squat",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 1,
+        "day_number": 4,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 2,
+        "raw_reference": "Barbell Romanian deadlift",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 1,
+        "day_number": 4,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 3,
+        "raw_reference": "DB bench press",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 1,
+        "day_number": 4,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 4,
+        "raw_reference": "One-arm DB row",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 1,
+        "day_number": 4,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 5,
+        "raw_reference": "DB farmer carry",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 1,
+        "day_number": 4,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 6,
+        "raw_reference": "Standing single-leg DB calf raise",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 1,
+        "day_number": 4,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 7,
+        "raw_reference": "Reverse crunch",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 2,
+        "day_number": 1,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 1,
+        "raw_reference": "DB reverse lunge",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 2,
+        "day_number": 1,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 2,
+        "raw_reference": "Pull-up",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 2,
+        "day_number": 1,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 3,
+        "raw_reference": "DB overhead press",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 2,
+        "day_number": 1,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 4,
+        "raw_reference": "One-arm DB row",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 2,
+        "day_number": 1,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 5,
+        "raw_reference": "DB lateral raise",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 2,
+        "day_number": 1,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 6,
+        "raw_reference": "Side plank",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 2,
+        "day_number": 4,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 1,
+        "raw_reference": "Barbell back squat",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 2,
+        "day_number": 4,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 2,
+        "raw_reference": "Barbell Romanian deadlift",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 2,
+        "day_number": 4,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 3,
+        "raw_reference": "DB bench press",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 2,
+        "day_number": 4,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 4,
+        "raw_reference": "One-arm DB row",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 2,
+        "day_number": 4,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 5,
+        "raw_reference": "DB farmer carry",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 2,
+        "day_number": 4,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 6,
+        "raw_reference": "Standing single-leg DB calf raise",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 2,
+        "day_number": 4,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 7,
+        "raw_reference": "Reverse crunch",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 3,
+        "day_number": 1,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 1,
+        "raw_reference": "DB reverse lunge",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 3,
+        "day_number": 1,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 2,
+        "raw_reference": "Pull-up",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 3,
+        "day_number": 1,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 3,
+        "raw_reference": "DB overhead press",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 3,
+        "day_number": 1,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 4,
+        "raw_reference": "One-arm DB row",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 3,
+        "day_number": 1,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 5,
+        "raw_reference": "DB lateral raise",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 3,
+        "day_number": 1,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 6,
+        "raw_reference": "Side plank",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 3,
+        "day_number": 4,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 1,
+        "raw_reference": "Barbell back squat",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 3,
+        "day_number": 4,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 2,
+        "raw_reference": "Barbell Romanian deadlift",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 3,
+        "day_number": 4,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 3,
+        "raw_reference": "DB bench press",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 3,
+        "day_number": 4,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 4,
+        "raw_reference": "One-arm DB row",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 3,
+        "day_number": 4,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 5,
+        "raw_reference": "DB farmer carry",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 3,
+        "day_number": 4,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 6,
+        "raw_reference": "Standing single-leg DB calf raise",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 3,
+        "day_number": 4,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 7,
+        "raw_reference": "Reverse crunch",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 4,
+        "day_number": 1,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 1,
+        "raw_reference": "DB reverse lunge",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 4,
+        "day_number": 1,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 2,
+        "raw_reference": "Pull-up",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 4,
+        "day_number": 1,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 3,
+        "raw_reference": "DB overhead press",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 4,
+        "day_number": 1,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 4,
+        "raw_reference": "One-arm DB row",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 4,
+        "day_number": 1,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 5,
+        "raw_reference": "DB lateral raise",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 4,
+        "day_number": 1,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 6,
+        "raw_reference": "Side plank",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 4,
+        "day_number": 4,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 1,
+        "raw_reference": "Barbell back squat",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 4,
+        "day_number": 4,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 2,
+        "raw_reference": "Barbell Romanian deadlift",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 4,
+        "day_number": 4,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 3,
+        "raw_reference": "DB bench press",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 4,
+        "day_number": 4,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 4,
+        "raw_reference": "One-arm DB row",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 4,
+        "day_number": 4,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 5,
+        "raw_reference": "DB farmer carry",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 4,
+        "day_number": 4,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 6,
+        "raw_reference": "Standing single-leg DB calf raise",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 4,
+        "day_number": 4,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 7,
+        "raw_reference": "Reverse crunch",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 5,
+        "day_number": 1,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 1,
+        "raw_reference": "DB reverse lunge",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 5,
+        "day_number": 1,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 2,
+        "raw_reference": "Pull-up",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 5,
+        "day_number": 1,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 3,
+        "raw_reference": "DB overhead press",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 5,
+        "day_number": 1,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 4,
+        "raw_reference": "One-arm DB row",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 5,
+        "day_number": 1,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 5,
+        "raw_reference": "DB lateral raise",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 5,
+        "day_number": 1,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 6,
+        "raw_reference": "Side plank",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 5,
+        "day_number": 4,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 1,
+        "raw_reference": "Barbell back squat",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 5,
+        "day_number": 4,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 2,
+        "raw_reference": "Barbell Romanian deadlift",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 5,
+        "day_number": 4,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 3,
+        "raw_reference": "DB bench press",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 5,
+        "day_number": 4,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 4,
+        "raw_reference": "One-arm DB row",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 5,
+        "day_number": 4,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 5,
+        "raw_reference": "DB farmer carry",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 5,
+        "day_number": 4,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 6,
+        "raw_reference": "Standing single-leg DB calf raise",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 5,
+        "day_number": 4,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 7,
+        "raw_reference": "Reverse crunch",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 6,
+        "day_number": 1,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 1,
+        "raw_reference": "DB reverse lunge",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 6,
+        "day_number": 1,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 2,
+        "raw_reference": "Pull-up",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 6,
+        "day_number": 1,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 3,
+        "raw_reference": "DB overhead press",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 6,
+        "day_number": 1,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 4,
+        "raw_reference": "One-arm DB row",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 6,
+        "day_number": 1,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 5,
+        "raw_reference": "DB lateral raise",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 6,
+        "day_number": 1,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 6,
+        "raw_reference": "Side plank",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 6,
+        "day_number": 4,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 1,
+        "raw_reference": "Barbell back squat",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 6,
+        "day_number": 4,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 2,
+        "raw_reference": "Barbell Romanian deadlift",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 6,
+        "day_number": 4,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 3,
+        "raw_reference": "DB bench press",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 6,
+        "day_number": 4,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 4,
+        "raw_reference": "One-arm DB row",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 6,
+        "day_number": 4,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 5,
+        "raw_reference": "DB farmer carry",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 6,
+        "day_number": 4,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 6,
+        "raw_reference": "Standing single-leg DB calf raise",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 6,
+        "day_number": 4,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 7,
+        "raw_reference": "Reverse crunch",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 7,
+        "day_number": 1,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 1,
+        "raw_reference": "DB reverse lunge",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 7,
+        "day_number": 1,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 2,
+        "raw_reference": "Pull-up",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 7,
+        "day_number": 1,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 3,
+        "raw_reference": "DB overhead press",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 7,
+        "day_number": 1,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 4,
+        "raw_reference": "One-arm DB row",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 7,
+        "day_number": 1,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 5,
+        "raw_reference": "DB lateral raise",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 7,
+        "day_number": 1,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 6,
+        "raw_reference": "Side plank",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 7,
+        "day_number": 4,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 1,
+        "raw_reference": "Barbell back squat",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 7,
+        "day_number": 4,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 2,
+        "raw_reference": "Barbell Romanian deadlift",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 7,
+        "day_number": 4,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 3,
+        "raw_reference": "DB bench press",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 7,
+        "day_number": 4,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 4,
+        "raw_reference": "One-arm DB row",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 7,
+        "day_number": 4,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 5,
+        "raw_reference": "DB farmer carry",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 7,
+        "day_number": 4,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 6,
+        "raw_reference": "Standing single-leg DB calf raise",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 7,
+        "day_number": 4,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 7,
+        "raw_reference": "Reverse crunch",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 8,
+        "day_number": 1,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 1,
+        "raw_reference": "DB reverse lunge",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 8,
+        "day_number": 1,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 2,
+        "raw_reference": "Pull-up",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 8,
+        "day_number": 1,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 3,
+        "raw_reference": "DB overhead press",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 8,
+        "day_number": 1,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 4,
+        "raw_reference": "One-arm DB row",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 8,
+        "day_number": 1,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 5,
+        "raw_reference": "DB lateral raise",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 8,
+        "day_number": 1,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 6,
+        "raw_reference": "Side plank",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 8,
+        "day_number": 4,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 1,
+        "raw_reference": "Barbell back squat",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 8,
+        "day_number": 4,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 2,
+        "raw_reference": "Barbell Romanian deadlift",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 8,
+        "day_number": 4,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 3,
+        "raw_reference": "DB bench press",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 8,
+        "day_number": 4,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 4,
+        "raw_reference": "One-arm DB row",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 8,
+        "day_number": 4,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 5,
+        "raw_reference": "DB farmer carry",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 8,
+        "day_number": 4,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 6,
+        "raw_reference": "Standing single-leg DB calf raise",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 8,
+        "day_number": 4,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 7,
+        "raw_reference": "Reverse crunch",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 9,
+        "day_number": 1,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 1,
+        "raw_reference": "DB reverse lunge",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 9,
+        "day_number": 1,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 2,
+        "raw_reference": "Pull-up",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 9,
+        "day_number": 1,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 3,
+        "raw_reference": "DB overhead press",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 9,
+        "day_number": 1,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 4,
+        "raw_reference": "One-arm DB row",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 9,
+        "day_number": 1,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 5,
+        "raw_reference": "DB lateral raise",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 9,
+        "day_number": 1,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 6,
+        "raw_reference": "Side plank",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 9,
+        "day_number": 4,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 1,
+        "raw_reference": "Barbell back squat",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 9,
+        "day_number": 4,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 2,
+        "raw_reference": "Barbell Romanian deadlift",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 9,
+        "day_number": 4,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 3,
+        "raw_reference": "DB bench press",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 9,
+        "day_number": 4,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 4,
+        "raw_reference": "One-arm DB row",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 9,
+        "day_number": 4,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 5,
+        "raw_reference": "DB farmer carry",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 9,
+        "day_number": 4,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 6,
+        "raw_reference": "Standing single-leg DB calf raise",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 9,
+        "day_number": 4,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 7,
+        "raw_reference": "Reverse crunch",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 10,
+        "day_number": 1,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 1,
+        "raw_reference": "Pull-up",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 10,
+        "day_number": 1,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 2,
+        "raw_reference": "DB overhead press",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 10,
+        "day_number": 1,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 3,
+        "raw_reference": "One-arm DB row",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 10,
+        "day_number": 1,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 4,
+        "raw_reference": "DB lateral raise",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      },
+      {
+        "programme_import_key": "lee-10k-draft-identity-probe",
+        "week_number": 10,
+        "day_number": 1,
+        "session_order": 1,
+        "block_order": 1,
+        "exercise_order": 5,
+        "raw_reference": "Side plank",
+        "code": "legacy_exercise_reference_unresolved",
+        "message": "Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.",
+        "canonical_candidates": []
+      }
+    ]
+  }
+}

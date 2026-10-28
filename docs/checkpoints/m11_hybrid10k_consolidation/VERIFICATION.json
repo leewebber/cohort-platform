@@ -1,0 +1,128 @@
+{
+  "date": "2026-10-28",
+  "timezone": "Asia/Makassar",
+  "base": "d88acd96b2647e94e70a8ee96d0f5bb18f078a7c",
+  "m11": "PARTIAL_DRAFT_CONSOLIDATED_FULL_GENUINE_ADMISSION_BLOCKED",
+  "gate_a": "OPEN",
+  "source_sha256": "d932e7103b03036e136249e0ab35d48378b0175c75feba84282386fc6ca00f40",
+  "checks": [
+    {
+      "command": "python3 tool/programmes/hybrid_10k/audit_source.py --check",
+      "exit": 0,
+      "result": "70 dates, unique source/occurrence IDs, all timed totals, narrative/JSON strength tables, deterministic regeneration"
+    },
+    {
+      "command": "flutter test --no-pub test/session/authored_timed_running_test.dart test/session/quality_target_admission_test.dart test/session/zone2_target_admission_test.dart test/programmes/private_protocol_graph_builder_test.dart test/founder_programme_import/founder_programme_identity_bridge_integration_test.dart tool/programmes/hybrid_10k/admission_probe_test.dart",
+      "exit": 0,
+      "passed": 86,
+      "log_sha256": "8f45eb9c7703b1e21e738cd267742084e4d1ec3cf6474fd2ccf7f2ab0ebea201"
+    },
+    {
+      "command": "flutter test --no-pub test/endurance/endurance_duration_capture_test.dart test/programme/athlete_programme_completion_service_test.dart test/performance/structured_running_targets_actuals_test.dart",
+      "exit": 0,
+      "passed": 39,
+      "log_sha256": "d7f28ac33f565541989dda8d266e3b0c2381e711ce3414b7548f67b1f6c4f699"
+    },
+    {
+      "command": "flutter test --no-pub tool/programmes/hybrid_10k/admission_probe_test.dart",
+      "exit": 0,
+      "passed": 4,
+      "note": "final source-derived admission evidence; overlaps 86-check command",
+      "log_sha256": "c70a80541f846927fd3567e175e25db92125a721d59b07ee01e6616e88144405"
+    },
+    {
+      "command": "flutter analyze --no-pub tool/programmes/hybrid_10k/admission_probe_test.dart",
+      "exit": 0,
+      "diagnostics": 0,
+      "log_sha256": "e5a0ac5c9139c0b7a49055933a81b1f0a2f0daf387a153caa1a85aa2af3e38fb"
+    },
+    {
+      "command": "./tool/testing/run_phase2_consolidation_safety_gate.sh",
+      "exit": 0,
+      "groups_passed": 6,
+      "groups_failed": 0,
+      "log_sha256": "9f27cbd9d78eb8149620ad020e6f0b516e725aad2ae08d1c4f53d2098feb0ef0"
+    },
+    {
+      "check": "source corruption controls",
+      "passed": 4,
+      "artifact": "SOURCE_NEGATIVE_CONTROLS.json"
+    },
+    {
+      "check": "diff, JSON, documentation links, source attachment equality, protected rule/migration bytes",
+      "result": "PASS"
+    }
+  ],
+  "not_run": [
+    "full default Flutter suite",
+    "full repository analysis",
+    "SQL/GoTrue/PostgREST replay",
+    "browser/desktop control",
+    "hosted inspection",
+    "device acceptance",
+    "canonical genuine acquisition/start/completion"
+  ],
+  "preservation": {
+    "existing_checkouts": 24,
+    "registered_absent": 28,
+    "before_after_identical": true,
+    "inventory_sha256": "5231fb345ddd8f565149e6530bb71e4237021c8c15f2e7fee1dab3e21de1dfc0",
+    "prior_unpushed_commits": [
+      "341fbad192c7d85074189af9ce10c8103ebc061b",
+      "632ff8393b8bd07c5b2297517a9ba2728fc4c0c6",
+      "2710185c43c36892f032358ca2ce2f5c0b3ba4b9",
+      "dade09f5e40a87768bb23b62b805022d4fb4461c",
+      "618c53f9c26565a2509bf79be81dafb348333315",
+      "d53786aff61fe7768cbfb852410ebac0ebdadc3c",
+      "544a3bbd7fc6ba1c6afd6fe3e68448636369d2b5",
+      "1963338cff87fc6165c2f9fb754afe153547f279",
+      "eb8fe4efde2c97ffa6fc545fadb2f563fdd50e0f",
+      "5d260bca7490bbc62d890d3aebc90b35ec5d000b",
+      "ce9ec89b79cb5c2fe6dcb4b7eb556bec73fff1fb",
+      "0caee794e63c9d7ce79aebffc65898cef1f2db11",
+      "a67e69c1bbbb5edae4d3a802de9c5c910444841a",
+      "7cc471b71125cf516b17e8bda03256614b474bc3",
+      "25b641a78c17fb49349729bde04c2ff54dc6db51",
+      "125ad8d309aa78e8f21c42fafc34798a5e585156",
+      "7d53cbd2212c6af451913455e420abe813e90311",
+      "d88acd96b2647e94e70a8ee96d0f5bb18f078a7c"
+    ],
+    "merges": 0
+  },
+  "protected_unchanged_sha256": {
+    "lib/domain/running_workout/alpha_quality_targets.dart": "b8e5f22c9c75adcaa3201a2cf1f9b768b2b30474b2b1a92b5e6a180dcb49c1ec",
+    "lib/features/session/models/running_target_admission.dart": "729046caec3f8ec3827ac21c1034af2ad343c4a69eae4dc7fa41391e97492c89",
+    "supabase/migrations/20261026110000_training_setup_private_alpha_acquisition.sql": "59cb7a97e5c5bcd6e5bc230631a1c34942ce4cd7610aa253b1556510df7248f5",
+    "supabase/migrations/20261026120000_durable_publication_approval_events.sql": "526881b82d7ab20e3e246db4ea808970300ef7570fdd03dd8d43a2b753b9f588",
+    "supabase/migrations/20261027120000_confirmed_running_zone_targets.sql": "26038e82bae21130982ccaed65be14ee49ad4581256f99476ccb5ba071b0de6a",
+    "supabase/migrations/20261027130000_alpha_quality_running_targets.sql": "5c49656c6fa85f6ef0c4524491d61dc53ff42a0bb7e61bbfe33a24ab0dc3b520",
+    "supabase/migrations/20261028120000_terminal_completion_retry.sql": "00c5f094d6c49716109fa67066d6d570e4af27ee24f0bd9b5237433e6d3a0ffa"
+  },
+  "artifact_sha256": {
+    "docs/checkpoints/m11_hybrid10k_consolidation/ADMISSION.json": "f0cb9fc9f6fc4f0095c1e499b5e0a6278a78fa283cb2f60d2af10db4ec0e3596",
+    "docs/checkpoints/m11_hybrid10k_consolidation/SOURCE_NEGATIVE_CONTROLS.json": "d0be76e5020d5922ab2829498a100adc54863e03c30c196168148e245f999fb1",
+    "docs/programmes/hybrid_10k/lee_draft_2026_10_28/AUDIT.json": "97d5114720d7e753b0dc20c7b909bab27d7018706ccf7f15d444b62f1f76fde7",
+    "docs/programmes/hybrid_10k/lee_draft_2026_10_28/CALENDAR.json": "00022a471c7a2d26a1db4213952c8be91779f9300817dc7168bead262f3101aa",
+    "docs/programmes/hybrid_10k/lee_draft_2026_10_28/EXPANDED.json": "e6f4744fad6d943b85b898bab25e64b445b2ee1dfff5f91c2931adefa6d7c4e5",
+    "docs/programmes/hybrid_10k/lee_draft_2026_10_28/EXPANDED_REVIEW.md": "13d201196c3ae30a925baed8b48e744d8946617cfd2a19a6e3f0fde86e10a1ba",
+    "docs/programmes/hybrid_10k/lee_draft_2026_10_28/README.md": "80dc18333a6555b7260c8728de6cf49ca6f6357da1cad1c93b02d2867478d2e4",
+    "docs/programmes/hybrid_10k/lee_draft_2026_10_28/RUNNING_BODIES.json": "6daf044f6b64c17fa463bb46788fac534131fce55fd1fbb5e358812e29ce7f4a",
+    "docs/programmes/hybrid_10k/lee_draft_2026_10_28/SCHEDULE_CANDIDATE.json": "478451d2a729ca2cb346e063f7a6e0c001845a0f033310b297e0ad23c9ec09a3",
+    "docs/programmes/hybrid_10k/lee_draft_2026_10_28/SOURCE.md": "d932e7103b03036e136249e0ab35d48378b0175c75feba84282386fc6ca00f40",
+    "tool/programmes/hybrid_10k/admission_probe_test.dart": "16d5cbadb894442e3c4f0c623b7c38f9b320ee34afa6a4fcc9af3e38f3cea820",
+    "tool/programmes/hybrid_10k/audit_source.py": "d08fe702eed88f876b249c1098a6cd9dab99fcfe2a79b903067b6352b90f2193"
+  },
+  "git": {
+    "working_clone": "/private/tmp/cohort_m11_consolidation",
+    "source_clone_preserved": "/private/tmp/cohort_m11_sources",
+    "remote_ancestry": "UNVERIFIED",
+    "ordinary_lookup_attempts": 2,
+    "result": "Could not resolve host: github.com",
+    "push_attempted": false,
+    "force_or_alternate_route": false
+  },
+  "hosted_status": "UNVERIFIED_NO_CONTACT",
+  "publication_accounts_eligibility_athlete_mutations": false,
+  "next_single_point": "M1.1 source reconciliation and exact identity intake, then complete private v1/v2 graph admission",
+  "source_and_probe_commit": "fc42a6240f96b8c87d173004aa5ad2c6f4211daf"
+}
