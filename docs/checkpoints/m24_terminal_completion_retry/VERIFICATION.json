@@ -1,0 +1,206 @@
+{
+  "format": "cohort.m24-terminal-completion-retry.verification.v1",
+  "recorded_date": "2026-10-28",
+  "timezone": "Asia/Makassar",
+  "base": "a67e69c1bbbb5edae4d3a802de9c5c910444841a",
+  "implementation": "7cc471b71125cf516b17e8bda03256614b474bc3",
+  "status": "TERMINAL_RETRY_SLICE_LOCAL_VERIFIED_OVERALL_M24_DEVICE_ACCEPTANCE_OPEN",
+  "pre_fix_reproduction": {
+    "real_local_gotrue_postgrest": true,
+    "first_commit_success": true,
+    "exact_retry_status": "validation_failure",
+    "exact_retry_code": "fixed_assignment_ineligible",
+    "red_log": "/private/tmp/cohort_m24_red.log"
+  },
+  "final_tests": {
+    "affected_passed": 894,
+    "opt_in_skipped": 3,
+    "completion_focused_passed": 235,
+    "focused_is_subset_of_affected": true,
+    "inherited_failure_isolated": {
+      "file": "test/programme/athlete_runtime_capability_bootstrap_test.dart",
+      "line": 124,
+      "name": "authenticated athlete reaches Home without waiting on RPC",
+      "result": "Expected AthleteAppShell, found none",
+      "current_failures": 1,
+      "exact_immutable_base_failures": 1,
+      "base_passed": 9,
+      "included_in_first_broad_attempt": true,
+      "excluded_from_final_affected_command_and_reported_separately": true
+    }
+  },
+  "local_auth": {
+    "fresh": "PASS",
+    "repeat": "PASS",
+    "quality_scenarios_per_pass": 4,
+    "zone2_scenarios_per_pass": 2,
+    "concurrent_requests_per_quality_completion": 6,
+    "committed": 1,
+    "replay_successes": 5,
+    "precommit_validation_and_forced_post_record_rollback": true,
+    "lost_committed_response_then_service_retry": true,
+    "fresh_client_service_json_restart": true,
+    "fixed_and_generic_replay": true,
+    "changed_fingerprint_status_note_snapshot_conflicts": true,
+    "cross_athlete_and_identity_denial": true,
+    "paused_reassigned_and_ineligible_new_completion_denied": true,
+    "read_only_replay_row_digests_unchanged": true,
+    "correction_then_original_retry_preserves_history": true,
+    "quality_zone2_freeze_unchanged": true
+  },
+  "compatibility": {
+    "without_held_m12_zone2_quality_producer_schemas": "PASS",
+    "b3_mapping_targets_actuals_correction": "PASS",
+    "migration_reapplication_application_evidence_oids_owners_acls_definitions": "PASS",
+    "helper_execute_and_client_receipt_write_denied": true
+  },
+  "safety": {
+    "groups_passed": 6,
+    "groups_failed": 0
+  },
+  "analysis": {
+    "before": 362,
+    "after": 362,
+    "identities_equal": true,
+    "errors": [],
+    "changed_file_diagnostics": []
+  },
+  "commands": {
+    "affected": "flutter test --no-pub test/session test/performance test/endurance test/persistence test/running_workout test/programmes test/programme_acquisition test/auth test/features/home/programme_session_execution_launcher_test.dart <all test/programme/**/*_test.dart except separately reported athlete_runtime_capability_bootstrap_test.dart>",
+    "completion": "flutter test --no-pub test/programme/athlete_programme_completion_service_test.dart test/programme/athlete_programme_completion_widget_test.dart test/performance",
+    "authenticated": "bash supabase/tests/run_quality_target_admission_gate.sh",
+    "compatibility": "bash supabase/tests/run_terminal_completion_retry_compatibility_gate.sh",
+    "safety": "bash tool/testing/run_phase2_consolidation_safety_gate.sh",
+    "analysis": "flutter analyze --no-pub"
+  },
+  "migration": {
+    "path": "supabase/migrations/20261028120000_terminal_completion_retry.sql",
+    "sha256": "00c5f094d6c49716109fa67066d6d570e4af27ee24f0bd9b5237433e6d3a0ffa",
+    "hosted_applied": false,
+    "historical_backfill": false,
+    "held_alpha_schemas_required": false,
+    "deployment_order": "One file after existing canonical completion/ownership/result/link baseline, last security prerequisite 20261008121000. See DEPLOYMENT.md."
+  },
+  "preservation": {
+    "existing_checkouts": 23,
+    "absent_registered_worktrees": 28,
+    "byte_identical_before_after": true,
+    "inventory_sha256": "a462c64486b147a5ba26d8eb7affe687bf5b4ccc9911bda3fc94f745f7cbfacd",
+    "original_dirty_checkout_unchanged": true,
+    "retained_indices_env_temp_unchanged": true,
+    "managed_worktree_lifecycle_called": false
+  },
+  "git": {
+    "working_checkout": "/private/tmp/cohort_m11_sources",
+    "branch": "main",
+    "base_prior_commits_after_1cca598": 13,
+    "all_preserved": true,
+    "base_merges_after_1cca598": 0,
+    "original_developer_checkout_head": "a331f52967e1887c4435cccc8f1ecfa192028cd6",
+    "cached_origin_main": "a331f52967e1887c4435cccc8f1ecfa192028cd6",
+    "remote_url": "https://github.com/leewebber/cohort-platform.git",
+    "normal_push_command": "git push origin main:main",
+    "implementation_push_attempted_head": "7cc471b71125cf516b17e8bda03256614b474bc3",
+    "implementation_push_exit": 128,
+    "implementation_push_result": "Could not resolve host: github.com",
+    "remote_freshness": "UNVERIFIED; cached origin/main is not remote truth",
+    "documentation_tip_and_final_push": "See final report; this documentation commit follows implementation linearly.",
+    "fetch_force_alternate_network_or_permission_bypass": false
+  },
+  "boundaries": {
+    "hosted_contact_or_mutation": false,
+    "accounts_programmes_assignments_real_athlete_changes": false,
+    "ui_control": false,
+    "installed_device_acceptance": false,
+    "full_default_flutter_suite_or_aggregate_db_gate": false,
+    "new_execution_runtime_or_offline_queue": false
+  },
+  "next_single_point": "M2.5 Garmin round-trip access/feasibility audit; not started",
+  "earlier_attempts_not_counted": [
+    "Expected-red defect reproduction",
+    "Intermediate SQL operator expression repaired before final successful proof",
+    "Concurrency winner may have a different transport key; assertion now accepts the correct logical replay",
+    "Invalid fixture attempted published-version archive and was rejected by unchanged immutability guard",
+    "First broad run and targeted bootstrap run retain inherited failure; immutable-base reproduction confirms same failure"
+  ],
+  "files": [
+    {
+      "path": "lib/features/performance/screens/session_finish_review_screen.dart",
+      "sha256": "ef354a91e9a29dffb35fbe53cca181eb5902b39791c63eea7ff3c4692a913624"
+    },
+    {
+      "path": "lib/features/performance/services/performance_record_save_coordinator.dart",
+      "sha256": "04911619a7bd91b1a8a53cc826e7d0759a5f6a963ba0518ae6e4dbe500b569cf"
+    },
+    {
+      "path": "lib/features/programme/services/athlete_programme_completion_service.dart",
+      "sha256": "719b56f3cf6454fdfb9445552aa54a8934efed0d2caf3da23bbd5b836bc745cf"
+    },
+    {
+      "path": "supabase/migrations/20261028120000_terminal_completion_retry.sql",
+      "sha256": "00c5f094d6c49716109fa67066d6d570e4af27ee24f0bd9b5237433e6d3a0ffa"
+    },
+    {
+      "path": "supabase/tests/run_terminal_completion_retry_compatibility_gate.sh",
+      "sha256": "31019d187f85b4ca9559b1c822b7542713b001374f0c8c276c89731653c0196a"
+    },
+    {
+      "path": "supabase/tests/sql/gate_terminal_completion_retry_contract.sql",
+      "sha256": "321b77b3c347e0037db2ad4d57af9afee294d9f98df6fed0d7ea73bdd6782fa8"
+    },
+    {
+      "path": "test/programme/athlete_programme_completion_service_test.dart",
+      "sha256": "e7d9f6626969db9de19602c593c266363354be059932d1daaed9a39dba955280"
+    },
+    {
+      "path": "test/programme/athlete_programme_completion_widget_test.dart",
+      "sha256": "126710b3a14588c04154d969c9e5eb80114801615a16a3bda95f10011c76e34b"
+    },
+    {
+      "path": "test/session/quality_authenticated_local_test.dart",
+      "sha256": "95ef44e132ad15465dc6da72bbd4494349e42d759f58c11256326d8d57e8de4a"
+    },
+    {
+      "path": "test/session/zone2_authenticated_local_test.dart",
+      "sha256": "71f773412ab198b4e5ec894b3c379f30f7ae29231bb297fc8b587eb89775bcf0"
+    }
+  ],
+  "local_logs": [
+    {
+      "path": "/private/tmp/cohort_m24_red.log",
+      "sha256": "697ccd04c90420ec727b28fee3be1ce368da602e8842aad85ce5f432e9ec35d5"
+    },
+    {
+      "path": "/private/tmp/cohort_m24_final_completion.log",
+      "sha256": "069c3aa6278be22f56f532c7d6d09eea961b9a72a2ed89d29d5f1f744c33091e"
+    },
+    {
+      "path": "/private/tmp/cohort_m24_regressions_final.log",
+      "sha256": "431b982df83244ab24d4510f17524f9cd8bea9e3d0622121ed5f7f9acbf74264"
+    },
+    {
+      "path": "/private/tmp/cohort_m24_safety_final.log",
+      "sha256": "0badb04c10299311bfd2978600021b18f96285aa2b036e251f661416169a6227"
+    },
+    {
+      "path": "/private/tmp/cohort_m24_db_final2.log",
+      "sha256": "db576d5ae4d98e13ab4d69584bcc2f32da26486b8faad861774d84fab8446335"
+    },
+    {
+      "path": "/private/tmp/cohort_m24_compatibility_final.log",
+      "sha256": "0a0bcd8762b79c6785e4ff6b1a22bb19e2eadda381e7814ead6f9ed4d15087ca"
+    },
+    {
+      "path": "/private/tmp/cohort_m24_analysis_before.log",
+      "sha256": "c3fc46b7a701e8bd4b6926de688e4cdd875a4f223686f435de91132b653b3f8d"
+    },
+    {
+      "path": "/private/tmp/cohort_m24_analysis_final2.log",
+      "sha256": "76cd644363bc46d29ac45b505a42f9dcc245f057f16ccc47d66ca73766c31b49"
+    },
+    {
+      "path": "/private/tmp/cohort_m24_bootstrap_immutable_base.log",
+      "sha256": "fc0ae291d0184bacd7fdf833b95d18be373e6ecef83013970ba9cf6f838667e6"
+    }
+  ]
+}

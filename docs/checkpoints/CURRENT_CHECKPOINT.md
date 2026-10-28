@@ -1,5 +1,25 @@
 # Current repository checkpoint
 
+> **M2.4 terminal completion retry — locally verified, 2026-10-28:**
+> [Retry handoff](./m24_terminal_completion_retry/HANDOFF.md) at `7cc471b` recovers an exact committed programme
+> completion through the existing guarded canonical RPC after terminal assignment
+> completion. Read-only replay returns the original identity/current corrected result;
+> new writes remain active-only. Prospective immutable request digest detects changed
+> payloads. Cursor movement alone cannot prove success; recovered success shows Session
+> saved even if subsequent refresh fails. 894 affected Flutter checks, fresh/repeat
+> real local-auth v1/v2/Zone 2 proof, no-held-alpha B3 compatibility, migration replay
+> evidence/OID/ACL checks and six safety groups pass. One inherited bootstrap test
+> fails identically on immutable pre-edit base `a67e69c`; it remains reported separately.
+> Analysis retains the same 362 inherited findings, zero errors/new/changed-file issues.
+> One [migration](./m24_terminal_completion_retry/DEPLOYMENT.md) remains LOCAL ONLY / UNDEPLOYED; held M1.2/Zone 2/quality
+> schemas are not prerequisites and remain held. All earlier commits and retained
+> checkouts/indices/.temp are preserved. Ordinary main push still fails GitHub DNS;
+> cached origin/main is not remote truth. Bounded retry slice is locally verified;
+> overall M2.4/Gate A require genuine-programme and authenticated installed-device
+> acceptance. Next single point: M2.5 Garmin round-trip access/feasibility audit.
+> No hosted/account/content/athlete/device/UI control or next-build authority follows.
+
+
 > **M2.3 quality-target admission — locally verified, 2026-10-27:**
 > [Quality handoff](./m23_quality_target_admission/HANDOFF.md) at `ce9ec89`
 > admits founder-approved representative sustained 5K estimates and explicitly selected
