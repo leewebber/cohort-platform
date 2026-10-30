@@ -126,7 +126,7 @@ def render():
                         else:
                             lines.append('   Retained source context: ' + old['explanation'])
                 lines += ['', 'Finish: 3–5 minutes easy walking. Preparation/ramp sets are additional to the listed work sets. Gym elapsed time is unknown, not an invented exact session duration.', '']
-    return '\n'.join(lines).rstrip() + '\n'
+    return '\n'.join(line.rstrip() for line in lines).rstrip() + '\n'
 
 
 if __name__ == '__main__':

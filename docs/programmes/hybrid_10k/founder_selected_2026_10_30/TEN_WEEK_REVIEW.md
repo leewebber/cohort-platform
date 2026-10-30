@@ -536,20 +536,20 @@ Review reference: `LW10K-W04-D02`. Status: founder-selected exact replacement.
 Preparation: exact 13-minute warm-up begins this selected body; no extra mandatory warm-up/walk is added.
 
 1. **Easy warm-up running — 10:00**. authored effort only; no fixed pace or invented HR target. Authored effort: EASY. RPE 3–4/10; full sentences, relaxed gait, slow down as needed; not fixed pace.
-2. **Relaxed acceleration — 0:20**. authored effort only; no fixed pace or invented HR target. Authored effort: RELAXED_ACCELERATION. 
-3. **Recovery — 0:40**. authored effort only; no fixed pace or invented HR target. Authored effort: VERY_EASY. 
-4. **Relaxed acceleration — 0:20**. authored effort only; no fixed pace or invented HR target. Authored effort: RELAXED_ACCELERATION. 
-5. **Recovery — 0:40**. authored effort only; no fixed pace or invented HR target. Authored effort: VERY_EASY. 
-6. **Relaxed acceleration — 0:20**. authored effort only; no fixed pace or invented HR target. Authored effort: RELAXED_ACCELERATION. 
-7. **Recovery — 0:40**. authored effort only; no fixed pace or invented HR target. Authored effort: VERY_EASY. 
+2. **Relaxed acceleration — 0:20**. authored effort only; no fixed pace or invented HR target. Authored effort: RELAXED_ACCELERATION.
+3. **Recovery — 0:40**. authored effort only; no fixed pace or invented HR target. Authored effort: VERY_EASY.
+4. **Relaxed acceleration — 0:20**. authored effort only; no fixed pace or invented HR target. Authored effort: RELAXED_ACCELERATION.
+5. **Recovery — 0:40**. authored effort only; no fixed pace or invented HR target. Authored effort: VERY_EASY.
+6. **Relaxed acceleration — 0:20**. authored effort only; no fixed pace or invented HR target. Authored effort: RELAXED_ACCELERATION.
+7. **Recovery — 0:40**. authored effort only; no fixed pace or invented HR target. Authored effort: VERY_EASY.
 8. **Threshold-labelled work — 5:00**. approved personalised threshold target; explicit source selection/review/acceptance. Authored effort: THRESHOLD. RPE 7/10 initially, up to 8 at the end; strong and repeatable, not a time trial; finish able to do one more repetition.
-9. **Recovery — 1:30**. authored effort only; no fixed pace or invented HR target. Authored effort: VERY_EASY. 
+9. **Recovery — 1:30**. authored effort only; no fixed pace or invented HR target. Authored effort: VERY_EASY.
 10. **Threshold-labelled work — 5:00**. approved personalised threshold target; explicit source selection/review/acceptance. Authored effort: THRESHOLD. RPE 7/10 initially, up to 8 at the end; strong and repeatable, not a time trial; finish able to do one more repetition.
-11. **Recovery — 1:30**. authored effort only; no fixed pace or invented HR target. Authored effort: VERY_EASY. 
+11. **Recovery — 1:30**. authored effort only; no fixed pace or invented HR target. Authored effort: VERY_EASY.
 12. **Threshold-labelled work — 5:00**. approved personalised threshold target; explicit source selection/review/acceptance. Authored effort: THRESHOLD. RPE 7/10 initially, up to 8 at the end; strong and repeatable, not a time trial; finish able to do one more repetition.
-13. **Recovery — 1:30**. authored effort only; no fixed pace or invented HR target. Authored effort: VERY_EASY. 
+13. **Recovery — 1:30**. authored effort only; no fixed pace or invented HR target. Authored effort: VERY_EASY.
 14. **Threshold-labelled work — 5:00**. approved personalised threshold target; explicit source selection/review/acceptance. Authored effort: THRESHOLD. RPE 7/10 initially, up to 8 at the end; strong and repeatable, not a time trial; finish able to do one more repetition.
-15. **Very easy running or walking cooldown — 5:00**. authored effort only; no fixed pace or invented HR target. Authored effort: VERY_EASY_RUN_OR_WALK. 
+15. **Very easy running or walking cooldown — 5:00**. authored effort only; no fixed pace or invented HR target. Authored effort: VERY_EASY_RUN_OR_WALK.
 
 Body total: **42:30**.
 The final 5-minute very easy run-or-walk cooldown is already included; no additional mandatory finish phase.
@@ -1010,18 +1010,18 @@ Review reference: `LW10K-W08-D02`. Status: founder-selected exact replacement.
 Preparation: exact 13-minute warm-up begins this selected body; no extra mandatory warm-up/walk is added.
 
 1. **Easy warm-up running — 10:00**. authored effort only; no fixed pace or invented HR target. Authored effort: EASY. RPE 3–4/10; full sentences, relaxed gait, slow down as needed; not fixed pace.
-2. **Relaxed acceleration — 0:20**. authored effort only; no fixed pace or invented HR target. Authored effort: RELAXED_ACCELERATION. 
-3. **Recovery — 0:40**. authored effort only; no fixed pace or invented HR target. Authored effort: VERY_EASY. 
-4. **Relaxed acceleration — 0:20**. authored effort only; no fixed pace or invented HR target. Authored effort: RELAXED_ACCELERATION. 
-5. **Recovery — 0:40**. authored effort only; no fixed pace or invented HR target. Authored effort: VERY_EASY. 
-6. **Relaxed acceleration — 0:20**. authored effort only; no fixed pace or invented HR target. Authored effort: RELAXED_ACCELERATION. 
-7. **Recovery — 0:40**. authored effort only; no fixed pace or invented HR target. Authored effort: VERY_EASY. 
+2. **Relaxed acceleration — 0:20**. authored effort only; no fixed pace or invented HR target. Authored effort: RELAXED_ACCELERATION.
+3. **Recovery — 0:40**. authored effort only; no fixed pace or invented HR target. Authored effort: VERY_EASY.
+4. **Relaxed acceleration — 0:20**. authored effort only; no fixed pace or invented HR target. Authored effort: RELAXED_ACCELERATION.
+5. **Recovery — 0:40**. authored effort only; no fixed pace or invented HR target. Authored effort: VERY_EASY.
+6. **Relaxed acceleration — 0:20**. authored effort only; no fixed pace or invented HR target. Authored effort: RELAXED_ACCELERATION.
+7. **Recovery — 0:40**. authored effort only; no fixed pace or invented HR target. Authored effort: VERY_EASY.
 8. **Estimated-current-10K work — 9:00**. approved personalised estimated-current-10K target; explicit source selection/review/acceptance. Authored effort: TEN_K. RPE about 7–8 early, at most 9 at end; current realistic 10K effort, repeatable output and controlled mechanics.
-9. **Recovery — 2:00**. authored effort only; no fixed pace or invented HR target. Authored effort: VERY_EASY. 
+9. **Recovery — 2:00**. authored effort only; no fixed pace or invented HR target. Authored effort: VERY_EASY.
 10. **Estimated-current-10K work — 9:00**. approved personalised estimated-current-10K target; explicit source selection/review/acceptance. Authored effort: TEN_K. RPE about 7–8 early, at most 9 at end; current realistic 10K effort, repeatable output and controlled mechanics.
-11. **Recovery — 2:00**. authored effort only; no fixed pace or invented HR target. Authored effort: VERY_EASY. 
+11. **Recovery — 2:00**. authored effort only; no fixed pace or invented HR target. Authored effort: VERY_EASY.
 12. **Estimated-current-10K work — 9:00**. approved personalised estimated-current-10K target; explicit source selection/review/acceptance. Authored effort: TEN_K. RPE about 7–8 early, at most 9 at end; current realistic 10K effort, repeatable output and controlled mechanics.
-13. **Very easy running or walking cooldown — 5:00**. authored effort only; no fixed pace or invented HR target. Authored effort: VERY_EASY_RUN_OR_WALK. 
+13. **Very easy running or walking cooldown — 5:00**. authored effort only; no fixed pace or invented HR target. Authored effort: VERY_EASY_RUN_OR_WALK.
 
 Body total: **49:00**.
 The final 5-minute very easy run-or-walk cooldown is already included; no additional mandatory finish phase.
@@ -1136,18 +1136,18 @@ Review reference: `LW10K-W09-D02`. Status: founder-selected exact replacement.
 Preparation: exact 13-minute warm-up begins this selected body; no extra mandatory warm-up/walk is added.
 
 1. **Easy warm-up running — 10:00**. authored effort only; no fixed pace or invented HR target. Authored effort: EASY. RPE 3–4/10; full sentences, relaxed gait, slow down as needed; not fixed pace.
-2. **Relaxed acceleration — 0:20**. authored effort only; no fixed pace or invented HR target. Authored effort: RELAXED_ACCELERATION. 
-3. **Recovery — 0:40**. authored effort only; no fixed pace or invented HR target. Authored effort: VERY_EASY. 
-4. **Relaxed acceleration — 0:20**. authored effort only; no fixed pace or invented HR target. Authored effort: RELAXED_ACCELERATION. 
-5. **Recovery — 0:40**. authored effort only; no fixed pace or invented HR target. Authored effort: VERY_EASY. 
-6. **Relaxed acceleration — 0:20**. authored effort only; no fixed pace or invented HR target. Authored effort: RELAXED_ACCELERATION. 
-7. **Recovery — 0:40**. authored effort only; no fixed pace or invented HR target. Authored effort: VERY_EASY. 
+2. **Relaxed acceleration — 0:20**. authored effort only; no fixed pace or invented HR target. Authored effort: RELAXED_ACCELERATION.
+3. **Recovery — 0:40**. authored effort only; no fixed pace or invented HR target. Authored effort: VERY_EASY.
+4. **Relaxed acceleration — 0:20**. authored effort only; no fixed pace or invented HR target. Authored effort: RELAXED_ACCELERATION.
+5. **Recovery — 0:40**. authored effort only; no fixed pace or invented HR target. Authored effort: VERY_EASY.
+6. **Relaxed acceleration — 0:20**. authored effort only; no fixed pace or invented HR target. Authored effort: RELAXED_ACCELERATION.
+7. **Recovery — 0:40**. authored effort only; no fixed pace or invented HR target. Authored effort: VERY_EASY.
 8. **Estimated-current-10K work — 6:00**. approved personalised estimated-current-10K target; explicit source selection/review/acceptance. Authored effort: TEN_K. RPE about 7–8 early, at most 9 at end; current realistic 10K effort, repeatable output and controlled mechanics.
-9. **Recovery — 2:00**. authored effort only; no fixed pace or invented HR target. Authored effort: VERY_EASY. 
+9. **Recovery — 2:00**. authored effort only; no fixed pace or invented HR target. Authored effort: VERY_EASY.
 10. **Estimated-current-10K work — 6:00**. approved personalised estimated-current-10K target; explicit source selection/review/acceptance. Authored effort: TEN_K. RPE about 7–8 early, at most 9 at end; current realistic 10K effort, repeatable output and controlled mechanics.
-11. **Recovery — 2:00**. authored effort only; no fixed pace or invented HR target. Authored effort: VERY_EASY. 
+11. **Recovery — 2:00**. authored effort only; no fixed pace or invented HR target. Authored effort: VERY_EASY.
 12. **Estimated-current-10K work — 6:00**. approved personalised estimated-current-10K target; explicit source selection/review/acceptance. Authored effort: TEN_K. RPE about 7–8 early, at most 9 at end; current realistic 10K effort, repeatable output and controlled mechanics.
-13. **Very easy running or walking cooldown — 5:00**. authored effort only; no fixed pace or invented HR target. Authored effort: VERY_EASY_RUN_OR_WALK. 
+13. **Very easy running or walking cooldown — 5:00**. authored effort only; no fixed pace or invented HR target. Authored effort: VERY_EASY_RUN_OR_WALK.
 
 Body total: **40:00**.
 The final 5-minute very easy run-or-walk cooldown is already included; no additional mandatory finish phase.
@@ -1264,18 +1264,18 @@ Review reference: `LW10K-W10-D02`. Status: founder-selected exact replacement.
 Preparation: exact 13-minute warm-up begins this selected body; no extra mandatory warm-up/walk is added.
 
 1. **Easy warm-up running — 10:00**. authored effort only; no fixed pace or invented HR target. Authored effort: EASY. RPE 3–4/10; full sentences, relaxed gait, slow down as needed; not fixed pace.
-2. **Relaxed acceleration — 0:20**. authored effort only; no fixed pace or invented HR target. Authored effort: RELAXED_ACCELERATION. 
-3. **Recovery — 0:40**. authored effort only; no fixed pace or invented HR target. Authored effort: VERY_EASY. 
-4. **Relaxed acceleration — 0:20**. authored effort only; no fixed pace or invented HR target. Authored effort: RELAXED_ACCELERATION. 
-5. **Recovery — 0:40**. authored effort only; no fixed pace or invented HR target. Authored effort: VERY_EASY. 
-6. **Relaxed acceleration — 0:20**. authored effort only; no fixed pace or invented HR target. Authored effort: RELAXED_ACCELERATION. 
-7. **Recovery — 0:40**. authored effort only; no fixed pace or invented HR target. Authored effort: VERY_EASY. 
+2. **Relaxed acceleration — 0:20**. authored effort only; no fixed pace or invented HR target. Authored effort: RELAXED_ACCELERATION.
+3. **Recovery — 0:40**. authored effort only; no fixed pace or invented HR target. Authored effort: VERY_EASY.
+4. **Relaxed acceleration — 0:20**. authored effort only; no fixed pace or invented HR target. Authored effort: RELAXED_ACCELERATION.
+5. **Recovery — 0:40**. authored effort only; no fixed pace or invented HR target. Authored effort: VERY_EASY.
+6. **Relaxed acceleration — 0:20**. authored effort only; no fixed pace or invented HR target. Authored effort: RELAXED_ACCELERATION.
+7. **Recovery — 0:40**. authored effort only; no fixed pace or invented HR target. Authored effort: VERY_EASY.
 8. **Estimated-current-10K work — 2:00**. approved personalised estimated-current-10K target; explicit source selection/review/acceptance. Authored effort: TEN_K. RPE about 7–8 early, at most 9 at end; current realistic 10K effort, repeatable output and controlled mechanics.
-9. **Recovery — 2:00**. authored effort only; no fixed pace or invented HR target. Authored effort: VERY_EASY. 
+9. **Recovery — 2:00**. authored effort only; no fixed pace or invented HR target. Authored effort: VERY_EASY.
 10. **Estimated-current-10K work — 2:00**. approved personalised estimated-current-10K target; explicit source selection/review/acceptance. Authored effort: TEN_K. RPE about 7–8 early, at most 9 at end; current realistic 10K effort, repeatable output and controlled mechanics.
-11. **Recovery — 2:00**. authored effort only; no fixed pace or invented HR target. Authored effort: VERY_EASY. 
+11. **Recovery — 2:00**. authored effort only; no fixed pace or invented HR target. Authored effort: VERY_EASY.
 12. **Estimated-current-10K work — 2:00**. approved personalised estimated-current-10K target; explicit source selection/review/acceptance. Authored effort: TEN_K. RPE about 7–8 early, at most 9 at end; current realistic 10K effort, repeatable output and controlled mechanics.
-13. **Very easy running or walking cooldown — 5:00**. authored effort only; no fixed pace or invented HR target. Authored effort: VERY_EASY_RUN_OR_WALK. 
+13. **Very easy running or walking cooldown — 5:00**. authored effort only; no fixed pace or invented HR target. Authored effort: VERY_EASY_RUN_OR_WALK.
 
 Body total: **28:00**.
 The final 5-minute very easy run-or-walk cooldown is already included; no additional mandatory finish phase.
@@ -1351,7 +1351,7 @@ Preparation outside this body: 3–5 min brisk walk, 10 ankle rocks/side, 10 cal
 6. **Warm-up strides — 0:20**. authored RPE 7–8/10, no fixed pace. Authored effort: STRIDE. RPE about 7–8, relaxed; smooth acceleration, quick running, never all-out sprint.
 7. **Recovery — 1:40**. authored RPE 2–3/10, no fixed pace. Authored effort: RECOVERY. RPE 2–3/10; very easy jog, walking allowed if needed.
 8. **Very easy settle jog — 2:00**. authored RPE 2–3/10, no fixed pace. Authored effort: RECOVERY. RPE 2–3/10; very easy jog, walking allowed if needed.
-9. **Measured time trial — 10,000 metres — DISTANCE-ENDED**. authored effort only; no fixed pace or invented HR target. Authored effort: Best sustainable evenly paced effort; no early sprint. 
+9. **Measured time trial — 10,000 metres — DISTANCE-ENDED**. authored effort only; no fixed pace or invented HR target. Authored effort: Best sustainable evenly paced effort; no early sprint.
 10. **Easy cooldown jog — 10:00**. authored RPE 3–4/10, no fixed pace. Authored effort: EASY. RPE 3–4/10; full sentences, relaxed gait, slow down as needed; not fixed pace.
 
 Body total: **33:00 + actual elapsed 10K segment time**.

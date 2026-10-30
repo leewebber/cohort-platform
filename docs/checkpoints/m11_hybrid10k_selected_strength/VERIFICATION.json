@@ -13,7 +13,8 @@
       "command": "python3 tool/programmes/hybrid_10k/selected_source_test.py -v",
       "exit": 0,
       "passed": 7,
-      "log_sha256": "d63105c0c880b2966f35d6bcc08b45a008aa156af74cff3bff61a4daf19d0bd2"
+      "log_sha256": "d63105c0c880b2966f35d6bcc08b45a008aa156af74cff3bff61a4daf19d0bd2",
+      "final_rerun_reason": "Renderer trims generated trailing whitespace; source/native contracts unchanged"
     },
     {
       "command": "flutter test --no-pub tool/programmes/hybrid_10k/selected_admission_probe_test.dart test/programmes/private_protocol_graph_builder_test.dart",
@@ -92,9 +93,9 @@
     "docs/programmes/hybrid_10k/founder_selected_2026_10_30/STRENGTH_REVIEW_GRAPHS.json": "caae2729ed16f150b5a01c3c07c010d513be92fe354284f5959176aecc3a835e",
     "docs/programmes/hybrid_10k/founder_selected_2026_10_30/FOUNDER_SELECTIONS.md": "dd7e08cc1b026b46307b42c491216543899879e202c3f665ce837f486bc0d6d8",
     "docs/programmes/hybrid_10k/founder_selected_2026_10_30/IDENTITY_INTAKE.json": "460c6e0e43f6b2d0f2884111a7b209087ace01c69312170673760c2542927e0b",
-    "docs/programmes/hybrid_10k/founder_selected_2026_10_30/TEN_WEEK_REVIEW.md": "50e3e3603ecde46c0ff8de7ca0d40b221f98e27b2cc4dd82d6bd4ace2a222d09",
+    "docs/programmes/hybrid_10k/founder_selected_2026_10_30/TEN_WEEK_REVIEW.md": "9420ec674b671eb61137c04bb2c82a1afa00be27ebb5f64f4d85baf0ae4d4990",
     "tool/programmes/hybrid_10k/selected_admission_probe_test.dart": "49341094a5046d7489d4835cab8f4499c6b75c8fd39c5acacc6d2eae75f5eb3b",
-    "tool/programmes/hybrid_10k/render_selected_review.py": "0bd5de791899cdb124e7fa0dfd80eeae9492cbb64bff67bf037ed5af3d7600d3",
+    "tool/programmes/hybrid_10k/render_selected_review.py": "9a91b3c5c959fb4f5d752b3595dc1885de3cd4047fdfd9eea0893ec4295e03c0",
     "tool/programmes/hybrid_10k/apply_strength_selections.py": "c1cfd04af087b173ffea5be071f2c57fb9dca8f3faab2968bfa9d58ae704142e",
     "tool/programmes/hybrid_10k/selected_source_test.py": "e09432db515ba96e4965a42eb4801247421910de6dc0e39b07d8776361ad9fff",
     "docs/checkpoints/m11_hybrid10k_selected_strength/ADMISSION.json": "63b6a42f09e04c959cfeb0ce43128d206e3cdb8c2ac2cdb48f936dd255e0dc23"
@@ -154,5 +155,10 @@
     "supabase/migrations/20261027120000_confirmed_running_zone_targets.sql": "26038e82bae21130982ccaed65be14ee49ad4581256f99476ccb5ba071b0de6a",
     "supabase/migrations/20261027130000_alpha_quality_running_targets.sql": "5c49656c6fa85f6ef0c4524491d61dc53ff42a0bb7e61bbfe33a24ab0dc3b520",
     "supabase/migrations/20261028120000_terminal_completion_retry.sql": "00c5f094d6c49716109fa67066d6d570e4af27ee24f0bd9b5237433e6d3a0ffa"
+  },
+  "diff_check": {
+    "initial_staged_check": "TRAILING_WHITESPACE_DETECTED_IN_GENERATED_REVIEW",
+    "correction": "Renderer strips line endings; follow-up commit preserves initial commit",
+    "final": "PASS"
   }
 }
