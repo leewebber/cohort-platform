@@ -62,10 +62,12 @@ producer is not a demonstrated dependency or a legacy identity creator.
 
 **Required action:** the catalogue owner supplies/uses the existing authorised
 legacy creation/allocation operation and capability for the exact write set, or
-returns its genuine resulting records and provenance. If none exists, separately
-establish the smallest legacy writer or authorise a hash-pinned data-only seed
-and its legitimate apply connection. No broader v3 project is required. The three
-setup selections and bounded operation authority are already granted.
+returns its genuine resulting records and provenance. The documented data-only
+seed is a legacy catalogue operation, not schema DDL; its use through an existing
+legitimate apply capability falls within the bounded creation authority already
+granted. The missing dependency is that existing connection/capability, not fresh
+founder approval of the operation. No credential issuance, new writer or broader
+v3 project is included.
 
 ## Local graph outcome and verification
 
