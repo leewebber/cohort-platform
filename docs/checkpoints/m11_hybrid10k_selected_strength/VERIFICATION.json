@@ -1,0 +1,158 @@
+{
+  "date": "2026-10-30",
+  "base": "398a7fe9dc61791db71410fa46ba8d3a1e6c3991",
+  "status": "M11_PARTIAL_D1_D7_SELECTED_D8_AND_TRUSTED_IDENTITIES_PENDING",
+  "gate_a": "OPEN",
+  "checks": [
+    {
+      "command": "python3 tool/programmes/hybrid_10k/apply_strength_selections.py --check; python3 tool/programmes/hybrid_10k/render_selected_review.py --check",
+      "exit": 0,
+      "log_sha256": "2a4042600a31e51af962219e4d3d32cbffb483c2ff215c72983a4adcace153e2"
+    },
+    {
+      "command": "python3 tool/programmes/hybrid_10k/selected_source_test.py -v",
+      "exit": 0,
+      "passed": 7,
+      "log_sha256": "d63105c0c880b2966f35d6bcc08b45a008aa156af74cff3bff61a4daf19d0bd2"
+    },
+    {
+      "command": "flutter test --no-pub tool/programmes/hybrid_10k/selected_admission_probe_test.dart test/programmes/private_protocol_graph_builder_test.dart",
+      "exit": 0,
+      "passed": 14,
+      "log_sha256": "ccbc72195a0dd3798b6e98c83647a603cc6584488640c8b154c06d2a02a9e5ea"
+    },
+    {
+      "command": "flutter test --no-pub tool/programmes/hybrid_10k/selected_admission_probe_test.dart",
+      "exit": 0,
+      "passed": 4,
+      "overlaps_prior_count": true,
+      "reason": "Final source metadata/title and trusted-request regeneration",
+      "log_sha256": "4e910b797be77616aaa462ae2853133ead051fec420bcb48c91d711f5f376512"
+    },
+    {
+      "command": "./tool/testing/run_phase2_consolidation_safety_gate.sh",
+      "exit": 0,
+      "groups_passed": 6,
+      "groups_failed": 0,
+      "log_sha256": "d977ff7f7045f462e7dba76658ff7db45c207ca9b664e37e23aa0221ab7556b9"
+    },
+    {
+      "command": "dart analyze tool/programmes/hybrid_10k/selected_admission_probe_test.dart",
+      "exit": 0,
+      "issues": 0,
+      "log_sha256": "63393a4bafa8228c2b90a25229f6fffd3a71f1f47230a4d295caf5b8637a8549"
+    }
+  ],
+  "human_review": "docs/programmes/hybrid_10k/founder_selected_2026_10_30/TEN_WEEK_REVIEW.md",
+  "selection_authority_sha256": "dd7e08cc1b026b46307b42c491216543899879e202c3f665ce837f486bc0d6d8",
+  "actual_admission": {
+    "schedule_versions": [
+      1,
+      2
+    ],
+    "schedule_sessions": 60,
+    "review_graph_scope": 60,
+    "verified_identity_references": 47,
+    "selected_template_bound": 38,
+    "unapproved_rdl_bound": 9,
+    "unresolved_selected_identity_references": 59,
+    "unique_selected_identity_gaps": 6,
+    "content_holds": [
+      "C1",
+      "C2",
+      "C3",
+      "C4"
+    ],
+    "complete_strength_graphs_admitted": 0,
+    "partial_graphs_checked": 19,
+    "partial_reference_links_checked": 47,
+    "native_reference_prescriptions_validated_and_round_tripped": 106,
+    "genuine_canonical_acquisition_start_log_complete_restore": "NOT_ATTEMPTED"
+  },
+  "reused_running_evidence": {
+    "commit": "a22249e23a385ebb6064b8f05e3d2fb17af3914e",
+    "file": "docs/checkpoints/m11_hybrid10k_reconciliation/ADMISSION.json",
+    "sha256": "26667be06d546f523d7f3c80c061f641bfd2a3d0e87fda17839c54198c24207d",
+    "executable_steps_targets_identity_durations_order": "UNCHANGED_EXACT_EQUALITY_CHECKED",
+    "general_note_only_change": "Remove personal W2 travel option, preserving 40-minute base run",
+    "timed_graphs": 39,
+    "final_10000m": "unsupported_timed_running_body",
+    "rerun": false
+  },
+  "runtime_schema_or_catalogue_mutation": false,
+  "v3_producer_dependency_created": false,
+  "publication_or_approval_events_created": false,
+  "artifact_sha256": {
+    "docs/programmes/hybrid_10k/founder_selected_2026_10_30/AUDIT.json": "5966cce364a0c8c829c431deee2750d1ec36c876a4b221490a7d9fd655c4f640",
+    "docs/programmes/hybrid_10k/founder_selected_2026_10_30/SOURCE.json": "fe74904444e0e1d203bc5b58b9373b5038d53d99f592992cc182b24e7f69d8b4",
+    "docs/programmes/hybrid_10k/founder_selected_2026_10_30/RUNNING_BODIES.json": "5d36176a57d8b610799cd72bf8be452bbf9a68fa7396ce4bf41877f83959491b",
+    "docs/programmes/hybrid_10k/founder_selected_2026_10_30/TRUSTED_INTAKE_REQUESTS.json": "c260109b6aaa4908844b7c34795a02053fae9c5f75524f99a1093cd635c8de2f",
+    "docs/programmes/hybrid_10k/founder_selected_2026_10_30/SCHEDULE_CANDIDATE.json": "f21103c194a019d6ecfdc7a4715a9bcedebc63e17cef9fefbd7592892bebea1d",
+    "docs/programmes/hybrid_10k/founder_selected_2026_10_30/README.md": "6f2558aa1aef6c08374a011d2a3ea8fe52ccecd0bcdbfcacb3736678157aabd3",
+    "docs/programmes/hybrid_10k/founder_selected_2026_10_30/STRENGTH_REVIEW_GRAPHS.json": "caae2729ed16f150b5a01c3c07c010d513be92fe354284f5959176aecc3a835e",
+    "docs/programmes/hybrid_10k/founder_selected_2026_10_30/FOUNDER_SELECTIONS.md": "dd7e08cc1b026b46307b42c491216543899879e202c3f665ce837f486bc0d6d8",
+    "docs/programmes/hybrid_10k/founder_selected_2026_10_30/IDENTITY_INTAKE.json": "460c6e0e43f6b2d0f2884111a7b209087ace01c69312170673760c2542927e0b",
+    "docs/programmes/hybrid_10k/founder_selected_2026_10_30/TEN_WEEK_REVIEW.md": "50e3e3603ecde46c0ff8de7ca0d40b221f98e27b2cc4dd82d6bd4ace2a222d09",
+    "tool/programmes/hybrid_10k/selected_admission_probe_test.dart": "49341094a5046d7489d4835cab8f4499c6b75c8fd39c5acacc6d2eae75f5eb3b",
+    "tool/programmes/hybrid_10k/render_selected_review.py": "0bd5de791899cdb124e7fa0dfd80eeae9492cbb64bff67bf037ed5af3d7600d3",
+    "tool/programmes/hybrid_10k/apply_strength_selections.py": "c1cfd04af087b173ffea5be071f2c57fb9dca8f3faab2968bfa9d58ae704142e",
+    "tool/programmes/hybrid_10k/selected_source_test.py": "e09432db515ba96e4965a42eb4801247421910de6dc0e39b07d8776361ad9fff",
+    "docs/checkpoints/m11_hybrid10k_selected_strength/ADMISSION.json": "63b6a42f09e04c959cfeb0ce43128d206e3cdb8c2ac2cdb48f936dd255e0dc23"
+  },
+  "preservation": {
+    "existing_checkouts": 27,
+    "registered_absent": 28,
+    "before_after_identical": true,
+    "snapshot_sha256": "ead494bd21f323a78420f600cd9e6407726bdde534995e6ab548594bd00ba669",
+    "all_prior_task_preserved_entries_unchanged": true,
+    "prior_linear_commits_after_1cca598": 23,
+    "prior_merges": 0,
+    "prior_complete_history_bundles": {
+      "Cohort-M1.1-main.bundle": {
+        "bytes": 8558001,
+        "sha256": "db9348edd795f7e669a722b4bdba7376577b3554a50c88c1ec19c0ac213880dd"
+      },
+      "Cohort-M1.1-movement-review-2026-10-30.bundle": {
+        "bytes": 8676845,
+        "sha256": "ccf622cddf1a18013d2a9cec487ec249b136cd0a0adf07d9ea1db28a131caacf"
+      },
+      "Cohort-M1.1-reconciled-2026-10-30.bundle": {
+        "bytes": 8625627,
+        "sha256": "6b21cb6d9fb61420d124812b5650e0ce7f3bae2eb0fc11ece568d12d65bea206"
+      }
+    },
+    "prior_bundle_verify_exit": 0
+  },
+  "git": {
+    "task_clone": "/private/tmp/cohort_m11_selected",
+    "retained_398a7fe_checkout": "UNCHANGED",
+    "original_developer_head": "a331f52967e1887c4435cccc8f1ecfa192028cd6",
+    "original_developer_dirty": "UNCHANGED",
+    "branch": "main",
+    "copied_origin_main": "398a7fe9dc61791db71410fa46ba8d3a1e6c3991_NOT_LIVE_REMOTE_TRUTH",
+    "ordinary_remote_lookups": 2,
+    "remote_ancestry": "UNVERIFIED_GITHUB_DNS_FAILURE",
+    "push_attempted": false,
+    "force_or_alternate_route": false
+  },
+  "hosted_supabase": "UNVERIFIED_NO_CONTACT",
+  "browser_or_desktop_control": false,
+  "not_run": [
+    "Garmin/M2.5/SDK work",
+    "unrelated broad default suite",
+    "full repository analysis",
+    "SQL/authenticated DB gate",
+    "hosted/device operations"
+  ],
+  "next_single_point": "M1.1 D8 review of the single ten-week programme and exact trusted row retention for six selected unresolved variants, then full private v1/v2 graph admission",
+  "protected_unchanged_sha256": {
+    "lib/domain/running_workout/alpha_quality_targets.dart": "b8e5f22c9c75adcaa3201a2cf1f9b768b2b30474b2b1a92b5e6a180dcb49c1ec",
+    "lib/features/session/models/running_target_admission.dart": "729046caec3f8ec3827ac21c1034af2ad343c4a69eae4dc7fa41391e97492c89",
+    "docs/checkpoints/m23_quality_target_admission/DECISIONS.md": "968ed2c3a84923a422a9f13797a282da454e5cde714315c856c97cf3144c1efa",
+    "supabase/migrations/20261026110000_training_setup_private_alpha_acquisition.sql": "59cb7a97e5c5bcd6e5bc230631a1c34942ce4cd7610aa253b1556510df7248f5",
+    "supabase/migrations/20261026120000_durable_publication_approval_events.sql": "526881b82d7ab20e3e246db4ea808970300ef7570fdd03dd8d43a2b753b9f588",
+    "supabase/migrations/20261027120000_confirmed_running_zone_targets.sql": "26038e82bae21130982ccaed65be14ee49ad4581256f99476ccb5ba071b0de6a",
+    "supabase/migrations/20261027130000_alpha_quality_running_targets.sql": "5c49656c6fa85f6ef0c4524491d61dc53ff42a0bb7e61bbfe33a24ab0dc3b520",
+    "supabase/migrations/20261028120000_terminal_completion_retry.sql": "00c5f094d6c49716109fa67066d6d570e4af27ee24f0bd9b5237433e6d3a0ffa"
+  }
+}

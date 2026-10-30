@@ -1,5 +1,30 @@
 # Current repository checkpoint
 
+> **M1.1 D1–D7 selected strength — partial, 2026-10-30:**
+> [Current handoff](./m11_hybrid10k_selected_strength/HANDOFF.md) and single
+> [complete ten-week programme review](../programmes/hybrid_10k/founder_selected_2026_10_30/TEN_WEEK_REVIEW.md)
+> apply the founder's exact movements/days/setups/standard doses. D8/full programme
+> approval is still pending. Working squats/farmer carries are removed as superseded
+> attachment carryovers; preparation squats/hinges remain preparation. Nine RDL
+> carryovers remain explicitly unselected, with unchanged doses and a membership hold.
+> Review covers 70 days, 40 runs (39 timed + final distance 10K), 20 strength, 10 rest;
+> 97 selected-template exercise occurrences plus 9 RDL carryovers. Standard doses
+> are not silently transferred from flat press/unilateral calf/reverse crunch.
+> C1–C4 collect reduction/taper mapping, W9 lunge, W10 new-dose/rest and RDL questions.
+> Full v1/v2 schedules compile; trusted local row intake resolves 47/106 references
+> (38 selected + 9 unapproved RDL), with 59 references across six selected variants
+> still blocked. All twenty full strength graphs are withheld at the source guard;
+> partial known-link/native serialization proof is not complete programme admission.
+> Final 10K distance execution, whole-programme/release/device dependencies remain.
+> Seven Python / fourteen focused Flutter checks, six safety groups and zero new
+> Dart diagnostics pass. M2.3 rules and executable running steps/targets/identities
+> remain unchanged; Garmin work is not repeated. All 27 existing checkouts/indices/
+> HEADs/dirty files/.temp and three prior verified bundles remain preserved. Ordinary
+> GitHub DNS fails; no push without live ancestry. No hosted/account/athlete/UI work.
+> **Next single point: M1.1 D8 review of the one complete programme and exact trusted
+> row retention for the six remaining selected variants, then complete private
+> v1/v2 graph admission. Gate A OPEN.**
+
 > **M1.1 unique movement/content review — partial, 2026-10-30:**
 > [Current handoff](./m11_hybrid10k_movement_review/HANDOFF.md) and single
 > [founder packet](../programmes/hybrid_10k/movement_review_2026_10_30/FOUNDER_REVIEW.md)

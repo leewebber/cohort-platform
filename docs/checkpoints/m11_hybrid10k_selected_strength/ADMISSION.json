@@ -1,0 +1,485 @@
+{
+  "classification": "GENUINE_DRAFT_LOCAL_CONTRACT_PROBE_NOT_PUBLICATION",
+  "base": "398a7fe9dc61791db71410fa46ba8d3a1e6c3991",
+  "content_approval": "D1_D7_STANDARDS_SELECTED_D8_PENDING",
+  "canonical_acquisition_start_logging_completion_restore": "NOT_ATTEMPTED",
+  "running_evidence": {
+    "reused_immutable_checkpoint": "a22249e:docs/checkpoints/m11_hybrid10k_reconciliation/ADMISSION.json",
+    "timed_graphs": 39,
+    "distance_10000m": "unsupported_timed_running_body",
+    "rerun": false
+  },
+  "trusted_identity_intake": {
+    "verified_legacy_row_occurrences": 47,
+    "selected_template_occurrences_bound": 38,
+    "unapproved_rdl_carryovers_bound": 9,
+    "unresolved_identity_occurrences": 59,
+    "full_published_row_or_version_event_created": false,
+    "current_hosted_catalogue_state": "NOT_VERIFIED"
+  },
+  "source_guard": {
+    "admitted": false,
+    "code": "source_identity_and_content_holds",
+    "unresolved_identity_occurrences": 59,
+    "unique_content_holds": [
+      "C1",
+      "C2",
+      "C3",
+      "C4"
+    ],
+    "full_strength_graphs_admitted": 0,
+    "complete_programme_approval": "D8_PENDING",
+    "canonical_private_decoder_called_for_incomplete_graphs": false
+  },
+  "full_programme": [
+    {
+      "schema": 1,
+      "schedule_sessions": 60,
+      "complete_review_graph_scope": 60,
+      "schedule_compile": "PASS",
+      "schedule_sha256": "c0c323ac4509905c84c0414a76e6723d4c5a4dc3bf00f3706aac6bf737d1fc2f",
+      "full_admission": "source_identity_and_content_holds",
+      "complete_strength_graphs_admitted": 0,
+      "private_decoder_called_for_incomplete_graphs": false
+    },
+    {
+      "schema": 2,
+      "schedule_sessions": 60,
+      "complete_review_graph_scope": 60,
+      "schedule_compile": "PASS",
+      "schedule_sha256": "a04f5a09c87e680dee6da92855d99a931381db890848d210bb87b6acb84effd7",
+      "full_admission": "source_identity_and_content_holds",
+      "complete_strength_graphs_admitted": 0,
+      "private_decoder_called_for_incomplete_graphs": false
+    }
+  ],
+  "strength_holds": [
+    {
+      "session_id": "LW10K-W01-D01",
+      "unresolved": [
+        {
+          "occurrence": "W01-A-pull_up_bodyweight",
+          "variant": "pull_up_bodyweight",
+          "content_holds": []
+        },
+        {
+          "occurrence": "W01-A-chest_supported_db_row",
+          "variant": "chest_supported_db_row",
+          "content_holds": []
+        },
+        {
+          "occurrence": "W01-A-db_lateral_raise",
+          "variant": "db_lateral_raise",
+          "content_holds": []
+        }
+      ]
+    },
+    {
+      "session_id": "LW10K-W01-D04",
+      "unresolved": [
+        {
+          "occurrence": "W01-B-reverse_lunge_db",
+          "variant": "reverse_lunge_db",
+          "content_holds": []
+        },
+        {
+          "occurrence": "W01-B-seated_supported_db_press",
+          "variant": "seated_supported_db_press",
+          "content_holds": []
+        },
+        {
+          "occurrence": "W01-B-bench_supported_db_row",
+          "variant": "bench_supported_db_row",
+          "content_holds": []
+        }
+      ]
+    },
+    {
+      "session_id": "LW10K-W02-D01",
+      "unresolved": [
+        {
+          "occurrence": "W02-A-pull_up_bodyweight",
+          "variant": "pull_up_bodyweight",
+          "content_holds": []
+        },
+        {
+          "occurrence": "W02-A-chest_supported_db_row",
+          "variant": "chest_supported_db_row",
+          "content_holds": []
+        },
+        {
+          "occurrence": "W02-A-db_lateral_raise",
+          "variant": "db_lateral_raise",
+          "content_holds": []
+        }
+      ]
+    },
+    {
+      "session_id": "LW10K-W02-D04",
+      "unresolved": [
+        {
+          "occurrence": "W02-B-reverse_lunge_db",
+          "variant": "reverse_lunge_db",
+          "content_holds": []
+        },
+        {
+          "occurrence": "W02-B-seated_supported_db_press",
+          "variant": "seated_supported_db_press",
+          "content_holds": []
+        },
+        {
+          "occurrence": "W02-B-bench_supported_db_row",
+          "variant": "bench_supported_db_row",
+          "content_holds": []
+        }
+      ]
+    },
+    {
+      "session_id": "LW10K-W03-D01",
+      "unresolved": [
+        {
+          "occurrence": "W03-A-pull_up_bodyweight",
+          "variant": "pull_up_bodyweight",
+          "content_holds": []
+        },
+        {
+          "occurrence": "W03-A-chest_supported_db_row",
+          "variant": "chest_supported_db_row",
+          "content_holds": []
+        },
+        {
+          "occurrence": "W03-A-db_lateral_raise",
+          "variant": "db_lateral_raise",
+          "content_holds": []
+        }
+      ]
+    },
+    {
+      "session_id": "LW10K-W03-D04",
+      "unresolved": [
+        {
+          "occurrence": "W03-B-reverse_lunge_db",
+          "variant": "reverse_lunge_db",
+          "content_holds": []
+        },
+        {
+          "occurrence": "W03-B-seated_supported_db_press",
+          "variant": "seated_supported_db_press",
+          "content_holds": []
+        },
+        {
+          "occurrence": "W03-B-bench_supported_db_row",
+          "variant": "bench_supported_db_row",
+          "content_holds": []
+        }
+      ]
+    },
+    {
+      "session_id": "LW10K-W04-D01",
+      "unresolved": [
+        {
+          "occurrence": "W04-A-pull_up_bodyweight",
+          "variant": "pull_up_bodyweight",
+          "content_holds": []
+        },
+        {
+          "occurrence": "W04-A-chest_supported_db_row",
+          "variant": "chest_supported_db_row",
+          "content_holds": [
+            "C1"
+          ]
+        },
+        {
+          "occurrence": "W04-A-db_lateral_raise",
+          "variant": "db_lateral_raise",
+          "content_holds": []
+        }
+      ]
+    },
+    {
+      "session_id": "LW10K-W04-D04",
+      "unresolved": [
+        {
+          "occurrence": "W04-B-reverse_lunge_db",
+          "variant": "reverse_lunge_db",
+          "content_holds": [
+            "C1"
+          ]
+        },
+        {
+          "occurrence": "W04-B-seated_supported_db_press",
+          "variant": "seated_supported_db_press",
+          "content_holds": [
+            "C1"
+          ]
+        },
+        {
+          "occurrence": "W04-B-bench_supported_db_row",
+          "variant": "bench_supported_db_row",
+          "content_holds": []
+        }
+      ]
+    },
+    {
+      "session_id": "LW10K-W05-D01",
+      "unresolved": [
+        {
+          "occurrence": "W05-A-pull_up_bodyweight",
+          "variant": "pull_up_bodyweight",
+          "content_holds": []
+        },
+        {
+          "occurrence": "W05-A-chest_supported_db_row",
+          "variant": "chest_supported_db_row",
+          "content_holds": []
+        },
+        {
+          "occurrence": "W05-A-db_lateral_raise",
+          "variant": "db_lateral_raise",
+          "content_holds": []
+        }
+      ]
+    },
+    {
+      "session_id": "LW10K-W05-D04",
+      "unresolved": [
+        {
+          "occurrence": "W05-B-reverse_lunge_db",
+          "variant": "reverse_lunge_db",
+          "content_holds": []
+        },
+        {
+          "occurrence": "W05-B-seated_supported_db_press",
+          "variant": "seated_supported_db_press",
+          "content_holds": []
+        },
+        {
+          "occurrence": "W05-B-bench_supported_db_row",
+          "variant": "bench_supported_db_row",
+          "content_holds": []
+        }
+      ]
+    },
+    {
+      "session_id": "LW10K-W06-D01",
+      "unresolved": [
+        {
+          "occurrence": "W06-A-pull_up_bodyweight",
+          "variant": "pull_up_bodyweight",
+          "content_holds": []
+        },
+        {
+          "occurrence": "W06-A-chest_supported_db_row",
+          "variant": "chest_supported_db_row",
+          "content_holds": []
+        },
+        {
+          "occurrence": "W06-A-db_lateral_raise",
+          "variant": "db_lateral_raise",
+          "content_holds": []
+        }
+      ]
+    },
+    {
+      "session_id": "LW10K-W06-D04",
+      "unresolved": [
+        {
+          "occurrence": "W06-B-reverse_lunge_db",
+          "variant": "reverse_lunge_db",
+          "content_holds": []
+        },
+        {
+          "occurrence": "W06-B-seated_supported_db_press",
+          "variant": "seated_supported_db_press",
+          "content_holds": []
+        },
+        {
+          "occurrence": "W06-B-bench_supported_db_row",
+          "variant": "bench_supported_db_row",
+          "content_holds": []
+        }
+      ]
+    },
+    {
+      "session_id": "LW10K-W07-D01",
+      "unresolved": [
+        {
+          "occurrence": "W07-A-pull_up_bodyweight",
+          "variant": "pull_up_bodyweight",
+          "content_holds": []
+        },
+        {
+          "occurrence": "W07-A-chest_supported_db_row",
+          "variant": "chest_supported_db_row",
+          "content_holds": [
+            "C1"
+          ]
+        },
+        {
+          "occurrence": "W07-A-db_lateral_raise",
+          "variant": "db_lateral_raise",
+          "content_holds": []
+        }
+      ]
+    },
+    {
+      "session_id": "LW10K-W07-D04",
+      "unresolved": [
+        {
+          "occurrence": "W07-B-reverse_lunge_db",
+          "variant": "reverse_lunge_db",
+          "content_holds": [
+            "C1"
+          ]
+        },
+        {
+          "occurrence": "W07-B-seated_supported_db_press",
+          "variant": "seated_supported_db_press",
+          "content_holds": [
+            "C1"
+          ]
+        },
+        {
+          "occurrence": "W07-B-bench_supported_db_row",
+          "variant": "bench_supported_db_row",
+          "content_holds": []
+        }
+      ]
+    },
+    {
+      "session_id": "LW10K-W08-D01",
+      "unresolved": [
+        {
+          "occurrence": "W08-A-pull_up_bodyweight",
+          "variant": "pull_up_bodyweight",
+          "content_holds": []
+        },
+        {
+          "occurrence": "W08-A-chest_supported_db_row",
+          "variant": "chest_supported_db_row",
+          "content_holds": []
+        },
+        {
+          "occurrence": "W08-A-db_lateral_raise",
+          "variant": "db_lateral_raise",
+          "content_holds": []
+        }
+      ]
+    },
+    {
+      "session_id": "LW10K-W08-D04",
+      "unresolved": [
+        {
+          "occurrence": "W08-B-reverse_lunge_db",
+          "variant": "reverse_lunge_db",
+          "content_holds": []
+        },
+        {
+          "occurrence": "W08-B-seated_supported_db_press",
+          "variant": "seated_supported_db_press",
+          "content_holds": []
+        },
+        {
+          "occurrence": "W08-B-bench_supported_db_row",
+          "variant": "bench_supported_db_row",
+          "content_holds": []
+        }
+      ]
+    },
+    {
+      "session_id": "LW10K-W09-D01",
+      "unresolved": [
+        {
+          "occurrence": "W09-A-pull_up_bodyweight",
+          "variant": "pull_up_bodyweight",
+          "content_holds": []
+        },
+        {
+          "occurrence": "W09-A-chest_supported_db_row",
+          "variant": "chest_supported_db_row",
+          "content_holds": []
+        },
+        {
+          "occurrence": "W09-A-db_lateral_raise",
+          "variant": "db_lateral_raise",
+          "content_holds": []
+        }
+      ]
+    },
+    {
+      "session_id": "LW10K-W09-D04",
+      "unresolved": [
+        {
+          "occurrence": "W09-B-reverse_lunge_db",
+          "variant": "reverse_lunge_db",
+          "content_holds": [
+            "C2"
+          ]
+        },
+        {
+          "occurrence": "W09-B-seated_supported_db_press",
+          "variant": "seated_supported_db_press",
+          "content_holds": []
+        },
+        {
+          "occurrence": "W09-B-bench_supported_db_row",
+          "variant": "bench_supported_db_row",
+          "content_holds": []
+        }
+      ]
+    },
+    {
+      "session_id": "LW10K-W10-D01",
+      "unresolved": [
+        {
+          "occurrence": "W10-A-pull_up_bodyweight",
+          "variant": "pull_up_bodyweight",
+          "content_holds": []
+        },
+        {
+          "occurrence": "W10-A-chest_supported_db_row",
+          "variant": "chest_supported_db_row",
+          "content_holds": [
+            "C3"
+          ]
+        },
+        {
+          "occurrence": "W10-A-db_lateral_raise",
+          "variant": "db_lateral_raise",
+          "content_holds": []
+        }
+      ]
+    },
+    {
+      "session_id": "LW10K-W10-D04",
+      "unresolved": [
+        {
+          "occurrence": "W10-B-seated_supported_db_press",
+          "variant": "seated_supported_db_press",
+          "content_holds": [
+            "C3"
+          ]
+        },
+        {
+          "occurrence": "W10-B-bench_supported_db_row",
+          "variant": "bench_supported_db_row",
+          "content_holds": []
+        }
+      ]
+    }
+  ],
+  "extracted_known_link_probes": {
+    "links": 47,
+    "partial_graphs": 19,
+    "private_v1_v2_graph_check": "PASS",
+    "native_plan_serialization_restore": "PASS",
+    "complete_sessions_or_canonical_started_state": false,
+    "prescription_scope": "REFERENCE_ONLY_WHERE_CONTENT_HELD_NOT_APPROVED_EFFECTIVE_DOSES"
+  },
+  "review_graphs": {
+    "sessions": 20,
+    "occurrences": 106,
+    "final_effective_work_sets": "UNKNOWN_UNTIL_C1_C4_RESOLVED",
+    "whole_sessions_withheld": 20
+  }
+}

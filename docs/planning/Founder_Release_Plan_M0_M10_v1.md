@@ -8,36 +8,43 @@ it does not grant implementation, content, hosted, account or release authority.
 
 ## Current single point — M1.1 (2026-10-30)
 
-**General Hybrid 10K calendar/targets reconciled; strength variant/content review
-and complete admission remain open.** The [current handoff](../checkpoints/m11_hybrid10k_movement_review/HANDOFF.md)
-and [single founder packet](../programmes/hybrid_10k/movement_review_2026_10_30/FOUNDER_REVIEW.md)
-correct the earlier overbroad source-reconciliation claim. The supplied attachment
-already contains flat DB bench, single-leg DB calf and reverse crunch; no explicit
-later selection over the earlier incline/standing-calf/Pallof template was found.
-Side plank persists. No silent substitution or blanket coaching approval follows.
+**D1–D7 strength selections applied; D8 and complete graph admission remain open.**
+[Current handoff](../checkpoints/m11_hybrid10k_selected_strength/HANDOFF.md) and the
+single [complete ten-week programme review](../programmes/hybrid_10k/founder_selected_2026_10_30/TEN_WEEK_REVIEW.md)
+contain every session, exact doses/rests/targets/preparation/progression, visible
+consolidation/taper proposals, running totals and quality minutes. New standard
+strength doses supersede conflicting attachment doses. Working squat/farmer-carry
+carryovers are removed; preparation is separate. RDL's nine unchanged prescriptions
+remain explicitly unapproved carryovers awaiting membership review. D1–D7 choice
+approval is not whole-programme/publication/eligibility/assignment authority.
 
-The unchanged source contains 40 runs, 20 strength sessions and 10 rests: 39 timed
-runs and the final distance-ended 10K. Explicit four-run/W10 Thursday amendments,
-general PB scope, confirmed Zone 2 and original approved M2.3 rules remain selected;
-Lee's personal adjustment remains separate. All 20 strength review graphs are now
-rebuilt; 37/124 occurrences have exact admitted local row evidence. Two further
-setups match historical catalogue descriptions but need trusted row retention.
-Three older-template options have verified local rows without source selection.
-Six conditional proposed identity records are unapproved/unpublished, with null
-IDs/versions/events. Full v1/v2 schedule compilation passes; complete graph
-admission stops at the source/evidence guard for 87 unresolved occurrences.
+General PB scope, 40 runs / 20 strength / 10 rests, the four selected timed run
+replacements, confirmed Zone 2 and approved original M2.3 rules remain controlling.
+Executable running steps/targets/identities are unchanged: 39 timed and final
+10,000 m distance-ended. The review separates workout-clock time from permitted
+walking and preserves final-test duration as unknown. Lee's personal adjustment
+stays separate; misplaced travel wording is removed from general notes only.
 
-**Next single point: M1.1 founder selection of the one movement/content packet
-plus exact trusted row retention, then complete private v1/v2 graph admission.**
-Final-10K execution, approved source/publication/recipient enablement and real
-canonical/device proof remain alpha dependencies. No hosted/account/athlete/UI
-operation follows. Preserve all existing heads, indices, dirty files, .temp, chain
-and bundles; normal main-only Git publication requires live remote ancestry.
+Full v1/v2 schedules compile with exact 60-body review scope. Trusted exact row
+intake resolves 47/106 strength references (38 selected-template plus 9 held RDL),
+leaving six selected variants / 59 identity occurrences unresolved. All twenty full
+strength graphs remain withheld; partial graph/codec proof is not canonical start.
+C1–C4 collect genuine remaining reduction/taper/RDL decisions; D8 retains the rest
+of programme/entry-workload review. No published rows, versions/events or deferred
+v3 producer dependency are invented.
 
-M2.5 remains externally blocked and was not repeated. Founder reports Forerunner
-255 and application not submitted; firmware/Connect/HR source remain unconfirmed.
-Access/contracts, authoritative binary FIT proof, adaptation, distribution/device
-acceptance, held migrations and inherited bootstrap triage remain Gate A gates.
+**Next single point: M1.1 D8 review of the one ten-week programme plus exact trusted
+row retention for the six selected unresolved variants, followed by complete
+private v1/v2 graph admission.** Final-10K execution, held migrations, separately
+authorised publication/access enablement, actual adaptation, distribution/device
+acceptance and inherited bootstrap triage remain alpha requirements. Supabase
+hosted status stays unverified; no hosted/account/athlete/UI operation follows.
+
+M2.5 remains externally blocked and is not repeated. Garmin access/contracts,
+authoritative binary FIT proof and missing firmware/Connect/HR details stay open.
+Preserve all prior checkouts/indices/heads/dirty files/.temp, the full Git chain
+and three verified bundles. Normal main-only Git publication requires fresh remote
+ancestry verification; ordinary GitHub DNS still fails, with no alternate route.
 
 ## Retained M1.1 consolidation direction (2026-10-28)
 

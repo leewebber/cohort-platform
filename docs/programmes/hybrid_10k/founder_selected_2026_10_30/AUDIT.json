@@ -1,0 +1,233 @@
+{
+  "base": "398a7fe9dc61791db71410fa46ba8d3a1e6c3991",
+  "selection_sha256": "dd7e08cc1b026b46307b42c491216543899879e202c3f665ce837f486bc0d6d8",
+  "inherited_source_sha256": {
+    "SOURCE.json": "3a610154a8be27d31ecfe7cbf2fdfb16908a305e1bd35e1ada22b7e4b1bee486",
+    "RUNNING_BODIES.json": "3eaa1b932b9251c1ca5d6c299d856436a0291ff4d7ade2663155eebb30d02c60",
+    "SCHEDULE_CANDIDATE.json": "d60803201b0986f67f6ab8ce6a9d8693e74fbd5b94a6d23e4f6d3c4aa9d9a092",
+    "GENERAL_GUIDANCE.md": "1aabcb3034f88efb0d2a29e280ffc141b759371c9364c28015d2dc51c79370c3",
+    "IDENTITY_INTAKE.json": "2229c3f72f3fba97de7dead7abe8ba6a172fa2293eff3f310fa2cef3f3306b10"
+  },
+  "counts": {
+    "strength": 20,
+    "running": 40,
+    "rest": 10
+  },
+  "strength_occurrences_in_review": 106,
+  "selected_template_occurrences": 97,
+  "unapproved_rdl_carryover_occurrences": 9,
+  "verified_local_identity_occurrences": 47,
+  "unresolved_identity_occurrences": 59,
+  "weekly_running": [
+    {
+      "week": 1,
+      "fixed_workout_seconds": 6600,
+      "running_seconds_range_if_permitted_recoveries_walked": [
+        6600,
+        6600
+      ],
+      "explicit_run_or_walk_cooldown_seconds": 0,
+      "inherited_optional_walk_recovery_seconds": 0,
+      "threshold_seconds": 0,
+      "ten_k_specific_seconds": 0,
+      "steady_seconds": 0,
+      "strides_acceleration_seconds": 0,
+      "distance_ended_metres": 0
+    },
+    {
+      "week": 2,
+      "fixed_workout_seconds": 7200,
+      "running_seconds_range_if_permitted_recoveries_walked": [
+        7200,
+        7200
+      ],
+      "explicit_run_or_walk_cooldown_seconds": 0,
+      "inherited_optional_walk_recovery_seconds": 0,
+      "threshold_seconds": 0,
+      "ten_k_specific_seconds": 0,
+      "steady_seconds": 300,
+      "strides_acceleration_seconds": 0,
+      "distance_ended_metres": 0
+    },
+    {
+      "week": 3,
+      "fixed_workout_seconds": 8460,
+      "running_seconds_range_if_permitted_recoveries_walked": [
+        7820,
+        8460
+      ],
+      "explicit_run_or_walk_cooldown_seconds": 0,
+      "inherited_optional_walk_recovery_seconds": 640,
+      "threshold_seconds": 720,
+      "ten_k_specific_seconds": 0,
+      "steady_seconds": 0,
+      "strides_acceleration_seconds": 80,
+      "distance_ended_metres": 0
+    },
+    {
+      "week": 4,
+      "fixed_workout_seconds": 8250,
+      "running_seconds_range_if_permitted_recoveries_walked": [
+        7550,
+        8250
+      ],
+      "explicit_run_or_walk_cooldown_seconds": 300,
+      "inherited_optional_walk_recovery_seconds": 400,
+      "threshold_seconds": 1200,
+      "ten_k_specific_seconds": 0,
+      "steady_seconds": 0,
+      "strides_acceleration_seconds": 140,
+      "distance_ended_metres": 0
+    },
+    {
+      "week": 5,
+      "fixed_workout_seconds": 9840,
+      "running_seconds_range_if_permitted_recoveries_walked": [
+        9200,
+        9840
+      ],
+      "explicit_run_or_walk_cooldown_seconds": 0,
+      "inherited_optional_walk_recovery_seconds": 640,
+      "threshold_seconds": 1080,
+      "ten_k_specific_seconds": 0,
+      "steady_seconds": 0,
+      "strides_acceleration_seconds": 80,
+      "distance_ended_metres": 0
+    },
+    {
+      "week": 6,
+      "fixed_workout_seconds": 10500,
+      "running_seconds_range_if_permitted_recoveries_walked": [
+        9660,
+        10500
+      ],
+      "explicit_run_or_walk_cooldown_seconds": 0,
+      "inherited_optional_walk_recovery_seconds": 840,
+      "threshold_seconds": 1440,
+      "ten_k_specific_seconds": 0,
+      "steady_seconds": 0,
+      "strides_acceleration_seconds": 120,
+      "distance_ended_metres": 0
+    },
+    {
+      "week": 7,
+      "fixed_workout_seconds": 8760,
+      "running_seconds_range_if_permitted_recoveries_walked": [
+        8180,
+        8760
+      ],
+      "explicit_run_or_walk_cooldown_seconds": 0,
+      "inherited_optional_walk_recovery_seconds": 580,
+      "threshold_seconds": 960,
+      "ten_k_specific_seconds": 0,
+      "steady_seconds": 0,
+      "strides_acceleration_seconds": 80,
+      "distance_ended_metres": 0
+    },
+    {
+      "week": 8,
+      "fixed_workout_seconds": 11040,
+      "running_seconds_range_if_permitted_recoveries_walked": [
+        10140,
+        11040
+      ],
+      "explicit_run_or_walk_cooldown_seconds": 300,
+      "inherited_optional_walk_recovery_seconds": 600,
+      "threshold_seconds": 0,
+      "ten_k_specific_seconds": 1620,
+      "steady_seconds": 0,
+      "strides_acceleration_seconds": 180,
+      "distance_ended_metres": 0
+    },
+    {
+      "week": 9,
+      "fixed_workout_seconds": 9300,
+      "running_seconds_range_if_permitted_recoveries_walked": [
+        8600,
+        9300
+      ],
+      "explicit_run_or_walk_cooldown_seconds": 300,
+      "inherited_optional_walk_recovery_seconds": 400,
+      "threshold_seconds": 0,
+      "ten_k_specific_seconds": 1080,
+      "steady_seconds": 0,
+      "strides_acceleration_seconds": 140,
+      "distance_ended_metres": 0
+    },
+    {
+      "week": 10,
+      "fixed_workout_seconds": 6360,
+      "running_seconds_range_if_permitted_recoveries_walked": [
+        5240,
+        6360
+      ],
+      "explicit_run_or_walk_cooldown_seconds": 300,
+      "inherited_optional_walk_recovery_seconds": 820,
+      "threshold_seconds": 0,
+      "ten_k_specific_seconds": 360,
+      "steady_seconds": 0,
+      "strides_acceleration_seconds": 200,
+      "distance_ended_metres": 10000
+    }
+  ],
+  "removed_personal_notes": [
+    {
+      "session_id": "LW10K-W02-D07",
+      "notes": [
+        "Travel variant: 25 minutes EASY, or rest, if travel fatigue/poor sleep. Athlete explicitly accepts; no make-up minutes."
+      ],
+      "reason": "General PB scope already excludes Lee-specific travel variants; base 40-minute run unchanged."
+    }
+  ],
+  "removed_working_carryovers": [
+    {
+      "exercise": "Barbell back squat",
+      "occurrences": [
+        "W01-B-E01",
+        "W02-B-E01",
+        "W03-B-E01",
+        "W04-B-E01",
+        "W05-B-E01",
+        "W06-B-E01",
+        "W07-B-E01",
+        "W08-B-E01",
+        "W09-B-E01"
+      ],
+      "authority": "Founder explicitly identifies these as outside the selected strength template"
+    },
+    {
+      "exercise": "DB farmer carry",
+      "occurrences": [
+        "W01-B-E05",
+        "W02-B-E05",
+        "W03-B-E05",
+        "W04-B-E05",
+        "W05-B-E05",
+        "W06-B-E05",
+        "W07-B-E05",
+        "W08-B-E05",
+        "W09-B-E05"
+      ],
+      "authority": "Founder explicitly identifies these as outside the selected strength template"
+    }
+  ],
+  "removed_or_replaced_variants": [
+    "Flat DB bench → Monday incline",
+    "Unilateral DB calf → bilateral machine calf",
+    "Reverse crunch → Monday Pallof; side plank moves to Thursday",
+    "Unspecified shoulder press → Thursday seated supported neutral-grip press",
+    "Monday unilateral row → bilateral chest-supported DB row",
+    "Monday reverse lunge → Thursday exact 1×6/leg"
+  ],
+  "running_execution_steps_targets_and_identity_unchanged": true,
+  "timed_runs": 39,
+  "distance_runs": 1,
+  "content_hold_counts": {
+    "C4": 9,
+    "C1": 10,
+    "C2": 1,
+    "C3": 4
+  },
+  "full_programme_approval": false,
+  "publication": false
+}
