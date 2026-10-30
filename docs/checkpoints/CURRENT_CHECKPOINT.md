@@ -1,5 +1,24 @@
 # Current repository checkpoint
 
+> **M1.1 three approved setups — capability blocked, 2026-10-30:**
+> [Current handoff](./m11_catalogue_setup_creation/HANDOFF.md) records the founder's
+> authority for three exact setup operations; no further movement/dose approval
+> is requested. One fresh status GET confirms Field Manual ACTIVE_HEALTHY; one
+> bounded dedup SELECT returns only unchanged EX-026/EX-037/EX-090 leads, with no
+> exact new match. These identities remain protected. The exact three-item write
+> set is prepared; executed writes are empty. Retained code exposes catalogue
+> readers and an in-memory publisher, not an available legacy owner create API.
+> Historical legacy creation used a hash-pinned data-only seed/apply connection;
+> no legitimate available apply capability was established. No unrestricted SQL
+> fallback, credential issuance, migration or v3 infrastructure was used.
+> Source/graphs/review are unchanged; deterministic rebuild checks pass, while
+> full graph admission remains 0/20 at exact_identity_records_required. Eight
+> trusted bindings and unchanged private v1/v2/native codec evidence are retained.
+> D8 and distance-ended final-10K execution remain pending. Thirty old checkouts
+> and six bundles are preserved; final Git receipt records normal publication.
+> **Next: genuine legacy owner creation/retention of the three approved records,
+> then complete strength-graph admission. Gate A OPEN.**
+
 > **M1.1 trusted catalogue lookup — partial, 2026-10-30:**
 > [Current handoff](./m11_trusted_catalogue_lookup/HANDOFF.md) records one authorised
 > status GET and one bounded read-only catalogue SELECT. Field Manual

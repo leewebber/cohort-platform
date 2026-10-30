@@ -1,0 +1,158 @@
+{
+  "format": "hybrid10k-bounded-exact-setup-write-set/1",
+  "status": "FOUNDER_AUTHORISED_SCOPE_PREPARED_NOT_EXECUTABLE_WITH_AVAILABLE_CAPABILITY",
+  "target_ref": "otnhhdxstdnwccehacku",
+  "authority": "Latest founder request: create/retain only these three exact setups through existing legitimate catalogue-owner/producer capability; no further coaching-choice approval needed",
+  "source": {
+    "path": "docs/programmes/hybrid_10k/founder_selected_2026_10_30/SOURCE.json",
+    "sha256": "f12b5df97f0a9dc813c9610021ee82233414d2e2b1e6187dd0ae09745e3ecdf5"
+  },
+  "supersedes_strategy_only": "Earlier SETUP_PROPOSALS.json suggestions to enrich EX-090/EX-037/EX-026 are not authorised; protect their semantics and historical consumers",
+  "scope": "Three source-faithful semantic records; not fabricated hosted rows or an executable unrestricted SQL request",
+  "protected_records_no_updates_or_deletes": [
+    "EX-026",
+    "EX-037",
+    "EX-090"
+  ],
+  "operations": [
+    {
+      "source_variant": "chest_supported_db_row",
+      "selected_name": "Bilateral chest-supported dumbbell row",
+      "source_selection": "D7",
+      "exact_setup": "Chest supported; bilateral row with two dumbbells. No bench angle or grip added.",
+      "required_equipment": [
+        "two dumbbells",
+        "chest support"
+      ],
+      "intended_operation": "RETAIN_EXACT_DISTINCT_EXISTING_RECORD_IF_OWNER_VERIFIES_OTHERWISE_CREATE_DISTINCT_IDENTITY",
+      "protected_existing_candidate": "EX-090",
+      "existing_candidate_match": "INSUFFICIENT_SETUP_EVIDENCE_NOT_A_BINDING",
+      "proposed_catalogue_content": {
+        "name": "Bilateral chest-supported dumbbell row",
+        "equipment": [
+          "two dumbbells",
+          "chest support"
+        ],
+        "setup_and_execution": "Chest supported; bilateral row with two dumbbells. No bench angle or grip added.",
+        "external_load_representation": "per dumbbell"
+      },
+      "programme_logging_contract": {
+        "external_load_unit": "kg",
+        "external_load_label": "External load per dumbbell",
+        "repetitions_per_side": false,
+        "source_occurrences": [
+          "W01-A-chest_supported_db_row",
+          "W02-A-chest_supported_db_row",
+          "W03-A-chest_supported_db_row",
+          "W04-A-chest_supported_db_row",
+          "W05-A-chest_supported_db_row",
+          "W06-A-chest_supported_db_row",
+          "W07-A-chest_supported_db_row",
+          "W08-A-chest_supported_db_row",
+          "W09-A-chest_supported_db_row",
+          "W10-A-chest_supported_db_row"
+        ]
+      },
+      "execution_state": "NOT_EXECUTED_REQUIRED_OWNER_WRITE_CAPABILITY_UNAVAILABLE",
+      "actual_exercise_id": null,
+      "actual_published_record": null,
+      "actual_definition_version": null,
+      "actual_publication_event": null
+    },
+    {
+      "source_variant": "seated_supported_db_press",
+      "selected_name": "Seated supported neutral-grip dumbbell shoulder press",
+      "source_selection": "D6",
+      "exact_setup": "Seated with near-upright back support; two dumbbells; neutral grip; strict execution without leg drive.",
+      "required_equipment": [
+        "two dumbbells",
+        "near-upright back support"
+      ],
+      "intended_operation": "RETAIN_EXACT_DISTINCT_EXISTING_RECORD_IF_OWNER_VERIFIES_OTHERWISE_CREATE_DISTINCT_IDENTITY",
+      "protected_existing_candidate": "EX-037",
+      "existing_candidate_match": "INSUFFICIENT_SETUP_EVIDENCE_NOT_A_BINDING",
+      "proposed_catalogue_content": {
+        "name": "Seated supported neutral-grip dumbbell shoulder press",
+        "equipment": [
+          "two dumbbells",
+          "near-upright back support"
+        ],
+        "setup_and_execution": "Seated with near-upright back support; two dumbbells; neutral grip; strict execution without leg drive.",
+        "external_load_representation": "per dumbbell"
+      },
+      "programme_logging_contract": {
+        "external_load_unit": "kg",
+        "external_load_label": "External load per dumbbell",
+        "repetitions_per_side": false,
+        "source_occurrences": [
+          "W01-B-seated_supported_db_press",
+          "W02-B-seated_supported_db_press",
+          "W03-B-seated_supported_db_press",
+          "W04-B-seated_supported_db_press",
+          "W05-B-seated_supported_db_press",
+          "W06-B-seated_supported_db_press",
+          "W07-B-seated_supported_db_press",
+          "W08-B-seated_supported_db_press",
+          "W09-B-seated_supported_db_press",
+          "W10-B-seated_supported_db_press"
+        ]
+      },
+      "execution_state": "NOT_EXECUTED_REQUIRED_OWNER_WRITE_CAPABILITY_UNAVAILABLE",
+      "actual_exercise_id": null,
+      "actual_published_record": null,
+      "actual_definition_version": null,
+      "actual_publication_event": null
+    },
+    {
+      "source_variant": "reverse_lunge_db",
+      "selected_name": "Two-dumbbell reverse lunge",
+      "source_selection": "D4",
+      "exact_setup": "Two dumbbells held at the sides with neutral grip; complete one side then the other. No added depth, stride or box requirement.",
+      "required_equipment": [
+        "two dumbbells"
+      ],
+      "intended_operation": "RETAIN_EXACT_DISTINCT_EXISTING_RECORD_IF_OWNER_VERIFIES_OTHERWISE_CREATE_DISTINCT_IDENTITY",
+      "protected_existing_candidate": "EX-026",
+      "existing_candidate_match": "INSUFFICIENT_SETUP_EVIDENCE_NOT_A_BINDING",
+      "proposed_catalogue_content": {
+        "name": "Two-dumbbell reverse lunge",
+        "equipment": [
+          "two dumbbells"
+        ],
+        "setup_and_execution": "Two dumbbells held at the sides with neutral grip; complete one side then the other. No added depth, stride or box requirement.",
+        "external_load_representation": "per dumbbell"
+      },
+      "programme_logging_contract": {
+        "external_load_unit": "kg",
+        "external_load_label": "External load per dumbbell",
+        "repetitions_per_side": true,
+        "source_occurrences": [
+          "W01-B-reverse_lunge_db",
+          "W02-B-reverse_lunge_db",
+          "W03-B-reverse_lunge_db",
+          "W04-B-reverse_lunge_db",
+          "W05-B-reverse_lunge_db",
+          "W06-B-reverse_lunge_db",
+          "W07-B-reverse_lunge_db",
+          "W08-B-reverse_lunge_db"
+        ]
+      },
+      "execution_state": "NOT_EXECUTED_REQUIRED_OWNER_WRITE_CAPABILITY_UNAVAILABLE",
+      "actual_exercise_id": null,
+      "actual_published_record": null,
+      "actual_definition_version": null,
+      "actual_publication_event": null
+    }
+  ],
+  "executed_write_set": [],
+  "associated_writes": [],
+  "id_allocation": "Unassigned. Actual owner process must allocate collision-safe real IDs and any required record keys; no guessed next EX number",
+  "publication_metadata": "Only actual producer result may supply real published state, timestamps or events; programme D8 remains pending",
+  "deduplication": "One bounded current SELECT returned only three insufficient protected leads; no exact distinct match returned. This is not proof of absence from every alias or unpublished record. Owner must finish identity dedup under its normal contract before allocation",
+  "write_postconditions": [
+    "Only exact retained/new setup records and necessary direct catalogue associations changed",
+    "EX-026/EX-037/EX-090 all fields unchanged; historical consumers untouched",
+    "Actual source/producer/time/result evidence retained; no invented versions/events",
+    "Private v1/v2 exact-row binding matches setup, external load per DB and laterality before complete graph admission"
+  ]
+}

@@ -8,34 +8,36 @@ it does not grant implementation, content, hosted, account or release authority.
 
 ## Current single point — M1.1 (2026-10-30)
 
-**Three exact hosted legacy rows retained; three setup records and D8 remain.**
-[Current handoff](../checkpoints/m11_trusted_catalogue_lookup/HANDOFF.md) records
-Field Manual `otnhhdxstdnwccehacku` ACTIVE_HEALTHY from one authorised status GET
-and one bounded catalogue SELECT through the dedicated read-only API. Existing
-Keychain authentication was used; no credentials, permissions or project settings
-were issued/changed. Three published legacy rows are now retained through v1/v2:
-`EX-053` initial bodyweight pull-up, `EX-044` DB lateral raise and `EX-038`
-bench-supported single-arm DB row. Raw data and provenance have exact hash checks;
-no v3 definition version/event or global catalogue seed is manufactured.
+**Three setup operations authorised; legitimate legacy write capability blocked.**
+[Current handoff](../checkpoints/m11_catalogue_setup_creation/HANDOFF.md) records
+one fresh Field Manual ACTIVE_HEALTHY check and one bounded dedup SELECT returning
+only the unchanged insufficient EX-026/EX-037/EX-090 leads. No exact distinct
+match was returned. Those records and existing consumers remain protected.
 
-Three exact setup records remain insufficient: `EX-090` DB bench-branch coverage;
-`EX-037` seated/back-supported neutral two-DB strict press; loaded two-DB reverse
-lunge (returned `EX-026` equipment/setup are NULL). Three bounded proposals await
-separate catalogue-owner/producer approval and real supporting record retention.
-Full v1/v2 schedules compile and known-identity partial graph/codec checks pass;
-full strength graphs remain withheld. Source/coaching and all running-body bytes
-are unchanged; dose holds stay resolved. D8/full-programme approval remains pending
-review of the one complete TEN_WEEK_REVIEW.md. No hosted write or athlete operation.
+The exact three-record write set matches the selected chest-supported bilateral
+DB row, seated/back-supported neutral strict DB press and side-held two-DB reverse
+lunge. Founder operation authority is granted; no movement/dose review is repeated.
+Executed writes are empty: the retained legacy repositories are read-only, the
+Exercise Knowledge publisher is in-memory, and no existing available legitimate
+legacy create/apply capability was established. The historical data-only seed
+procedure needs its normal hash-pinned operation and legitimate DB connection;
+unrestricted Management API SQL and new credential issuance are not substitutes.
+No v3 infrastructure, schema migration or hosted mutation is introduced.
 
-**Next single point: review the three exact setup proposals for separate trusted
-producer action, retain genuine supporting records, then complete local graph
-admission.** D8 remains an independent founder content review. Final distance-ended
-10K execution, held migrations, separate programme publication/access enablement,
-adaptation, distribution/device acceptance and inherited bootstrap triage remain
-Gate A dependencies. M2.5 is not repeated. Preserve all prior checkouts/HEADs/
-indices/dirty files/.temp, complete chain and five bundles. Normal main-only Git
-publication is authorised after fresh ancestry verification; ordinary HTTPS now
-verifies live main `1cca598` as the exact pre-publication ancestor.
+All twenty strength graphs rebuild identically and remain withheld at
+`exact_identity_records_required` (0/20 complete). Eight trusted bindings and
+unchanged v1/v2 compile/partial graph/native codec proof are reused from 4b02305.
+No source, running, dose or full-programme approval is inferred. D8 remains
+pending review of TEN_WEEK_REVIEW.md.
+
+**Next single point: obtain the genuine legacy owner creation/retention results
+for these three approved setups, retain them through v1/v2 and admit the twenty
+complete strength graphs.** Final distance-ended 10K execution, separate programme
+publication/access, held migrations, adaptation, distribution/device acceptance
+and bootstrap triage remain Gate A dependencies. M2.5 is not repeated. Preserve
+all prior checkouts/HEADs/indices/dirty files/.temp, complete chain and six bundles.
+Normal main-only Git publication is authorised after fresh ancestry verification;
+initial ordinary HTTPS verifies published main at 4b02305.
 
 ## Retained M1.1 consolidation direction (2026-10-28)
 

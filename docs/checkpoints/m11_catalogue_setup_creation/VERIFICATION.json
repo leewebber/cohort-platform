@@ -1,0 +1,161 @@
+{
+  "base": "4b02305c8128a6dae82b94436f7492838f17e4a6",
+  "fresh_lookup": {
+    "project": "ACTIVE_HEALTHY",
+    "status_http": 200,
+    "select_http": 201,
+    "status_requests": 1,
+    "select_requests": 1,
+    "rows": 3,
+    "row_cap_reached": false,
+    "new_exact_matches": 0
+  },
+  "protected_row_comparison": [
+    {
+      "exercise_id": "EX-026",
+      "projection_fields": [
+        "category",
+        "coaching_cues",
+        "equipment",
+        "execution",
+        "exercise_id",
+        "loading_options",
+        "movement_pattern",
+        "name",
+        "notes_internal",
+        "published",
+        "purpose",
+        "setup",
+        "slug",
+        "unilateral"
+      ],
+      "previous_and_current_projection_equal": true,
+      "canonical_projection_sha256": "2157aca12df2e426996914e52299b3cf6e532413d4da4572bf73c2ef020cc463"
+    },
+    {
+      "exercise_id": "EX-037",
+      "projection_fields": [
+        "category",
+        "coaching_cues",
+        "equipment",
+        "execution",
+        "exercise_id",
+        "loading_options",
+        "movement_pattern",
+        "name",
+        "notes_internal",
+        "published",
+        "purpose",
+        "setup",
+        "slug",
+        "unilateral"
+      ],
+      "previous_and_current_projection_equal": true,
+      "canonical_projection_sha256": "b9fccb8d24cc6bdcaad72c37a20c15f856ef53342ba61d388a4636cda2035314"
+    },
+    {
+      "exercise_id": "EX-090",
+      "projection_fields": [
+        "category",
+        "coaching_cues",
+        "equipment",
+        "execution",
+        "exercise_id",
+        "loading_options",
+        "movement_pattern",
+        "name",
+        "notes_internal",
+        "published",
+        "purpose",
+        "setup",
+        "slug",
+        "unilateral"
+      ],
+      "previous_and_current_projection_equal": true,
+      "canonical_projection_sha256": "ec8e6f0233748b5ad64bebfbec6d942a58d73580d908c3a2ba08c2963610c1a4"
+    }
+  ],
+  "unchanged_row_scope": "All 14 selected catalogue fields equal the prior snapshot. No hosted writes attempted, so no mutation postcondition claimed; unrelated fields/consumers not separately queried.",
+  "source_fidelity": {
+    "three_proposals_match_selected_setup": true,
+    "no_added_bench_angle_grip_for_row": true,
+    "no_dose_or_tempo_added_to_identity": true,
+    "kg_external_load_per_DB_checked_for_all_three_variants": true,
+    "laterality": {
+      "chest_supported_db_row": false,
+      "seated_supported_db_press": false,
+      "reverse_lunge_db": true
+    }
+  },
+  "checks_current_task": [
+    {
+      "command": "python3 tool/programmes/hybrid_10k/apply_strength_selections.py --check",
+      "exit": 0,
+      "result": "Rebuilt source/review graphs match retained exact bytes; exact_identity_records_required, zero content holds, 0/20 complete strength graphs"
+    },
+    {
+      "command": "python3 tool/programmes/hybrid_10k/render_selected_review.py --check",
+      "exit": 0,
+      "result": "Ten-week review matches selected source"
+    }
+  ],
+  "admission": {
+    "complete_strength_graphs_admitted": 0,
+    "strength_graphs_total": 20,
+    "trusted_legacy_bindings_retained": 8,
+    "known_links": 77,
+    "missing_unique_setups": 3,
+    "whole_graph_guard": "exact_identity_records_required",
+    "new_evidence_intake_bindings": 0,
+    "v1_v2_partial_graph_codec_and_all_105_prescription_checks": "REUSED immutable 4b02305:docs/checkpoints/m11_trusted_catalogue_lookup/ADMISSION.json and VERIFICATION.json; not rerun",
+    "full_schedule_compilation": "REUSED 4b02305 v1/v2 60-session compile evidence",
+    "canonical_private_decoder_called_for_incomplete_graphs": false
+  },
+  "unchanged_source_and_check_inputs": {
+    "docs/programmes/hybrid_10k/founder_selected_2026_10_30/AUDIT.json": "5809c1a8e2be35292ac5a14e1a782fc347edfb0383c94c96b02f57c3de37690a",
+    "docs/programmes/hybrid_10k/founder_selected_2026_10_30/SOURCE.json": "f12b5df97f0a9dc813c9610021ee82233414d2e2b1e6187dd0ae09745e3ecdf5",
+    "docs/programmes/hybrid_10k/founder_selected_2026_10_30/RUNNING_BODIES.json": "5d36176a57d8b610799cd72bf8be452bbf9a68fa7396ce4bf41877f83959491b",
+    "docs/programmes/hybrid_10k/founder_selected_2026_10_30/TRUSTED_INTAKE_REQUESTS.json": "3cfa104b25d388d487fefe36f2d30fd1cde388aec9e40170cc931cea00f47adf",
+    "docs/programmes/hybrid_10k/founder_selected_2026_10_30/SCHEDULE_CANDIDATE.json": "4276d149c61e9d5c476593da9360821a2bc5fe8b9bad896b7346f0e25fd4f02c",
+    "docs/programmes/hybrid_10k/founder_selected_2026_10_30/README.md": "342a21e3683037d4c24dfffb32b1d36cf7b52c9dc75159befe038571048a3559",
+    "docs/programmes/hybrid_10k/founder_selected_2026_10_30/EXACT_ROW_RETENTION_REQUEST.sql": "5834c56489e7856805651257ab7ab4403094381aed5e729abb8035e239d8d6a8",
+    "docs/programmes/hybrid_10k/founder_selected_2026_10_30/STRENGTH_REVIEW_GRAPHS.json": "399fcdcf618ee85d474e973d0a53a3a950f052740d7b539056df95ed1517342e",
+    "docs/programmes/hybrid_10k/founder_selected_2026_10_30/DOSE_CLARIFICATIONS.md": "e38cba504a1b40dcfe93e1fa72cee4b1804b0f4bee5078e7e240e41df9457b76",
+    "docs/programmes/hybrid_10k/founder_selected_2026_10_30/EXACT_IDENTITY_ACTIONS.md": "bfeb0b4990db0b6dd2340bfd941cfe6e41f7c7c81e374190f4432bca2d6119a8",
+    "docs/programmes/hybrid_10k/founder_selected_2026_10_30/FOUNDER_SELECTIONS.md": "dd7e08cc1b026b46307b42c491216543899879e202c3f665ce837f486bc0d6d8",
+    "docs/programmes/hybrid_10k/founder_selected_2026_10_30/IDENTITY_INTAKE.json": "5372a05dda6c2a4850794b94bb3c6beed654cbc55a2fc972ea1e8ab1c8f68652",
+    "docs/programmes/hybrid_10k/founder_selected_2026_10_30/TEN_WEEK_REVIEW.md": "f65358b81e3690938511ea5009bfcccbf20ae6593230118d8fbca828944e1a93",
+    "docs/checkpoints/m11_trusted_catalogue_lookup/ADMISSION.json": "55dc75204ca78cde8c7f57898a9dae01aa266e4557db02877d2ba2c8357bcd82",
+    "docs/checkpoints/m11_trusted_catalogue_lookup/VERIFICATION.json": "fdd5026a4383b5de54e17b230cdccbe157ed4a789e7ea165fe8a9487e50ff982",
+    "tool/programmes/hybrid_10k/apply_strength_selections.py": "81d6f0e7a78ad41055e1c52535e936f92e33b1de1fe72cef354209b1fa23dce8",
+    "tool/programmes/hybrid_10k/render_selected_review.py": "b74caacacf2b279468d53864203dea69b7d483b722fa84825dc466d40484747d",
+    "tool/programmes/hybrid_10k/selected_admission_probe_test.dart": "7bbc526c20d935584ca9d0717e89c047d11ac47b321db2b5aa3256de1ec965fb",
+    "tool/programmes/hybrid_10k/trusted_catalogue_snapshot.py": "acf6e8c2cbfcd0892c68384a5edffa61aae4317cb1324ec9e524c2eef0998d0e"
+  },
+  "new_evidence_pins": {
+    "WRITE_BOUNDARY.json": "c3024606d211aa7c891c50f99f803d1628f0024b3d893743367eb909f561e595",
+    "DEDUP_SELECT.sql": "653d27a6d6f4d4b780dca390e8dc1b2e341bce1e9ce9cbf0050e80ab0ecca3c8",
+    "WRITE_SET.json": "7ebba83be9d35c26c73ad2202fd149f5909fa71619d3b1266e465b18b847a746",
+    "CATALOGUE_ROWS.raw.json": "50f05ce2df65c5b5968a0efa067bf0ec8034e90c48ad82f5e899e5ab12e4a9e0",
+    "LOOKUP_RECEIPT.json": "de18f23682f68950f9b8da52e085625e3b4f56411eb4659395d72ee00f04e2e0",
+    "PROJECT_STATUS.json": "846537106c1911c6c0e18a605ab4130fd125f63c8ce7a30c7db625bc7969c8ef"
+  },
+  "broad_tests_safety_or_garmin_rerun": false,
+  "safety_reason": "No architecture/runtime/intake/schema change; unchanged committed focused and safety proof reused",
+  "programme_publication_or_athlete_state_changes": false,
+  "additional_current_checks": {
+    "new_evidence_hash_query_status_raw_integrity": "PASS",
+    "new_json_parse": "PASS",
+    "changed_section_local_links": "PASS",
+    "git_diff_check": "PASS",
+    "existing_checkouts_heads_indices_files_temp_equal_before_after": 30,
+    "prior_six_backup_bundle_hashes_unchanged": {
+      "Cohort-M1.1-main.bundle": "db9348edd795f7e669a722b4bdba7376577b3554a50c88c1ec19c0ac213880dd",
+      "Cohort-M1.1-reconciled-2026-10-30.bundle": "6b21cb6d9fb61420d124812b5650e0ce7f3bae2eb0fc11ece568d12d65bea206",
+      "Cohort-M1.1-movement-review-2026-10-30.bundle": "ccf622cddf1a18013d2a9cec487ec249b136cd0a0adf07d9ea1db28a131caacf",
+      "Cohort-M1.1-selected-strength-2026-10-30.bundle": "5dd23b6491ff92b45e55918dfb719d9952df2e8019e3f91f831d1f6dab78ddfc",
+      "Cohort-M1.1-dose-reconciled-2026-10-30.bundle": "418203d393a767051eb86a572e7e737390b87882ce63632b484371e7d519b10a",
+      "Cohort-M1.1-trusted-catalogue-2026-10-30.bundle": "757217d27d497edd56243ec0492dd5ba3b7efb4883eb778dbc2c44b3e8de0d72"
+    }
+  }
+}

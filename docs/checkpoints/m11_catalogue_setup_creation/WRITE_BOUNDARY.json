@@ -1,0 +1,26 @@
+{
+  "status": "BLOCKED_NO_AVAILABLE_ESTABLISHED_LEGACY_OWNER_WRITE_CAPABILITY",
+  "findings": [
+    "Retained app/importer exercise repositories are read-only; importer writes programmes, not catalogue identities",
+    "ExerciseKnowledgePublicationService explicitly does not persist to Supabase; its retained repository implementation is in-memory, not real legacy published evidence",
+    "Documented Phase 3.1F legacy additions used a separately hash-pinned data-only seed migration with an authorised operational DB apply connection, collision preflight and exact postchecks. It is not schema DDL, but there is no identified available authorised DB apply connection for this task; no seed or migration was created/applied",
+    "No existing database-password/connection or exercise-producer variable was available in the process or the two retained root .env files; names/presence only inspected, no secret values exposed. This does not assert absence of credentials in every external owner system",
+    "Existing Supabase CLI Keychain credential was usable for status and SELECT; no authenticated legacy catalogue-owner creation RPC/API is established by the retained procedures. Generic Management API SQL is not used as a substitute",
+    "V3 published-definition/event retention is a separate contract and does not create legacy exercises_v2 identities; no v3 dependency introduced"
+  ],
+  "required_action": "The authorised catalogue owner must identify/use an existing legitimate legacy authoring/apply capability and its supported collision-safe identity allocation/create operation for WRITE_SET.json, or return genuine resulting exact published records with provenance. If no such capability exists, separately establish/approve the smallest legacy catalogue writer or a hash-pinned data-only seed/apply operation and legitimate connection; no credential issuance, grants, schema work or generic SQL fallback is included in this task. Existing founder selection/three-record operation authority is already recorded; do not ask for D1-D7 approval again.",
+  "credential_issuance_or_permission_change_performed": false,
+  "hosted_write_attempts": 0,
+  "evidence_files": {
+    "lib/features/exercises/services/exercise_catalogue_service.dart": "eb4e34cc258fc366d6b44e89869e73e7eb3b03e374e90871d036a833aa8c0916",
+    "lib/data/repositories/exercise_repository.dart": "adbed95f44df074d45e3c15ce86d9805cf497f7dac790223be8d15443cd124ae",
+    "tool/importer/lib/data/repositories/exercise_repository.dart": "e7716f295c168875146732f8ed7759549a582d8cca56fe615b6abdbc1cd9cf63",
+    "tool/importer/lib/data/repositories/base_repository.dart": "b61b3b31a1db8af16ae85462137057561666e656cff2e47fd617ffb51d72996a",
+    "lib/domain/exercise_knowledge/services/exercise_knowledge_publication_service.dart": "4c9b50857f5f75654b7e32db840eafa8a031a70d345744cd386cd9b4f44a6aaf",
+    "lib/domain/exercise_knowledge/in_memory/in_memory_exercise_knowledge_repository.dart": "4e946c898ff83093ac246192ff728e6b0d7bdd82cfabd1af3c6464f7ae1c989c",
+    "docs/architecture/Phase_3_1F_Canonical_Deployment_and_First_Consumer_Plan_v1.md": "a3592e4c132d089edb6f4f70c762e5a32d3c6f1e202febe3a7a7010bf0720851",
+    "supabase/migrations/20260809160000_founder_exercise_library_phase_3_1f_part2.sql": "69ebd998ae4da92e101e92d49c186f9f22bc96baebc3e07faab17c4255efdd6d",
+    "server/trusted_plan_package_import/lib/src/exercise_publication_producer.dart": "cd59c4dc37848a3cd2b2305686360efedc15f150c49dcca65ff9b3a96b5dccb2",
+    "docs/checkpoints/hyrox_approval_producer/PROVISIONING.json": "dbb561c47bb47b64d7a548d74f37b9aadc95f9986d4ee51e0dd7ecf4c209837b"
+  }
+}

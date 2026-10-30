@@ -1,0 +1,18 @@
+{
+  "expected_project_ref": "otnhhdxstdnwccehacku",
+  "configured_target_matches": true,
+  "captured_at_utc": "2026-10-30T12:14:44.464974+00:00",
+  "operation": "GET /v1/projects/otnhhdxstdnwccehacku",
+  "credential_source": "Existing Supabase CLI Keychain item; not printed, stored or changed",
+  "attempts": 1,
+  "http_status": 200,
+  "result": "PROJECT_STATUS_OBSERVED",
+  "raw_response_sha256": "cdb0905008bd4965925ff7fe404c53355724e82d6465c9a42edba0f3fc2eb4d7",
+  "project": {
+    "id": "otnhhdxstdnwccehacku",
+    "ref": "otnhhdxstdnwccehacku",
+    "name": "Cohort Field Manual",
+    "status": "ACTIVE_HEALTHY",
+    "region": "eu-west-1"
+  }
+}
