@@ -1,0 +1,584 @@
+{
+  "classification": "GENUINE_DRAFT_LOCAL_CONTRACT_PROBE_NOT_PUBLICATION",
+  "base": "a22249e23a385ebb6064b8f05e3d2fb17af3914e",
+  "content_approval": "NOT_GRANTED_BY_THIS_TASK",
+  "canonical_acquisition_start_logging_completion_restore": "NOT_ATTEMPTED",
+  "running_evidence": {
+    "reused_immutable_checkpoint": "a22249e:docs/checkpoints/m11_hybrid10k_reconciliation/ADMISSION.json",
+    "timed_graphs": 39,
+    "distance_10000m": "unsupported_timed_running_body",
+    "rerun": false
+  },
+  "full_programme": [
+    {
+      "schema": 1,
+      "schedule_sessions": 60,
+      "complete_review_graph_scope": 60,
+      "schedule_compile": "PASS",
+      "schedule_sha256": "ad89b86bf449f34329e2756381e787a99ed4f9697ef3bb88a8fef01a8d65e007",
+      "full_admission": "movement_identity_or_selection_required:87",
+      "complete_strength_graphs_admitted": 0,
+      "private_decoder_called_for_incomplete_graphs": false
+    },
+    {
+      "schema": 2,
+      "schedule_sessions": 60,
+      "complete_review_graph_scope": 60,
+      "schedule_compile": "PASS",
+      "schedule_sha256": "9b4da70bfcdbbe3d32e72642da95af4d5de1d248c1b6972cda00391400f6c819",
+      "full_admission": "movement_identity_or_selection_required:87",
+      "complete_strength_graphs_admitted": 0,
+      "private_decoder_called_for_incomplete_graphs": false
+    }
+  ],
+  "strength_holds": [
+    {
+      "session_id": "LW10K-W01-D01",
+      "unresolved": [
+        {
+          "occurrence": "W01-A-E01",
+          "variant": "reverse_lunge_db",
+          "reference": "D4"
+        },
+        {
+          "occurrence": "W01-A-E02",
+          "variant": "pull_up_choice",
+          "reference": "D5"
+        },
+        {
+          "occurrence": "W01-A-E03",
+          "variant": "db_overhead_press",
+          "reference": "D6"
+        },
+        {
+          "occurrence": "W01-A-E04",
+          "variant": "db_row_a",
+          "reference": "D7"
+        },
+        {
+          "occurrence": "W01-A-E05",
+          "variant": "db_lateral_raise",
+          "reference": "T2"
+        }
+      ]
+    },
+    {
+      "session_id": "LW10K-W01-D04",
+      "unresolved": [
+        {
+          "occurrence": "W01-B-E03",
+          "variant": "flat_db_bench",
+          "reference": "D1"
+        },
+        {
+          "occurrence": "W01-B-E04",
+          "variant": "db_row_b",
+          "reference": "T1"
+        },
+        {
+          "occurrence": "W01-B-E06",
+          "variant": "single_leg_db_calf",
+          "reference": "D2"
+        },
+        {
+          "occurrence": "W01-B-E07",
+          "variant": "reverse_crunch",
+          "reference": "D3"
+        }
+      ]
+    },
+    {
+      "session_id": "LW10K-W02-D01",
+      "unresolved": [
+        {
+          "occurrence": "W02-A-E01",
+          "variant": "reverse_lunge_db",
+          "reference": "D4"
+        },
+        {
+          "occurrence": "W02-A-E02",
+          "variant": "pull_up_choice",
+          "reference": "D5"
+        },
+        {
+          "occurrence": "W02-A-E03",
+          "variant": "db_overhead_press",
+          "reference": "D6"
+        },
+        {
+          "occurrence": "W02-A-E04",
+          "variant": "db_row_a",
+          "reference": "D7"
+        },
+        {
+          "occurrence": "W02-A-E05",
+          "variant": "db_lateral_raise",
+          "reference": "T2"
+        }
+      ]
+    },
+    {
+      "session_id": "LW10K-W02-D04",
+      "unresolved": [
+        {
+          "occurrence": "W02-B-E03",
+          "variant": "flat_db_bench",
+          "reference": "D1"
+        },
+        {
+          "occurrence": "W02-B-E04",
+          "variant": "db_row_b",
+          "reference": "T1"
+        },
+        {
+          "occurrence": "W02-B-E06",
+          "variant": "single_leg_db_calf",
+          "reference": "D2"
+        },
+        {
+          "occurrence": "W02-B-E07",
+          "variant": "reverse_crunch",
+          "reference": "D3"
+        }
+      ]
+    },
+    {
+      "session_id": "LW10K-W03-D01",
+      "unresolved": [
+        {
+          "occurrence": "W03-A-E01",
+          "variant": "reverse_lunge_db",
+          "reference": "D4"
+        },
+        {
+          "occurrence": "W03-A-E02",
+          "variant": "pull_up_choice",
+          "reference": "D5"
+        },
+        {
+          "occurrence": "W03-A-E03",
+          "variant": "db_overhead_press",
+          "reference": "D6"
+        },
+        {
+          "occurrence": "W03-A-E04",
+          "variant": "db_row_a",
+          "reference": "D7"
+        },
+        {
+          "occurrence": "W03-A-E05",
+          "variant": "db_lateral_raise",
+          "reference": "T2"
+        }
+      ]
+    },
+    {
+      "session_id": "LW10K-W03-D04",
+      "unresolved": [
+        {
+          "occurrence": "W03-B-E03",
+          "variant": "flat_db_bench",
+          "reference": "D1"
+        },
+        {
+          "occurrence": "W03-B-E04",
+          "variant": "db_row_b",
+          "reference": "T1"
+        },
+        {
+          "occurrence": "W03-B-E06",
+          "variant": "single_leg_db_calf",
+          "reference": "D2"
+        },
+        {
+          "occurrence": "W03-B-E07",
+          "variant": "reverse_crunch",
+          "reference": "D3"
+        }
+      ]
+    },
+    {
+      "session_id": "LW10K-W04-D01",
+      "unresolved": [
+        {
+          "occurrence": "W04-A-E01",
+          "variant": "reverse_lunge_db",
+          "reference": "D4"
+        },
+        {
+          "occurrence": "W04-A-E02",
+          "variant": "pull_up_choice",
+          "reference": "D5"
+        },
+        {
+          "occurrence": "W04-A-E03",
+          "variant": "db_overhead_press",
+          "reference": "D6"
+        },
+        {
+          "occurrence": "W04-A-E04",
+          "variant": "db_row_a",
+          "reference": "D7"
+        },
+        {
+          "occurrence": "W04-A-E05",
+          "variant": "db_lateral_raise",
+          "reference": "T2"
+        }
+      ]
+    },
+    {
+      "session_id": "LW10K-W04-D04",
+      "unresolved": [
+        {
+          "occurrence": "W04-B-E03",
+          "variant": "flat_db_bench",
+          "reference": "D1"
+        },
+        {
+          "occurrence": "W04-B-E04",
+          "variant": "db_row_b",
+          "reference": "T1"
+        },
+        {
+          "occurrence": "W04-B-E06",
+          "variant": "single_leg_db_calf",
+          "reference": "D2"
+        },
+        {
+          "occurrence": "W04-B-E07",
+          "variant": "reverse_crunch",
+          "reference": "D3"
+        }
+      ]
+    },
+    {
+      "session_id": "LW10K-W05-D01",
+      "unresolved": [
+        {
+          "occurrence": "W05-A-E01",
+          "variant": "reverse_lunge_db",
+          "reference": "D4"
+        },
+        {
+          "occurrence": "W05-A-E02",
+          "variant": "pull_up_choice",
+          "reference": "D5"
+        },
+        {
+          "occurrence": "W05-A-E03",
+          "variant": "db_overhead_press",
+          "reference": "D6"
+        },
+        {
+          "occurrence": "W05-A-E04",
+          "variant": "db_row_a",
+          "reference": "D7"
+        },
+        {
+          "occurrence": "W05-A-E05",
+          "variant": "db_lateral_raise",
+          "reference": "T2"
+        }
+      ]
+    },
+    {
+      "session_id": "LW10K-W05-D04",
+      "unresolved": [
+        {
+          "occurrence": "W05-B-E03",
+          "variant": "flat_db_bench",
+          "reference": "D1"
+        },
+        {
+          "occurrence": "W05-B-E04",
+          "variant": "db_row_b",
+          "reference": "T1"
+        },
+        {
+          "occurrence": "W05-B-E06",
+          "variant": "single_leg_db_calf",
+          "reference": "D2"
+        },
+        {
+          "occurrence": "W05-B-E07",
+          "variant": "reverse_crunch",
+          "reference": "D3"
+        }
+      ]
+    },
+    {
+      "session_id": "LW10K-W06-D01",
+      "unresolved": [
+        {
+          "occurrence": "W06-A-E01",
+          "variant": "reverse_lunge_db",
+          "reference": "D4"
+        },
+        {
+          "occurrence": "W06-A-E02",
+          "variant": "pull_up_choice",
+          "reference": "D5"
+        },
+        {
+          "occurrence": "W06-A-E03",
+          "variant": "db_overhead_press",
+          "reference": "D6"
+        },
+        {
+          "occurrence": "W06-A-E04",
+          "variant": "db_row_a",
+          "reference": "D7"
+        },
+        {
+          "occurrence": "W06-A-E05",
+          "variant": "db_lateral_raise",
+          "reference": "T2"
+        }
+      ]
+    },
+    {
+      "session_id": "LW10K-W06-D04",
+      "unresolved": [
+        {
+          "occurrence": "W06-B-E03",
+          "variant": "flat_db_bench",
+          "reference": "D1"
+        },
+        {
+          "occurrence": "W06-B-E04",
+          "variant": "db_row_b",
+          "reference": "T1"
+        },
+        {
+          "occurrence": "W06-B-E06",
+          "variant": "single_leg_db_calf",
+          "reference": "D2"
+        },
+        {
+          "occurrence": "W06-B-E07",
+          "variant": "reverse_crunch",
+          "reference": "D3"
+        }
+      ]
+    },
+    {
+      "session_id": "LW10K-W07-D01",
+      "unresolved": [
+        {
+          "occurrence": "W07-A-E01",
+          "variant": "reverse_lunge_db",
+          "reference": "D4"
+        },
+        {
+          "occurrence": "W07-A-E02",
+          "variant": "pull_up_choice",
+          "reference": "D5"
+        },
+        {
+          "occurrence": "W07-A-E03",
+          "variant": "db_overhead_press",
+          "reference": "D6"
+        },
+        {
+          "occurrence": "W07-A-E04",
+          "variant": "db_row_a",
+          "reference": "D7"
+        },
+        {
+          "occurrence": "W07-A-E05",
+          "variant": "db_lateral_raise",
+          "reference": "T2"
+        }
+      ]
+    },
+    {
+      "session_id": "LW10K-W07-D04",
+      "unresolved": [
+        {
+          "occurrence": "W07-B-E03",
+          "variant": "flat_db_bench",
+          "reference": "D1"
+        },
+        {
+          "occurrence": "W07-B-E04",
+          "variant": "db_row_b",
+          "reference": "T1"
+        },
+        {
+          "occurrence": "W07-B-E06",
+          "variant": "single_leg_db_calf",
+          "reference": "D2"
+        },
+        {
+          "occurrence": "W07-B-E07",
+          "variant": "reverse_crunch",
+          "reference": "D3"
+        }
+      ]
+    },
+    {
+      "session_id": "LW10K-W08-D01",
+      "unresolved": [
+        {
+          "occurrence": "W08-A-E01",
+          "variant": "reverse_lunge_db",
+          "reference": "D4"
+        },
+        {
+          "occurrence": "W08-A-E02",
+          "variant": "pull_up_choice",
+          "reference": "D5"
+        },
+        {
+          "occurrence": "W08-A-E03",
+          "variant": "db_overhead_press",
+          "reference": "D6"
+        },
+        {
+          "occurrence": "W08-A-E04",
+          "variant": "db_row_a",
+          "reference": "D7"
+        },
+        {
+          "occurrence": "W08-A-E05",
+          "variant": "db_lateral_raise",
+          "reference": "T2"
+        }
+      ]
+    },
+    {
+      "session_id": "LW10K-W08-D04",
+      "unresolved": [
+        {
+          "occurrence": "W08-B-E03",
+          "variant": "flat_db_bench",
+          "reference": "D1"
+        },
+        {
+          "occurrence": "W08-B-E04",
+          "variant": "db_row_b",
+          "reference": "T1"
+        },
+        {
+          "occurrence": "W08-B-E06",
+          "variant": "single_leg_db_calf",
+          "reference": "D2"
+        },
+        {
+          "occurrence": "W08-B-E07",
+          "variant": "reverse_crunch",
+          "reference": "D3"
+        }
+      ]
+    },
+    {
+      "session_id": "LW10K-W09-D01",
+      "unresolved": [
+        {
+          "occurrence": "W09-A-E01",
+          "variant": "reverse_lunge_db",
+          "reference": "D4"
+        },
+        {
+          "occurrence": "W09-A-E02",
+          "variant": "pull_up_choice",
+          "reference": "D5"
+        },
+        {
+          "occurrence": "W09-A-E03",
+          "variant": "db_overhead_press",
+          "reference": "D6"
+        },
+        {
+          "occurrence": "W09-A-E04",
+          "variant": "db_row_a",
+          "reference": "D7"
+        },
+        {
+          "occurrence": "W09-A-E05",
+          "variant": "db_lateral_raise",
+          "reference": "T2"
+        }
+      ]
+    },
+    {
+      "session_id": "LW10K-W09-D04",
+      "unresolved": [
+        {
+          "occurrence": "W09-B-E03",
+          "variant": "flat_db_bench",
+          "reference": "D1"
+        },
+        {
+          "occurrence": "W09-B-E04",
+          "variant": "db_row_b",
+          "reference": "T1"
+        },
+        {
+          "occurrence": "W09-B-E06",
+          "variant": "single_leg_db_calf",
+          "reference": "D2"
+        },
+        {
+          "occurrence": "W09-B-E07",
+          "variant": "reverse_crunch",
+          "reference": "D3"
+        }
+      ]
+    },
+    {
+      "session_id": "LW10K-W10-D01",
+      "unresolved": [
+        {
+          "occurrence": "W10-A-E02",
+          "variant": "pull_up_choice",
+          "reference": "D5"
+        },
+        {
+          "occurrence": "W10-A-E03",
+          "variant": "db_overhead_press",
+          "reference": "D6"
+        },
+        {
+          "occurrence": "W10-A-E04",
+          "variant": "db_row_a",
+          "reference": "D7"
+        },
+        {
+          "occurrence": "W10-A-E05",
+          "variant": "db_lateral_raise",
+          "reference": "T2"
+        }
+      ]
+    },
+    {
+      "session_id": "LW10K-W10-D04",
+      "unresolved": [
+        {
+          "occurrence": "W10-B-E01",
+          "variant": "db_overhead_press",
+          "reference": "D6"
+        },
+        {
+          "occurrence": "W10-B-E02",
+          "variant": "db_row_b",
+          "reference": "T1"
+        }
+      ]
+    }
+  ],
+  "extracted_known_link_probes": {
+    "links": 37,
+    "partial_graphs": 19,
+    "private_v1_v2_graph_check": "PASS",
+    "native_plan_serialization_restore": "PASS",
+    "complete_sessions_or_canonical_started_state": false
+  },
+  "review_graphs": {
+    "sessions": 20,
+    "occurrences": 124,
+    "work_sets": 263,
+    "whole_sessions_withheld": 20
+  }
+}

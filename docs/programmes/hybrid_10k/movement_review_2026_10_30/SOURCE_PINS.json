@@ -1,0 +1,14 @@
+{
+  "base": "a22249e23a385ebb6064b8f05e3d2fb17af3914e",
+  "files": {
+    "docs/programmes/hybrid_10k/general_draft_2026_10_30/SOURCE.json": "3a610154a8be27d31ecfe7cbf2fdfb16908a305e1bd35e1ada22b7e4b1bee486",
+    "docs/programmes/hybrid_10k/general_draft_2026_10_30/IDENTITY_INTAKE.json": "2229c3f72f3fba97de7dead7abe8ba6a172fa2293eff3f310fa2cef3f3306b10",
+    "docs/programmes/hybrid_10k/general_draft_2026_10_30/SCHEDULE_CANDIDATE.json": "d60803201b0986f67f6ab8ce6a9d8693e74fbd5b94a6d23e4f6d3c4aa9d9a092",
+    "docs/programmes/hybrid_10k/general_draft_2026_10_30/RUNNING_BODIES.json": "3eaa1b932b9251c1ca5d6c299d856436a0291ff4d7ade2663155eebb30d02c60",
+    "docs/programmes/hybrid_10k/general_draft_2026_10_30/FOUNDER_CLARIFICATION.md": "8e16f59f8963efbc0db40b0c4b0532dcc4104e52ca6af391a604fa17cb5a48eb",
+    "docs/programmes/hybrid_10k/general_draft_2026_10_30/GENERAL_GUIDANCE.md": "1aabcb3034f88efb0d2a29e280ffc141b759371c9364c28015d2dc51c79370c3",
+    "docs/programmes/hybrid_10k/lee_draft_2026_10_28/SOURCE.md": "d932e7103b03036e136249e0ab35d48378b0175c75feba84282386fc6ca00f40",
+    "docs/programmes/hybrid_10k/FOUNDER_BRIEF_2026_10_27.txt": "7de445cf0ac8d7e9082cb158c356b9f29c778b1df24da12c0090f7d7efb1c44a",
+    "supabase/migrations/20260724140000_founder_exercise_library_wave1.sql": "22a2683b81d09e071b99adda3c120dff06cb6410fcc4a2b53029beffca73d0c8"
+  }
+}

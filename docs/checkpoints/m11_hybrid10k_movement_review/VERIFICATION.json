@@ -1,0 +1,130 @@
+{
+  "date": "2026-10-30",
+  "base": "a22249e23a385ebb6064b8f05e3d2fb17af3914e",
+  "m11": "PARTIAL_SOURCE_CHOICES_AND_TRUSTED_ROWS_REQUIRED",
+  "gate_a": "OPEN",
+  "checks": [
+    {
+      "command": "python3 tool/programmes/hybrid_10k/build_movement_review.py --check",
+      "exit": 0,
+      "result": "20 rebuilt withheld review graphs; pinned source/catalogue unchanged"
+    },
+    {
+      "command": "python3 tool/programmes/hybrid_10k/movement_review_test.py -v",
+      "exit": 0,
+      "passed": 7,
+      "log_sha256": "6371b2e17b43a60ee553d0e32b6031739b97af75ec59399668d7b8ed2992a47a"
+    },
+    {
+      "command": "flutter test --no-pub tool/programmes/hybrid_10k/movement_admission_probe_test.dart test/programmes/private_protocol_graph_builder_test.dart",
+      "exit": 0,
+      "passed": 13,
+      "log_sha256": "66914224f78273b85c1607d404b0c287092fcc863dc6a183cdd8d1569b493192"
+    },
+    {
+      "command": "flutter test --no-pub tool/programmes/hybrid_10k/movement_admission_probe_test.dart",
+      "exit": 0,
+      "passed": 3,
+      "overlaps_prior_count": true,
+      "reason": "Final complete 60-graph scope assertion",
+      "log_sha256": "62445695173ce8173456b95344f2e8c4b6881008b9b220303856b296d2938839"
+    },
+    {
+      "command": "./tool/testing/run_phase2_consolidation_safety_gate.sh",
+      "exit": 0,
+      "groups_passed": 6,
+      "groups_failed": 0,
+      "log_sha256": "623d2bfd2f397ab4af4b945121e6b10243b3a4ef81bb9c1f1fcc30aea3a6ba0b"
+    },
+    {
+      "command": "dart analyze tool/programmes/hybrid_10k/movement_admission_probe_test.dart",
+      "exit": 0,
+      "issues": 0,
+      "log_sha256": "3487ed1f99ecb4774ab355c6955b80bb4e989096f21c185f0cfb65b0901bfcd1"
+    }
+  ],
+  "evidence_boundary": "Full v1/v2 schedule compilation and source identity guard; known-link partial graph/native plan contracts only. No genuine canonical acquisition/start/logging/completion/restore. Historical CSV remains candidate only.",
+  "source_overlay_only": true,
+  "runtime_schema_or_hosted_changes": false,
+  "running_and_garmin_verification_repeated": false,
+  "reused_running_evidence": {
+    "commit": "a22249e23a385ebb6064b8f05e3d2fb17af3914e",
+    "file": "docs/checkpoints/m11_hybrid10k_reconciliation/ADMISSION.json",
+    "sha256": "26667be06d546f523d7f3c80c061f641bfd2a3d0e87fda17839c54198c24207d",
+    "timed_body_count": 39,
+    "final_distance_metres": 10000,
+    "final_runner_result": "unsupported_timed_running_body"
+  },
+  "artifact_sha256": {
+    "docs/programmes/hybrid_10k/movement_review_2026_10_30/SOURCE_PINS.json": "96419ad32e6c53559b6c04589ad150b3d58c7e89d096339a513f288a24081434",
+    "docs/programmes/hybrid_10k/movement_review_2026_10_30/LOCAL_IDENTITY_EVIDENCE.json": "32c6f2f7259389504e51c0f6ef8e2204f82e36d6c34031d7bd4c011bd2e25833",
+    "docs/programmes/hybrid_10k/movement_review_2026_10_30/UNIQUE_MOVEMENTS.md": "acb18d3b04d97784beee4432bf652a16687bf60fa966aea96d8ae40d0fb4cb32",
+    "docs/programmes/hybrid_10k/movement_review_2026_10_30/PROVENANCE.md": "f6419bc780e98dfcf1b59414187642f2cadd8ba2e8fc191279f2c0709d62d593",
+    "docs/programmes/hybrid_10k/movement_review_2026_10_30/README.md": "25be96929f5ad710625792ac01793a37ddc0639cafdf0c8cfaa1e2b233f541ee",
+    "docs/programmes/hybrid_10k/movement_review_2026_10_30/STRENGTH_REVIEW_GRAPHS.json": "c5119259930cfb77ceaf532de625f625601f7b996c0ba2cf03b597378f0dff1a",
+    "docs/programmes/hybrid_10k/movement_review_2026_10_30/PROPOSED_IDENTITIES.json": "20d4dfaea997cf298045455407c3213f023b93df83ba06ba58a2fb6a2f69285d",
+    "docs/programmes/hybrid_10k/movement_review_2026_10_30/FOUNDER_REVIEW.md": "70afd282a0347ffd4a168a45826a36b9c6df8b7918e1057dc41b830c9acb48d8",
+    "tool/programmes/hybrid_10k/movement_admission_probe_test.dart": "76552ecd18a93e5f46e06f3e935c7a924bbf5483e9e31ab0f14dabb44cfcd141",
+    "tool/programmes/hybrid_10k/movement_review_test.py": "ae7937a6d49d15cc61b74ec830837dd794f2cb5bfbbe5a954aa520a82039ef53",
+    "tool/programmes/hybrid_10k/build_movement_review.py": "167345f1c3b6079be679bdaa3ab6d4ff582f659d84125e850a2fe3c768bf74e9",
+    "docs/checkpoints/m11_hybrid10k_movement_review/ADMISSION.json": "02cc999247de0acf6dd09f6c20d9d6cdeb6065c23a0a5359a881e5da36c90959"
+  },
+  "preservation": {
+    "existing_checkouts": 26,
+    "registered_absent": 28,
+    "before_after_identical": true,
+    "snapshot_sha256": "6dbd119c58e31027320903573b3839c1984c970165d96a74ec94fcf6680c3cd8",
+    "prior_linear_commits_after_1cca598": 22,
+    "prior_merge_count": 0,
+    "existing_checkouts_or_heads_moved": false,
+    "prior_bundles": [
+      {
+        "name": "Cohort-M1.1-main.bundle",
+        "sha256": "db9348edd795f7e669a722b4bdba7376577b3554a50c88c1ec19c0ac213880dd",
+        "bytes": 8558001,
+        "main_ref": "0f0c40dae54c87e7b3f739b205c0fe6b8edf847a",
+        "verify_exit": 0,
+        "complete_history": true
+      },
+      {
+        "name": "Cohort-M1.1-reconciled-2026-10-30.bundle",
+        "sha256": "6b21cb6d9fb61420d124812b5650e0ce7f3bae2eb0fc11ece568d12d65bea206",
+        "bytes": 8625627,
+        "main_ref": "a22249e23a385ebb6064b8f05e3d2fb17af3914e",
+        "verify_exit": 0,
+        "complete_history": true
+      }
+    ]
+  },
+  "git": {
+    "task_clone": "/private/tmp/cohort_m11_movement_review",
+    "original_developer_checkout_head": "a331f52967e1887c4435cccc8f1ecfa192028cd6",
+    "original_developer_dirty": "UNCHANGED",
+    "branch": "main",
+    "copied_origin_main": "a22249e23a385ebb6064b8f05e3d2fb17af3914e_NOT_LIVE_REMOTE_TRUTH",
+    "normal_lookups_this_task": 2,
+    "remote_ancestry": "UNVERIFIED_DNS_FAILURE",
+    "push_attempted": false,
+    "force_or_alternate_route": false
+  },
+  "hosted_supabase": "UNVERIFIED_NO_CONTACT",
+  "not_run": [
+    "M2.5/Garmin/SDK checks",
+    "running schedule reconciliation",
+    "default broad suite",
+    "full repository analysis",
+    "SQL/authenticated DB gate",
+    "hosted/device acceptance"
+  ],
+  "next_single_point": "M1.1 founder selection of the single movement/content packet and exact trusted row retention, then complete private v1/v2 graph admission",
+  "protected_unchanged_sha256": {
+    "lib/domain/running_workout/alpha_quality_targets.dart": "b8e5f22c9c75adcaa3201a2cf1f9b768b2b30474b2b1a92b5e6a180dcb49c1ec",
+    "lib/features/session/models/running_target_admission.dart": "729046caec3f8ec3827ac21c1034af2ad343c4a69eae4dc7fa41391e97492c89",
+    "docs/checkpoints/m23_quality_target_admission/DECISIONS.md": "968ed2c3a84923a422a9f13797a282da454e5cde714315c856c97cf3144c1efa",
+    "supabase/migrations/20261026110000_training_setup_private_alpha_acquisition.sql": "59cb7a97e5c5bcd6e5bc230631a1c34942ce4cd7610aa253b1556510df7248f5",
+    "supabase/migrations/20261026120000_durable_publication_approval_events.sql": "526881b82d7ab20e3e246db4ea808970300ef7570fdd03dd8d43a2b753b9f588",
+    "supabase/migrations/20261027120000_confirmed_running_zone_targets.sql": "26038e82bae21130982ccaed65be14ee49ad4581256f99476ccb5ba071b0de6a",
+    "supabase/migrations/20261027130000_alpha_quality_running_targets.sql": "5c49656c6fa85f6ef0c4524491d61dc53ff42a0bb7e61bbfe33a24ab0dc3b520",
+    "supabase/migrations/20261028120000_terminal_completion_retry.sql": "00c5f094d6c49716109fa67066d6d570e4af27ee24f0bd9b5237433e6d3a0ffa"
+  }
+}

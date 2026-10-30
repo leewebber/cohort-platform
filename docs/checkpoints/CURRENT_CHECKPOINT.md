@@ -1,5 +1,29 @@
 # Current repository checkpoint
 
+> **M1.1 unique movement/content review — partial, 2026-10-30:**
+> [Current handoff](./m11_hybrid10k_movement_review/HANDOFF.md) and single
+> [founder packet](../programmes/hybrid_10k/movement_review_2026_10_30/FOUNDER_REVIEW.md)
+> correct the earlier overbroad “all source discrepancies reconciled” status.
+> Calendar/timing/approved targets remain reconciled; strength inventory selection
+> is still open. Flat DB bench, unilateral DB calf and reverse crunch already
+> occur in the supplied attachment; no explicit later selection over the earlier
+> incline/standing-calf/Pallof template was found. Side plank remains present.
+> Four exact movements still bind 37/124 occurrences. Three earlier-template
+> options have verified local rows, unselected; Thursday DB row and lateral raise
+> have exact setup comparisons but historical candidate evidence only. Six
+> conditional identity proposals have no assigned ID/version/event/approval.
+> All 20 strength review graphs are rebuilt; complete v1/v2 admission refuses at
+> the source/evidence guard for 87 unresolved occurrences. No null/candidate-ID
+> bypass. Extracted partial graphs/plan serialization pass; full genuine programme
+> acquisition/start/logging/completion/restore remain unproved. Final 10K stays
+> distance-ended and unsupported. Seven Python / thirteen Flutter checks, six
+> safety groups and zero new-tool Dart diagnostics pass. Running reconciliation
+> and Garmin verification were not repeated. No hosted/account/athlete/UI work.
+> All prior checkouts/indices/HEADs/.temp/dirty files and bundles are preserved;
+> fresh ordinary Git DNS still fails, no push without remote ancestry verification.
+> **Next single point: M1.1 select the one founder packet and retain exact trusted
+> rows, then complete private v1/v2 graph admission. Gate A OPEN.**
+
 > **M1.1 general Hybrid 10K reconciliation — partial, 2026-10-30:**
 > [Current handoff](./m11_hybrid10k_reconciliation/HANDOFF.md) retains the founder's
 > general-PB scope and exact W4/W8/W9/W10 Tuesday timed replacements. All source

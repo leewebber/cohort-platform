@@ -1,0 +1,702 @@
+{
+  "format": "hybrid10k-conditional-identity-proposals/1",
+  "authority": "UNAPPROVED_REVIEW_ONLY_NO_ID_VERSION_OR_EVENT_ASSIGNED",
+  "records": [
+    {
+      "proposal_key": "proposal.reverse_lunge_db",
+      "decision_reference": "D4",
+      "status": "UNAPPROVED_CONDITIONAL_TEMPLATE_NOT_ADMISSIBLE",
+      "source_evidence": [
+        "../lee_draft_2026_10_28/SOURCE.md",
+        "../general_draft_2026_10_30/SOURCE.json"
+      ],
+      "approved": false,
+      "content_approval": null,
+      "publication_event": null,
+      "retained_version": null,
+      "retained_digest": null,
+      "existing_identity_candidate": null,
+      "identity_action": "Trusted author checks duplicate/exact existing identity first; assigns actual identity only after variant selection and established review. No ID reserved here.",
+      "position": "Standing, two DBs hanging at sides; complete left-side reps then right-side reps; both sides form one set.",
+      "grip": "Closed neutral grip, one DB in each hand.",
+      "laterality": "unilateral",
+      "load_representation": "External kg per dumbbell; completed reps per side; no bodyweight-to-loaded EX-026 substitution.",
+      "definition_template": {
+        "id": null,
+        "version": null,
+        "canonical_name": "Two-dumbbell reverse lunge",
+        "owner": "founder",
+        "lifecycle_status": "draft",
+        "modality": "strength",
+        "laterality": "unilateral",
+        "movement_patterns": [
+          "lunge"
+        ],
+        "equipment": {
+          "required_tokens": [
+            "dumbbell"
+          ],
+          "optional_tokens": [],
+          "one_of_groups": [],
+          "supports_external_load": true,
+          "notes": "Standing, two DBs hanging at sides; complete left-side reps then right-side reps; both sides form one set. Closed neutral grip, one DB in each hand. Equipment tokens are proposed descriptors, not newly registered catalogue identifiers."
+        },
+        "valid_prescription_dimensions": [
+          "repetitions",
+          "rir",
+          "load",
+          "unilateral_side"
+        ],
+        "valid_completed_performance_dimensions": [
+          "repetitions",
+          "load",
+          "unilateral_side"
+        ],
+        "technical_complexity": "unknown",
+        "impact_level": "unknown",
+        "environments": {
+          "suitable": [],
+          "unsuitable": [],
+          "notes": "No equipment availability guarantee."
+        },
+        "aliases": [],
+        "transitional_alias_ids": [],
+        "movement_standard_refs": [],
+        "sport_standard_refs": [],
+        "media_refs": [],
+        "coaching_content_refs": []
+      },
+      "movement_standard_template": {
+        "id": null,
+        "exercise_id": null,
+        "version": null,
+        "schema_version": 1,
+        "title": "Two-dumbbell reverse lunge — unapproved proposal",
+        "language": "en",
+        "lifecycle_status": "draft",
+        "start_position": "Standing, two DBs hanging at sides; complete left-side reps then right-side reps; both sides form one set. Closed neutral grip, one DB in each hand.",
+        "execution_sequence": [
+          "Step one foot back under control into a lunge.",
+          "Return using the front leg; repeat the left-side then right-side sequence."
+        ],
+        "completion_criteria": [
+          "Complete each selected-side repetition under control."
+        ],
+        "invalid_repetition_criteria": [
+          "Uncontrolled return or loss of prescribed stance."
+        ],
+        "applicability_key": "hybrid10k.proposal.reverse_lunge_db",
+        "author": {
+          "id": "codex.proposal"
+        },
+        "authored_at": null,
+        "provenance": {
+          "source_type": "unapproved_local_proposal",
+          "source_reference": "FOUNDER_REVIEW.md (decision D4)",
+          "notes": "Proposed setup only. No founder review or trusted identity publication has occurred."
+        },
+        "reviewer": null,
+        "reviewed_at": null,
+        "published_at": null,
+        "replacement_id": null,
+        "safety_boundary_refs": [],
+        "safety_notes": []
+      },
+      "dose_policy": "No new session doses authored. Existing doses remain proposed and require explicit review; never transfer doses between different movements automatically.",
+      "founder_action": "Select exact setup and accept/edit proposed execution content in D4",
+      "technical_action": "Retain actual trusted published v1/v2 row after deduplication/authoring; do not construct v3 version/event or decode null version as 1.",
+      "legacy_v1_v2_row_proposal": {
+        "exercise_id": null,
+        "name": "Two-dumbbell reverse lunge",
+        "slug": null,
+        "published": false,
+        "category": null,
+        "movement_pattern": "lunge",
+        "equipment": "Standing, two DBs hanging at sides; complete left-side reps then right-side reps; both sides form one set. Closed neutral grip, one DB in each hand.",
+        "primary_muscles": null,
+        "primary_capability": null,
+        "loading_options": "External kg per dumbbell; completed reps per side; no bodyweight-to-loaded EX-026 substitution.",
+        "purpose": "UNAPPROVED exact movement proposal; trusted author completes taxonomy/identity after deduplication. No record has been inserted."
+      },
+      "proposal_scope": "Exact recommended setup for review, introduced here as a proposal; not claimed to be selected or fully specified in the retained source. Founder may accept this named proposal or supply an exact edit."
+    },
+    {
+      "proposal_key": "proposal.flat_db_bench",
+      "decision_reference": "D1",
+      "status": "UNAPPROVED_CONDITIONAL_TEMPLATE_NOT_ADMISSIBLE",
+      "source_evidence": [
+        "../lee_draft_2026_10_28/SOURCE.md",
+        "../general_draft_2026_10_30/SOURCE.json"
+      ],
+      "approved": false,
+      "content_approval": null,
+      "publication_event": null,
+      "retained_version": null,
+      "retained_digest": null,
+      "existing_identity_candidate": null,
+      "identity_action": "Trusted author checks duplicate/exact existing identity first; assigns actual identity only after variant selection and established review. No ID reserved here.",
+      "position": "Supine on a flat bench, feet on floor, one DB in each hand; press both arms together through a comfortable shoulder range.",
+      "grip": "Closed neutral grip with palms facing each other; no forced depth beyond comfortable range.",
+      "laterality": "bilateral",
+      "load_representation": "External kg per dumbbell, not summed pair load.",
+      "definition_template": {
+        "id": null,
+        "version": null,
+        "canonical_name": "Flat dumbbell bench press",
+        "owner": "founder",
+        "lifecycle_status": "draft",
+        "modality": "strength",
+        "laterality": "bilateral",
+        "movement_patterns": [
+          "horizontal_push"
+        ],
+        "equipment": {
+          "required_tokens": [
+            "bench",
+            "dumbbell"
+          ],
+          "optional_tokens": [],
+          "one_of_groups": [],
+          "supports_external_load": true,
+          "notes": "Supine on a flat bench, feet on floor, one DB in each hand; press both arms together through a comfortable shoulder range. Closed neutral grip with palms facing each other; no forced depth beyond comfortable range. Equipment tokens are proposed descriptors, not newly registered catalogue identifiers."
+        },
+        "valid_prescription_dimensions": [
+          "repetitions",
+          "rir",
+          "load"
+        ],
+        "valid_completed_performance_dimensions": [
+          "repetitions",
+          "load"
+        ],
+        "technical_complexity": "unknown",
+        "impact_level": "unknown",
+        "environments": {
+          "suitable": [],
+          "unsuitable": [],
+          "notes": "No equipment availability guarantee."
+        },
+        "aliases": [],
+        "transitional_alias_ids": [],
+        "movement_standard_refs": [],
+        "sport_standard_refs": [],
+        "media_refs": [],
+        "coaching_content_refs": []
+      },
+      "movement_standard_template": {
+        "id": null,
+        "exercise_id": null,
+        "version": null,
+        "schema_version": 1,
+        "title": "Flat dumbbell bench press — unapproved proposal",
+        "language": "en",
+        "lifecycle_status": "draft",
+        "start_position": "Supine on a flat bench, feet on floor, one DB in each hand; press both arms together through a comfortable shoulder range. Closed neutral grip with palms facing each other; no forced depth beyond comfortable range.",
+        "execution_sequence": [
+          "Lower both DBs under control through comfortable shoulder range.",
+          "Press both DBs to the controlled extended-arm position."
+        ],
+        "completion_criteria": [
+          "Complete controlled press through the selected range."
+        ],
+        "invalid_repetition_criteria": [
+          "Loss of control or failure to complete selected range."
+        ],
+        "applicability_key": "hybrid10k.proposal.flat_db_bench",
+        "author": {
+          "id": "codex.proposal"
+        },
+        "authored_at": null,
+        "provenance": {
+          "source_type": "unapproved_local_proposal",
+          "source_reference": "FOUNDER_REVIEW.md (decision D1)",
+          "notes": "Proposed setup only. No founder review or trusted identity publication has occurred."
+        },
+        "reviewer": null,
+        "reviewed_at": null,
+        "published_at": null,
+        "replacement_id": null,
+        "safety_boundary_refs": [],
+        "safety_notes": []
+      },
+      "dose_policy": "No new session doses authored. Existing doses remain proposed and require explicit review; never transfer doses between different movements automatically.",
+      "founder_action": "Select exact setup and accept/edit proposed execution content in D1",
+      "technical_action": "Retain actual trusted published v1/v2 row after deduplication/authoring; do not construct v3 version/event or decode null version as 1.",
+      "legacy_v1_v2_row_proposal": {
+        "exercise_id": null,
+        "name": "Flat dumbbell bench press",
+        "slug": null,
+        "published": false,
+        "category": null,
+        "movement_pattern": "horizontal_push",
+        "equipment": "Supine on a flat bench, feet on floor, one DB in each hand; press both arms together through a comfortable shoulder range. Closed neutral grip with palms facing each other; no forced depth beyond comfortable range.",
+        "primary_muscles": null,
+        "primary_capability": null,
+        "loading_options": "External kg per dumbbell, not summed pair load.",
+        "purpose": "UNAPPROVED exact movement proposal; trusted author completes taxonomy/identity after deduplication. No record has been inserted."
+      },
+      "proposal_scope": "Exact recommended setup for review, introduced here as a proposal; not claimed to be selected or fully specified in the retained source. Founder may accept this named proposal or supply an exact edit."
+    },
+    {
+      "proposal_key": "proposal.single_leg_db_calf",
+      "decision_reference": "D2",
+      "status": "UNAPPROVED_CONDITIONAL_TEMPLATE_NOT_ADMISSIBLE",
+      "source_evidence": [
+        "../lee_draft_2026_10_28/SOURCE.md",
+        "../general_draft_2026_10_30/SOURCE.json"
+      ],
+      "approved": false,
+      "content_approval": null,
+      "publication_event": null,
+      "retained_version": null,
+      "retained_digest": null,
+      "existing_identity_candidate": null,
+      "identity_action": "Trusted author checks duplicate/exact existing identity first; assigns actual identity only after variant selection and established review. No ID reserved here.",
+      "position": "Working forefoot on a stable step, heel free; free hand on stable support; DB in the hand on the working-leg side. Complete left then right; both sides form one set.",
+      "grip": "Closed neutral DB grip; opposite hand holds stable support.",
+      "laterality": "unilateral",
+      "load_representation": "External kg per dumbbell; reps per leg. Do not map to bilateral Machine-or-Step EX-125.",
+      "definition_template": {
+        "id": null,
+        "version": null,
+        "canonical_name": "Standing single-leg dumbbell calf raise",
+        "owner": "founder",
+        "lifecycle_status": "draft",
+        "modality": "strength",
+        "laterality": "unilateral",
+        "movement_patterns": [
+          "other"
+        ],
+        "equipment": {
+          "required_tokens": [
+            "dumbbell",
+            "stable_hand_support"
+          ],
+          "optional_tokens": [],
+          "one_of_groups": [],
+          "supports_external_load": true,
+          "notes": "Working forefoot on a stable step, heel free; free hand on stable support; DB in the hand on the working-leg side. Complete left then right; both sides form one set. Closed neutral DB grip; opposite hand holds stable support. Equipment tokens are proposed descriptors, not newly registered catalogue identifiers."
+        },
+        "valid_prescription_dimensions": [
+          "repetitions",
+          "rir",
+          "load",
+          "unilateral_side"
+        ],
+        "valid_completed_performance_dimensions": [
+          "repetitions",
+          "load",
+          "unilateral_side"
+        ],
+        "technical_complexity": "unknown",
+        "impact_level": "unknown",
+        "environments": {
+          "suitable": [],
+          "unsuitable": [],
+          "notes": "No equipment availability guarantee."
+        },
+        "aliases": [],
+        "transitional_alias_ids": [],
+        "movement_standard_refs": [],
+        "sport_standard_refs": [],
+        "media_refs": [],
+        "coaching_content_refs": []
+      },
+      "movement_standard_template": {
+        "id": null,
+        "exercise_id": null,
+        "version": null,
+        "schema_version": 1,
+        "title": "Standing single-leg dumbbell calf raise — unapproved proposal",
+        "language": "en",
+        "lifecycle_status": "draft",
+        "start_position": "Working forefoot on a stable step, heel free; free hand on stable support; DB in the hand on the working-leg side. Complete left then right; both sides form one set. Closed neutral DB grip; opposite hand holds stable support.",
+        "execution_sequence": [
+          "Raise working heel for authored approximately 2 seconds.",
+          "Pause at top for authored 1 second.",
+          "Lower for authored approximately 2 seconds through comfortable range."
+        ],
+        "completion_criteria": [
+          "One controlled rise/lower on selected working leg; reps per leg."
+        ],
+        "invalid_repetition_criteria": [
+          "Bouncing or failure to use selected controlled range."
+        ],
+        "applicability_key": "hybrid10k.proposal.single_leg_db_calf",
+        "author": {
+          "id": "codex.proposal"
+        },
+        "authored_at": null,
+        "provenance": {
+          "source_type": "unapproved_local_proposal",
+          "source_reference": "FOUNDER_REVIEW.md (decision D2)",
+          "notes": "Proposed setup only. No founder review or trusted identity publication has occurred."
+        },
+        "reviewer": null,
+        "reviewed_at": null,
+        "published_at": null,
+        "replacement_id": null,
+        "safety_boundary_refs": [],
+        "safety_notes": []
+      },
+      "dose_policy": "No new session doses authored. Existing doses remain proposed and require explicit review; never transfer doses between different movements automatically.",
+      "founder_action": "Select exact setup and accept/edit proposed execution content in D2",
+      "technical_action": "Retain actual trusted published v1/v2 row after deduplication/authoring; do not construct v3 version/event or decode null version as 1.",
+      "legacy_v1_v2_row_proposal": {
+        "exercise_id": null,
+        "name": "Standing single-leg dumbbell calf raise",
+        "slug": null,
+        "published": false,
+        "category": null,
+        "movement_pattern": "other",
+        "equipment": "Working forefoot on a stable step, heel free; free hand on stable support; DB in the hand on the working-leg side. Complete left then right; both sides form one set. Closed neutral DB grip; opposite hand holds stable support.",
+        "primary_muscles": null,
+        "primary_capability": null,
+        "loading_options": "External kg per dumbbell; reps per leg. Do not map to bilateral Machine-or-Step EX-125.",
+        "purpose": "UNAPPROVED exact movement proposal; trusted author completes taxonomy/identity after deduplication. No record has been inserted."
+      },
+      "proposal_scope": "Exact recommended setup for review, introduced here as a proposal; not claimed to be selected or fully specified in the retained source. Founder may accept this named proposal or supply an exact edit."
+    },
+    {
+      "proposal_key": "proposal.reverse_crunch",
+      "decision_reference": "D3",
+      "status": "UNAPPROVED_CONDITIONAL_TEMPLATE_NOT_ADMISSIBLE",
+      "source_evidence": [
+        "../lee_draft_2026_10_28/SOURCE.md",
+        "../general_draft_2026_10_30/SOURCE.json"
+      ],
+      "approved": false,
+      "content_approval": null,
+      "publication_event": null,
+      "retained_version": null,
+      "retained_digest": null,
+      "existing_identity_candidate": null,
+      "identity_action": "Trusted author checks duplicate/exact existing identity first; assigns actual identity only after variant selection and established review. No ID reserved here.",
+      "position": "Supine on the floor, hips and knees initially bent approximately 90 degrees, arms beside torso with palms on floor; curl pelvis toward ribs and lower under control.",
+      "grip": "Palms on floor for light support; no external implement.",
+      "laterality": "bilateral",
+      "load_representation": "No external load prescribed; do not fabricate zero kg actuals.",
+      "definition_template": {
+        "id": null,
+        "version": null,
+        "canonical_name": "Bodyweight reverse crunch",
+        "owner": "founder",
+        "lifecycle_status": "draft",
+        "modality": "bodyweight",
+        "laterality": "bilateral",
+        "movement_patterns": [
+          "core"
+        ],
+        "equipment": {
+          "required_tokens": [],
+          "optional_tokens": [],
+          "one_of_groups": [],
+          "supports_external_load": false,
+          "notes": "Supine on the floor, hips and knees initially bent approximately 90 degrees, arms beside torso with palms on floor; curl pelvis toward ribs and lower under control. Palms on floor for light support; no external implement. Equipment tokens are proposed descriptors, not newly registered catalogue identifiers."
+        },
+        "valid_prescription_dimensions": [
+          "repetitions",
+          "rir"
+        ],
+        "valid_completed_performance_dimensions": [
+          "repetitions"
+        ],
+        "technical_complexity": "unknown",
+        "impact_level": "unknown",
+        "environments": {
+          "suitable": [],
+          "unsuitable": [],
+          "notes": "No equipment availability guarantee."
+        },
+        "aliases": [],
+        "transitional_alias_ids": [],
+        "movement_standard_refs": [],
+        "sport_standard_refs": [],
+        "media_refs": [],
+        "coaching_content_refs": []
+      },
+      "movement_standard_template": {
+        "id": null,
+        "exercise_id": null,
+        "version": null,
+        "schema_version": 1,
+        "title": "Bodyweight reverse crunch — unapproved proposal",
+        "language": "en",
+        "lifecycle_status": "draft",
+        "start_position": "Supine on the floor, hips and knees initially bent approximately 90 degrees, arms beside torso with palms on floor; curl pelvis toward ribs and lower under control. Palms on floor for light support; no external implement.",
+        "execution_sequence": [
+          "Use controlled pelvic curl without swinging.",
+          "Lower under control to authored start position."
+        ],
+        "completion_criteria": [
+          "Complete controlled pelvic curl and return."
+        ],
+        "invalid_repetition_criteria": [
+          "Swinging legs in place of controlled pelvic curl."
+        ],
+        "applicability_key": "hybrid10k.proposal.reverse_crunch",
+        "author": {
+          "id": "codex.proposal"
+        },
+        "authored_at": null,
+        "provenance": {
+          "source_type": "unapproved_local_proposal",
+          "source_reference": "FOUNDER_REVIEW.md (decision D3)",
+          "notes": "Proposed setup only. No founder review or trusted identity publication has occurred."
+        },
+        "reviewer": null,
+        "reviewed_at": null,
+        "published_at": null,
+        "replacement_id": null,
+        "safety_boundary_refs": [],
+        "safety_notes": []
+      },
+      "dose_policy": "No new session doses authored. Existing doses remain proposed and require explicit review; never transfer doses between different movements automatically.",
+      "founder_action": "Select exact setup and accept/edit proposed execution content in D3",
+      "technical_action": "Retain actual trusted published v1/v2 row after deduplication/authoring; do not construct v3 version/event or decode null version as 1.",
+      "legacy_v1_v2_row_proposal": {
+        "exercise_id": null,
+        "name": "Bodyweight reverse crunch",
+        "slug": null,
+        "published": false,
+        "category": null,
+        "movement_pattern": "core",
+        "equipment": "Supine on the floor, hips and knees initially bent approximately 90 degrees, arms beside torso with palms on floor; curl pelvis toward ribs and lower under control. Palms on floor for light support; no external implement.",
+        "primary_muscles": null,
+        "primary_capability": null,
+        "loading_options": "No external load prescribed; do not fabricate zero kg actuals.",
+        "purpose": "UNAPPROVED exact movement proposal; trusted author completes taxonomy/identity after deduplication. No record has been inserted."
+      },
+      "proposal_scope": "Exact recommended setup for review, introduced here as a proposal; not claimed to be selected or fully specified in the retained source. Founder may accept this named proposal or supply an exact edit."
+    },
+    {
+      "proposal_key": "proposal.pull_up_foot_assisted",
+      "decision_reference": "D5",
+      "status": "UNAPPROVED_CONDITIONAL_TEMPLATE_NOT_ADMISSIBLE",
+      "source_evidence": [
+        "../lee_draft_2026_10_28/SOURCE.md",
+        "../general_draft_2026_10_30/SOURCE.json"
+      ],
+      "approved": false,
+      "content_approval": null,
+      "publication_event": null,
+      "retained_version": null,
+      "retained_digest": null,
+      "existing_identity_candidate": null,
+      "identity_action": "Trusted author checks duplicate/exact existing identity first; assigns actual identity only after variant selection and established review. No ID reserved here.",
+      "position": "Secure overhead bar with both feet on a stable box, knees bent to permit a controlled hang; keep the same foot support throughout each set.",
+      "grip": "Closed pronated grip at approximately shoulder width.",
+      "laterality": "bilateral",
+      "load_representation": "Assistance type/setup and magnitude separate from added external kg. No negative load; typed capture not yet proved.",
+      "definition_template": {
+        "id": null,
+        "version": null,
+        "canonical_name": "Foot-assisted strict pull-up",
+        "owner": "founder",
+        "lifecycle_status": "draft",
+        "modality": "strength",
+        "laterality": "bilateral",
+        "movement_patterns": [
+          "vertical_pull"
+        ],
+        "equipment": {
+          "required_tokens": [
+            "pull_up_bar",
+            "stable_foot_support"
+          ],
+          "optional_tokens": [],
+          "one_of_groups": [],
+          "supports_external_load": false,
+          "notes": "Secure overhead bar with both feet on a stable box, knees bent to permit a controlled hang; keep the same foot support throughout each set. Closed pronated grip at approximately shoulder width. Equipment tokens are proposed descriptors, not newly registered catalogue identifiers."
+        },
+        "valid_prescription_dimensions": [
+          "repetitions",
+          "rir"
+        ],
+        "valid_completed_performance_dimensions": [
+          "repetitions"
+        ],
+        "technical_complexity": "unknown",
+        "impact_level": "unknown",
+        "environments": {
+          "suitable": [],
+          "unsuitable": [],
+          "notes": "No equipment availability guarantee."
+        },
+        "aliases": [],
+        "transitional_alias_ids": [],
+        "movement_standard_refs": [],
+        "sport_standard_refs": [],
+        "media_refs": [],
+        "coaching_content_refs": []
+      },
+      "movement_standard_template": {
+        "id": null,
+        "exercise_id": null,
+        "version": null,
+        "schema_version": 1,
+        "title": "Foot-assisted strict pull-up — unapproved proposal",
+        "language": "en",
+        "lifecycle_status": "draft",
+        "start_position": "Secure overhead bar with both feet on a stable box, knees bent to permit a controlled hang; keep the same foot support throughout each set. Closed pronated grip at approximately shoulder width.",
+        "execution_sequence": [
+          "Pull with foot assistance from a controlled hang until chin clears the bar.",
+          "Lower under control; keep support secure."
+        ],
+        "completion_criteria": [
+          "Complete reviewed assisted pull-up range with controlled return."
+        ],
+        "invalid_repetition_criteria": [
+          "Kipping or insecure/changing support outside reviewed setup."
+        ],
+        "applicability_key": "hybrid10k.proposal.pull_up_foot_assisted",
+        "author": {
+          "id": "codex.proposal"
+        },
+        "authored_at": null,
+        "provenance": {
+          "source_type": "unapproved_local_proposal",
+          "source_reference": "FOUNDER_REVIEW.md (decision D5)",
+          "notes": "Proposed setup only. No founder review or trusted identity publication has occurred."
+        },
+        "reviewer": null,
+        "reviewed_at": null,
+        "published_at": null,
+        "replacement_id": null,
+        "safety_boundary_refs": [],
+        "safety_notes": []
+      },
+      "dose_policy": "No new session doses authored. Existing doses remain proposed and require explicit review; never transfer doses between different movements automatically.",
+      "founder_action": "Select exact setup and accept/edit proposed execution content in D5",
+      "technical_action": "Retain actual trusted published v1/v2 row after deduplication/authoring; do not construct v3 version/event or decode null version as 1.",
+      "legacy_v1_v2_row_proposal": {
+        "exercise_id": null,
+        "name": "Foot-assisted strict pull-up",
+        "slug": null,
+        "published": false,
+        "category": null,
+        "movement_pattern": "vertical_pull",
+        "equipment": "Secure overhead bar with both feet on a stable box, knees bent to permit a controlled hang; keep the same foot support throughout each set. Closed pronated grip at approximately shoulder width.",
+        "primary_muscles": null,
+        "primary_capability": null,
+        "loading_options": "Assistance type/setup and magnitude separate from added external kg. No negative load; typed capture not yet proved.",
+        "purpose": "UNAPPROVED exact movement proposal; trusted author completes taxonomy/identity after deduplication. No record has been inserted."
+      },
+      "proposal_scope": "Exact recommended setup for review, introduced here as a proposal; not claimed to be selected or fully specified in the retained source. Founder may accept this named proposal or supply an exact edit."
+    },
+    {
+      "proposal_key": "proposal.pull_up_machine_assisted",
+      "decision_reference": "D5",
+      "status": "UNAPPROVED_CONDITIONAL_TEMPLATE_NOT_ADMISSIBLE",
+      "source_evidence": [
+        "../lee_draft_2026_10_28/SOURCE.md",
+        "../general_draft_2026_10_30/SOURCE.json"
+      ],
+      "approved": false,
+      "content_approval": null,
+      "publication_event": null,
+      "retained_version": null,
+      "retained_digest": null,
+      "existing_identity_candidate": null,
+      "identity_action": "Trusted author checks duplicate/exact existing identity first; assigns actual identity only after variant selection and established review. No ID reserved here.",
+      "position": "Kneeling on the support pad of an assisted-pull-up machine, torso controlled; keep the selected assistance setting for the set.",
+      "grip": "Closed pronated grip at approximately shoulder width; a machine lacking that setup is not this proposed variant.",
+      "laterality": "bilateral",
+      "load_representation": "Machine assistance amount and units separate from added external kg; no negative added load or assumed cross-machine comparability.",
+      "definition_template": {
+        "id": null,
+        "version": null,
+        "canonical_name": "Machine-assisted strict pull-up",
+        "owner": "founder",
+        "lifecycle_status": "draft",
+        "modality": "strength",
+        "laterality": "bilateral",
+        "movement_patterns": [
+          "vertical_pull"
+        ],
+        "equipment": {
+          "required_tokens": [
+            "assisted_pull_up_machine"
+          ],
+          "optional_tokens": [],
+          "one_of_groups": [],
+          "supports_external_load": false,
+          "notes": "Kneeling on the support pad of an assisted-pull-up machine, torso controlled; keep the selected assistance setting for the set. Closed pronated grip at approximately shoulder width; a machine lacking that setup is not this proposed variant. Equipment tokens are proposed descriptors, not newly registered catalogue identifiers."
+        },
+        "valid_prescription_dimensions": [
+          "repetitions",
+          "rir"
+        ],
+        "valid_completed_performance_dimensions": [
+          "repetitions"
+        ],
+        "technical_complexity": "unknown",
+        "impact_level": "unknown",
+        "environments": {
+          "suitable": [],
+          "unsuitable": [],
+          "notes": "No equipment availability guarantee."
+        },
+        "aliases": [],
+        "transitional_alias_ids": [],
+        "movement_standard_refs": [],
+        "sport_standard_refs": [],
+        "media_refs": [],
+        "coaching_content_refs": []
+      },
+      "movement_standard_template": {
+        "id": null,
+        "exercise_id": null,
+        "version": null,
+        "schema_version": 1,
+        "title": "Machine-assisted strict pull-up — unapproved proposal",
+        "language": "en",
+        "lifecycle_status": "draft",
+        "start_position": "Kneeling on the support pad of an assisted-pull-up machine, torso controlled; keep the selected assistance setting for the set. Closed pronated grip at approximately shoulder width; a machine lacking that setup is not this proposed variant.",
+        "execution_sequence": [
+          "Pull through a controlled hang until chin clears the bar, with the selected machine assistance.",
+          "Lower under control on machine."
+        ],
+        "completion_criteria": [
+          "Complete reviewed range with selected machine support."
+        ],
+        "invalid_repetition_criteria": [
+          "Kipping or loss of reviewed pad/contact position."
+        ],
+        "applicability_key": "hybrid10k.proposal.pull_up_machine_assisted",
+        "author": {
+          "id": "codex.proposal"
+        },
+        "authored_at": null,
+        "provenance": {
+          "source_type": "unapproved_local_proposal",
+          "source_reference": "FOUNDER_REVIEW.md (decision D5)",
+          "notes": "Proposed setup only. No founder review or trusted identity publication has occurred."
+        },
+        "reviewer": null,
+        "reviewed_at": null,
+        "published_at": null,
+        "replacement_id": null,
+        "safety_boundary_refs": [],
+        "safety_notes": []
+      },
+      "dose_policy": "No new session doses authored. Existing doses remain proposed and require explicit review; never transfer doses between different movements automatically.",
+      "founder_action": "Select exact setup and accept/edit proposed execution content in D5",
+      "technical_action": "Retain actual trusted published v1/v2 row after deduplication/authoring; do not construct v3 version/event or decode null version as 1.",
+      "legacy_v1_v2_row_proposal": {
+        "exercise_id": null,
+        "name": "Machine-assisted strict pull-up",
+        "slug": null,
+        "published": false,
+        "category": null,
+        "movement_pattern": "vertical_pull",
+        "equipment": "Kneeling on the support pad of an assisted-pull-up machine, torso controlled; keep the selected assistance setting for the set. Closed pronated grip at approximately shoulder width; a machine lacking that setup is not this proposed variant.",
+        "primary_muscles": null,
+        "primary_capability": null,
+        "loading_options": "Machine assistance amount and units separate from added external kg; no negative added load or assumed cross-machine comparability.",
+        "purpose": "UNAPPROVED exact movement proposal; trusted author completes taxonomy/identity after deduplication. No record has been inserted."
+      },
+      "proposal_scope": "Exact recommended setup for review, introduced here as a proposal; not claimed to be selected or fully specified in the retained source. Founder may accept this named proposal or supply an exact edit."
+    }
+  ]
+}

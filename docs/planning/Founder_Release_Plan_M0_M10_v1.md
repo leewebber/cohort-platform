@@ -8,26 +8,34 @@ it does not grant implementation, content, hosted, account or release authority.
 
 ## Current single point — M1.1 (2026-10-30)
 
-**General Hybrid 10K source reconciled; complete local graph admission still open.**
-[Current checkpoint](../checkpoints/m11_hybrid10k_reconciliation/HANDOFF.md) records
-40 runs, 20 strength sessions and 10 rests. Four exact founder-selected timed
-replacements remove the old in-programme 5K and three distance repetition sessions;
-39 runs are timed and only the final 10K remains distance-ended. W10 Thursday
-retains two comfortable upper-body press/row sets each, at least 3 RIR. General PB
-scope, confirmed Zone 2 primacy and unchanged approved M2.3 quality rules control;
-Lee's personal adjustment stays separate. This is not blanket detailed content
-approval or publication authority.
+**General Hybrid 10K calendar/targets reconciled; strength variant/content review
+and complete admission remain open.** The [current handoff](../checkpoints/m11_hybrid10k_movement_review/HANDOFF.md)
+and [single founder packet](../programmes/hybrid_10k/movement_review_2026_10_30/FOUNDER_REVIEW.md)
+correct the earlier overbroad source-reconciliation claim. The supplied attachment
+already contains flat DB bench, single-leg DB calf and reverse crunch; no explicit
+later selection over the earlier incline/standing-calf/Pallof template was found.
+Side plank persists. No silent substitution or blanket coaching approval follows.
 
-**Next single point: M1.1 unique movement identity/setup completion and exact
-remaining content review**, then complete private v1/v2 graph admission. Thirty-nine
-timed graphs validate locally; exact local row evidence resolves 37 of 124 strength
-occurrences. Twenty full strength graphs, final-10K distance execution, authorised
-publication/recipient enablement and authenticated device proof remain incomplete.
-No hosted/account/athlete operation follows. Preserve original chain/checkouts/bundle;
-normal main-only Git publication still requires live remote ancestry verification.
+The unchanged source contains 40 runs, 20 strength sessions and 10 rests: 39 timed
+runs and the final distance-ended 10K. Explicit four-run/W10 Thursday amendments,
+general PB scope, confirmed Zone 2 and original approved M2.3 rules remain selected;
+Lee's personal adjustment remains separate. All 20 strength review graphs are now
+rebuilt; 37/124 occurrences have exact admitted local row evidence. Two further
+setups match historical catalogue descriptions but need trusted row retention.
+Three older-template options have verified local rows without source selection.
+Six conditional proposed identity records are unapproved/unpublished, with null
+IDs/versions/events. Full v1/v2 schedule compilation passes; complete graph
+admission stops at the source/evidence guard for 87 unresolved occurrences.
 
-M2.5 remains externally blocked and was not repeated. Founder reports Forerunner 255
-and application not submitted; firmware/Connect/HR source remain unconfirmed.
+**Next single point: M1.1 founder selection of the one movement/content packet
+plus exact trusted row retention, then complete private v1/v2 graph admission.**
+Final-10K execution, approved source/publication/recipient enablement and real
+canonical/device proof remain alpha dependencies. No hosted/account/athlete/UI
+operation follows. Preserve all existing heads, indices, dirty files, .temp, chain
+and bundles; normal main-only Git publication requires live remote ancestry.
+
+M2.5 remains externally blocked and was not repeated. Founder reports Forerunner
+255 and application not submitted; firmware/Connect/HR source remain unconfirmed.
 Access/contracts, authoritative binary FIT proof, adaptation, distribution/device
 acceptance, held migrations and inherited bootstrap triage remain Gate A gates.
 
