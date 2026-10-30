@@ -1,5 +1,5 @@
 {
-  "base": "15627ecd7c41ab0f5f593ba6a08075374f7316fe",
+  "base": "b220f42dcf038e14161d3088c7819c7be8ff853f",
   "selection_sha256": "dd7e08cc1b026b46307b42c491216543899879e202c3f665ce837f486bc0d6d8",
   "dose_clarification_sha256": "e38cba504a1b40dcfe93e1fa72cee4b1804b0f4bee5078e7e240e41df9457b76",
   "inherited_source_sha256": {
@@ -51,8 +51,8 @@
       "scope": "Explicitly preserve selected running prescriptions; no retiming or implied strength deload"
     }
   ],
-  "verified_local_identity_occurrences": 47,
-  "unresolved_identity_occurrences": 58,
+  "verified_local_identity_occurrences": 77,
+  "unresolved_identity_occurrences": 28,
   "weekly_running": [
     {
       "week": 1,

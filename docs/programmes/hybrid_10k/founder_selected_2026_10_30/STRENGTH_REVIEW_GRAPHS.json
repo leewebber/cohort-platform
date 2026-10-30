@@ -1,8 +1,8 @@
 [
   {
     "source_session_id": "LW10K-W01-D01",
-    "protocol_id": "LW10K-W01-D01-DRAFT-R3",
-    "revision_number": 3,
+    "protocol_id": "LW10K-W01-D01-DRAFT-R4",
+    "revision_number": 4,
     "classification": "REVIEW_ONLY_NOT_ADMITTED_OR_PUBLISHED",
     "blocks": [
       {
@@ -65,7 +65,7 @@
           },
           {
             "position": 2,
-            "exercise_id": null,
+            "exercise_id": "EX-053",
             "variant_key": "pull_up_bodyweight",
             "source_occurrence_id": "W01-A-pull_up_bodyweight",
             "display_label_override": "Strict bodyweight pull-up",
@@ -145,7 +145,7 @@
           },
           {
             "position": 4,
-            "exercise_id": null,
+            "exercise_id": "EX-044",
             "variant_key": "db_lateral_raise",
             "source_occurrence_id": "W01-A-db_lateral_raise",
             "display_label_override": "DB lateral raise",
@@ -238,8 +238,8 @@
   },
   {
     "source_session_id": "LW10K-W01-D04",
-    "protocol_id": "LW10K-W01-D04-DRAFT-R3",
-    "revision_number": 3,
+    "protocol_id": "LW10K-W01-D04-DRAFT-R4",
+    "revision_number": 4,
     "classification": "REVIEW_ONLY_NOT_ADMITTED_OR_PUBLISHED",
     "blocks": [
       {
@@ -388,7 +388,7 @@
           },
           {
             "position": 4,
-            "exercise_id": null,
+            "exercise_id": "EX-038",
             "variant_key": "bench_supported_db_row",
             "source_occurrence_id": "W01-B-bench_supported_db_row",
             "display_label_override": "Bench-supported single-arm DB row",
@@ -519,8 +519,8 @@
   },
   {
     "source_session_id": "LW10K-W02-D01",
-    "protocol_id": "LW10K-W02-D01-DRAFT-R3",
-    "revision_number": 3,
+    "protocol_id": "LW10K-W02-D01-DRAFT-R4",
+    "revision_number": 4,
     "classification": "REVIEW_ONLY_NOT_ADMITTED_OR_PUBLISHED",
     "blocks": [
       {
@@ -583,7 +583,7 @@
           },
           {
             "position": 2,
-            "exercise_id": null,
+            "exercise_id": "EX-053",
             "variant_key": "pull_up_bodyweight",
             "source_occurrence_id": "W02-A-pull_up_bodyweight",
             "display_label_override": "Strict bodyweight pull-up",
@@ -663,7 +663,7 @@
           },
           {
             "position": 4,
-            "exercise_id": null,
+            "exercise_id": "EX-044",
             "variant_key": "db_lateral_raise",
             "source_occurrence_id": "W02-A-db_lateral_raise",
             "display_label_override": "DB lateral raise",
@@ -756,8 +756,8 @@
   },
   {
     "source_session_id": "LW10K-W02-D04",
-    "protocol_id": "LW10K-W02-D04-DRAFT-R3",
-    "revision_number": 3,
+    "protocol_id": "LW10K-W02-D04-DRAFT-R4",
+    "revision_number": 4,
     "classification": "REVIEW_ONLY_NOT_ADMITTED_OR_PUBLISHED",
     "blocks": [
       {
@@ -906,7 +906,7 @@
           },
           {
             "position": 4,
-            "exercise_id": null,
+            "exercise_id": "EX-038",
             "variant_key": "bench_supported_db_row",
             "source_occurrence_id": "W02-B-bench_supported_db_row",
             "display_label_override": "Bench-supported single-arm DB row",
@@ -1037,8 +1037,8 @@
   },
   {
     "source_session_id": "LW10K-W03-D01",
-    "protocol_id": "LW10K-W03-D01-DRAFT-R3",
-    "revision_number": 3,
+    "protocol_id": "LW10K-W03-D01-DRAFT-R4",
+    "revision_number": 4,
     "classification": "REVIEW_ONLY_NOT_ADMITTED_OR_PUBLISHED",
     "blocks": [
       {
@@ -1101,7 +1101,7 @@
           },
           {
             "position": 2,
-            "exercise_id": null,
+            "exercise_id": "EX-053",
             "variant_key": "pull_up_bodyweight",
             "source_occurrence_id": "W03-A-pull_up_bodyweight",
             "display_label_override": "Strict bodyweight pull-up",
@@ -1181,7 +1181,7 @@
           },
           {
             "position": 4,
-            "exercise_id": null,
+            "exercise_id": "EX-044",
             "variant_key": "db_lateral_raise",
             "source_occurrence_id": "W03-A-db_lateral_raise",
             "display_label_override": "DB lateral raise",
@@ -1274,8 +1274,8 @@
   },
   {
     "source_session_id": "LW10K-W03-D04",
-    "protocol_id": "LW10K-W03-D04-DRAFT-R3",
-    "revision_number": 3,
+    "protocol_id": "LW10K-W03-D04-DRAFT-R4",
+    "revision_number": 4,
     "classification": "REVIEW_ONLY_NOT_ADMITTED_OR_PUBLISHED",
     "blocks": [
       {
@@ -1424,7 +1424,7 @@
           },
           {
             "position": 4,
-            "exercise_id": null,
+            "exercise_id": "EX-038",
             "variant_key": "bench_supported_db_row",
             "source_occurrence_id": "W03-B-bench_supported_db_row",
             "display_label_override": "Bench-supported single-arm DB row",
@@ -1555,8 +1555,8 @@
   },
   {
     "source_session_id": "LW10K-W04-D01",
-    "protocol_id": "LW10K-W04-D01-DRAFT-R3",
-    "revision_number": 3,
+    "protocol_id": "LW10K-W04-D01-DRAFT-R4",
+    "revision_number": 4,
     "classification": "REVIEW_ONLY_NOT_ADMITTED_OR_PUBLISHED",
     "blocks": [
       {
@@ -1619,7 +1619,7 @@
           },
           {
             "position": 2,
-            "exercise_id": null,
+            "exercise_id": "EX-053",
             "variant_key": "pull_up_bodyweight",
             "source_occurrence_id": "W04-A-pull_up_bodyweight",
             "display_label_override": "Strict bodyweight pull-up",
@@ -1699,7 +1699,7 @@
           },
           {
             "position": 4,
-            "exercise_id": null,
+            "exercise_id": "EX-044",
             "variant_key": "db_lateral_raise",
             "source_occurrence_id": "W04-A-db_lateral_raise",
             "display_label_override": "DB lateral raise",
@@ -1792,8 +1792,8 @@
   },
   {
     "source_session_id": "LW10K-W04-D04",
-    "protocol_id": "LW10K-W04-D04-DRAFT-R3",
-    "revision_number": 3,
+    "protocol_id": "LW10K-W04-D04-DRAFT-R4",
+    "revision_number": 4,
     "classification": "REVIEW_ONLY_NOT_ADMITTED_OR_PUBLISHED",
     "blocks": [
       {
@@ -1943,7 +1943,7 @@
           },
           {
             "position": 4,
-            "exercise_id": null,
+            "exercise_id": "EX-038",
             "variant_key": "bench_supported_db_row",
             "source_occurrence_id": "W04-B-bench_supported_db_row",
             "display_label_override": "Bench-supported single-arm DB row",
@@ -2074,8 +2074,8 @@
   },
   {
     "source_session_id": "LW10K-W05-D01",
-    "protocol_id": "LW10K-W05-D01-DRAFT-R3",
-    "revision_number": 3,
+    "protocol_id": "LW10K-W05-D01-DRAFT-R4",
+    "revision_number": 4,
     "classification": "REVIEW_ONLY_NOT_ADMITTED_OR_PUBLISHED",
     "blocks": [
       {
@@ -2138,7 +2138,7 @@
           },
           {
             "position": 2,
-            "exercise_id": null,
+            "exercise_id": "EX-053",
             "variant_key": "pull_up_bodyweight",
             "source_occurrence_id": "W05-A-pull_up_bodyweight",
             "display_label_override": "Strict bodyweight pull-up",
@@ -2218,7 +2218,7 @@
           },
           {
             "position": 4,
-            "exercise_id": null,
+            "exercise_id": "EX-044",
             "variant_key": "db_lateral_raise",
             "source_occurrence_id": "W05-A-db_lateral_raise",
             "display_label_override": "DB lateral raise",
@@ -2311,8 +2311,8 @@
   },
   {
     "source_session_id": "LW10K-W05-D04",
-    "protocol_id": "LW10K-W05-D04-DRAFT-R3",
-    "revision_number": 3,
+    "protocol_id": "LW10K-W05-D04-DRAFT-R4",
+    "revision_number": 4,
     "classification": "REVIEW_ONLY_NOT_ADMITTED_OR_PUBLISHED",
     "blocks": [
       {
@@ -2461,7 +2461,7 @@
           },
           {
             "position": 4,
-            "exercise_id": null,
+            "exercise_id": "EX-038",
             "variant_key": "bench_supported_db_row",
             "source_occurrence_id": "W05-B-bench_supported_db_row",
             "display_label_override": "Bench-supported single-arm DB row",
@@ -2592,8 +2592,8 @@
   },
   {
     "source_session_id": "LW10K-W06-D01",
-    "protocol_id": "LW10K-W06-D01-DRAFT-R3",
-    "revision_number": 3,
+    "protocol_id": "LW10K-W06-D01-DRAFT-R4",
+    "revision_number": 4,
     "classification": "REVIEW_ONLY_NOT_ADMITTED_OR_PUBLISHED",
     "blocks": [
       {
@@ -2656,7 +2656,7 @@
           },
           {
             "position": 2,
-            "exercise_id": null,
+            "exercise_id": "EX-053",
             "variant_key": "pull_up_bodyweight",
             "source_occurrence_id": "W06-A-pull_up_bodyweight",
             "display_label_override": "Strict bodyweight pull-up",
@@ -2736,7 +2736,7 @@
           },
           {
             "position": 4,
-            "exercise_id": null,
+            "exercise_id": "EX-044",
             "variant_key": "db_lateral_raise",
             "source_occurrence_id": "W06-A-db_lateral_raise",
             "display_label_override": "DB lateral raise",
@@ -2829,8 +2829,8 @@
   },
   {
     "source_session_id": "LW10K-W06-D04",
-    "protocol_id": "LW10K-W06-D04-DRAFT-R3",
-    "revision_number": 3,
+    "protocol_id": "LW10K-W06-D04-DRAFT-R4",
+    "revision_number": 4,
     "classification": "REVIEW_ONLY_NOT_ADMITTED_OR_PUBLISHED",
     "blocks": [
       {
@@ -2979,7 +2979,7 @@
           },
           {
             "position": 4,
-            "exercise_id": null,
+            "exercise_id": "EX-038",
             "variant_key": "bench_supported_db_row",
             "source_occurrence_id": "W06-B-bench_supported_db_row",
             "display_label_override": "Bench-supported single-arm DB row",
@@ -3110,8 +3110,8 @@
   },
   {
     "source_session_id": "LW10K-W07-D01",
-    "protocol_id": "LW10K-W07-D01-DRAFT-R3",
-    "revision_number": 3,
+    "protocol_id": "LW10K-W07-D01-DRAFT-R4",
+    "revision_number": 4,
     "classification": "REVIEW_ONLY_NOT_ADMITTED_OR_PUBLISHED",
     "blocks": [
       {
@@ -3174,7 +3174,7 @@
           },
           {
             "position": 2,
-            "exercise_id": null,
+            "exercise_id": "EX-053",
             "variant_key": "pull_up_bodyweight",
             "source_occurrence_id": "W07-A-pull_up_bodyweight",
             "display_label_override": "Strict bodyweight pull-up",
@@ -3254,7 +3254,7 @@
           },
           {
             "position": 4,
-            "exercise_id": null,
+            "exercise_id": "EX-044",
             "variant_key": "db_lateral_raise",
             "source_occurrence_id": "W07-A-db_lateral_raise",
             "display_label_override": "DB lateral raise",
@@ -3347,8 +3347,8 @@
   },
   {
     "source_session_id": "LW10K-W07-D04",
-    "protocol_id": "LW10K-W07-D04-DRAFT-R3",
-    "revision_number": 3,
+    "protocol_id": "LW10K-W07-D04-DRAFT-R4",
+    "revision_number": 4,
     "classification": "REVIEW_ONLY_NOT_ADMITTED_OR_PUBLISHED",
     "blocks": [
       {
@@ -3497,7 +3497,7 @@
           },
           {
             "position": 4,
-            "exercise_id": null,
+            "exercise_id": "EX-038",
             "variant_key": "bench_supported_db_row",
             "source_occurrence_id": "W07-B-bench_supported_db_row",
             "display_label_override": "Bench-supported single-arm DB row",
@@ -3628,8 +3628,8 @@
   },
   {
     "source_session_id": "LW10K-W08-D01",
-    "protocol_id": "LW10K-W08-D01-DRAFT-R3",
-    "revision_number": 3,
+    "protocol_id": "LW10K-W08-D01-DRAFT-R4",
+    "revision_number": 4,
     "classification": "REVIEW_ONLY_NOT_ADMITTED_OR_PUBLISHED",
     "blocks": [
       {
@@ -3692,7 +3692,7 @@
           },
           {
             "position": 2,
-            "exercise_id": null,
+            "exercise_id": "EX-053",
             "variant_key": "pull_up_bodyweight",
             "source_occurrence_id": "W08-A-pull_up_bodyweight",
             "display_label_override": "Strict bodyweight pull-up",
@@ -3772,7 +3772,7 @@
           },
           {
             "position": 4,
-            "exercise_id": null,
+            "exercise_id": "EX-044",
             "variant_key": "db_lateral_raise",
             "source_occurrence_id": "W08-A-db_lateral_raise",
             "display_label_override": "DB lateral raise",
@@ -3865,8 +3865,8 @@
   },
   {
     "source_session_id": "LW10K-W08-D04",
-    "protocol_id": "LW10K-W08-D04-DRAFT-R3",
-    "revision_number": 3,
+    "protocol_id": "LW10K-W08-D04-DRAFT-R4",
+    "revision_number": 4,
     "classification": "REVIEW_ONLY_NOT_ADMITTED_OR_PUBLISHED",
     "blocks": [
       {
@@ -4016,7 +4016,7 @@
           },
           {
             "position": 4,
-            "exercise_id": null,
+            "exercise_id": "EX-038",
             "variant_key": "bench_supported_db_row",
             "source_occurrence_id": "W08-B-bench_supported_db_row",
             "display_label_override": "Bench-supported single-arm DB row",
@@ -4148,8 +4148,8 @@
   },
   {
     "source_session_id": "LW10K-W09-D01",
-    "protocol_id": "LW10K-W09-D01-DRAFT-R3",
-    "revision_number": 3,
+    "protocol_id": "LW10K-W09-D01-DRAFT-R4",
+    "revision_number": 4,
     "classification": "REVIEW_ONLY_NOT_ADMITTED_OR_PUBLISHED",
     "blocks": [
       {
@@ -4212,7 +4212,7 @@
           },
           {
             "position": 2,
-            "exercise_id": null,
+            "exercise_id": "EX-053",
             "variant_key": "pull_up_bodyweight",
             "source_occurrence_id": "W09-A-pull_up_bodyweight",
             "display_label_override": "Strict bodyweight pull-up",
@@ -4292,7 +4292,7 @@
           },
           {
             "position": 4,
-            "exercise_id": null,
+            "exercise_id": "EX-044",
             "variant_key": "db_lateral_raise",
             "source_occurrence_id": "W09-A-db_lateral_raise",
             "display_label_override": "DB lateral raise",
@@ -4385,8 +4385,8 @@
   },
   {
     "source_session_id": "LW10K-W09-D04",
-    "protocol_id": "LW10K-W09-D04-DRAFT-R3",
-    "revision_number": 3,
+    "protocol_id": "LW10K-W09-D04-DRAFT-R4",
+    "revision_number": 4,
     "classification": "REVIEW_ONLY_NOT_ADMITTED_OR_PUBLISHED",
     "blocks": [
       {
@@ -4493,7 +4493,7 @@
           },
           {
             "position": 3,
-            "exercise_id": null,
+            "exercise_id": "EX-038",
             "variant_key": "bench_supported_db_row",
             "source_occurrence_id": "W09-B-bench_supported_db_row",
             "display_label_override": "Bench-supported single-arm DB row",
@@ -4624,8 +4624,8 @@
   },
   {
     "source_session_id": "LW10K-W10-D01",
-    "protocol_id": "LW10K-W10-D01-DRAFT-R3",
-    "revision_number": 3,
+    "protocol_id": "LW10K-W10-D01-DRAFT-R4",
+    "revision_number": 4,
     "classification": "REVIEW_ONLY_NOT_ADMITTED_OR_PUBLISHED",
     "blocks": [
       {
@@ -4688,7 +4688,7 @@
           },
           {
             "position": 2,
-            "exercise_id": null,
+            "exercise_id": "EX-053",
             "variant_key": "pull_up_bodyweight",
             "source_occurrence_id": "W10-A-pull_up_bodyweight",
             "display_label_override": "Strict bodyweight pull-up",
@@ -4768,7 +4768,7 @@
           },
           {
             "position": 4,
-            "exercise_id": null,
+            "exercise_id": "EX-044",
             "variant_key": "db_lateral_raise",
             "source_occurrence_id": "W10-A-db_lateral_raise",
             "display_label_override": "DB lateral raise",
@@ -4861,8 +4861,8 @@
   },
   {
     "source_session_id": "LW10K-W10-D04",
-    "protocol_id": "LW10K-W10-D04-DRAFT-R3",
-    "revision_number": 3,
+    "protocol_id": "LW10K-W10-D04-DRAFT-R4",
+    "revision_number": 4,
     "classification": "REVIEW_ONLY_NOT_ADMITTED_OR_PUBLISHED",
     "blocks": [
       {
@@ -4921,7 +4921,7 @@
           },
           {
             "position": 2,
-            "exercise_id": null,
+            "exercise_id": "EX-038",
             "variant_key": "bench_supported_db_row",
             "source_occurrence_id": "W10-B-bench_supported_db_row",
             "display_label_override": "Bench-supported single-arm DB row",

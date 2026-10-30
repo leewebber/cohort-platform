@@ -3,23 +3,6 @@
   "canonical_definition_versions_or_events_required_by_v1_v2": false,
   "records": [
     {
-      "variant_key": "pull_up_bodyweight",
-      "source_decision": "D5",
-      "plain_english_name": "Strict bodyweight pull-up",
-      "selected_setup": "Shoulder-width overhand grip; strict. Bodyweight initially; no invented body mass or zero-kg actual. Added load requires the exact supported weighted identity and explicit selection; assistance remains separate.",
-      "per_side": false,
-      "load_representation": {
-        "load_label": "Added external load only after supported weighted-identity selection"
-      },
-      "candidate_id": "EX-053",
-      "verified_exercise_id": null,
-      "canonical_definition_version": null,
-      "publication_event": null,
-      "content_authority": "D1–D7 selected content; not identity publication authority",
-      "required_action": "Trusted author checks exact existing row/setup first. Retain actual admissible published v1/v2 row or complete established exact identity authoring/intake if absent. No invented ID or v3 dependency.",
-      "candidate_gap": "Approved bridge/historical CSV do not supply a trusted runtime row for the selected initial strict bodyweight branch."
-    },
-    {
       "variant_key": "chest_supported_db_row",
       "source_decision": "D7",
       "plain_english_name": "Bilateral chest-supported DB row",
@@ -35,43 +18,7 @@
       "publication_event": null,
       "content_authority": "D1–D7 selected content; not identity publication authority",
       "required_action": "Trusted author checks exact existing row/setup first. Retain actual admissible published v1/v2 row or complete established exact identity authoring/intake if absent. No invented ID or v3 dependency.",
-      "candidate_gap": "Published EX-090 equipment says Machine or Bench, not Dumbbells. Need technical evidence for DB branch; unrelated HYROX candidate is not authority."
-    },
-    {
-      "variant_key": "db_lateral_raise",
-      "source_decision": "D7",
-      "plain_english_name": "DB lateral raise",
-      "selected_setup": "Bilateral dumbbells; no swinging. Log external load per dumbbell.",
-      "per_side": false,
-      "load_representation": {
-        "load_unit": "kg",
-        "load_label": "External load per dumbbell"
-      },
-      "candidate_id": "EX-044",
-      "verified_exercise_id": null,
-      "canonical_definition_version": null,
-      "publication_event": null,
-      "content_authority": "D1–D7 selected content; not identity publication authority",
-      "required_action": "Trusted author checks exact existing row/setup first. Retain actual admissible published v1/v2 row or complete established exact identity authoring/intake if absent. No invented ID or v3 dependency.",
-      "candidate_gap": "Historical exact equipment/execution description only; no admissible row retained."
-    },
-    {
-      "variant_key": "bench_supported_db_row",
-      "source_decision": "D7",
-      "plain_english_name": "Bench-supported single-arm DB row",
-      "selected_setup": "Free hand supported on bench; complete both sides, then rest 90 seconds. External load per dumbbell.",
-      "per_side": true,
-      "load_representation": {
-        "load_unit": "kg",
-        "load_label": "External load per dumbbell"
-      },
-      "candidate_id": "EX-038",
-      "verified_exercise_id": null,
-      "canonical_definition_version": null,
-      "publication_event": null,
-      "content_authority": "D1–D7 selected content; not identity publication authority",
-      "required_action": "Trusted author checks exact existing row/setup first. Retain actual admissible published v1/v2 row or complete established exact identity authoring/intake if absent. No invented ID or v3 dependency.",
-      "candidate_gap": "Historical exact One Dumbbell + Bench description only; no admissible row retained."
+      "candidate_gap": "Observed published EX-090 equipment says Machine or Bench; setup/execution/cues NULL. Exact DB branch coverage remains unverified."
     },
     {
       "variant_key": "seated_supported_db_press",
@@ -89,7 +36,7 @@
       "publication_event": null,
       "content_authority": "D1–D7 selected content; not identity publication authority",
       "required_action": "Trusted author checks exact existing row/setup first. Retain actual admissible published v1/v2 row or complete established exact identity authoring/intake if absent. No invented ID or v3 dependency.",
-      "candidate_gap": "Historical EX-037 lacks the selected seated back-supported neutral two-DB setup; do not reuse standing proposal."
+      "candidate_gap": "Observed published EX-037 supports dumbbells but setup/execution NULL; seated back support and neutral grip are not established."
     },
     {
       "variant_key": "reverse_lunge_db",
@@ -101,13 +48,13 @@
         "load_unit": "kg",
         "load_label": "External load per dumbbell"
       },
-      "candidate_id": null,
+      "candidate_id": "EX-026",
       "verified_exercise_id": null,
       "canonical_definition_version": null,
       "publication_event": null,
       "content_authority": "D1–D7 selected content; not identity publication authority",
       "required_action": "Trusted author checks exact existing row/setup first. Retain actual admissible published v1/v2 row or complete established exact identity authoring/intake if absent. No invented ID or v3 dependency.",
-      "candidate_gap": "EX-026 is equipment None; no exact loaded two-DB reverse-lunge row retained."
+      "candidate_gap": "Observed EX-026 equipment/setup/execution NULL; historical None equipment is candidate-only evidence. No exact loaded two-DB support was returned by the bounded lookup."
     }
   ],
   "conditional_not_initial_blockers": [

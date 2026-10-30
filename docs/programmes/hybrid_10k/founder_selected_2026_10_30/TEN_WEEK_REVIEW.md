@@ -179,22 +179,32 @@ The running range subtracts the four explicitly optional five-minute walking coo
 
 All recoveries are expanded explicitly below. For normal stride blocks the final 100-second recovery IS included. For the four selected Tuesday workouts, work recoveries are BETWEEN repetitions only, with no recovery after the last work repetition; their warm-up includes all three acceleration recoveries.
 
-## Exact local identity retention — six records/actions
+## Trusted catalogue result — retained matches and three actions
 
 The retained legacy rows support the selected incline DB press (`EX-084`), cable Pallof (`EX-114`), bilateral machine standing calf (`EX-125`), side plank (`EX-116`) and barbell RDL (`EX-078`). RDL membership is now confirmed. This is local row evidence, not a new published version/event or current hosted-state verification.
 
-| Selected movement | Exact missing record | Authority/action needed |
+| Selected movement | Actual retained identity and supporting evidence |
+|---|---|
+| Strict initial bodyweight pull-up | Published `EX-053`, slug `pull-up`, Pull-up Bar, Vertical Pull; dead-hang/control cues. Existing founder-approved bridge identifies strict/bodyweight pull-up separately from weighted/chin-up identities. The selected grip/effort remains authored source, not an invented published setup field. |
+| Dumbbell lateral raise | Published `EX-044`, slug `lateral-raise`, One Dumbbell/Two Dumbbells, controlled shoulder-height raise/lower cues. The two-DB source uses a supported equipment branch. |
+| Bench-supported single-arm DB row | Published `EX-038`, slug `single-arm-dumbbell-row`, Bench + One Dumbbell, Horizontal Pull, controlled elbow-to-hip cues. Source free-hand support/per-side prescription remains unchanged. |
+
+NULL `setup`, `execution`, `unilateral` and `loading_options` values remain NULL in
+the evidence. No published field is filled from a display label or programme cue.
+The exact published rows plus explicit compatible source/approved bridge support
+these three v1/v2 matches; nothing is seeded globally or mapped by name similarity.
+
+## Three precise remaining records / separate approval
+
+| Selected movement | Actual lookup result | Missing evidence and smallest action |
 |---|---|---|
-| Strict shoulder-width overhand **bodyweight pull-up** | Actual trusted published legacy `exercises_v2` row for `EX-053`, with source provenance. The approved `cohort.exercise.pull_up → EX-053` bridge identifies the strict/bodyweight branch but is not that row. | Catalogue owner/trusted source producer retains the real row through the existing private v1/v2 boundary and confirms the selected branch is covered. Do not use weighted `EX-095` as the initial identity. |
-| Bilateral **chest-supported dumbbell row** | A trusted implement/setup binding showing that the bench branch of `EX-090` covers this DB variant, or the actual exact DB-specific published row. The retained `EX-090` row says “Chest Supported Row Machine or Bench”, without establishing dumbbells. | Catalogue/definition owner verifies the DB branch and supplies its legitimate identity evidence; if absent, perform normal exact identity authoring/intake. Another programme's unpublished DB-row proposal cannot establish it. |
-| **Dumbbell lateral raise** | Actual trusted published legacy row `EX-044`. The retained historical authoring CSV describes dumbbells/controlled execution but is candidate evidence only. | Trusted source producer retains that actual row with provenance; verify selected DB equipment/execution. No new founder movement decision is needed. |
-| **Single-arm DB row, free hand on bench** | Actual trusted published legacy row `EX-038`. The historical “One Dumbbell, Bench” row description agrees but lacks admissible publication-source retention. | Trusted source producer retains the actual row with provenance; preserve unilateral setup and per-DB load. Do not substitute bilateral/cable rows. |
-| **Seated near-upright back-supported, neutral-grip two-DB strict press** | Actual published legacy row plus trusted setup binding covering seated back support/neutral grip/no leg drive. `EX-037` is only a historical strict-press lead and does not establish this setup. | Catalogue/definition owner verifies whether the selected variant belongs to `EX-037` or another existing exact identity; if absent, use established authoring/intake. No standing, barbell or push-press substitution. |
-| **Two-DB side-held neutral-grip reverse lunge**, one side then the other | Actual exact loaded reverse-lunge published identity/row and source provenance. No admissible ID is retained; `EX-026` has equipment None. | Trusted producer checks the real catalogue for this exact variant; retain the real existing record or author through the established process if absent. Do not assign a made-up ID or promote the bodyweight row. |
+| Bilateral chest-supported **DB** row | `EX-090` is published; equipment says “Chest Supported Row Machine or Bench”; setup/execution/cues are NULL. | Catalogue owner must confirm/publish explicit two-DB bench-branch coverage, or return the actual distinct DB identity. A bench label alone does not establish the DB implement. |
+| Seated supported neutral-grip two-DB strict press | `EX-037` is published with One/Two Dumbbells; setup/execution are NULL; no seated/back-support candidate was returned. | Owner must confirm/publish seated, near-upright back support, neutral two-DB, no-leg-drive coverage under the legitimate identity, or provide the actual distinct exact record. |
+| Loaded two-DB reverse lunge | `EX-026` is published but equipment, setup, execution and loading options are NULL; no exact loaded two-DB candidate was returned. | Owner must establish actual loaded side-held neutral-grip coverage or author the exact record through normal deduplication. Historical CSV “None” is not current hosted equipment; NULL is neither bodyweight proof nor loaded approval. |
 
-A trusted catalogue/definition owner must provide the actual records/setup bindings above through the established private v1/v2 boundary. The narrowly scoped SQL retention request is prepared but not executed; hosted target/read authority is separate. No new founder movement choice is being requested. Foot-assisted and machine-assisted pull-ups remain separate unresolved branches, never negative added load; weighted EX-095 is a separate retained weight-belt option, not the initial bodyweight identity.
+Field Manual was ACTIVE_HEALTHY at the authenticated snapshot. No hosted writes occurred. The three missing exact setup/identity records require separate catalogue-owner/producer approval and genuine published evidence before admission; approval alone is not a published record. No new coaching dose or founder movement choice is requested. Assisted pull-ups remain separate; weighted EX-095 is not initial bodyweight intake.
 
-**Actual full admission:** both v1/v2 schedules compile; known-identity partial graph/codec checks pass. Full strength admission remains blocked by the exact identity records above, with no unresolved dose holds. D8/full-programme approval is still pending. Nothing is published, acquired, started, logged, completed or restored for an athlete here. The final 10K remains distance-ended and unsupported by the current runner.
+**Actual full admission:** both v1/v2 schedules compile; known-identity partial graph/codec checks pass. Full strength admission remains blocked by the three exact setup/identity records above, with no unresolved dose holds. D8/full-programme approval is still pending. Nothing is published, acquired, started, logged, completed or restored for an athlete here. The final 10K remains distance-ended and unsupported by the current runner.
 
 ## All ten weeks — every session
 

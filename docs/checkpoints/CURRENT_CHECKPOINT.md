@@ -1,5 +1,27 @@
 # Current repository checkpoint
 
+> **M1.1 trusted catalogue lookup — partial, 2026-10-30:**
+> [Current handoff](./m11_trusted_catalogue_lookup/HANDOFF.md) records one authorised
+> status GET and one bounded read-only catalogue SELECT. Field Manual
+> `otnhhdxstdnwccehacku` was **ACTIVE_HEALTHY**; existing Keychain authentication
+> was used without credential issuance, disclosure or configuration change.
+> Actual published `EX-053` bodyweight pull-up, `EX-044` DB lateral raise and
+> `EX-038` supported single-arm DB row are retained with raw/provenance/hash checks
+> through legacy v1/v2 intake. Three exact setup records remain: DB coverage for
+> `EX-090`, seated/back-supported neutral press coverage for `EX-037`, loaded
+> two-DB reverse-lunge coverage (`EX-026` equipment/setup are NULL). The three
+> source-faithful proposals require separate catalogue-owner/producer approval
+> and actual record retention; no invented versions/events or hosted writes.
+> Full schedules compile and known-identity partial graph/codec checks pass;
+> complete strength graph admission remains 0/20. Coaching/running body bytes
+> and dose decisions are unchanged; D8 and final-10K execution remain pending.
+> Five focused evidence checks and four admission probes pass; unchanged dose,
+> Garmin and safety proof is reused. All prior checkouts/indices/HEADs/.temp,
+> dirty files, history and five bundles are preserved. Normal Git HTTPS/fetch
+> verifies live main `1cca598` as the exact chain ancestor before publication.
+> **Next: three bounded setup/identity producer actions and full local admission;
+> D8/full-programme approval remains an independent founder review. Gate A OPEN.**
+
 > **M1.1 dose reconciliation — 2026-10-30:**
 > [Current handoff](./m11_hybrid10k_dose_reconciliation/HANDOFF.md) applies the
 > explicit RDL and W4/W8/W9/W10 doses plus the W7 follow-up. All former strength

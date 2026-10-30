@@ -14,11 +14,12 @@ from pathlib import Path
 import re
 
 import reconcile_general_source as prior
+import trusted_catalogue_snapshot as trusted
 
 ROOT = Path(__file__).resolve().parents[3]
 OLD = ROOT / 'docs/programmes/hybrid_10k/general_draft_2026_10_30'
 OUT = ROOT / 'docs/programmes/hybrid_10k/founder_selected_2026_10_30'
-BASE = '15627ecd7c41ab0f5f593ba6a08075374f7316fe'
+BASE = 'b220f42dcf038e14161d3088c7819c7be8ff853f'
 PINS = {
     'SOURCE.json': '3a610154a8be27d31ecfe7cbf2fdfb16908a305e1bd35e1ada22b7e4b1bee486',
     'RUNNING_BODIES.json': '3eaa1b932b9251c1ca5d6c299d856436a0291ff4d7ade2663155eebb30d02c60',
@@ -32,10 +33,9 @@ WAVE = 'supabase/migrations/20260724140000_founder_exercise_library_wave1.sql'
 WAVE_HASH = '22a2683b81d09e071b99adda3c120dff06cb6410fcc4a2b53029beffca73d0c8'
 BOUND = {'incline_db_press': 'EX-084', 'cable_pallof_square': 'EX-114',
          'machine_standing_calf': 'EX-125', 'side_plank': 'EX-116',
-         'barbell_rdl': 'EX-078'}
-CANDIDATES = {'pull_up_bodyweight': 'EX-053', 'chest_supported_db_row': 'EX-090',
-              'db_lateral_raise': 'EX-044', 'bench_supported_db_row': 'EX-038',
-              'seated_supported_db_press': 'EX-037', 'reverse_lunge_db': None}
+         'barbell_rdl': 'EX-078', **trusted.DIRECT_MATCHES}
+CANDIDATES = {'chest_supported_db_row': 'EX-090',
+              'seated_supported_db_press': 'EX-037', 'reverse_lunge_db': 'EX-026'}
 MONDAY = ['incline_db_press', 'pull_up_bodyweight', 'chest_supported_db_row',
           'db_lateral_raise', 'cable_pallof_square']
 THURSDAY = ['barbell_rdl', 'reverse_lunge_db', 'seated_supported_db_press',
@@ -88,6 +88,7 @@ def rows():
                 'hosted_state': 'UNVERIFIED',
             }
     assert len(result) == 7 and all(r['catalogue_row']['published'] for r in result.values())
+    result.update(trusted.row_evidence(ROOT))
     return result
 
 
@@ -237,8 +238,8 @@ def build():
                 'Bodyweight squats/unloaded hinges are preparation, not working squat/RDL prescriptions.')
         if week == 10 and day == 4:
             prep = 'Upper-body preparation only; 1–2 light sets per new upper-body pattern as needed, no failure. No lower-body lifting or squat/hinge warm-up inserted.'
-        graphs.append({'source_session_id': s['session_id'], 'protocol_id': s['session_id'] + '-DRAFT-R3',
-            'revision_number': 3, 'classification': 'REVIEW_ONLY_NOT_ADMITTED_OR_PUBLISHED',
+        graphs.append({'source_session_id': s['session_id'], 'protocol_id': s['session_id'] + '-DRAFT-R4',
+            'revision_number': 4, 'classification': 'REVIEW_ONLY_NOT_ADMITTED_OR_PUBLISHED',
             'blocks': [
                 {'position': 1, 'block_type': 'warm_up', 'title': 'Preparation', 'content': prep, 'workout_format': 'none', 'exercises': []},
                 {'position': 2, 'block_type': 'strength', 'title': s['title'], 'content': 'Exact founder-selected standard and week-specific doses; full programme D8 review pending.',
@@ -271,7 +272,7 @@ def build():
     for ref in schedule['sessions']:
         s = next(s for s in source['sessions'] if s['session_id'] == ref['session_key'])
         if s['type'] == 'strength':
-            ref.update(protocol_id=s['session_id'] + '-DRAFT-R3', revision_number=3, title=s['title'])
+            ref.update(protocol_id=s['session_id'] + '-DRAFT-R4', revision_number=4, title=s['title'])
     for w in schedule['weeks']:
         w['title'] = source['weeks'][w['week_number'] - 1]['focus']
         for day in w['days']:
@@ -282,9 +283,13 @@ def build():
                     slot['display_title'] = day_source['title']
                     slot['progression']['prescription_summary'] = 'D1–D7 plus exact founder-selected week doses; D8 full-programme review in TEN_WEEK_REVIEW.md. No automatic progression.'
     statistics = weekly_stats(runs)
-    evidence = {'scope': 'TRUSTED_LOCAL_PRIVATE_V1_V2_ROW_INTAKE_NOT_V3_OR_HOSTED', 'base': BASE,
-        'repository_rows': rows(), 'historical_candidate_rows': load('IDENTITY_INTAKE.json')['candidate_export'],
+    evidence = {'scope': 'TRUSTED_LEGACY_V1_V2_ROWS_REPOSITORY_PLUS_BOUNDED_HOSTED_SNAPSHOT', 'base': BASE,
+        'catalogue_rows': rows(), 'historical_candidate_rows': load('IDENTITY_INTAKE.json')['candidate_export'],
         'verified_bindings': BOUND, 'candidate_leads': CANDIDATES,
+        'bounded_hosted_snapshot': {'directory': str(trusted.DIRECTORY),
+                                    'artifact_sha256': trusted.PINS,
+                                    'retained_exact_ids': list(trusted.DIRECT_MATCHES.values()),
+                                    'remaining_candidate_ids': ['EX-026','EX-037','EX-090']},
         'occurrences': bindings,
         'assisted_branches': [
             {'variant_key': 'pull_up_foot_assisted', 'identity': None, 'selected': False, 'status': 'UNRESOLVED_SEPARATE_BRANCH_NOT_NEGATIVE_LOAD'},
@@ -302,12 +307,9 @@ def build():
              'content_authority': 'D1–D7 selected content; not identity publication authority',
              'required_action': 'Trusted author checks exact existing row/setup first. Retain actual admissible published v1/v2 row or complete established exact identity authoring/intake if absent. No invented ID or v3 dependency.',
              'candidate_gap': {
-                 'pull_up_bodyweight': 'Approved bridge/historical CSV do not supply a trusted runtime row for the selected initial strict bodyweight branch.',
-                 'chest_supported_db_row': 'Published EX-090 equipment says Machine or Bench, not Dumbbells. Need technical evidence for DB branch; unrelated HYROX candidate is not authority.',
-                 'db_lateral_raise': 'Historical exact equipment/execution description only; no admissible row retained.',
-                 'bench_supported_db_row': 'Historical exact One Dumbbell + Bench description only; no admissible row retained.',
-                 'seated_supported_db_press': 'Historical EX-037 lacks the selected seated back-supported neutral two-DB setup; do not reuse standing proposal.',
-                 'reverse_lunge_db': 'EX-026 is equipment None; no exact loaded two-DB reverse-lunge row retained.',
+                  'chest_supported_db_row': 'Observed published EX-090 equipment says Machine or Bench; setup/execution/cues NULL. Exact DB branch coverage remains unverified.',
+                 'seated_supported_db_press': 'Observed published EX-037 supports dumbbells but setup/execution NULL; seated back support and neutral grip are not established.',
+                 'reverse_lunge_db': 'Observed EX-026 equipment/setup/execution NULL; historical None equipment is candidate-only evidence. No exact loaded two-DB support was returned by the bounded lookup.',
              }[key]}
             for key in CANDIDATES],
         'conditional_not_initial_blockers': evidence['assisted_branches'] + [evidence['weighted_option']]}
@@ -336,7 +338,7 @@ def build():
         'content_hold_counts': dict(collections.Counter(h for b in bindings for h in b['content_holds'])),
         'full_programme_approval': False, 'publication': False}
     assert audit['counts'] == {'strength': 20, 'running': 40, 'rest': 10}
-    assert len(bindings) == 105 and audit['verified_local_identity_occurrences'] == 47
+    assert len(bindings) == 105 and audit['verified_local_identity_occurrences'] == 77
     assert audit['running_execution_steps_targets_and_identity_unchanged']
     return {'SOURCE.json': source, 'RUNNING_BODIES.json': runs, 'SCHEDULE_CANDIDATE.json': schedule,
             'IDENTITY_INTAKE.json': evidence, 'TRUSTED_INTAKE_REQUESTS.json': requests,

@@ -1,0 +1,16 @@
+{
+  "target_ref": "otnhhdxstdnwccehacku",
+  "captured_at_utc": "2026-10-30T11:30:44.779409+00:00",
+  "status_gate": "ACTIVE_HEALTHY",
+  "status_evidence_sha256": "f7d10058eeab9d0acc110b718c640670ad95d0dd77fffe951ca057fbb5a8c274",
+  "operation": "POST /v1/projects/otnhhdxstdnwccehacku/database/query/read-only",
+  "sql_sha256": "98952f4893bb1a733785c44df85f0fc8176326ddb8f0228b9c5a5032a9cd46aa",
+  "schema_evidence": "docs/architecture/Phase_3_1F_Part1_Founder_Identity_Mapping_Review_v1.md section 3",
+  "sql_review": "Single bounded SELECT of public.exercises_v2; six identity scopes; no athlete tables/functions/mutation statements; 20-row cap",
+  "attempts": 1,
+  "result": "BOUNDED_SELECT_SUCCEEDED",
+  "http_status": 201,
+  "rows": 6,
+  "row_cap_reached": false,
+  "raw_response_sha256": "434bb9d83b109571ae136353b61fd78ca172aeb3409668ba908d09790690ef8c"
+}

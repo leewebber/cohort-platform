@@ -8,32 +8,34 @@ it does not grant implementation, content, hosted, account or release authority.
 
 ## Current single point — M1.1 (2026-10-30)
 
-**Strength dose/membership holds resolved; D8 and six exact identity records remain.**
-[Current handoff](../checkpoints/m11_hybrid10k_dose_reconciliation/HANDOFF.md) and
-[updated complete TEN_WEEK_REVIEW.md](../programmes/hybrid_10k/founder_selected_2026_10_30/TEN_WEEK_REVIEW.md)
-apply the founder's exact RDL standard, W4 consolidation, W8 lower-body effort,
-W9 reduction and W10 exception. The explicit follow-up makes W7 standard strength
-and removes its former consolidation label/reductions: W5–7 build, W8 controls
-lower-body effort, W9–10 reduce workload. Selected runs and original approved M2.3
-behaviour remain unchanged; the review groups surviving older phase wording.
-Preparation is separate from working sets; no working squat/carry returns.
+**Three exact hosted legacy rows retained; three setup records and D8 remain.**
+[Current handoff](../checkpoints/m11_trusted_catalogue_lookup/HANDOFF.md) records
+Field Manual `otnhhdxstdnwccehacku` ACTIVE_HEALTHY from one authorised status GET
+and one bounded catalogue SELECT through the dedicated read-only API. Existing
+Keychain authentication was used; no credentials, permissions or project settings
+were issued/changed. Three published legacy rows are now retained through v1/v2:
+`EX-053` initial bodyweight pull-up, `EX-044` DB lateral raise and `EX-038`
+bench-supported single-arm DB row. Raw data and provenance have exact hash checks;
+no v3 definition version/event or global catalogue seed is manufactured.
 
-RDL membership and all numeric strength doses are selected. D8/full-programme
-approval remains pending review of the single complete document. Exact missing
-legacy rows/setup bindings for six selected variants, and the authority/action
-needed for each, are recorded in the bounded intake handoff. No occurrence audit,
-similar-movement substitution, invented published evidence or deferred v3 producer
-is required. Full v1/v2 schedules compile and known-identity partial contracts pass;
-full strength admission remains blocked by those exact records, with no dose holds.
+Three exact setup records remain insufficient: `EX-090` DB bench-branch coverage;
+`EX-037` seated/back-supported neutral two-DB strict press; loaded two-DB reverse
+lunge (returned `EX-026` equipment/setup are NULL). Three bounded proposals await
+separate catalogue-owner/producer approval and real supporting record retention.
+Full v1/v2 schedules compile and known-identity partial graph/codec checks pass;
+full strength graphs remain withheld. Source/coaching and all running-body bytes
+are unchanged; dose holds stay resolved. D8/full-programme approval remains pending
+review of the one complete TEN_WEEK_REVIEW.md. No hosted write or athlete operation.
 
-**Next single point: M1.1 D8 review of the updated complete programme plus retention
-of the six exact trusted identities, then complete private v1/v2 graph admission.**
-Final distance-ended 10K execution, held migrations, separate publication/access
-enablement, adaptation, distribution/authenticated device acceptance and inherited
-bootstrap triage remain Gate A requirements. M2.5 is externally blocked and is not
-repeated. Supabase hosted status remains unverified; no hosted/athlete/UI operation.
-Preserve all prior checkouts/HEADs/indices/dirty files/.temp, full chain and four
-verified bundles; normal main-only Git publication needs fresh remote ancestry.
+**Next single point: review the three exact setup proposals for separate trusted
+producer action, retain genuine supporting records, then complete local graph
+admission.** D8 remains an independent founder content review. Final distance-ended
+10K execution, held migrations, separate programme publication/access enablement,
+adaptation, distribution/device acceptance and inherited bootstrap triage remain
+Gate A dependencies. M2.5 is not repeated. Preserve all prior checkouts/HEADs/
+indices/dirty files/.temp, complete chain and five bundles. Normal main-only Git
+publication is authorised after fresh ancestry verification; ordinary HTTPS now
+verifies live main `1cca598` as the exact pre-publication ancestor.
 
 ## Retained M1.1 consolidation direction (2026-10-28)
 

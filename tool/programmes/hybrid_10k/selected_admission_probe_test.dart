@@ -24,7 +24,7 @@ dynamic read(String file) => jsonDecode(File(file).readAsStringSync());
 void main() {
   final report = <String, dynamic>{
     'classification': 'GENUINE_DRAFT_LOCAL_CONTRACT_PROBE_NOT_PUBLICATION',
-    'base': '15627ecd7c41ab0f5f593ba6a08075374f7316fe',
+    'base': 'b220f42dcf038e14161d3088c7819c7be8ff853f',
     'content_approval': 'D1_D7_AND_WEEK_DOSES_SELECTED_D8_PENDING',
     'canonical_acquisition_start_logging_completion_restore': 'NOT_ATTEMPTED',
     'running_evidence': {
@@ -37,7 +37,7 @@ void main() {
   };
   tearDownAll(() {
     final file = File(
-      'docs/checkpoints/m11_hybrid10k_dose_reconciliation/ADMISSION.json',
+      'docs/checkpoints/m11_trusted_catalogue_lookup/ADMISSION.json',
     );
     file.parent.createSync(recursive: true);
     file.writeAsStringSync(
@@ -46,10 +46,10 @@ void main() {
   });
 
   test(
-    'trusted exact-row catalogue intake resolves 47 references and holds all missing exact records without name substitution',
+    'trusted exact-row catalogue intake resolves retained exact references and holds all missing exact records without name substitution',
     () {
       final evidence = read('$source/IDENTITY_INTAKE.json') as Map;
-      final rows = evidence['repository_rows'] as Map;
+      final rows = evidence['catalogue_rows'] as Map;
       final selectedIds = (evidence['verified_bindings'] as Map).values.toSet();
       final catalogue = [
         for (final id in selectedIds)
@@ -126,25 +126,29 @@ void main() {
       final resolved = FounderProgrammeExerciseResolver.fromCatalogue(
         catalogue,
       ).resolveDocument(document);
-      expect(resolved.canonicalIds, hasLength(47));
-      expect(resolved.issues, hasLength(58));
+      expect(resolved.canonicalIds, hasLength(77));
+      expect(resolved.issues, hasLength(28));
       expect(resolved.canonicalIds.values.toSet(), {
         'EX-078',
         'EX-084',
         'EX-114',
         'EX-116',
         'EX-125',
+        'EX-038',
+        'EX-044',
+        'EX-053',
       });
       expect(
         resolved.issues.map((i) => i.code),
         everyElement('legacy_exercise_reference_unresolved'),
       );
       report['trusted_identity_intake'] = {
-        'verified_legacy_row_occurrences': 47,
-        'selected_template_occurrences_bound': 47,
-        'unresolved_identity_occurrences': 58,
+        'verified_legacy_row_occurrences': 77,
+        'selected_template_occurrences_bound': 77,
+        'unresolved_identity_occurrences': 28,
         'full_published_row_or_version_event_created': false,
-        'current_hosted_catalogue_state': 'NOT_VERIFIED',
+        'hosted_evidence_scope':
+            'SIX_BOUNDED_ROWS_ONLY_AT_CAPTURE_NOT_GLOBAL_CATALOGUE',
       };
     },
   );
@@ -174,7 +178,7 @@ void main() {
       expect(preflight.exitCode, 0, reason: preflight.stderr.toString());
       final held = jsonDecode(preflight.stdout.toString()) as Map;
       expect(held['admitted'], isFalse);
-      expect(held['unresolved_identity_occurrences'], 58);
+      expect(held['unresolved_identity_occurrences'], 28);
       expect(held['unique_content_holds'], isEmpty);
       report['source_guard'] = held;
       final results = <Map>[];
@@ -225,7 +229,7 @@ void main() {
   );
 
   test(
-    '47 exact-bound genuine reference prescriptions pass extracted private v1/v2 graph and native plan restore contracts',
+    'retained exact-bound genuine reference prescriptions pass extracted private v1/v2 graph and native plan restore contracts',
     () {
       final package = read('$source/SCHEDULE_CANDIDATE.json') as Map;
       final graphs = read('$review/STRENGTH_REVIEW_GRAPHS.json') as List;
@@ -314,8 +318,8 @@ void main() {
           expect(e.prescription!.validate(requireComplete: true), isEmpty);
         }
       }
-      expect(acceptedLinks, 47);
-      expect(partialGraphs, 19);
+      expect(acceptedLinks, 77);
+      expect(partialGraphs, 20);
       report['extracted_known_link_probes'] = {
         'links': acceptedLinks,
         'partial_graphs': partialGraphs,

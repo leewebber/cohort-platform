@@ -15,30 +15,35 @@ are unchanged. Surviving older phase wording/patterns are grouped in the review.
 [SOURCE.json](SOURCE.json), [AUDIT.json](AUDIT.json) and the twenty
 [review graphs](STRENGTH_REVIEW_GRAPHS.json) regenerate exact selected doses.
 Preparation stays separate from working sets. The graphs use unpublished local
-`DRAFT-R3` review revisions; no published version/event is manufactured. The final
+`DRAFT-R4` review revisions; no published version/event is manufactured. The final
 test stays distance-ended. Prior source versions remain at their original Git
 commits/checkouts and in verified bundles.
 
-The six technical dependencies are specific records, not further founder movement
-choices: [EXACT_IDENTITY_ACTIONS.md](EXACT_IDENTITY_ACTIONS.md) names each missing
-row/setup binding, authority and action. The bounded
-[SELECT request](EXACT_ROW_RETENTION_REQUEST.sql) is **unexecuted**.
-[Identity evidence](IDENTITY_INTAKE.json) distinguishes legitimate retained rows
-from candidates and separate conditional assisted/weighted pull-up branches.
-There is no demonstrated need for deferred v3 producer infrastructure.
+The authorised [six-record lookup](../../../checkpoints/m11_trusted_catalogue_lookup/HANDOFF.md)
+confirmed Field Manual ACTIVE_HEALTHY and retained three exact published legacy
+rows: initial bodyweight pull-up `EX-053`, DB lateral raise `EX-044` and bench-supported
+single-arm DB row `EX-038`. Raw rows, target/time/query provenance and SHA-256 checks
+are retained; no canonical ExerciseDefinition version/event or global seed is created.
+
+[EXACT_IDENTITY_ACTIONS.md](EXACT_IDENTITY_ACTIONS.md) now names only three remaining
+setup/identity gaps and their separate owner/producer action. The exact
+[setup proposals](../../../checkpoints/m11_trusted_catalogue_lookup/SETUP_PROPOSALS.json)
+are unapproved and unapplied. The executed bounded query is retained in the lookup
+checkpoint; the earlier prepared request remains historical. No hosted write,
+project restoration, programme publication or athlete mutation occurred.
 
 Reproduce locally without SQL/network/accounts/athlete operations:
 
 ```sh
 python3 tool/programmes/hybrid_10k/apply_strength_selections.py --check
 python3 tool/programmes/hybrid_10k/render_selected_review.py --check
-python3 tool/programmes/hybrid_10k/selected_source_test.py -v
-flutter test --no-pub tool/programmes/hybrid_10k/selected_admission_probe_test.dart test/programmes/private_protocol_graph_builder_test.dart
+python3 tool/programmes/hybrid_10k/trusted_catalogue_snapshot_test.py -v
+flutter test --no-pub tool/programmes/hybrid_10k/selected_admission_probe_test.dart
 ```
 
-[Actual admission](../../../checkpoints/m11_hybrid10k_dose_reconciliation/ADMISSION.json)
-and [handoff](../../../checkpoints/m11_hybrid10k_dose_reconciliation/HANDOFF.md):
+[Actual admission](../../../checkpoints/m11_trusted_catalogue_lookup/ADMISSION.json)
+and [handoff](../../../checkpoints/m11_trusted_catalogue_lookup/HANDOFF.md):
 v1/v2 schedules compile; known-identity partial graph/codec checks pass; full
-strength admission remains blocked by the six exact identity records. No genuine
+strength admission remains blocked by the three exact setup/identity records. No genuine
 programme is published, acquired, started, logged, completed or restored for an
-athlete. No hosted, Garmin or device work occurred.
+athlete. Only the authorised status/catalogue reads occurred; no Garmin/device work or hosted mutation.

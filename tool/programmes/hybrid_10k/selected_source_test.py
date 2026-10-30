@@ -123,8 +123,8 @@ class SelectedSourceTest(unittest.TestCase):
     def test_untrusted_candidates_and_assisted_branches_cannot_gain_authority(self):
         data = source.build()
         e = data['IDENTITY_INTAKE.json']
-        self.assertEqual(sum(b['exercise_id'] is not None for b in e['occurrences']), 47)
-        self.assertEqual(sum(b['exercise_id'] is None for b in e['occurrences']), 58)
+        self.assertEqual(sum(b['exercise_id'] is not None for b in e['occurrences']), 77)
+        self.assertEqual(sum(b['exercise_id'] is None for b in e['occurrences']), 28)
         self.assertEqual(len(e['assisted_branches']), 2)
         self.assertFalse(e['weighted_option']['selected'])
         graphs = data['STRENGTH_REVIEW_GRAPHS.json']

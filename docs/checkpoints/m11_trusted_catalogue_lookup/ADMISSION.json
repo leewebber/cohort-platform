@@ -1,0 +1,306 @@
+{
+  "classification": "GENUINE_DRAFT_LOCAL_CONTRACT_PROBE_NOT_PUBLICATION",
+  "base": "b220f42dcf038e14161d3088c7819c7be8ff853f",
+  "content_approval": "D1_D7_AND_WEEK_DOSES_SELECTED_D8_PENDING",
+  "canonical_acquisition_start_logging_completion_restore": "NOT_ATTEMPTED",
+  "running_evidence": {
+    "reused_immutable_checkpoint": "a22249e:docs/checkpoints/m11_hybrid10k_reconciliation/ADMISSION.json",
+    "timed_graphs": 39,
+    "distance_10000m": "unsupported_timed_running_body",
+    "rerun": false
+  },
+  "trusted_identity_intake": {
+    "verified_legacy_row_occurrences": 77,
+    "selected_template_occurrences_bound": 77,
+    "unresolved_identity_occurrences": 28,
+    "full_published_row_or_version_event_created": false,
+    "hosted_evidence_scope": "SIX_BOUNDED_ROWS_ONLY_AT_CAPTURE_NOT_GLOBAL_CATALOGUE"
+  },
+  "source_guard": {
+    "admitted": false,
+    "code": "exact_identity_records_required",
+    "unresolved_identity_occurrences": 28,
+    "unique_content_holds": [],
+    "full_strength_graphs_admitted": 0,
+    "complete_programme_approval": "D8_PENDING",
+    "canonical_private_decoder_called_for_incomplete_graphs": false
+  },
+  "full_programme": [
+    {
+      "schema": 1,
+      "schedule_sessions": 60,
+      "complete_review_graph_scope": 60,
+      "schedule_compile": "PASS",
+      "schedule_sha256": "738388673055da75c0d6aa5e79d132246dd5953ae1a36e77b02e5118408b250d",
+      "full_admission": "exact_identity_records_required",
+      "complete_strength_graphs_admitted": 0,
+      "private_decoder_called_for_incomplete_graphs": false
+    },
+    {
+      "schema": 2,
+      "schedule_sessions": 60,
+      "complete_review_graph_scope": 60,
+      "schedule_compile": "PASS",
+      "schedule_sha256": "81e13f21ae64fa152f81381825681458b56536819d589f6fc5b6536ec7748b87",
+      "full_admission": "exact_identity_records_required",
+      "complete_strength_graphs_admitted": 0,
+      "private_decoder_called_for_incomplete_graphs": false
+    }
+  ],
+  "strength_holds": [
+    {
+      "session_id": "LW10K-W01-D01",
+      "unresolved": [
+        {
+          "occurrence": "W01-A-chest_supported_db_row",
+          "variant": "chest_supported_db_row",
+          "content_holds": []
+        }
+      ]
+    },
+    {
+      "session_id": "LW10K-W01-D04",
+      "unresolved": [
+        {
+          "occurrence": "W01-B-reverse_lunge_db",
+          "variant": "reverse_lunge_db",
+          "content_holds": []
+        },
+        {
+          "occurrence": "W01-B-seated_supported_db_press",
+          "variant": "seated_supported_db_press",
+          "content_holds": []
+        }
+      ]
+    },
+    {
+      "session_id": "LW10K-W02-D01",
+      "unresolved": [
+        {
+          "occurrence": "W02-A-chest_supported_db_row",
+          "variant": "chest_supported_db_row",
+          "content_holds": []
+        }
+      ]
+    },
+    {
+      "session_id": "LW10K-W02-D04",
+      "unresolved": [
+        {
+          "occurrence": "W02-B-reverse_lunge_db",
+          "variant": "reverse_lunge_db",
+          "content_holds": []
+        },
+        {
+          "occurrence": "W02-B-seated_supported_db_press",
+          "variant": "seated_supported_db_press",
+          "content_holds": []
+        }
+      ]
+    },
+    {
+      "session_id": "LW10K-W03-D01",
+      "unresolved": [
+        {
+          "occurrence": "W03-A-chest_supported_db_row",
+          "variant": "chest_supported_db_row",
+          "content_holds": []
+        }
+      ]
+    },
+    {
+      "session_id": "LW10K-W03-D04",
+      "unresolved": [
+        {
+          "occurrence": "W03-B-reverse_lunge_db",
+          "variant": "reverse_lunge_db",
+          "content_holds": []
+        },
+        {
+          "occurrence": "W03-B-seated_supported_db_press",
+          "variant": "seated_supported_db_press",
+          "content_holds": []
+        }
+      ]
+    },
+    {
+      "session_id": "LW10K-W04-D01",
+      "unresolved": [
+        {
+          "occurrence": "W04-A-chest_supported_db_row",
+          "variant": "chest_supported_db_row",
+          "content_holds": []
+        }
+      ]
+    },
+    {
+      "session_id": "LW10K-W04-D04",
+      "unresolved": [
+        {
+          "occurrence": "W04-B-reverse_lunge_db",
+          "variant": "reverse_lunge_db",
+          "content_holds": []
+        },
+        {
+          "occurrence": "W04-B-seated_supported_db_press",
+          "variant": "seated_supported_db_press",
+          "content_holds": []
+        }
+      ]
+    },
+    {
+      "session_id": "LW10K-W05-D01",
+      "unresolved": [
+        {
+          "occurrence": "W05-A-chest_supported_db_row",
+          "variant": "chest_supported_db_row",
+          "content_holds": []
+        }
+      ]
+    },
+    {
+      "session_id": "LW10K-W05-D04",
+      "unresolved": [
+        {
+          "occurrence": "W05-B-reverse_lunge_db",
+          "variant": "reverse_lunge_db",
+          "content_holds": []
+        },
+        {
+          "occurrence": "W05-B-seated_supported_db_press",
+          "variant": "seated_supported_db_press",
+          "content_holds": []
+        }
+      ]
+    },
+    {
+      "session_id": "LW10K-W06-D01",
+      "unresolved": [
+        {
+          "occurrence": "W06-A-chest_supported_db_row",
+          "variant": "chest_supported_db_row",
+          "content_holds": []
+        }
+      ]
+    },
+    {
+      "session_id": "LW10K-W06-D04",
+      "unresolved": [
+        {
+          "occurrence": "W06-B-reverse_lunge_db",
+          "variant": "reverse_lunge_db",
+          "content_holds": []
+        },
+        {
+          "occurrence": "W06-B-seated_supported_db_press",
+          "variant": "seated_supported_db_press",
+          "content_holds": []
+        }
+      ]
+    },
+    {
+      "session_id": "LW10K-W07-D01",
+      "unresolved": [
+        {
+          "occurrence": "W07-A-chest_supported_db_row",
+          "variant": "chest_supported_db_row",
+          "content_holds": []
+        }
+      ]
+    },
+    {
+      "session_id": "LW10K-W07-D04",
+      "unresolved": [
+        {
+          "occurrence": "W07-B-reverse_lunge_db",
+          "variant": "reverse_lunge_db",
+          "content_holds": []
+        },
+        {
+          "occurrence": "W07-B-seated_supported_db_press",
+          "variant": "seated_supported_db_press",
+          "content_holds": []
+        }
+      ]
+    },
+    {
+      "session_id": "LW10K-W08-D01",
+      "unresolved": [
+        {
+          "occurrence": "W08-A-chest_supported_db_row",
+          "variant": "chest_supported_db_row",
+          "content_holds": []
+        }
+      ]
+    },
+    {
+      "session_id": "LW10K-W08-D04",
+      "unresolved": [
+        {
+          "occurrence": "W08-B-reverse_lunge_db",
+          "variant": "reverse_lunge_db",
+          "content_holds": []
+        },
+        {
+          "occurrence": "W08-B-seated_supported_db_press",
+          "variant": "seated_supported_db_press",
+          "content_holds": []
+        }
+      ]
+    },
+    {
+      "session_id": "LW10K-W09-D01",
+      "unresolved": [
+        {
+          "occurrence": "W09-A-chest_supported_db_row",
+          "variant": "chest_supported_db_row",
+          "content_holds": []
+        }
+      ]
+    },
+    {
+      "session_id": "LW10K-W09-D04",
+      "unresolved": [
+        {
+          "occurrence": "W09-B-seated_supported_db_press",
+          "variant": "seated_supported_db_press",
+          "content_holds": []
+        }
+      ]
+    },
+    {
+      "session_id": "LW10K-W10-D01",
+      "unresolved": [
+        {
+          "occurrence": "W10-A-chest_supported_db_row",
+          "variant": "chest_supported_db_row",
+          "content_holds": []
+        }
+      ]
+    },
+    {
+      "session_id": "LW10K-W10-D04",
+      "unresolved": [
+        {
+          "occurrence": "W10-B-seated_supported_db_press",
+          "variant": "seated_supported_db_press",
+          "content_holds": []
+        }
+      ]
+    }
+  ],
+  "extracted_known_link_probes": {
+    "links": 77,
+    "partial_graphs": 20,
+    "private_v1_v2_graph_check": "PASS",
+    "native_plan_serialization_restore": "PASS",
+    "complete_sessions_or_canonical_started_state": false,
+    "prescription_scope": "EXACT_SELECTED_DOSES_FULL_PROGRAMME_D8_PENDING"
+  },
+  "review_graphs": {
+    "sessions": 20,
+    "occurrences": 105,
+    "selected_work_set_prescriptions": 238,
+    "whole_sessions_withheld": 20
+  }
+}
