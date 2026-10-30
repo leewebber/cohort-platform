@@ -1,0 +1,736 @@
+{
+  "status": "RECONCILED_GENERAL_DRAFT_NOT_PUBLISHED",
+  "base": "0f0c40dae54c87e7b3f739b205c0fe6b8edf847a",
+  "founder_clarification_sha256": "8e16f59f8963efbc0db40b0c4b0532dcc4104e52ca6af391a604fa17cb5a48eb",
+  "original_source_sha256": "d932e7103b03036e136249e0ab35d48378b0175c75feba84282386fc6ca00f40",
+  "counts": {
+    "strength": 20,
+    "running": 40,
+    "rest": 10
+  },
+  "timed_runs": 39,
+  "distance_runs": 1,
+  "strength_occurrences": 124,
+  "strength_work_sets": 263,
+  "locally_verified_bound_occurrences": 37,
+  "weeks": [
+    {
+      "week": 1,
+      "focus": "Retained proposed opening doses; general-plan suitability pending review",
+      "programmed_fixed_seconds": 6600,
+      "running_fixed_seconds_range": [
+        6600,
+        6600
+      ],
+      "distance_ended_metres": 0
+    },
+    {
+      "week": 2,
+      "focus": "Retained proposed opening progression; no personal travel variant",
+      "programmed_fixed_seconds": 7200,
+      "running_fixed_seconds_range": [
+        7200,
+        7200
+      ],
+      "distance_ended_metres": 0
+    },
+    {
+      "week": 3,
+      "focus": "First controlled threshold session",
+      "programmed_fixed_seconds": 8460,
+      "running_fixed_seconds_range": [
+        8460,
+        8460
+      ],
+      "distance_ended_metres": 0
+    },
+    {
+      "week": 4,
+      "focus": "Consolidation threshold; no in-programme 5K test",
+      "programmed_fixed_seconds": 8250,
+      "running_fixed_seconds_range": [
+        7950,
+        8250
+      ],
+      "distance_ended_metres": 0
+    },
+    {
+      "week": 5,
+      "focus": "Build threshold duration and aerobic endurance",
+      "programmed_fixed_seconds": 9840,
+      "running_fixed_seconds_range": [
+        9840,
+        9840
+      ],
+      "distance_ended_metres": 0
+    },
+    {
+      "week": 6,
+      "focus": "Extend repeatable threshold work",
+      "programmed_fixed_seconds": 10500,
+      "running_fixed_seconds_range": [
+        10500,
+        10500
+      ],
+      "distance_ended_metres": 0
+    },
+    {
+      "week": 7,
+      "focus": "Consolidation: reduce running and lifting volume",
+      "programmed_fixed_seconds": 8760,
+      "running_fixed_seconds_range": [
+        8760,
+        8760
+      ],
+      "distance_ended_metres": 0
+    },
+    {
+      "week": 8,
+      "focus": "10K-specific repetitions while retaining aerobic volume",
+      "programmed_fixed_seconds": 11040,
+      "running_fixed_seconds_range": [
+        10740,
+        11040
+      ],
+      "distance_ended_metres": 0
+    },
+    {
+      "week": 9,
+      "focus": "Final 10K-specific development; reduce lower-body lifting",
+      "programmed_fixed_seconds": 9300,
+      "running_fixed_seconds_range": [
+        9000,
+        9300
+      ],
+      "distance_ended_metres": 0
+    },
+    {
+      "week": 10,
+      "focus": "Freshen up, sharpen and test 10K on Sunday",
+      "programmed_fixed_seconds": 6360,
+      "running_fixed_seconds_range": [
+        6060,
+        6360
+      ],
+      "distance_ended_metres": 10000
+    }
+  ],
+  "running_sessions": [
+    {
+      "source_session_id": "LW10K-W01-D02",
+      "source_week": 1,
+      "source_day": 2,
+      "fixed_seconds": 1500,
+      "distance_metres": 0,
+      "running_fixed_seconds_range": [
+        1500,
+        1500
+      ],
+      "content_status": "RETAINED_PROPOSED_DETAILS_NOT_BLANKET_APPROVED"
+    },
+    {
+      "source_session_id": "LW10K-W01-D03",
+      "source_week": 1,
+      "source_day": 3,
+      "fixed_seconds": 1500,
+      "distance_metres": 0,
+      "running_fixed_seconds_range": [
+        1500,
+        1500
+      ],
+      "content_status": "RETAINED_PROPOSED_DETAILS_NOT_BLANKET_APPROVED"
+    },
+    {
+      "source_session_id": "LW10K-W01-D05",
+      "source_week": 1,
+      "source_day": 5,
+      "fixed_seconds": 1500,
+      "distance_metres": 0,
+      "running_fixed_seconds_range": [
+        1500,
+        1500
+      ],
+      "content_status": "RETAINED_PROPOSED_DETAILS_NOT_BLANKET_APPROVED"
+    },
+    {
+      "source_session_id": "LW10K-W01-D07",
+      "source_week": 1,
+      "source_day": 7,
+      "fixed_seconds": 2100,
+      "distance_metres": 0,
+      "running_fixed_seconds_range": [
+        2100,
+        2100
+      ],
+      "content_status": "RETAINED_PROPOSED_DETAILS_NOT_BLANKET_APPROVED"
+    },
+    {
+      "source_session_id": "LW10K-W02-D02",
+      "source_week": 2,
+      "source_day": 2,
+      "fixed_seconds": 1800,
+      "distance_metres": 0,
+      "running_fixed_seconds_range": [
+        1800,
+        1800
+      ],
+      "content_status": "RETAINED_PROPOSED_DETAILS_NOT_BLANKET_APPROVED"
+    },
+    {
+      "source_session_id": "LW10K-W02-D03",
+      "source_week": 2,
+      "source_day": 3,
+      "fixed_seconds": 1500,
+      "distance_metres": 0,
+      "running_fixed_seconds_range": [
+        1500,
+        1500
+      ],
+      "content_status": "RETAINED_PROPOSED_DETAILS_NOT_BLANKET_APPROVED"
+    },
+    {
+      "source_session_id": "LW10K-W02-D05",
+      "source_week": 2,
+      "source_day": 5,
+      "fixed_seconds": 1500,
+      "distance_metres": 0,
+      "running_fixed_seconds_range": [
+        1500,
+        1500
+      ],
+      "content_status": "RETAINED_PROPOSED_DETAILS_NOT_BLANKET_APPROVED"
+    },
+    {
+      "source_session_id": "LW10K-W02-D07",
+      "source_week": 2,
+      "source_day": 7,
+      "fixed_seconds": 2400,
+      "distance_metres": 0,
+      "running_fixed_seconds_range": [
+        2400,
+        2400
+      ],
+      "content_status": "RETAINED_PROPOSED_DETAILS_NOT_BLANKET_APPROVED"
+    },
+    {
+      "source_session_id": "LW10K-W03-D02",
+      "source_week": 3,
+      "source_day": 2,
+      "fixed_seconds": 2160,
+      "distance_metres": 0,
+      "running_fixed_seconds_range": [
+        2160,
+        2160
+      ],
+      "content_status": "RETAINED_PROPOSED_DETAILS_NOT_BLANKET_APPROVED"
+    },
+    {
+      "source_session_id": "LW10K-W03-D03",
+      "source_week": 3,
+      "source_day": 3,
+      "fixed_seconds": 1800,
+      "distance_metres": 0,
+      "running_fixed_seconds_range": [
+        1800,
+        1800
+      ],
+      "content_status": "RETAINED_PROPOSED_DETAILS_NOT_BLANKET_APPROVED"
+    },
+    {
+      "source_session_id": "LW10K-W03-D05",
+      "source_week": 3,
+      "source_day": 5,
+      "fixed_seconds": 1800,
+      "distance_metres": 0,
+      "running_fixed_seconds_range": [
+        1800,
+        1800
+      ],
+      "content_status": "RETAINED_PROPOSED_DETAILS_NOT_BLANKET_APPROVED"
+    },
+    {
+      "source_session_id": "LW10K-W03-D07",
+      "source_week": 3,
+      "source_day": 7,
+      "fixed_seconds": 2700,
+      "distance_metres": 0,
+      "running_fixed_seconds_range": [
+        2700,
+        2700
+      ],
+      "content_status": "RETAINED_PROPOSED_DETAILS_NOT_BLANKET_APPROVED"
+    },
+    {
+      "source_session_id": "LW10K-W04-D02",
+      "source_week": 4,
+      "source_day": 2,
+      "fixed_seconds": 2550,
+      "distance_metres": 0,
+      "running_fixed_seconds_range": [
+        2250,
+        2550
+      ],
+      "content_status": "FOUNDER_SELECTED_REPLACEMENT_2026_10_30"
+    },
+    {
+      "source_session_id": "LW10K-W04-D03",
+      "source_week": 4,
+      "source_day": 3,
+      "fixed_seconds": 1500,
+      "distance_metres": 0,
+      "running_fixed_seconds_range": [
+        1500,
+        1500
+      ],
+      "content_status": "RETAINED_PROPOSED_DETAILS_NOT_BLANKET_APPROVED"
+    },
+    {
+      "source_session_id": "LW10K-W04-D05",
+      "source_week": 4,
+      "source_day": 5,
+      "fixed_seconds": 1800,
+      "distance_metres": 0,
+      "running_fixed_seconds_range": [
+        1800,
+        1800
+      ],
+      "content_status": "RETAINED_PROPOSED_DETAILS_NOT_BLANKET_APPROVED"
+    },
+    {
+      "source_session_id": "LW10K-W04-D07",
+      "source_week": 4,
+      "source_day": 7,
+      "fixed_seconds": 2400,
+      "distance_metres": 0,
+      "running_fixed_seconds_range": [
+        2400,
+        2400
+      ],
+      "content_status": "RETAINED_PROPOSED_DETAILS_NOT_BLANKET_APPROVED"
+    },
+    {
+      "source_session_id": "LW10K-W05-D02",
+      "source_week": 5,
+      "source_day": 2,
+      "fixed_seconds": 2640,
+      "distance_metres": 0,
+      "running_fixed_seconds_range": [
+        2640,
+        2640
+      ],
+      "content_status": "RETAINED_PROPOSED_DETAILS_NOT_BLANKET_APPROVED"
+    },
+    {
+      "source_session_id": "LW10K-W05-D03",
+      "source_week": 5,
+      "source_day": 3,
+      "fixed_seconds": 2100,
+      "distance_metres": 0,
+      "running_fixed_seconds_range": [
+        2100,
+        2100
+      ],
+      "content_status": "RETAINED_PROPOSED_DETAILS_NOT_BLANKET_APPROVED"
+    },
+    {
+      "source_session_id": "LW10K-W05-D05",
+      "source_week": 5,
+      "source_day": 5,
+      "fixed_seconds": 2100,
+      "distance_metres": 0,
+      "running_fixed_seconds_range": [
+        2100,
+        2100
+      ],
+      "content_status": "RETAINED_PROPOSED_DETAILS_NOT_BLANKET_APPROVED"
+    },
+    {
+      "source_session_id": "LW10K-W05-D07",
+      "source_week": 5,
+      "source_day": 7,
+      "fixed_seconds": 3000,
+      "distance_metres": 0,
+      "running_fixed_seconds_range": [
+        3000,
+        3000
+      ],
+      "content_status": "RETAINED_PROPOSED_DETAILS_NOT_BLANKET_APPROVED"
+    },
+    {
+      "source_session_id": "LW10K-W06-D02",
+      "source_week": 6,
+      "source_day": 2,
+      "fixed_seconds": 3000,
+      "distance_metres": 0,
+      "running_fixed_seconds_range": [
+        3000,
+        3000
+      ],
+      "content_status": "RETAINED_PROPOSED_DETAILS_NOT_BLANKET_APPROVED"
+    },
+    {
+      "source_session_id": "LW10K-W06-D03",
+      "source_week": 6,
+      "source_day": 3,
+      "fixed_seconds": 2100,
+      "distance_metres": 0,
+      "running_fixed_seconds_range": [
+        2100,
+        2100
+      ],
+      "content_status": "RETAINED_PROPOSED_DETAILS_NOT_BLANKET_APPROVED"
+    },
+    {
+      "source_session_id": "LW10K-W06-D05",
+      "source_week": 6,
+      "source_day": 5,
+      "fixed_seconds": 2100,
+      "distance_metres": 0,
+      "running_fixed_seconds_range": [
+        2100,
+        2100
+      ],
+      "content_status": "RETAINED_PROPOSED_DETAILS_NOT_BLANKET_APPROVED"
+    },
+    {
+      "source_session_id": "LW10K-W06-D07",
+      "source_week": 6,
+      "source_day": 7,
+      "fixed_seconds": 3300,
+      "distance_metres": 0,
+      "running_fixed_seconds_range": [
+        3300,
+        3300
+      ],
+      "content_status": "RETAINED_PROPOSED_DETAILS_NOT_BLANKET_APPROVED"
+    },
+    {
+      "source_session_id": "LW10K-W07-D02",
+      "source_week": 7,
+      "source_day": 2,
+      "fixed_seconds": 2460,
+      "distance_metres": 0,
+      "running_fixed_seconds_range": [
+        2460,
+        2460
+      ],
+      "content_status": "RETAINED_PROPOSED_DETAILS_NOT_BLANKET_APPROVED"
+    },
+    {
+      "source_session_id": "LW10K-W07-D03",
+      "source_week": 7,
+      "source_day": 3,
+      "fixed_seconds": 1800,
+      "distance_metres": 0,
+      "running_fixed_seconds_range": [
+        1800,
+        1800
+      ],
+      "content_status": "RETAINED_PROPOSED_DETAILS_NOT_BLANKET_APPROVED"
+    },
+    {
+      "source_session_id": "LW10K-W07-D05",
+      "source_week": 7,
+      "source_day": 5,
+      "fixed_seconds": 1800,
+      "distance_metres": 0,
+      "running_fixed_seconds_range": [
+        1800,
+        1800
+      ],
+      "content_status": "RETAINED_PROPOSED_DETAILS_NOT_BLANKET_APPROVED"
+    },
+    {
+      "source_session_id": "LW10K-W07-D07",
+      "source_week": 7,
+      "source_day": 7,
+      "fixed_seconds": 2700,
+      "distance_metres": 0,
+      "running_fixed_seconds_range": [
+        2700,
+        2700
+      ],
+      "content_status": "RETAINED_PROPOSED_DETAILS_NOT_BLANKET_APPROVED"
+    },
+    {
+      "source_session_id": "LW10K-W08-D02",
+      "source_week": 8,
+      "source_day": 2,
+      "fixed_seconds": 2940,
+      "distance_metres": 0,
+      "running_fixed_seconds_range": [
+        2640,
+        2940
+      ],
+      "content_status": "FOUNDER_SELECTED_REPLACEMENT_2026_10_30"
+    },
+    {
+      "source_session_id": "LW10K-W08-D03",
+      "source_week": 8,
+      "source_day": 3,
+      "fixed_seconds": 2400,
+      "distance_metres": 0,
+      "running_fixed_seconds_range": [
+        2400,
+        2400
+      ],
+      "content_status": "RETAINED_PROPOSED_DETAILS_NOT_BLANKET_APPROVED"
+    },
+    {
+      "source_session_id": "LW10K-W08-D05",
+      "source_week": 8,
+      "source_day": 5,
+      "fixed_seconds": 2100,
+      "distance_metres": 0,
+      "running_fixed_seconds_range": [
+        2100,
+        2100
+      ],
+      "content_status": "RETAINED_PROPOSED_DETAILS_NOT_BLANKET_APPROVED"
+    },
+    {
+      "source_session_id": "LW10K-W08-D07",
+      "source_week": 8,
+      "source_day": 7,
+      "fixed_seconds": 3600,
+      "distance_metres": 0,
+      "running_fixed_seconds_range": [
+        3600,
+        3600
+      ],
+      "content_status": "RETAINED_PROPOSED_DETAILS_NOT_BLANKET_APPROVED"
+    },
+    {
+      "source_session_id": "LW10K-W09-D02",
+      "source_week": 9,
+      "source_day": 2,
+      "fixed_seconds": 2400,
+      "distance_metres": 0,
+      "running_fixed_seconds_range": [
+        2100,
+        2400
+      ],
+      "content_status": "FOUNDER_SELECTED_REPLACEMENT_2026_10_30"
+    },
+    {
+      "source_session_id": "LW10K-W09-D03",
+      "source_week": 9,
+      "source_day": 3,
+      "fixed_seconds": 2100,
+      "distance_metres": 0,
+      "running_fixed_seconds_range": [
+        2100,
+        2100
+      ],
+      "content_status": "RETAINED_PROPOSED_DETAILS_NOT_BLANKET_APPROVED"
+    },
+    {
+      "source_session_id": "LW10K-W09-D05",
+      "source_week": 9,
+      "source_day": 5,
+      "fixed_seconds": 1800,
+      "distance_metres": 0,
+      "running_fixed_seconds_range": [
+        1800,
+        1800
+      ],
+      "content_status": "RETAINED_PROPOSED_DETAILS_NOT_BLANKET_APPROVED"
+    },
+    {
+      "source_session_id": "LW10K-W09-D07",
+      "source_week": 9,
+      "source_day": 7,
+      "fixed_seconds": 3000,
+      "distance_metres": 0,
+      "running_fixed_seconds_range": [
+        3000,
+        3000
+      ],
+      "content_status": "RETAINED_PROPOSED_DETAILS_NOT_BLANKET_APPROVED"
+    },
+    {
+      "source_session_id": "LW10K-W10-D02",
+      "source_week": 10,
+      "source_day": 2,
+      "fixed_seconds": 1680,
+      "distance_metres": 0,
+      "running_fixed_seconds_range": [
+        1380,
+        1680
+      ],
+      "content_status": "FOUNDER_SELECTED_REPLACEMENT_2026_10_30"
+    },
+    {
+      "source_session_id": "LW10K-W10-D03",
+      "source_week": 10,
+      "source_day": 3,
+      "fixed_seconds": 1500,
+      "distance_metres": 0,
+      "running_fixed_seconds_range": [
+        1500,
+        1500
+      ],
+      "content_status": "RETAINED_PROPOSED_DETAILS_NOT_BLANKET_APPROVED"
+    },
+    {
+      "source_session_id": "LW10K-W10-D05",
+      "source_week": 10,
+      "source_day": 5,
+      "fixed_seconds": 1200,
+      "distance_metres": 0,
+      "running_fixed_seconds_range": [
+        1200,
+        1200
+      ],
+      "content_status": "RETAINED_PROPOSED_DETAILS_NOT_BLANKET_APPROVED"
+    },
+    {
+      "source_session_id": "LW10K-W10-D07",
+      "source_week": 10,
+      "source_day": 7,
+      "fixed_seconds": 1980,
+      "distance_metres": 10000,
+      "running_fixed_seconds_range": [
+        1980,
+        1980
+      ],
+      "content_status": "RETAINED_PROPOSED_DETAILS_NOT_BLANKET_APPROVED"
+    }
+  ],
+  "resolved_discrepancies": [
+    {
+      "source_session_id": "LW10K-W04-D02",
+      "previous_steps": [
+        {
+          "action": "Easy warm-up jog",
+          "duration_minutes": 12,
+          "effort": "EASY"
+        },
+        {
+          "action": "Warm-up strides",
+          "repetitions": 3,
+          "work_seconds": 20,
+          "work_effort": "STRIDE",
+          "recovery_seconds": 100,
+          "recovery_effort": "RECOVERY",
+          "recovery_after_last": true
+        },
+        {
+          "action": "Very easy settle jog",
+          "duration_minutes": 2,
+          "effort": "RECOVERY"
+        },
+        {
+          "action": "Measured time trial",
+          "distance_metres": 5000,
+          "effort": "Best sustainable evenly paced effort; no early sprint"
+        },
+        {
+          "action": "Easy cooldown jog",
+          "duration_minutes": 10,
+          "effort": "EASY"
+        }
+      ],
+      "resolution": "EXPLICIT_FOUNDER_SELECTED_TIMED_REPLACEMENT",
+      "programmed_seconds": 2550
+    },
+    {
+      "source_session_id": "LW10K-W08-D02",
+      "previous_steps": [
+        {
+          "action": "Easy warm-up jog",
+          "duration_minutes": 15,
+          "effort": "EASY"
+        },
+        {
+          "action": "Current 10K-effort repetitions",
+          "repetitions": 4,
+          "work_metres": 1000,
+          "work_effort": "TEN_K",
+          "recovery_minutes": 2,
+          "recovery_effort": "RECOVERY",
+          "recovery_after_last": false
+        },
+        {
+          "action": "Easy cooldown jog",
+          "duration_minutes": 10,
+          "effort": "EASY"
+        }
+      ],
+      "resolution": "EXPLICIT_FOUNDER_SELECTED_TIMED_REPLACEMENT",
+      "programmed_seconds": 2940
+    },
+    {
+      "source_session_id": "LW10K-W09-D02",
+      "previous_steps": [
+        {
+          "action": "Easy warm-up jog",
+          "duration_minutes": 15,
+          "effort": "EASY"
+        },
+        {
+          "action": "Current 10K-effort repetitions",
+          "repetitions": 3,
+          "work_metres": 1600,
+          "work_effort": "TEN_K",
+          "recovery_minutes": 3,
+          "recovery_effort": "RECOVERY",
+          "recovery_after_last": false
+        },
+        {
+          "action": "Easy cooldown jog",
+          "duration_minutes": 10,
+          "effort": "EASY"
+        }
+      ],
+      "resolution": "EXPLICIT_FOUNDER_SELECTED_TIMED_REPLACEMENT",
+      "programmed_seconds": 2400
+    },
+    {
+      "source_session_id": "LW10K-W10-D02",
+      "previous_steps": [
+        {
+          "action": "Easy warm-up jog",
+          "duration_minutes": 12,
+          "effort": "EASY"
+        },
+        {
+          "action": "Current 10K-effort repetitions",
+          "repetitions": 3,
+          "work_metres": 800,
+          "work_effort": "TEN_K",
+          "recovery_minutes": 2,
+          "recovery_effort": "RECOVERY",
+          "recovery_after_last": false
+        },
+        {
+          "action": "Easy cooldown jog",
+          "duration_minutes": 8,
+          "effort": "EASY"
+        }
+      ],
+      "resolution": "EXPLICIT_FOUNDER_SELECTED_TIMED_REPLACEMENT",
+      "programmed_seconds": 1680
+    },
+    {
+      "source_session_id": "LW10K-W10-D04",
+      "previous_type": "rest",
+      "resolution": "UPPER_BODY_THURSDAY_RESTORED_2_SETS_EACH_MINIMUM_3_RIR"
+    }
+  ],
+  "rules": [
+    "alpha_5k_8w_riegel_1_06_v1",
+    "alpha_manual_threshold_pm2_v1",
+    "authored_rpe_v1"
+  ],
+  "explicit_scalar_rpe_fallbacks": [],
+  "automatic_fallback": false,
+  "garmin_facts": {
+    "watch": "Forerunner 255",
+    "developer_application": "NOT_SUBMITTED",
+    "firmware": null,
+    "connect_platform_version": null,
+    "hr_source": null,
+    "authority": "Founder supplied 2026-10-30; no device/API verification"
+  }
+}

@@ -1,0 +1,1594 @@
+{
+  "package_schema_version": 1,
+  "programme": {
+    "lineage_code": "HYBRID10K-GENERAL-DRAFT",
+    "version_number": 1,
+    "name": "General Hybrid 10K PB programme — reconciled draft",
+    "description": "Reconciled general draft; four explicitly founder-selected timed replacements, other detailed content pending approval.",
+    "library_scope": "coach_private",
+    "owner_type": "coach",
+    "coaching_intent": "Review-only source admission",
+    "duration_weeks": 10,
+    "sessions_per_week": 6
+  },
+  "sessions": [
+    {
+      "session_key": "LW10K-W01-D01",
+      "protocol_id": "LW10K-W01-D01-DRAFT-R1",
+      "session_lineage_id": "379bb177-55b7-5535-8527-9047568a5ce9",
+      "revision_number": 1,
+      "title": "Strength A"
+    },
+    {
+      "session_key": "LW10K-W01-D02",
+      "protocol_id": "LW10K-W01-D02-DRAFT-R1",
+      "session_lineage_id": "baf02122-f283-5521-a3a4-16b1de1fd63d",
+      "revision_number": 1,
+      "title": "Main run"
+    },
+    {
+      "session_key": "LW10K-W01-D03",
+      "protocol_id": "LW10K-W01-D03-DRAFT-R1",
+      "session_lineage_id": "43496cc4-773d-54cc-9ef4-db07b3aace5f",
+      "revision_number": 1,
+      "title": "Easy run"
+    },
+    {
+      "session_key": "LW10K-W01-D04",
+      "protocol_id": "LW10K-W01-D04-DRAFT-R1",
+      "session_lineage_id": "21fc299c-06ba-5506-8553-0209780cbfe3",
+      "revision_number": 1,
+      "title": "Strength B"
+    },
+    {
+      "session_key": "LW10K-W01-D05",
+      "protocol_id": "LW10K-W01-D05-DRAFT-R1",
+      "session_lineage_id": "63a11e44-8efd-57ac-99d2-c7e2b7f44a43",
+      "revision_number": 1,
+      "title": "Easy run / strides"
+    },
+    {
+      "session_key": "LW10K-W01-D07",
+      "protocol_id": "LW10K-W01-D07-DRAFT-R1",
+      "session_lineage_id": "939762f3-bb11-592e-86e6-bd9a9fb8c153",
+      "revision_number": 1,
+      "title": "Long easy run"
+    },
+    {
+      "session_key": "LW10K-W02-D01",
+      "protocol_id": "LW10K-W02-D01-DRAFT-R1",
+      "session_lineage_id": "6aec11af-45d5-5fb9-9e4d-fbcc49d9e767",
+      "revision_number": 1,
+      "title": "Strength A"
+    },
+    {
+      "session_key": "LW10K-W02-D02",
+      "protocol_id": "LW10K-W02-D02-DRAFT-R1",
+      "session_lineage_id": "fcb86f6f-07ac-5f1b-b9b9-5fa7d4544827",
+      "revision_number": 1,
+      "title": "Main run"
+    },
+    {
+      "session_key": "LW10K-W02-D03",
+      "protocol_id": "LW10K-W02-D03-DRAFT-R1",
+      "session_lineage_id": "4d650387-b504-5c80-9bc2-a6534d88863b",
+      "revision_number": 1,
+      "title": "Easy run"
+    },
+    {
+      "session_key": "LW10K-W02-D04",
+      "protocol_id": "LW10K-W02-D04-DRAFT-R1",
+      "session_lineage_id": "e7f72978-bb3e-5252-bcbd-ee996d53ac3e",
+      "revision_number": 1,
+      "title": "Strength B"
+    },
+    {
+      "session_key": "LW10K-W02-D05",
+      "protocol_id": "LW10K-W02-D05-DRAFT-R1",
+      "session_lineage_id": "57a3b9c7-9da1-52a8-9600-f2d1fbb1e64a",
+      "revision_number": 1,
+      "title": "Easy run / strides"
+    },
+    {
+      "session_key": "LW10K-W02-D07",
+      "protocol_id": "LW10K-W02-D07-DRAFT-R1",
+      "session_lineage_id": "74717952-b073-5d01-9df1-cfbd40df7c70",
+      "revision_number": 1,
+      "title": "Long easy run"
+    },
+    {
+      "session_key": "LW10K-W03-D01",
+      "protocol_id": "LW10K-W03-D01-DRAFT-R1",
+      "session_lineage_id": "da3a1810-a65f-5e19-a7dc-e7d276839e44",
+      "revision_number": 1,
+      "title": "Strength A"
+    },
+    {
+      "session_key": "LW10K-W03-D02",
+      "protocol_id": "LW10K-W03-D02-DRAFT-R1",
+      "session_lineage_id": "3116c98a-5e21-5ce1-8e3b-9b708479454f",
+      "revision_number": 1,
+      "title": "Main run"
+    },
+    {
+      "session_key": "LW10K-W03-D03",
+      "protocol_id": "LW10K-W03-D03-DRAFT-R1",
+      "session_lineage_id": "b9aa43f7-9dc3-539c-b183-3ab339654758",
+      "revision_number": 1,
+      "title": "Easy run"
+    },
+    {
+      "session_key": "LW10K-W03-D04",
+      "protocol_id": "LW10K-W03-D04-DRAFT-R1",
+      "session_lineage_id": "2052df8e-b4dd-58e0-9c03-17f98f138e24",
+      "revision_number": 1,
+      "title": "Strength B"
+    },
+    {
+      "session_key": "LW10K-W03-D05",
+      "protocol_id": "LW10K-W03-D05-DRAFT-R1",
+      "session_lineage_id": "1ea65fa9-b267-51ba-9525-584d6f8e3783",
+      "revision_number": 1,
+      "title": "Easy run / strides"
+    },
+    {
+      "session_key": "LW10K-W03-D07",
+      "protocol_id": "LW10K-W03-D07-DRAFT-R1",
+      "session_lineage_id": "9d2ae8c0-e828-5a54-bdba-c2c05d76d364",
+      "revision_number": 1,
+      "title": "Long easy run"
+    },
+    {
+      "session_key": "LW10K-W04-D01",
+      "protocol_id": "LW10K-W04-D01-DRAFT-R1",
+      "session_lineage_id": "2d045c4d-0da3-583f-823c-f6d2fa3c0443",
+      "revision_number": 1,
+      "title": "Strength A"
+    },
+    {
+      "session_key": "LW10K-W04-D02",
+      "protocol_id": "LW10K-W04-D02-DRAFT-R1",
+      "session_lineage_id": "e8afd9a6-7246-598d-b6f9-6fb59096a76e",
+      "revision_number": 1,
+      "title": "Consolidation threshold"
+    },
+    {
+      "session_key": "LW10K-W04-D03",
+      "protocol_id": "LW10K-W04-D03-DRAFT-R1",
+      "session_lineage_id": "f6675795-cabc-5706-b1bf-7c5a08f62528",
+      "revision_number": 1,
+      "title": "Easy run"
+    },
+    {
+      "session_key": "LW10K-W04-D04",
+      "protocol_id": "LW10K-W04-D04-DRAFT-R1",
+      "session_lineage_id": "d5f28dd7-25fd-53e3-ba85-b297c17420e4",
+      "revision_number": 1,
+      "title": "Strength B"
+    },
+    {
+      "session_key": "LW10K-W04-D05",
+      "protocol_id": "LW10K-W04-D05-DRAFT-R1",
+      "session_lineage_id": "4a8dee15-c86d-5822-be7d-0241e9a3077f",
+      "revision_number": 1,
+      "title": "Easy run / strides"
+    },
+    {
+      "session_key": "LW10K-W04-D07",
+      "protocol_id": "LW10K-W04-D07-DRAFT-R1",
+      "session_lineage_id": "c54df464-7cf0-5aad-9c1b-87f1481f40da",
+      "revision_number": 1,
+      "title": "Long easy run"
+    },
+    {
+      "session_key": "LW10K-W05-D01",
+      "protocol_id": "LW10K-W05-D01-DRAFT-R1",
+      "session_lineage_id": "c2b9a2a5-a0fd-5b32-9b5a-db285799c0a3",
+      "revision_number": 1,
+      "title": "Strength A"
+    },
+    {
+      "session_key": "LW10K-W05-D02",
+      "protocol_id": "LW10K-W05-D02-DRAFT-R1",
+      "session_lineage_id": "d65948b6-69b5-570b-8d4a-6e96e5908314",
+      "revision_number": 1,
+      "title": "Main run"
+    },
+    {
+      "session_key": "LW10K-W05-D03",
+      "protocol_id": "LW10K-W05-D03-DRAFT-R1",
+      "session_lineage_id": "31891ea0-b339-5f67-ab8c-deebae40d54c",
+      "revision_number": 1,
+      "title": "Easy run"
+    },
+    {
+      "session_key": "LW10K-W05-D04",
+      "protocol_id": "LW10K-W05-D04-DRAFT-R1",
+      "session_lineage_id": "eb3d69ec-b232-5fb8-ba32-c7cf00cc794d",
+      "revision_number": 1,
+      "title": "Strength B"
+    },
+    {
+      "session_key": "LW10K-W05-D05",
+      "protocol_id": "LW10K-W05-D05-DRAFT-R1",
+      "session_lineage_id": "9353deb4-1360-59bd-8785-5c88ee68c7d2",
+      "revision_number": 1,
+      "title": "Easy run / strides"
+    },
+    {
+      "session_key": "LW10K-W05-D07",
+      "protocol_id": "LW10K-W05-D07-DRAFT-R1",
+      "session_lineage_id": "d9e7a99e-887a-569f-90e0-989c3bd84954",
+      "revision_number": 1,
+      "title": "Long easy run"
+    },
+    {
+      "session_key": "LW10K-W06-D01",
+      "protocol_id": "LW10K-W06-D01-DRAFT-R1",
+      "session_lineage_id": "18d0f55a-76b8-5d60-9fc4-2ea5698fdf7b",
+      "revision_number": 1,
+      "title": "Strength A"
+    },
+    {
+      "session_key": "LW10K-W06-D02",
+      "protocol_id": "LW10K-W06-D02-DRAFT-R1",
+      "session_lineage_id": "44f05b2a-a55a-5766-a9b4-00b2db46ea71",
+      "revision_number": 1,
+      "title": "Main run"
+    },
+    {
+      "session_key": "LW10K-W06-D03",
+      "protocol_id": "LW10K-W06-D03-DRAFT-R1",
+      "session_lineage_id": "bf80b11c-5389-5268-8659-1655e36410e3",
+      "revision_number": 1,
+      "title": "Easy run"
+    },
+    {
+      "session_key": "LW10K-W06-D04",
+      "protocol_id": "LW10K-W06-D04-DRAFT-R1",
+      "session_lineage_id": "661a1086-1435-5e43-8dea-845528a38643",
+      "revision_number": 1,
+      "title": "Strength B"
+    },
+    {
+      "session_key": "LW10K-W06-D05",
+      "protocol_id": "LW10K-W06-D05-DRAFT-R1",
+      "session_lineage_id": "f010db80-69f7-502f-90f7-d6fb577ad005",
+      "revision_number": 1,
+      "title": "Easy run / strides"
+    },
+    {
+      "session_key": "LW10K-W06-D07",
+      "protocol_id": "LW10K-W06-D07-DRAFT-R1",
+      "session_lineage_id": "09fc43aa-02be-52c9-9210-0fe46d68bb6d",
+      "revision_number": 1,
+      "title": "Long easy run"
+    },
+    {
+      "session_key": "LW10K-W07-D01",
+      "protocol_id": "LW10K-W07-D01-DRAFT-R1",
+      "session_lineage_id": "e1978da3-e34b-5d08-a740-350a80d1926c",
+      "revision_number": 1,
+      "title": "Strength A"
+    },
+    {
+      "session_key": "LW10K-W07-D02",
+      "protocol_id": "LW10K-W07-D02-DRAFT-R1",
+      "session_lineage_id": "4b710afd-00c5-55b9-b9bb-11ce51daa47f",
+      "revision_number": 1,
+      "title": "Main run"
+    },
+    {
+      "session_key": "LW10K-W07-D03",
+      "protocol_id": "LW10K-W07-D03-DRAFT-R1",
+      "session_lineage_id": "d4ecea05-5ec7-58a9-b534-0cec24e53164",
+      "revision_number": 1,
+      "title": "Easy run"
+    },
+    {
+      "session_key": "LW10K-W07-D04",
+      "protocol_id": "LW10K-W07-D04-DRAFT-R1",
+      "session_lineage_id": "696dede4-268c-5a31-8e3a-0e555a8f8b0c",
+      "revision_number": 1,
+      "title": "Strength B"
+    },
+    {
+      "session_key": "LW10K-W07-D05",
+      "protocol_id": "LW10K-W07-D05-DRAFT-R1",
+      "session_lineage_id": "54f39e5d-e386-5e07-a677-9a24eb15e3e6",
+      "revision_number": 1,
+      "title": "Easy run / strides"
+    },
+    {
+      "session_key": "LW10K-W07-D07",
+      "protocol_id": "LW10K-W07-D07-DRAFT-R1",
+      "session_lineage_id": "a95f0a65-4152-50c7-80b1-675746aa3cfa",
+      "revision_number": 1,
+      "title": "Long easy run"
+    },
+    {
+      "session_key": "LW10K-W08-D01",
+      "protocol_id": "LW10K-W08-D01-DRAFT-R1",
+      "session_lineage_id": "308b82a9-d6b7-5c6d-a94b-b83c0b0d349a",
+      "revision_number": 1,
+      "title": "Strength A"
+    },
+    {
+      "session_key": "LW10K-W08-D02",
+      "protocol_id": "LW10K-W08-D02-DRAFT-R1",
+      "session_lineage_id": "c82ec1f8-e007-5f52-8d2b-a91f46df370c",
+      "revision_number": 1,
+      "title": "Peak 10K specificity"
+    },
+    {
+      "session_key": "LW10K-W08-D03",
+      "protocol_id": "LW10K-W08-D03-DRAFT-R1",
+      "session_lineage_id": "2d770815-cd17-5501-9e01-9aa555a95bb0",
+      "revision_number": 1,
+      "title": "Easy run"
+    },
+    {
+      "session_key": "LW10K-W08-D04",
+      "protocol_id": "LW10K-W08-D04-DRAFT-R1",
+      "session_lineage_id": "d44b2d25-63fb-5508-97a8-172f611fd422",
+      "revision_number": 1,
+      "title": "Strength B"
+    },
+    {
+      "session_key": "LW10K-W08-D05",
+      "protocol_id": "LW10K-W08-D05-DRAFT-R1",
+      "session_lineage_id": "37c5ad17-bc27-56f6-812c-c99929b5832e",
+      "revision_number": 1,
+      "title": "Easy run / strides"
+    },
+    {
+      "session_key": "LW10K-W08-D07",
+      "protocol_id": "LW10K-W08-D07-DRAFT-R1",
+      "session_lineage_id": "f8c3ee75-dd3c-5fbc-808d-07ea66c6b7bb",
+      "revision_number": 1,
+      "title": "Long easy run"
+    },
+    {
+      "session_key": "LW10K-W09-D01",
+      "protocol_id": "LW10K-W09-D01-DRAFT-R1",
+      "session_lineage_id": "2a69637d-75c7-557d-b5dc-ba5e49b257d0",
+      "revision_number": 1,
+      "title": "Strength A"
+    },
+    {
+      "session_key": "LW10K-W09-D02",
+      "protocol_id": "LW10K-W09-D02-DRAFT-R1",
+      "session_lineage_id": "cde0bbe4-0af4-5d4a-a0cb-fd17398eb7d3",
+      "revision_number": 1,
+      "title": "Reduced-volume 10K specificity"
+    },
+    {
+      "session_key": "LW10K-W09-D03",
+      "protocol_id": "LW10K-W09-D03-DRAFT-R1",
+      "session_lineage_id": "029597e8-d816-5e64-b9a0-e47e81c4c108",
+      "revision_number": 1,
+      "title": "Easy run"
+    },
+    {
+      "session_key": "LW10K-W09-D04",
+      "protocol_id": "LW10K-W09-D04-DRAFT-R1",
+      "session_lineage_id": "0a6de07f-0ee6-5850-b903-acee407ca491",
+      "revision_number": 1,
+      "title": "Strength B"
+    },
+    {
+      "session_key": "LW10K-W09-D05",
+      "protocol_id": "LW10K-W09-D05-DRAFT-R1",
+      "session_lineage_id": "924f3647-cd34-5bf1-88ec-7bb0e1f9ae6a",
+      "revision_number": 1,
+      "title": "Easy run / strides"
+    },
+    {
+      "session_key": "LW10K-W09-D07",
+      "protocol_id": "LW10K-W09-D07-DRAFT-R1",
+      "session_lineage_id": "370218c5-441d-570c-bd36-ae08b3380ee4",
+      "revision_number": 1,
+      "title": "Long easy run"
+    },
+    {
+      "session_key": "LW10K-W10-D01",
+      "protocol_id": "LW10K-W10-D01-DRAFT-R1",
+      "session_lineage_id": "13a6135f-439c-5e10-ac06-bc3e506596f9",
+      "revision_number": 1,
+      "title": "Strength A — test-week reduced upper body"
+    },
+    {
+      "session_key": "LW10K-W10-D02",
+      "protocol_id": "LW10K-W10-D02-DRAFT-R1",
+      "session_lineage_id": "cbd90fb8-37ff-5458-b991-6c41b6fcd63e",
+      "revision_number": 1,
+      "title": "Taper sharpening"
+    },
+    {
+      "session_key": "LW10K-W10-D03",
+      "protocol_id": "LW10K-W10-D03-DRAFT-R1",
+      "session_lineage_id": "e97108b8-57d9-5eae-8809-33a3699939b6",
+      "revision_number": 1,
+      "title": "Easy run"
+    },
+    {
+      "session_key": "LW10K-W10-D05",
+      "protocol_id": "LW10K-W10-D05-DRAFT-R1",
+      "session_lineage_id": "fe801431-6348-5b56-8081-396a810e7fd4",
+      "revision_number": 1,
+      "title": "Easy run / strides"
+    },
+    {
+      "session_key": "LW10K-W10-D07",
+      "protocol_id": "LW10K-W10-D07-DRAFT-R1",
+      "session_lineage_id": "d1f03e44-ae64-5a40-a52e-675881e8f077",
+      "revision_number": 1,
+      "title": "10K final assessment"
+    },
+    {
+      "session_key": "LW10K-W10-D04",
+      "protocol_id": "LW10K-W10-D04-DRAFT-R1",
+      "session_lineage_id": "02346200-732e-56d4-a637-f20e7d75b7b4",
+      "revision_number": 1,
+      "title": "Upper-body taper"
+    }
+  ],
+  "phases": [],
+  "weeks": [
+    {
+      "week_number": 1,
+      "title": "Retained proposed opening doses; general-plan suitability pending review",
+      "days": [
+        {
+          "day_key": "day_1",
+          "day_order": 1,
+          "day_type": "training",
+          "title": "Strength A",
+          "slots": [
+            {
+              "slot_key": "LW10K-W01-D01",
+              "session_order": 1,
+              "session_key": "LW10K-W01-D01",
+              "display_title": "Strength A",
+              "progression": {
+                "prescription_summary": "Reconciled general draft; see current SOURCE.json, GENERAL_GUIDANCE.md and founder-selected replacements. No automatic progression."
+              }
+            }
+          ]
+        },
+        {
+          "day_key": "day_2",
+          "day_order": 2,
+          "day_type": "training",
+          "title": "Main run",
+          "slots": [
+            {
+              "slot_key": "LW10K-W01-D02",
+              "session_order": 1,
+              "session_key": "LW10K-W01-D02",
+              "display_title": "Main run",
+              "progression": {
+                "prescription_summary": "Reconciled general draft; see current SOURCE.json, GENERAL_GUIDANCE.md and founder-selected replacements. No automatic progression."
+              }
+            }
+          ]
+        },
+        {
+          "day_key": "day_3",
+          "day_order": 3,
+          "day_type": "training",
+          "title": "Easy run",
+          "slots": [
+            {
+              "slot_key": "LW10K-W01-D03",
+              "session_order": 1,
+              "session_key": "LW10K-W01-D03",
+              "display_title": "Easy run",
+              "progression": {
+                "prescription_summary": "Reconciled general draft; see current SOURCE.json, GENERAL_GUIDANCE.md and founder-selected replacements. No automatic progression."
+              }
+            }
+          ]
+        },
+        {
+          "day_key": "day_4",
+          "day_order": 4,
+          "day_type": "training",
+          "title": "Strength B",
+          "slots": [
+            {
+              "slot_key": "LW10K-W01-D04",
+              "session_order": 1,
+              "session_key": "LW10K-W01-D04",
+              "display_title": "Strength B",
+              "progression": {
+                "prescription_summary": "Reconciled general draft; see current SOURCE.json, GENERAL_GUIDANCE.md and founder-selected replacements. No automatic progression."
+              }
+            }
+          ]
+        },
+        {
+          "day_key": "day_5",
+          "day_order": 5,
+          "day_type": "training",
+          "title": "Easy run / strides",
+          "slots": [
+            {
+              "slot_key": "LW10K-W01-D05",
+              "session_order": 1,
+              "session_key": "LW10K-W01-D05",
+              "display_title": "Easy run / strides",
+              "progression": {
+                "prescription_summary": "Reconciled general draft; see current SOURCE.json, GENERAL_GUIDANCE.md and founder-selected replacements. No automatic progression."
+              }
+            }
+          ]
+        },
+        {
+          "day_key": "day_6",
+          "day_order": 6,
+          "day_type": "rest",
+          "title": "Rest",
+          "slots": []
+        },
+        {
+          "day_key": "day_7",
+          "day_order": 7,
+          "day_type": "training",
+          "title": "Long easy run",
+          "slots": [
+            {
+              "slot_key": "LW10K-W01-D07",
+              "session_order": 1,
+              "session_key": "LW10K-W01-D07",
+              "display_title": "Long easy run",
+              "progression": {
+                "prescription_summary": "Reconciled general draft; see current SOURCE.json, GENERAL_GUIDANCE.md and founder-selected replacements. No automatic progression."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "week_number": 2,
+      "title": "Retained proposed opening progression; no personal travel variant",
+      "days": [
+        {
+          "day_key": "day_1",
+          "day_order": 1,
+          "day_type": "training",
+          "title": "Strength A",
+          "slots": [
+            {
+              "slot_key": "LW10K-W02-D01",
+              "session_order": 1,
+              "session_key": "LW10K-W02-D01",
+              "display_title": "Strength A",
+              "progression": {
+                "prescription_summary": "Reconciled general draft; see current SOURCE.json, GENERAL_GUIDANCE.md and founder-selected replacements. No automatic progression."
+              }
+            }
+          ]
+        },
+        {
+          "day_key": "day_2",
+          "day_order": 2,
+          "day_type": "training",
+          "title": "Main run",
+          "slots": [
+            {
+              "slot_key": "LW10K-W02-D02",
+              "session_order": 1,
+              "session_key": "LW10K-W02-D02",
+              "display_title": "Main run",
+              "progression": {
+                "prescription_summary": "Reconciled general draft; see current SOURCE.json, GENERAL_GUIDANCE.md and founder-selected replacements. No automatic progression."
+              }
+            }
+          ]
+        },
+        {
+          "day_key": "day_3",
+          "day_order": 3,
+          "day_type": "training",
+          "title": "Easy run",
+          "slots": [
+            {
+              "slot_key": "LW10K-W02-D03",
+              "session_order": 1,
+              "session_key": "LW10K-W02-D03",
+              "display_title": "Easy run",
+              "progression": {
+                "prescription_summary": "Reconciled general draft; see current SOURCE.json, GENERAL_GUIDANCE.md and founder-selected replacements. No automatic progression."
+              }
+            }
+          ]
+        },
+        {
+          "day_key": "day_4",
+          "day_order": 4,
+          "day_type": "training",
+          "title": "Strength B",
+          "slots": [
+            {
+              "slot_key": "LW10K-W02-D04",
+              "session_order": 1,
+              "session_key": "LW10K-W02-D04",
+              "display_title": "Strength B",
+              "progression": {
+                "prescription_summary": "Reconciled general draft; see current SOURCE.json, GENERAL_GUIDANCE.md and founder-selected replacements. No automatic progression."
+              }
+            }
+          ]
+        },
+        {
+          "day_key": "day_5",
+          "day_order": 5,
+          "day_type": "training",
+          "title": "Easy run / strides",
+          "slots": [
+            {
+              "slot_key": "LW10K-W02-D05",
+              "session_order": 1,
+              "session_key": "LW10K-W02-D05",
+              "display_title": "Easy run / strides",
+              "progression": {
+                "prescription_summary": "Reconciled general draft; see current SOURCE.json, GENERAL_GUIDANCE.md and founder-selected replacements. No automatic progression."
+              }
+            }
+          ]
+        },
+        {
+          "day_key": "day_6",
+          "day_order": 6,
+          "day_type": "rest",
+          "title": "Rest / travel",
+          "slots": []
+        },
+        {
+          "day_key": "day_7",
+          "day_order": 7,
+          "day_type": "training",
+          "title": "Long easy run",
+          "slots": [
+            {
+              "slot_key": "LW10K-W02-D07",
+              "session_order": 1,
+              "session_key": "LW10K-W02-D07",
+              "display_title": "Long easy run",
+              "progression": {
+                "prescription_summary": "Reconciled general draft; see current SOURCE.json, GENERAL_GUIDANCE.md and founder-selected replacements. No automatic progression."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "week_number": 3,
+      "title": "First controlled threshold session",
+      "days": [
+        {
+          "day_key": "day_1",
+          "day_order": 1,
+          "day_type": "training",
+          "title": "Strength A",
+          "slots": [
+            {
+              "slot_key": "LW10K-W03-D01",
+              "session_order": 1,
+              "session_key": "LW10K-W03-D01",
+              "display_title": "Strength A",
+              "progression": {
+                "prescription_summary": "Reconciled general draft; see current SOURCE.json, GENERAL_GUIDANCE.md and founder-selected replacements. No automatic progression."
+              }
+            }
+          ]
+        },
+        {
+          "day_key": "day_2",
+          "day_order": 2,
+          "day_type": "training",
+          "title": "Main run",
+          "slots": [
+            {
+              "slot_key": "LW10K-W03-D02",
+              "session_order": 1,
+              "session_key": "LW10K-W03-D02",
+              "display_title": "Main run",
+              "progression": {
+                "prescription_summary": "Reconciled general draft; see current SOURCE.json, GENERAL_GUIDANCE.md and founder-selected replacements. No automatic progression."
+              }
+            }
+          ]
+        },
+        {
+          "day_key": "day_3",
+          "day_order": 3,
+          "day_type": "training",
+          "title": "Easy run",
+          "slots": [
+            {
+              "slot_key": "LW10K-W03-D03",
+              "session_order": 1,
+              "session_key": "LW10K-W03-D03",
+              "display_title": "Easy run",
+              "progression": {
+                "prescription_summary": "Reconciled general draft; see current SOURCE.json, GENERAL_GUIDANCE.md and founder-selected replacements. No automatic progression."
+              }
+            }
+          ]
+        },
+        {
+          "day_key": "day_4",
+          "day_order": 4,
+          "day_type": "training",
+          "title": "Strength B",
+          "slots": [
+            {
+              "slot_key": "LW10K-W03-D04",
+              "session_order": 1,
+              "session_key": "LW10K-W03-D04",
+              "display_title": "Strength B",
+              "progression": {
+                "prescription_summary": "Reconciled general draft; see current SOURCE.json, GENERAL_GUIDANCE.md and founder-selected replacements. No automatic progression."
+              }
+            }
+          ]
+        },
+        {
+          "day_key": "day_5",
+          "day_order": 5,
+          "day_type": "training",
+          "title": "Easy run / strides",
+          "slots": [
+            {
+              "slot_key": "LW10K-W03-D05",
+              "session_order": 1,
+              "session_key": "LW10K-W03-D05",
+              "display_title": "Easy run / strides",
+              "progression": {
+                "prescription_summary": "Reconciled general draft; see current SOURCE.json, GENERAL_GUIDANCE.md and founder-selected replacements. No automatic progression."
+              }
+            }
+          ]
+        },
+        {
+          "day_key": "day_6",
+          "day_order": 6,
+          "day_type": "rest",
+          "title": "Rest",
+          "slots": []
+        },
+        {
+          "day_key": "day_7",
+          "day_order": 7,
+          "day_type": "training",
+          "title": "Long easy run",
+          "slots": [
+            {
+              "slot_key": "LW10K-W03-D07",
+              "session_order": 1,
+              "session_key": "LW10K-W03-D07",
+              "display_title": "Long easy run",
+              "progression": {
+                "prescription_summary": "Reconciled general draft; see current SOURCE.json, GENERAL_GUIDANCE.md and founder-selected replacements. No automatic progression."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "week_number": 4,
+      "title": "Consolidation threshold; no in-programme 5K test",
+      "days": [
+        {
+          "day_key": "day_1",
+          "day_order": 1,
+          "day_type": "training",
+          "title": "Strength A",
+          "slots": [
+            {
+              "slot_key": "LW10K-W04-D01",
+              "session_order": 1,
+              "session_key": "LW10K-W04-D01",
+              "display_title": "Strength A",
+              "progression": {
+                "prescription_summary": "Reconciled general draft; see current SOURCE.json, GENERAL_GUIDANCE.md and founder-selected replacements. No automatic progression."
+              }
+            }
+          ]
+        },
+        {
+          "day_key": "day_2",
+          "day_order": 2,
+          "day_type": "training",
+          "title": "Consolidation threshold",
+          "slots": [
+            {
+              "slot_key": "LW10K-W04-D02",
+              "session_order": 1,
+              "session_key": "LW10K-W04-D02",
+              "display_title": "Consolidation threshold",
+              "progression": {
+                "prescription_summary": "Reconciled general draft; see current SOURCE.json, GENERAL_GUIDANCE.md and founder-selected replacements. No automatic progression."
+              }
+            }
+          ]
+        },
+        {
+          "day_key": "day_3",
+          "day_order": 3,
+          "day_type": "training",
+          "title": "Easy run",
+          "slots": [
+            {
+              "slot_key": "LW10K-W04-D03",
+              "session_order": 1,
+              "session_key": "LW10K-W04-D03",
+              "display_title": "Easy run",
+              "progression": {
+                "prescription_summary": "Reconciled general draft; see current SOURCE.json, GENERAL_GUIDANCE.md and founder-selected replacements. No automatic progression."
+              }
+            }
+          ]
+        },
+        {
+          "day_key": "day_4",
+          "day_order": 4,
+          "day_type": "training",
+          "title": "Strength B",
+          "slots": [
+            {
+              "slot_key": "LW10K-W04-D04",
+              "session_order": 1,
+              "session_key": "LW10K-W04-D04",
+              "display_title": "Strength B",
+              "progression": {
+                "prescription_summary": "Reconciled general draft; see current SOURCE.json, GENERAL_GUIDANCE.md and founder-selected replacements. No automatic progression."
+              }
+            }
+          ]
+        },
+        {
+          "day_key": "day_5",
+          "day_order": 5,
+          "day_type": "training",
+          "title": "Easy run / strides",
+          "slots": [
+            {
+              "slot_key": "LW10K-W04-D05",
+              "session_order": 1,
+              "session_key": "LW10K-W04-D05",
+              "display_title": "Easy run / strides",
+              "progression": {
+                "prescription_summary": "Reconciled general draft; see current SOURCE.json, GENERAL_GUIDANCE.md and founder-selected replacements. No automatic progression."
+              }
+            }
+          ]
+        },
+        {
+          "day_key": "day_6",
+          "day_order": 6,
+          "day_type": "rest",
+          "title": "Rest",
+          "slots": []
+        },
+        {
+          "day_key": "day_7",
+          "day_order": 7,
+          "day_type": "training",
+          "title": "Long easy run",
+          "slots": [
+            {
+              "slot_key": "LW10K-W04-D07",
+              "session_order": 1,
+              "session_key": "LW10K-W04-D07",
+              "display_title": "Long easy run",
+              "progression": {
+                "prescription_summary": "Reconciled general draft; see current SOURCE.json, GENERAL_GUIDANCE.md and founder-selected replacements. No automatic progression."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "week_number": 5,
+      "title": "Build threshold duration and aerobic endurance",
+      "days": [
+        {
+          "day_key": "day_1",
+          "day_order": 1,
+          "day_type": "training",
+          "title": "Strength A",
+          "slots": [
+            {
+              "slot_key": "LW10K-W05-D01",
+              "session_order": 1,
+              "session_key": "LW10K-W05-D01",
+              "display_title": "Strength A",
+              "progression": {
+                "prescription_summary": "Reconciled general draft; see current SOURCE.json, GENERAL_GUIDANCE.md and founder-selected replacements. No automatic progression."
+              }
+            }
+          ]
+        },
+        {
+          "day_key": "day_2",
+          "day_order": 2,
+          "day_type": "training",
+          "title": "Main run",
+          "slots": [
+            {
+              "slot_key": "LW10K-W05-D02",
+              "session_order": 1,
+              "session_key": "LW10K-W05-D02",
+              "display_title": "Main run",
+              "progression": {
+                "prescription_summary": "Reconciled general draft; see current SOURCE.json, GENERAL_GUIDANCE.md and founder-selected replacements. No automatic progression."
+              }
+            }
+          ]
+        },
+        {
+          "day_key": "day_3",
+          "day_order": 3,
+          "day_type": "training",
+          "title": "Easy run",
+          "slots": [
+            {
+              "slot_key": "LW10K-W05-D03",
+              "session_order": 1,
+              "session_key": "LW10K-W05-D03",
+              "display_title": "Easy run",
+              "progression": {
+                "prescription_summary": "Reconciled general draft; see current SOURCE.json, GENERAL_GUIDANCE.md and founder-selected replacements. No automatic progression."
+              }
+            }
+          ]
+        },
+        {
+          "day_key": "day_4",
+          "day_order": 4,
+          "day_type": "training",
+          "title": "Strength B",
+          "slots": [
+            {
+              "slot_key": "LW10K-W05-D04",
+              "session_order": 1,
+              "session_key": "LW10K-W05-D04",
+              "display_title": "Strength B",
+              "progression": {
+                "prescription_summary": "Reconciled general draft; see current SOURCE.json, GENERAL_GUIDANCE.md and founder-selected replacements. No automatic progression."
+              }
+            }
+          ]
+        },
+        {
+          "day_key": "day_5",
+          "day_order": 5,
+          "day_type": "training",
+          "title": "Easy run / strides",
+          "slots": [
+            {
+              "slot_key": "LW10K-W05-D05",
+              "session_order": 1,
+              "session_key": "LW10K-W05-D05",
+              "display_title": "Easy run / strides",
+              "progression": {
+                "prescription_summary": "Reconciled general draft; see current SOURCE.json, GENERAL_GUIDANCE.md and founder-selected replacements. No automatic progression."
+              }
+            }
+          ]
+        },
+        {
+          "day_key": "day_6",
+          "day_order": 6,
+          "day_type": "rest",
+          "title": "Rest",
+          "slots": []
+        },
+        {
+          "day_key": "day_7",
+          "day_order": 7,
+          "day_type": "training",
+          "title": "Long easy run",
+          "slots": [
+            {
+              "slot_key": "LW10K-W05-D07",
+              "session_order": 1,
+              "session_key": "LW10K-W05-D07",
+              "display_title": "Long easy run",
+              "progression": {
+                "prescription_summary": "Reconciled general draft; see current SOURCE.json, GENERAL_GUIDANCE.md and founder-selected replacements. No automatic progression."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "week_number": 6,
+      "title": "Extend repeatable threshold work",
+      "days": [
+        {
+          "day_key": "day_1",
+          "day_order": 1,
+          "day_type": "training",
+          "title": "Strength A",
+          "slots": [
+            {
+              "slot_key": "LW10K-W06-D01",
+              "session_order": 1,
+              "session_key": "LW10K-W06-D01",
+              "display_title": "Strength A",
+              "progression": {
+                "prescription_summary": "Reconciled general draft; see current SOURCE.json, GENERAL_GUIDANCE.md and founder-selected replacements. No automatic progression."
+              }
+            }
+          ]
+        },
+        {
+          "day_key": "day_2",
+          "day_order": 2,
+          "day_type": "training",
+          "title": "Main run",
+          "slots": [
+            {
+              "slot_key": "LW10K-W06-D02",
+              "session_order": 1,
+              "session_key": "LW10K-W06-D02",
+              "display_title": "Main run",
+              "progression": {
+                "prescription_summary": "Reconciled general draft; see current SOURCE.json, GENERAL_GUIDANCE.md and founder-selected replacements. No automatic progression."
+              }
+            }
+          ]
+        },
+        {
+          "day_key": "day_3",
+          "day_order": 3,
+          "day_type": "training",
+          "title": "Easy run",
+          "slots": [
+            {
+              "slot_key": "LW10K-W06-D03",
+              "session_order": 1,
+              "session_key": "LW10K-W06-D03",
+              "display_title": "Easy run",
+              "progression": {
+                "prescription_summary": "Reconciled general draft; see current SOURCE.json, GENERAL_GUIDANCE.md and founder-selected replacements. No automatic progression."
+              }
+            }
+          ]
+        },
+        {
+          "day_key": "day_4",
+          "day_order": 4,
+          "day_type": "training",
+          "title": "Strength B",
+          "slots": [
+            {
+              "slot_key": "LW10K-W06-D04",
+              "session_order": 1,
+              "session_key": "LW10K-W06-D04",
+              "display_title": "Strength B",
+              "progression": {
+                "prescription_summary": "Reconciled general draft; see current SOURCE.json, GENERAL_GUIDANCE.md and founder-selected replacements. No automatic progression."
+              }
+            }
+          ]
+        },
+        {
+          "day_key": "day_5",
+          "day_order": 5,
+          "day_type": "training",
+          "title": "Easy run / strides",
+          "slots": [
+            {
+              "slot_key": "LW10K-W06-D05",
+              "session_order": 1,
+              "session_key": "LW10K-W06-D05",
+              "display_title": "Easy run / strides",
+              "progression": {
+                "prescription_summary": "Reconciled general draft; see current SOURCE.json, GENERAL_GUIDANCE.md and founder-selected replacements. No automatic progression."
+              }
+            }
+          ]
+        },
+        {
+          "day_key": "day_6",
+          "day_order": 6,
+          "day_type": "rest",
+          "title": "Rest",
+          "slots": []
+        },
+        {
+          "day_key": "day_7",
+          "day_order": 7,
+          "day_type": "training",
+          "title": "Long easy run",
+          "slots": [
+            {
+              "slot_key": "LW10K-W06-D07",
+              "session_order": 1,
+              "session_key": "LW10K-W06-D07",
+              "display_title": "Long easy run",
+              "progression": {
+                "prescription_summary": "Reconciled general draft; see current SOURCE.json, GENERAL_GUIDANCE.md and founder-selected replacements. No automatic progression."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "week_number": 7,
+      "title": "Consolidation: reduce running and lifting volume",
+      "days": [
+        {
+          "day_key": "day_1",
+          "day_order": 1,
+          "day_type": "training",
+          "title": "Strength A",
+          "slots": [
+            {
+              "slot_key": "LW10K-W07-D01",
+              "session_order": 1,
+              "session_key": "LW10K-W07-D01",
+              "display_title": "Strength A",
+              "progression": {
+                "prescription_summary": "Reconciled general draft; see current SOURCE.json, GENERAL_GUIDANCE.md and founder-selected replacements. No automatic progression."
+              }
+            }
+          ]
+        },
+        {
+          "day_key": "day_2",
+          "day_order": 2,
+          "day_type": "training",
+          "title": "Main run",
+          "slots": [
+            {
+              "slot_key": "LW10K-W07-D02",
+              "session_order": 1,
+              "session_key": "LW10K-W07-D02",
+              "display_title": "Main run",
+              "progression": {
+                "prescription_summary": "Reconciled general draft; see current SOURCE.json, GENERAL_GUIDANCE.md and founder-selected replacements. No automatic progression."
+              }
+            }
+          ]
+        },
+        {
+          "day_key": "day_3",
+          "day_order": 3,
+          "day_type": "training",
+          "title": "Easy run",
+          "slots": [
+            {
+              "slot_key": "LW10K-W07-D03",
+              "session_order": 1,
+              "session_key": "LW10K-W07-D03",
+              "display_title": "Easy run",
+              "progression": {
+                "prescription_summary": "Reconciled general draft; see current SOURCE.json, GENERAL_GUIDANCE.md and founder-selected replacements. No automatic progression."
+              }
+            }
+          ]
+        },
+        {
+          "day_key": "day_4",
+          "day_order": 4,
+          "day_type": "training",
+          "title": "Strength B",
+          "slots": [
+            {
+              "slot_key": "LW10K-W07-D04",
+              "session_order": 1,
+              "session_key": "LW10K-W07-D04",
+              "display_title": "Strength B",
+              "progression": {
+                "prescription_summary": "Reconciled general draft; see current SOURCE.json, GENERAL_GUIDANCE.md and founder-selected replacements. No automatic progression."
+              }
+            }
+          ]
+        },
+        {
+          "day_key": "day_5",
+          "day_order": 5,
+          "day_type": "training",
+          "title": "Easy run / strides",
+          "slots": [
+            {
+              "slot_key": "LW10K-W07-D05",
+              "session_order": 1,
+              "session_key": "LW10K-W07-D05",
+              "display_title": "Easy run / strides",
+              "progression": {
+                "prescription_summary": "Reconciled general draft; see current SOURCE.json, GENERAL_GUIDANCE.md and founder-selected replacements. No automatic progression."
+              }
+            }
+          ]
+        },
+        {
+          "day_key": "day_6",
+          "day_order": 6,
+          "day_type": "rest",
+          "title": "Rest",
+          "slots": []
+        },
+        {
+          "day_key": "day_7",
+          "day_order": 7,
+          "day_type": "training",
+          "title": "Long easy run",
+          "slots": [
+            {
+              "slot_key": "LW10K-W07-D07",
+              "session_order": 1,
+              "session_key": "LW10K-W07-D07",
+              "display_title": "Long easy run",
+              "progression": {
+                "prescription_summary": "Reconciled general draft; see current SOURCE.json, GENERAL_GUIDANCE.md and founder-selected replacements. No automatic progression."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "week_number": 8,
+      "title": "10K-specific repetitions while retaining aerobic volume",
+      "days": [
+        {
+          "day_key": "day_1",
+          "day_order": 1,
+          "day_type": "training",
+          "title": "Strength A",
+          "slots": [
+            {
+              "slot_key": "LW10K-W08-D01",
+              "session_order": 1,
+              "session_key": "LW10K-W08-D01",
+              "display_title": "Strength A",
+              "progression": {
+                "prescription_summary": "Reconciled general draft; see current SOURCE.json, GENERAL_GUIDANCE.md and founder-selected replacements. No automatic progression."
+              }
+            }
+          ]
+        },
+        {
+          "day_key": "day_2",
+          "day_order": 2,
+          "day_type": "training",
+          "title": "Peak 10K specificity",
+          "slots": [
+            {
+              "slot_key": "LW10K-W08-D02",
+              "session_order": 1,
+              "session_key": "LW10K-W08-D02",
+              "display_title": "Peak 10K specificity",
+              "progression": {
+                "prescription_summary": "Reconciled general draft; see current SOURCE.json, GENERAL_GUIDANCE.md and founder-selected replacements. No automatic progression."
+              }
+            }
+          ]
+        },
+        {
+          "day_key": "day_3",
+          "day_order": 3,
+          "day_type": "training",
+          "title": "Easy run",
+          "slots": [
+            {
+              "slot_key": "LW10K-W08-D03",
+              "session_order": 1,
+              "session_key": "LW10K-W08-D03",
+              "display_title": "Easy run",
+              "progression": {
+                "prescription_summary": "Reconciled general draft; see current SOURCE.json, GENERAL_GUIDANCE.md and founder-selected replacements. No automatic progression."
+              }
+            }
+          ]
+        },
+        {
+          "day_key": "day_4",
+          "day_order": 4,
+          "day_type": "training",
+          "title": "Strength B",
+          "slots": [
+            {
+              "slot_key": "LW10K-W08-D04",
+              "session_order": 1,
+              "session_key": "LW10K-W08-D04",
+              "display_title": "Strength B",
+              "progression": {
+                "prescription_summary": "Reconciled general draft; see current SOURCE.json, GENERAL_GUIDANCE.md and founder-selected replacements. No automatic progression."
+              }
+            }
+          ]
+        },
+        {
+          "day_key": "day_5",
+          "day_order": 5,
+          "day_type": "training",
+          "title": "Easy run / strides",
+          "slots": [
+            {
+              "slot_key": "LW10K-W08-D05",
+              "session_order": 1,
+              "session_key": "LW10K-W08-D05",
+              "display_title": "Easy run / strides",
+              "progression": {
+                "prescription_summary": "Reconciled general draft; see current SOURCE.json, GENERAL_GUIDANCE.md and founder-selected replacements. No automatic progression."
+              }
+            }
+          ]
+        },
+        {
+          "day_key": "day_6",
+          "day_order": 6,
+          "day_type": "rest",
+          "title": "Rest",
+          "slots": []
+        },
+        {
+          "day_key": "day_7",
+          "day_order": 7,
+          "day_type": "training",
+          "title": "Long easy run",
+          "slots": [
+            {
+              "slot_key": "LW10K-W08-D07",
+              "session_order": 1,
+              "session_key": "LW10K-W08-D07",
+              "display_title": "Long easy run",
+              "progression": {
+                "prescription_summary": "Reconciled general draft; see current SOURCE.json, GENERAL_GUIDANCE.md and founder-selected replacements. No automatic progression."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "week_number": 9,
+      "title": "Final 10K-specific development; reduce lower-body lifting",
+      "days": [
+        {
+          "day_key": "day_1",
+          "day_order": 1,
+          "day_type": "training",
+          "title": "Strength A",
+          "slots": [
+            {
+              "slot_key": "LW10K-W09-D01",
+              "session_order": 1,
+              "session_key": "LW10K-W09-D01",
+              "display_title": "Strength A",
+              "progression": {
+                "prescription_summary": "Reconciled general draft; see current SOURCE.json, GENERAL_GUIDANCE.md and founder-selected replacements. No automatic progression."
+              }
+            }
+          ]
+        },
+        {
+          "day_key": "day_2",
+          "day_order": 2,
+          "day_type": "training",
+          "title": "Reduced-volume 10K specificity",
+          "slots": [
+            {
+              "slot_key": "LW10K-W09-D02",
+              "session_order": 1,
+              "session_key": "LW10K-W09-D02",
+              "display_title": "Reduced-volume 10K specificity",
+              "progression": {
+                "prescription_summary": "Reconciled general draft; see current SOURCE.json, GENERAL_GUIDANCE.md and founder-selected replacements. No automatic progression."
+              }
+            }
+          ]
+        },
+        {
+          "day_key": "day_3",
+          "day_order": 3,
+          "day_type": "training",
+          "title": "Easy run",
+          "slots": [
+            {
+              "slot_key": "LW10K-W09-D03",
+              "session_order": 1,
+              "session_key": "LW10K-W09-D03",
+              "display_title": "Easy run",
+              "progression": {
+                "prescription_summary": "Reconciled general draft; see current SOURCE.json, GENERAL_GUIDANCE.md and founder-selected replacements. No automatic progression."
+              }
+            }
+          ]
+        },
+        {
+          "day_key": "day_4",
+          "day_order": 4,
+          "day_type": "training",
+          "title": "Strength B",
+          "slots": [
+            {
+              "slot_key": "LW10K-W09-D04",
+              "session_order": 1,
+              "session_key": "LW10K-W09-D04",
+              "display_title": "Strength B",
+              "progression": {
+                "prescription_summary": "Reconciled general draft; see current SOURCE.json, GENERAL_GUIDANCE.md and founder-selected replacements. No automatic progression."
+              }
+            }
+          ]
+        },
+        {
+          "day_key": "day_5",
+          "day_order": 5,
+          "day_type": "training",
+          "title": "Easy run / strides",
+          "slots": [
+            {
+              "slot_key": "LW10K-W09-D05",
+              "session_order": 1,
+              "session_key": "LW10K-W09-D05",
+              "display_title": "Easy run / strides",
+              "progression": {
+                "prescription_summary": "Reconciled general draft; see current SOURCE.json, GENERAL_GUIDANCE.md and founder-selected replacements. No automatic progression."
+              }
+            }
+          ]
+        },
+        {
+          "day_key": "day_6",
+          "day_order": 6,
+          "day_type": "rest",
+          "title": "Rest",
+          "slots": []
+        },
+        {
+          "day_key": "day_7",
+          "day_order": 7,
+          "day_type": "training",
+          "title": "Long easy run",
+          "slots": [
+            {
+              "slot_key": "LW10K-W09-D07",
+              "session_order": 1,
+              "session_key": "LW10K-W09-D07",
+              "display_title": "Long easy run",
+              "progression": {
+                "prescription_summary": "Reconciled general draft; see current SOURCE.json, GENERAL_GUIDANCE.md and founder-selected replacements. No automatic progression."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "week_number": 10,
+      "title": "Freshen up, sharpen and test 10K on Sunday",
+      "days": [
+        {
+          "day_key": "day_1",
+          "day_order": 1,
+          "day_type": "training",
+          "title": "Strength A — test-week reduced upper body",
+          "slots": [
+            {
+              "slot_key": "LW10K-W10-D01",
+              "session_order": 1,
+              "session_key": "LW10K-W10-D01",
+              "display_title": "Strength A — test-week reduced upper body",
+              "progression": {
+                "prescription_summary": "Reconciled general draft; see current SOURCE.json, GENERAL_GUIDANCE.md and founder-selected replacements. No automatic progression."
+              }
+            }
+          ]
+        },
+        {
+          "day_key": "day_2",
+          "day_order": 2,
+          "day_type": "training",
+          "title": "Taper sharpening",
+          "slots": [
+            {
+              "slot_key": "LW10K-W10-D02",
+              "session_order": 1,
+              "session_key": "LW10K-W10-D02",
+              "display_title": "Taper sharpening",
+              "progression": {
+                "prescription_summary": "Reconciled general draft; see current SOURCE.json, GENERAL_GUIDANCE.md and founder-selected replacements. No automatic progression."
+              }
+            }
+          ]
+        },
+        {
+          "day_key": "day_3",
+          "day_order": 3,
+          "day_type": "training",
+          "title": "Easy run",
+          "slots": [
+            {
+              "slot_key": "LW10K-W10-D03",
+              "session_order": 1,
+              "session_key": "LW10K-W10-D03",
+              "display_title": "Easy run",
+              "progression": {
+                "prescription_summary": "Reconciled general draft; see current SOURCE.json, GENERAL_GUIDANCE.md and founder-selected replacements. No automatic progression."
+              }
+            }
+          ]
+        },
+        {
+          "day_key": "day_4",
+          "day_order": 4,
+          "day_type": "training",
+          "title": "Upper-body taper",
+          "slots": [
+            {
+              "slot_key": "LW10K-W10-D04",
+              "session_order": 1,
+              "session_key": "LW10K-W10-D04",
+              "display_title": "Upper-body taper",
+              "progression": {
+                "prescription_summary": "Two comfortable sets each retained upper-body press/row, at least 3 RIR; no lower-body lifting."
+              }
+            }
+          ]
+        },
+        {
+          "day_key": "day_5",
+          "day_order": 5,
+          "day_type": "training",
+          "title": "Easy run / strides",
+          "slots": [
+            {
+              "slot_key": "LW10K-W10-D05",
+              "session_order": 1,
+              "session_key": "LW10K-W10-D05",
+              "display_title": "Easy run / strides",
+              "progression": {
+                "prescription_summary": "Reconciled general draft; see current SOURCE.json, GENERAL_GUIDANCE.md and founder-selected replacements. No automatic progression."
+              }
+            }
+          ]
+        },
+        {
+          "day_key": "day_6",
+          "day_order": 6,
+          "day_type": "rest",
+          "title": "Rest",
+          "slots": []
+        },
+        {
+          "day_key": "day_7",
+          "day_order": 7,
+          "day_type": "training",
+          "title": "10K final assessment",
+          "slots": [
+            {
+              "slot_key": "LW10K-W10-D07",
+              "session_order": 1,
+              "session_key": "LW10K-W10-D07",
+              "display_title": "10K final assessment",
+              "progression": {
+                "prescription_summary": "Reconciled general draft; see current SOURCE.json, GENERAL_GUIDANCE.md and founder-selected replacements. No automatic progression."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "adaptation_permissions": [],
+  "protected_invariants": [],
+  "assessments": [],
+  "performance_evidence_requirements": [],
+  "comparison_identities": []
+}

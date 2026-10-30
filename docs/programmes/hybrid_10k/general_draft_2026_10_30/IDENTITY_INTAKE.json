@@ -1,0 +1,4908 @@
+{
+  "scope": "LOCAL_PRIVATE_V1_V2_IDENTITY_INTAKE_ONLY_NOT_V3_OR_HOSTED_AUTHORITY",
+  "repository_rows": {
+    "EX-073": {
+      "catalogue_row": {
+        "exercise_id": "EX-073",
+        "name": "Back Squat",
+        "slug": "back-squat",
+        "published": true,
+        "category": "Squat",
+        "movement_pattern": "Squat",
+        "equipment": "Barbell, Full Gym",
+        "primary_muscles": "Quadriceps, Glutes, Hamstrings",
+        "primary_capability": "Strength",
+        "loading_options": "Load, Reps, RPE, Tempo",
+        "purpose": "Canonical Cohort Wave 1 movement (Bilateral)."
+      },
+      "row_sha256": "05eaf64993a2de2579b3f631bfa3c5c9d1f8ff2e1e3c013d0feb52a634df1be5",
+      "row_sql": "('EX-073', 'Back Squat', 'back-squat', true, 'Squat', 'Squat', 'Barbell, Full Gym', 'Quadriceps, Glutes, Hamstrings', 'Strength', 'Load, Reps, RPE, Tempo', 'Canonical Cohort Wave 1 movement (Bilateral).'),",
+      "source_path": "supabase/migrations/20260724140000_founder_exercise_library_wave1.sql",
+      "source_sha256": "22a2683b81d09e071b99adda3c120dff06cb6410fcc4a2b53029beffca73d0c8",
+      "snapshot_git_revision": "0f0c40dae54c87e7b3f739b205c0fe6b8edf847a",
+      "classification": "VERIFIED_LOCAL_V1_V2_REPOSITORY_ROW_DECLARATION",
+      "canonical_definition_version": null,
+      "publication_event": null,
+      "hosted_state": "NOT_VERIFIED"
+    },
+    "EX-078": {
+      "catalogue_row": {
+        "exercise_id": "EX-078",
+        "name": "Romanian Deadlift",
+        "slug": "romanian-deadlift",
+        "published": true,
+        "category": "Hinge",
+        "movement_pattern": "Hinge",
+        "equipment": "Barbell, Full Gym",
+        "primary_muscles": "Hamstrings, Glutes",
+        "primary_capability": "Strength",
+        "loading_options": "Load, Reps, RPE",
+        "purpose": "Canonical Cohort Wave 1 movement (Bilateral)."
+      },
+      "row_sha256": "8c0f0b5c484906eaaf76993ede47eaef1647d5b62371727951abe66216666f55",
+      "row_sql": "('EX-078', 'Romanian Deadlift', 'romanian-deadlift', true, 'Hinge', 'Hinge', 'Barbell, Full Gym', 'Hamstrings, Glutes', 'Strength', 'Load, Reps, RPE', 'Canonical Cohort Wave 1 movement (Bilateral).'),",
+      "source_path": "supabase/migrations/20260724140000_founder_exercise_library_wave1.sql",
+      "source_sha256": "22a2683b81d09e071b99adda3c120dff06cb6410fcc4a2b53029beffca73d0c8",
+      "snapshot_git_revision": "0f0c40dae54c87e7b3f739b205c0fe6b8edf847a",
+      "classification": "VERIFIED_LOCAL_V1_V2_REPOSITORY_ROW_DECLARATION",
+      "canonical_definition_version": null,
+      "publication_event": null,
+      "hosted_state": "NOT_VERIFIED"
+    },
+    "EX-095": {
+      "catalogue_row": {
+        "exercise_id": "EX-095",
+        "name": "Weighted Pull Up",
+        "slug": "weighted-pull-up",
+        "published": true,
+        "category": "Pull",
+        "movement_pattern": "Vertical Pull",
+        "equipment": "Pull-up Bar, Weight Belt",
+        "primary_muscles": "Lats, Biceps, Core",
+        "primary_capability": "Strength",
+        "loading_options": "Load, Reps, RPE",
+        "purpose": "Canonical Cohort Wave 1 movement (Bilateral)."
+      },
+      "row_sha256": "d53708b2ea382335dc3937e6499fdd39fc369a033fe26ff84bcc395b0ea18c8c",
+      "row_sql": "('EX-095', 'Weighted Pull Up', 'weighted-pull-up', true, 'Pull', 'Vertical Pull', 'Pull-up Bar, Weight Belt', 'Lats, Biceps, Core', 'Strength', 'Load, Reps, RPE', 'Canonical Cohort Wave 1 movement (Bilateral).'),",
+      "source_path": "supabase/migrations/20260724140000_founder_exercise_library_wave1.sql",
+      "source_sha256": "22a2683b81d09e071b99adda3c120dff06cb6410fcc4a2b53029beffca73d0c8",
+      "snapshot_git_revision": "0f0c40dae54c87e7b3f739b205c0fe6b8edf847a",
+      "classification": "VERIFIED_LOCAL_V1_V2_REPOSITORY_ROW_DECLARATION",
+      "canonical_definition_version": null,
+      "publication_event": null,
+      "hosted_state": "NOT_VERIFIED"
+    },
+    "EX-101": {
+      "catalogue_row": {
+        "exercise_id": "EX-101",
+        "name": "Farmer Carry",
+        "slug": "farmer-carry",
+        "published": true,
+        "category": "Carry",
+        "movement_pattern": "Carry",
+        "equipment": "Dumbbells, Kettlebells, or Handles",
+        "primary_muscles": "Grip, Core, Traps",
+        "primary_capability": "Strength",
+        "loading_options": "Load, Distance, Time",
+        "purpose": "Canonical Cohort Wave 1 movement (Bilateral)."
+      },
+      "row_sha256": "41b2b72e482f13522cf4ef79117cfffc617c7f3db04781dae0f73c2076276754",
+      "row_sql": "('EX-101', 'Farmer Carry', 'farmer-carry', true, 'Carry', 'Carry', 'Dumbbells, Kettlebells, or Handles', 'Grip, Core, Traps', 'Strength', 'Load, Distance, Time', 'Canonical Cohort Wave 1 movement (Bilateral).'),",
+      "source_path": "supabase/migrations/20260724140000_founder_exercise_library_wave1.sql",
+      "source_sha256": "22a2683b81d09e071b99adda3c120dff06cb6410fcc4a2b53029beffca73d0c8",
+      "snapshot_git_revision": "0f0c40dae54c87e7b3f739b205c0fe6b8edf847a",
+      "classification": "VERIFIED_LOCAL_V1_V2_REPOSITORY_ROW_DECLARATION",
+      "canonical_definition_version": null,
+      "publication_event": null,
+      "hosted_state": "NOT_VERIFIED"
+    },
+    "EX-116": {
+      "catalogue_row": {
+        "exercise_id": "EX-116",
+        "name": "Side Plank",
+        "slug": "side-plank",
+        "published": true,
+        "category": "Core",
+        "movement_pattern": "Core",
+        "equipment": "Bodyweight",
+        "primary_muscles": "Obliques, Core",
+        "primary_capability": "Strength",
+        "loading_options": "Time, RPE",
+        "purpose": "Canonical Cohort Wave 1 movement (Unilateral)."
+      },
+      "row_sha256": "64c266e3aeed827245b8e45588fc0df6de8badb548e985300cf338c08f7e9ea5",
+      "row_sql": "('EX-116', 'Side Plank', 'side-plank', true, 'Core', 'Core', 'Bodyweight', 'Obliques, Core', 'Strength', 'Time, RPE', 'Canonical Cohort Wave 1 movement (Unilateral).'),",
+      "source_path": "supabase/migrations/20260724140000_founder_exercise_library_wave1.sql",
+      "source_sha256": "22a2683b81d09e071b99adda3c120dff06cb6410fcc4a2b53029beffca73d0c8",
+      "snapshot_git_revision": "0f0c40dae54c87e7b3f739b205c0fe6b8edf847a",
+      "classification": "VERIFIED_LOCAL_V1_V2_REPOSITORY_ROW_DECLARATION",
+      "canonical_definition_version": null,
+      "publication_event": null,
+      "hosted_state": "NOT_VERIFIED"
+    }
+  },
+  "candidate_export": {
+    "path": "/Users/leewebber/Documents/COHORT PERFORMANCE/Cohort Field Manual/09 Exports/CSV/Cohort_Exercise_Database_V1.csv",
+    "sha256": "dc836fa8bf2c26640d22261f2304a8a3adad8b7e3c188b8485142468ee11af15",
+    "rows": [
+      {
+        "Exercise Name": "Reverse Lunge",
+        "Exercise ID": "EX-026",
+        "Category": "Lunge",
+        "Movement Pattern": "Lunge",
+        "Equipment": "None",
+        "Primary Muscles": "Quadriceps, Glutes, Hamstrings",
+        "Technical Complexity": "Beginner",
+        "Coaching Priority": "Essential",
+        "Coaching Cues": "Step back under control, front foot rooted, drive through front leg.",
+        "Common Mistakes": "Losing balance, collapsing knee, rushing reps.",
+        "Notes": "Knee-friendlier lunge option.",
+        "Regression": "",
+        "Progression": "",
+        "Protocols": "",
+        "Video URL": "",
+        "Image": "",
+        "Published": "Yes",
+        "Primary Capability": "Strength"
+      },
+      {
+        "Exercise Name": "Dumbbell Strict Press",
+        "Exercise ID": "EX-037",
+        "Category": "Push",
+        "Movement Pattern": "Vertical Push",
+        "Equipment": "One Dumbbell, Two Dumbbells",
+        "Primary Muscles": "Shoulders, Triceps, Core",
+        "Technical Complexity": "Intermediate",
+        "Coaching Priority": "Essential",
+        "Coaching Cues": "Brace ribs down, press straight up, control the descent.",
+        "Common Mistakes": "Leaning back, flared ribs, partial lockout.",
+        "Notes": "Foundational vertical press.",
+        "Regression": "",
+        "Progression": "",
+        "Protocols": "",
+        "Video URL": "",
+        "Image": "",
+        "Published": "Yes",
+        "Primary Capability": "Strength"
+      },
+      {
+        "Exercise Name": "Single-Arm Dumbbell Row",
+        "Exercise ID": "EX-038",
+        "Category": "Pull",
+        "Movement Pattern": "Horizontal Pull",
+        "Equipment": "One Dumbbell, Bench",
+        "Primary Muscles": "Back, Biceps, Forearms",
+        "Technical Complexity": "Beginner",
+        "Coaching Priority": "Essential",
+        "Coaching Cues": "Pull elbow to hip, pause briefly, control the lower.",
+        "Common Mistakes": "Shrugging, twisting excessively, bouncing reps.",
+        "Notes": "Key pull substitute for minimal kit.",
+        "Regression": "",
+        "Progression": "",
+        "Protocols": "",
+        "Video URL": "",
+        "Image": "",
+        "Published": "Yes",
+        "Primary Capability": "Strength"
+      },
+      {
+        "Exercise Name": "Lateral Raise",
+        "Exercise ID": "EX-044",
+        "Category": "Push",
+        "Movement Pattern": "Vertical Push",
+        "Equipment": "One Dumbbell, Two Dumbbells",
+        "Primary Muscles": "Shoulders",
+        "Technical Complexity": "Beginner",
+        "Coaching Priority": "Recommended",
+        "Coaching Cues": "Slight bend in elbows, raise to shoulder height, control down.",
+        "Common Mistakes": "Swinging, shrugging, going too heavy.",
+        "Notes": "Delt hypertrophy staple.",
+        "Regression": "",
+        "Progression": "",
+        "Protocols": "",
+        "Video URL": "",
+        "Image": "",
+        "Published": "Yes",
+        "Primary Capability": "Hypertrophy"
+      },
+      {
+        "Exercise Name": "Pull Up",
+        "Exercise ID": "EX-053",
+        "Category": "Pull",
+        "Movement Pattern": "Vertical Pull",
+        "Equipment": "Pull-up Bar",
+        "Primary Muscles": "Back, Biceps, Forearms, Core",
+        "Technical Complexity": "Intermediate",
+        "Coaching Priority": "Essential",
+        "Coaching Cues": "Start from dead hang, pull chest up, control down.",
+        "Common Mistakes": "Kipping unintentionally, half reps, craning neck.",
+        "Notes": "Essential upper-body pulling test.",
+        "Regression": "",
+        "Progression": "",
+        "Protocols": "",
+        "Video URL": "",
+        "Image": "",
+        "Published": "Yes",
+        "Primary Capability": "Strength"
+      }
+    ],
+    "classification": "HISTORICAL_EXPORT_CANDIDATE_EVIDENCE_ONLY",
+    "runtime_seed": false,
+    "canonical_definition_versions": null
+  },
+  "variants": [
+    {
+      "variant_key": "reverse_lunge_db",
+      "authored_variant": "Dumbbell reverse lunge",
+      "status": "MISSING_EXACT_LOCAL_ROW",
+      "verified_local_exercise_id": null,
+      "candidate_exercise_id": null,
+      "reason": "EX-026 export is bodyweight/None equipment.",
+      "rejected_substitutions": [
+        "EX-025 walking lunge",
+        "EX-026 bodyweight reverse lunge"
+      ],
+      "evidence": null,
+      "canonical_definition_version": null,
+      "publication_event": null
+    },
+    {
+      "variant_key": "pull_up_bodyweight",
+      "authored_variant": "Bodyweight pull-up option",
+      "status": "CANDIDATE_ONLY",
+      "verified_local_exercise_id": null,
+      "candidate_exercise_id": "EX-053",
+      "reason": "Approved bridge and historical export; exact source grip/branch and supplied runtime row remain unbound.",
+      "rejected_substitutions": [],
+      "evidence": null,
+      "canonical_definition_version": null,
+      "publication_event": null
+    },
+    {
+      "variant_key": "pull_up_weighted",
+      "authored_variant": "Weighted pull-up option",
+      "status": "VERIFIED_LOCAL_OPTION_NOT_SELECTED",
+      "verified_local_exercise_id": "EX-095",
+      "candidate_exercise_id": null,
+      "reason": "Exact published local repository row; source allows added load but no option is selected for its slots.",
+      "rejected_substitutions": [],
+      "evidence": {
+        "catalogue_row": {
+          "exercise_id": "EX-095",
+          "name": "Weighted Pull Up",
+          "slug": "weighted-pull-up",
+          "published": true,
+          "category": "Pull",
+          "movement_pattern": "Vertical Pull",
+          "equipment": "Pull-up Bar, Weight Belt",
+          "primary_muscles": "Lats, Biceps, Core",
+          "primary_capability": "Strength",
+          "loading_options": "Load, Reps, RPE",
+          "purpose": "Canonical Cohort Wave 1 movement (Bilateral)."
+        },
+        "row_sha256": "d53708b2ea382335dc3937e6499fdd39fc369a033fe26ff84bcc395b0ea18c8c",
+        "row_sql": "('EX-095', 'Weighted Pull Up', 'weighted-pull-up', true, 'Pull', 'Vertical Pull', 'Pull-up Bar, Weight Belt', 'Lats, Biceps, Core', 'Strength', 'Load, Reps, RPE', 'Canonical Cohort Wave 1 movement (Bilateral).'),",
+        "source_path": "supabase/migrations/20260724140000_founder_exercise_library_wave1.sql",
+        "source_sha256": "22a2683b81d09e071b99adda3c120dff06cb6410fcc4a2b53029beffca73d0c8",
+        "snapshot_git_revision": "0f0c40dae54c87e7b3f739b205c0fe6b8edf847a",
+        "classification": "VERIFIED_LOCAL_V1_V2_REPOSITORY_ROW_DECLARATION",
+        "canonical_definition_version": null,
+        "publication_event": null,
+        "hosted_state": "NOT_VERIFIED"
+      },
+      "canonical_definition_version": null,
+      "publication_event": null
+    },
+    {
+      "variant_key": "pull_up_foot_assisted",
+      "authored_variant": "Secure foot-assisted pull-up option",
+      "status": "MISSING_EXACT_LOCAL_ROW",
+      "verified_local_exercise_id": null,
+      "candidate_exercise_id": null,
+      "reason": "Do not map assistance to an unassisted or weighted identity.",
+      "rejected_substitutions": [],
+      "evidence": null,
+      "canonical_definition_version": null,
+      "publication_event": null
+    },
+    {
+      "variant_key": "pull_up_machine_assisted",
+      "authored_variant": "Machine-assisted pull-up option",
+      "status": "MISSING_EXACT_LOCAL_ROW",
+      "verified_local_exercise_id": null,
+      "candidate_exercise_id": null,
+      "reason": "Separate from foot assistance; no exact retained runtime row.",
+      "rejected_substitutions": [],
+      "evidence": null,
+      "canonical_definition_version": null,
+      "publication_event": null
+    },
+    {
+      "variant_key": "db_overhead_press",
+      "authored_variant": "Dumbbell overhead press; comfortable range, neutral grip allowed",
+      "status": "CANDIDATE_ONLY",
+      "verified_local_exercise_id": null,
+      "candidate_exercise_id": "EX-037",
+      "reason": "Historical DB strict-press lead; source does not fix standing/seated or demonstrate identity equivalence.",
+      "rejected_substitutions": [
+        "EX-088 barbell strict press",
+        "EX-036 dumbbell push press"
+      ],
+      "evidence": null,
+      "canonical_definition_version": null,
+      "publication_event": null
+    },
+    {
+      "variant_key": "db_row_a",
+      "authored_variant": "One-arm dumbbell row, Monday support unspecified",
+      "status": "CANDIDATE_ONLY",
+      "verified_local_exercise_id": null,
+      "candidate_exercise_id": "EX-038",
+      "reason": "Historical single-arm DB/bench row; Monday support/setup remains unbound.",
+      "rejected_substitutions": [],
+      "evidence": null,
+      "canonical_definition_version": null,
+      "publication_event": null
+    },
+    {
+      "variant_key": "db_row_b",
+      "authored_variant": "One-arm dumbbell row, free hand supported on bench",
+      "status": "CANDIDATE_ONLY",
+      "verified_local_exercise_id": null,
+      "candidate_exercise_id": "EX-038",
+      "reason": "Historical export is compatible evidence; no exact retained runtime catalogue row is promoted from that export.",
+      "rejected_substitutions": [
+        "EX-090 chest-supported bilateral row",
+        "EX-142 one-arm cable row"
+      ],
+      "evidence": null,
+      "canonical_definition_version": null,
+      "publication_event": null
+    },
+    {
+      "variant_key": "db_lateral_raise",
+      "authored_variant": "Controlled dumbbell lateral raise",
+      "status": "CANDIDATE_ONLY",
+      "verified_local_exercise_id": null,
+      "candidate_exercise_id": "EX-044",
+      "reason": "Historical export specifies dumbbells; retain as a candidate, not a published definition version.",
+      "rejected_substitutions": [
+        "EX-138 cable lateral raise"
+      ],
+      "evidence": null,
+      "canonical_definition_version": null,
+      "publication_event": null
+    },
+    {
+      "variant_key": "side_plank",
+      "authored_variant": "Per-side bodyweight side plank",
+      "status": "VERIFIED_LOCAL_MATCH",
+      "verified_local_exercise_id": "EX-116",
+      "candidate_exercise_id": null,
+      "reason": "Exact unilateral bodyweight/time row; no front-plank substitution.",
+      "rejected_substitutions": [],
+      "evidence": {
+        "catalogue_row": {
+          "exercise_id": "EX-116",
+          "name": "Side Plank",
+          "slug": "side-plank",
+          "published": true,
+          "category": "Core",
+          "movement_pattern": "Core",
+          "equipment": "Bodyweight",
+          "primary_muscles": "Obliques, Core",
+          "primary_capability": "Strength",
+          "loading_options": "Time, RPE",
+          "purpose": "Canonical Cohort Wave 1 movement (Unilateral)."
+        },
+        "row_sha256": "64c266e3aeed827245b8e45588fc0df6de8badb548e985300cf338c08f7e9ea5",
+        "row_sql": "('EX-116', 'Side Plank', 'side-plank', true, 'Core', 'Core', 'Bodyweight', 'Obliques, Core', 'Strength', 'Time, RPE', 'Canonical Cohort Wave 1 movement (Unilateral).'),",
+        "source_path": "supabase/migrations/20260724140000_founder_exercise_library_wave1.sql",
+        "source_sha256": "22a2683b81d09e071b99adda3c120dff06cb6410fcc4a2b53029beffca73d0c8",
+        "snapshot_git_revision": "0f0c40dae54c87e7b3f739b205c0fe6b8edf847a",
+        "classification": "VERIFIED_LOCAL_V1_V2_REPOSITORY_ROW_DECLARATION",
+        "canonical_definition_version": null,
+        "publication_event": null,
+        "hosted_state": "NOT_VERIFIED"
+      },
+      "canonical_definition_version": null,
+      "publication_event": null
+    },
+    {
+      "variant_key": "back_squat",
+      "authored_variant": "Barbell back squat",
+      "status": "VERIFIED_LOCAL_MATCH",
+      "verified_local_exercise_id": "EX-073",
+      "candidate_exercise_id": null,
+      "reason": "Exact barbell squat row and accepted explicit bridge.",
+      "rejected_substitutions": [],
+      "evidence": {
+        "catalogue_row": {
+          "exercise_id": "EX-073",
+          "name": "Back Squat",
+          "slug": "back-squat",
+          "published": true,
+          "category": "Squat",
+          "movement_pattern": "Squat",
+          "equipment": "Barbell, Full Gym",
+          "primary_muscles": "Quadriceps, Glutes, Hamstrings",
+          "primary_capability": "Strength",
+          "loading_options": "Load, Reps, RPE, Tempo",
+          "purpose": "Canonical Cohort Wave 1 movement (Bilateral)."
+        },
+        "row_sha256": "05eaf64993a2de2579b3f631bfa3c5c9d1f8ff2e1e3c013d0feb52a634df1be5",
+        "row_sql": "('EX-073', 'Back Squat', 'back-squat', true, 'Squat', 'Squat', 'Barbell, Full Gym', 'Quadriceps, Glutes, Hamstrings', 'Strength', 'Load, Reps, RPE, Tempo', 'Canonical Cohort Wave 1 movement (Bilateral).'),",
+        "source_path": "supabase/migrations/20260724140000_founder_exercise_library_wave1.sql",
+        "source_sha256": "22a2683b81d09e071b99adda3c120dff06cb6410fcc4a2b53029beffca73d0c8",
+        "snapshot_git_revision": "0f0c40dae54c87e7b3f739b205c0fe6b8edf847a",
+        "classification": "VERIFIED_LOCAL_V1_V2_REPOSITORY_ROW_DECLARATION",
+        "canonical_definition_version": null,
+        "publication_event": null,
+        "hosted_state": "NOT_VERIFIED"
+      },
+      "canonical_definition_version": null,
+      "publication_event": null
+    },
+    {
+      "variant_key": "barbell_rdl",
+      "authored_variant": "Barbell Romanian deadlift",
+      "status": "VERIFIED_LOCAL_MATCH",
+      "verified_local_exercise_id": "EX-078",
+      "candidate_exercise_id": null,
+      "reason": "Exact barbell hinge row and accepted explicit bridge.",
+      "rejected_substitutions": [],
+      "evidence": {
+        "catalogue_row": {
+          "exercise_id": "EX-078",
+          "name": "Romanian Deadlift",
+          "slug": "romanian-deadlift",
+          "published": true,
+          "category": "Hinge",
+          "movement_pattern": "Hinge",
+          "equipment": "Barbell, Full Gym",
+          "primary_muscles": "Hamstrings, Glutes",
+          "primary_capability": "Strength",
+          "loading_options": "Load, Reps, RPE",
+          "purpose": "Canonical Cohort Wave 1 movement (Bilateral)."
+        },
+        "row_sha256": "8c0f0b5c484906eaaf76993ede47eaef1647d5b62371727951abe66216666f55",
+        "row_sql": "('EX-078', 'Romanian Deadlift', 'romanian-deadlift', true, 'Hinge', 'Hinge', 'Barbell, Full Gym', 'Hamstrings, Glutes', 'Strength', 'Load, Reps, RPE', 'Canonical Cohort Wave 1 movement (Bilateral).'),",
+        "source_path": "supabase/migrations/20260724140000_founder_exercise_library_wave1.sql",
+        "source_sha256": "22a2683b81d09e071b99adda3c120dff06cb6410fcc4a2b53029beffca73d0c8",
+        "snapshot_git_revision": "0f0c40dae54c87e7b3f739b205c0fe6b8edf847a",
+        "classification": "VERIFIED_LOCAL_V1_V2_REPOSITORY_ROW_DECLARATION",
+        "canonical_definition_version": null,
+        "publication_event": null,
+        "hosted_state": "NOT_VERIFIED"
+      },
+      "canonical_definition_version": null,
+      "publication_event": null
+    },
+    {
+      "variant_key": "flat_db_bench",
+      "authored_variant": "Flat dumbbell bench press",
+      "status": "MISSING_EXACT_LOCAL_ROW",
+      "verified_local_exercise_id": null,
+      "candidate_exercise_id": null,
+      "reason": "No exact local flat DB bench row found.",
+      "rejected_substitutions": [
+        "EX-083 barbell bench",
+        "EX-084 incline DB press",
+        "EX-046 DB floor press"
+      ],
+      "evidence": null,
+      "canonical_definition_version": null,
+      "publication_event": null
+    },
+    {
+      "variant_key": "db_farmer_carry",
+      "authored_variant": "Two-dumbbell walking farmer carry",
+      "status": "VERIFIED_LOCAL_MATCH",
+      "verified_local_exercise_id": "EX-101",
+      "candidate_exercise_id": null,
+      "reason": "Bilateral carry row explicitly permits dumbbells and time capture.",
+      "rejected_substitutions": [],
+      "evidence": {
+        "catalogue_row": {
+          "exercise_id": "EX-101",
+          "name": "Farmer Carry",
+          "slug": "farmer-carry",
+          "published": true,
+          "category": "Carry",
+          "movement_pattern": "Carry",
+          "equipment": "Dumbbells, Kettlebells, or Handles",
+          "primary_muscles": "Grip, Core, Traps",
+          "primary_capability": "Strength",
+          "loading_options": "Load, Distance, Time",
+          "purpose": "Canonical Cohort Wave 1 movement (Bilateral)."
+        },
+        "row_sha256": "41b2b72e482f13522cf4ef79117cfffc617c7f3db04781dae0f73c2076276754",
+        "row_sql": "('EX-101', 'Farmer Carry', 'farmer-carry', true, 'Carry', 'Carry', 'Dumbbells, Kettlebells, or Handles', 'Grip, Core, Traps', 'Strength', 'Load, Distance, Time', 'Canonical Cohort Wave 1 movement (Bilateral).'),",
+        "source_path": "supabase/migrations/20260724140000_founder_exercise_library_wave1.sql",
+        "source_sha256": "22a2683b81d09e071b99adda3c120dff06cb6410fcc4a2b53029beffca73d0c8",
+        "snapshot_git_revision": "0f0c40dae54c87e7b3f739b205c0fe6b8edf847a",
+        "classification": "VERIFIED_LOCAL_V1_V2_REPOSITORY_ROW_DECLARATION",
+        "canonical_definition_version": null,
+        "publication_event": null,
+        "hosted_state": "NOT_VERIFIED"
+      },
+      "canonical_definition_version": null,
+      "publication_event": null
+    },
+    {
+      "variant_key": "single_leg_db_calf",
+      "authored_variant": "Standing single-leg dumbbell calf raise",
+      "status": "MISSING_EXACT_LOCAL_ROW",
+      "verified_local_exercise_id": null,
+      "candidate_exercise_id": null,
+      "reason": "No unilateral DB-specific row found.",
+      "rejected_substitutions": [
+        "EX-125 bilateral standing machine/step calf raise",
+        "EX-126 seated calf raise"
+      ],
+      "evidence": null,
+      "canonical_definition_version": null,
+      "publication_event": null
+    },
+    {
+      "variant_key": "reverse_crunch",
+      "authored_variant": "Controlled reverse crunch / pelvic curl",
+      "status": "MISSING_EXACT_LOCAL_ROW",
+      "verified_local_exercise_id": null,
+      "candidate_exercise_id": null,
+      "reason": "No exact retained reverse-crunch identity; no generic crunch substitute.",
+      "rejected_substitutions": [],
+      "evidence": null,
+      "canonical_definition_version": null,
+      "publication_event": null
+    }
+  ],
+  "occurrences": [
+    {
+      "session_id": "LW10K-W01-D01",
+      "source_occurrence_id": "W01-A-E01",
+      "variant_key": "reverse_lunge_db",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 1,
+        "reps": {
+          "type": "exact",
+          "exact_reps": 5
+        },
+        "per_side": true,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Small maintenance dose; controlled step, no soreness chasing.",
+        "authored_details": {
+          "source_occurrence_id": "W01-A-E01",
+          "source_repetitions_or_duration": "5/leg",
+          "source_rir": "3",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "90"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 90,
+        "rir_range": [
+          3,
+          3
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W01-D01",
+      "source_occurrence_id": "W01-A-E02",
+      "variant_key": "pull_up_choice",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "range",
+          "min_reps": 5,
+          "max_reps": 8
+        },
+        "per_side": false,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Bodyweight or athlete-selected added load/assistance.",
+        "authored_details": {
+          "source_occurrence_id": "W01-A-E02",
+          "source_repetitions_or_duration": "5–8",
+          "source_rir": "3",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "120"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 120,
+        "rir_range": [
+          3,
+          3
+        ]
+      }
+    },
+    {
+      "session_id": "LW10K-W01-D01",
+      "source_occurrence_id": "W01-A-E03",
+      "variant_key": "db_overhead_press",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "range",
+          "min_reps": 6,
+          "max_reps": 10
+        },
+        "per_side": false,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Comfortable range; neutral grip permitted.",
+        "authored_details": {
+          "source_occurrence_id": "W01-A-E03",
+          "source_repetitions_or_duration": "6–10",
+          "source_rir": "3",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "90"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 90,
+        "rir_range": [
+          3,
+          3
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W01-D01",
+      "source_occurrence_id": "W01-A-E04",
+      "variant_key": "db_row_a",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "range",
+          "min_reps": 8,
+          "max_reps": 12
+        },
+        "per_side": true,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Rest after both sides.",
+        "authored_details": {
+          "source_occurrence_id": "W01-A-E04",
+          "source_repetitions_or_duration": "8–12/side",
+          "source_rir": "3",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "90"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 90,
+        "rir_range": [
+          3,
+          3
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W01-D01",
+      "source_occurrence_id": "W01-A-E05",
+      "variant_key": "db_lateral_raise",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "range",
+          "min_reps": 12,
+          "max_reps": 15
+        },
+        "per_side": false,
+        "tempo": "Controlled both ways",
+        "coach_cue": "No swinging.",
+        "authored_details": {
+          "source_occurrence_id": "W01-A-E05",
+          "source_repetitions_or_duration": "12–15",
+          "source_rir": "3",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "60"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 60,
+        "rir_range": [
+          3,
+          3
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W01-D01",
+      "source_occurrence_id": "W01-A-E06",
+      "variant_key": "side_plank",
+      "exercise_id": "EX-116",
+      "intake_status": "VERIFIED_LOCAL_MATCH",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "duration",
+          "text": "30–40 sec/side"
+        },
+        "per_side": true,
+        "tempo": "Hold position; stop before posture loss",
+        "coach_cue": "Stop before posture loss.",
+        "authored_details": {
+          "source_occurrence_id": "W01-A-E06",
+          "source_repetitions_or_duration": "30–40 sec/side",
+          "source_rir": "N/A",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "45"
+        },
+        "rest_seconds": 45
+      }
+    },
+    {
+      "session_id": "LW10K-W01-D04",
+      "source_occurrence_id": "W01-B-E01",
+      "variant_key": "back_squat",
+      "exercise_id": "EX-073",
+      "intake_status": "VERIFIED_LOCAL_MATCH",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "range",
+          "min_reps": 4,
+          "max_reps": 6
+        },
+        "per_side": false,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Familiar stance/depth; no grinding.",
+        "authored_details": {
+          "source_occurrence_id": "W01-B-E01",
+          "source_repetitions_or_duration": "4–6",
+          "source_rir": "3",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "150–180"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds_range": [
+          150,
+          180
+        ],
+        "rir_range": [
+          3,
+          3
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "Total barbell load"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W01-D04",
+      "source_occurrence_id": "W01-B-E02",
+      "variant_key": "barbell_rdl",
+      "exercise_id": "EX-078",
+      "intake_status": "VERIFIED_LOCAL_MATCH",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "range",
+          "min_reps": 6,
+          "max_reps": 8
+        },
+        "per_side": false,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Controlled hinge; stop before spinal position changes.",
+        "authored_details": {
+          "source_occurrence_id": "W01-B-E02",
+          "source_repetitions_or_duration": "6–8",
+          "source_rir": "3",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "120"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 120,
+        "rir_range": [
+          3,
+          3
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "Total barbell load"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W01-D04",
+      "source_occurrence_id": "W01-B-E03",
+      "variant_key": "flat_db_bench",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "range",
+          "min_reps": 6,
+          "max_reps": 10
+        },
+        "per_side": false,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Flat bench; comfortable shoulder range.",
+        "authored_details": {
+          "source_occurrence_id": "W01-B-E03",
+          "source_repetitions_or_duration": "6–10",
+          "source_rir": "3",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "90"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 90,
+        "rir_range": [
+          3,
+          3
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W01-D04",
+      "source_occurrence_id": "W01-B-E04",
+      "variant_key": "db_row_b",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "range",
+          "min_reps": 8,
+          "max_reps": 12
+        },
+        "per_side": true,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Support free hand on bench; rest after both sides.",
+        "authored_details": {
+          "source_occurrence_id": "W01-B-E04",
+          "source_repetitions_or_duration": "8–12/side",
+          "source_rir": "3",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "90"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 90,
+        "rir_range": [
+          3,
+          3
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W01-D04",
+      "source_occurrence_id": "W01-B-E05",
+      "variant_key": "db_farmer_carry",
+      "exercise_id": "EX-101",
+      "intake_status": "VERIFIED_LOCAL_MATCH",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "duration",
+          "text": "40 sec",
+          "duration_seconds": 40
+        },
+        "per_side": false,
+        "tempo": "Normal walking; tall posture; no running",
+        "coach_cue": "Heavy enough to challenge grip with tall posture.",
+        "authored_details": {
+          "source_occurrence_id": "W01-B-E05",
+          "source_repetitions_or_duration": "40 sec",
+          "source_rir": "N/A",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "90"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 90,
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W01-D04",
+      "source_occurrence_id": "W01-B-E06",
+      "variant_key": "single_leg_db_calf",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "range",
+          "min_reps": 10,
+          "max_reps": 15
+        },
+        "per_side": true,
+        "tempo": "~2 sec up, 1 sec top pause, ~2 sec down",
+        "coach_cue": "Use prescribed calf tempo; rest after both sides.",
+        "authored_details": {
+          "source_occurrence_id": "W01-B-E06",
+          "source_repetitions_or_duration": "10–15/leg",
+          "source_rir": "3",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "60"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 60,
+        "rir_range": [
+          3,
+          3
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W01-D04",
+      "source_occurrence_id": "W01-B-E07",
+      "variant_key": "reverse_crunch",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "range",
+          "min_reps": 10,
+          "max_reps": 15
+        },
+        "per_side": false,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Controlled pelvic curl, no swing.",
+        "authored_details": {
+          "source_occurrence_id": "W01-B-E07",
+          "source_repetitions_or_duration": "10–15",
+          "source_rir": "3",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "60"
+        },
+        "rest_seconds": 60,
+        "rir_range": [
+          3,
+          3
+        ]
+      }
+    },
+    {
+      "session_id": "LW10K-W02-D01",
+      "source_occurrence_id": "W02-A-E01",
+      "variant_key": "reverse_lunge_db",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 1,
+        "reps": {
+          "type": "exact",
+          "exact_reps": 5
+        },
+        "per_side": true,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Small maintenance dose; controlled step, no soreness chasing.",
+        "authored_details": {
+          "source_occurrence_id": "W02-A-E01",
+          "source_repetitions_or_duration": "5/leg",
+          "source_rir": "3",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "90"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 90,
+        "rir_range": [
+          3,
+          3
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W02-D01",
+      "source_occurrence_id": "W02-A-E02",
+      "variant_key": "pull_up_choice",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "range",
+          "min_reps": 5,
+          "max_reps": 8
+        },
+        "per_side": false,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Bodyweight or athlete-selected added load/assistance.",
+        "authored_details": {
+          "source_occurrence_id": "W02-A-E02",
+          "source_repetitions_or_duration": "5–8",
+          "source_rir": "3",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "120"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 120,
+        "rir_range": [
+          3,
+          3
+        ]
+      }
+    },
+    {
+      "session_id": "LW10K-W02-D01",
+      "source_occurrence_id": "W02-A-E03",
+      "variant_key": "db_overhead_press",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "range",
+          "min_reps": 6,
+          "max_reps": 10
+        },
+        "per_side": false,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Comfortable range; neutral grip permitted.",
+        "authored_details": {
+          "source_occurrence_id": "W02-A-E03",
+          "source_repetitions_or_duration": "6–10",
+          "source_rir": "3",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "90"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 90,
+        "rir_range": [
+          3,
+          3
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W02-D01",
+      "source_occurrence_id": "W02-A-E04",
+      "variant_key": "db_row_a",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "range",
+          "min_reps": 8,
+          "max_reps": 12
+        },
+        "per_side": true,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Rest after both sides.",
+        "authored_details": {
+          "source_occurrence_id": "W02-A-E04",
+          "source_repetitions_or_duration": "8–12/side",
+          "source_rir": "3",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "90"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 90,
+        "rir_range": [
+          3,
+          3
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W02-D01",
+      "source_occurrence_id": "W02-A-E05",
+      "variant_key": "db_lateral_raise",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "range",
+          "min_reps": 12,
+          "max_reps": 15
+        },
+        "per_side": false,
+        "tempo": "Controlled both ways",
+        "coach_cue": "No swinging.",
+        "authored_details": {
+          "source_occurrence_id": "W02-A-E05",
+          "source_repetitions_or_duration": "12–15",
+          "source_rir": "3",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "60"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 60,
+        "rir_range": [
+          3,
+          3
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W02-D01",
+      "source_occurrence_id": "W02-A-E06",
+      "variant_key": "side_plank",
+      "exercise_id": "EX-116",
+      "intake_status": "VERIFIED_LOCAL_MATCH",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "duration",
+          "text": "30–40 sec/side"
+        },
+        "per_side": true,
+        "tempo": "Hold position; stop before posture loss",
+        "coach_cue": "Stop before posture loss.",
+        "authored_details": {
+          "source_occurrence_id": "W02-A-E06",
+          "source_repetitions_or_duration": "30–40 sec/side",
+          "source_rir": "N/A",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "45"
+        },
+        "rest_seconds": 45
+      }
+    },
+    {
+      "session_id": "LW10K-W02-D04",
+      "source_occurrence_id": "W02-B-E01",
+      "variant_key": "back_squat",
+      "exercise_id": "EX-073",
+      "intake_status": "VERIFIED_LOCAL_MATCH",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "range",
+          "min_reps": 4,
+          "max_reps": 6
+        },
+        "per_side": false,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Familiar stance/depth; no grinding.",
+        "authored_details": {
+          "source_occurrence_id": "W02-B-E01",
+          "source_repetitions_or_duration": "4–6",
+          "source_rir": "3",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "150–180"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds_range": [
+          150,
+          180
+        ],
+        "rir_range": [
+          3,
+          3
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "Total barbell load"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W02-D04",
+      "source_occurrence_id": "W02-B-E02",
+      "variant_key": "barbell_rdl",
+      "exercise_id": "EX-078",
+      "intake_status": "VERIFIED_LOCAL_MATCH",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "range",
+          "min_reps": 6,
+          "max_reps": 8
+        },
+        "per_side": false,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Controlled hinge; stop before spinal position changes.",
+        "authored_details": {
+          "source_occurrence_id": "W02-B-E02",
+          "source_repetitions_or_duration": "6–8",
+          "source_rir": "3",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "120"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 120,
+        "rir_range": [
+          3,
+          3
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "Total barbell load"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W02-D04",
+      "source_occurrence_id": "W02-B-E03",
+      "variant_key": "flat_db_bench",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "range",
+          "min_reps": 6,
+          "max_reps": 10
+        },
+        "per_side": false,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Flat bench; comfortable shoulder range.",
+        "authored_details": {
+          "source_occurrence_id": "W02-B-E03",
+          "source_repetitions_or_duration": "6–10",
+          "source_rir": "3",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "90"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 90,
+        "rir_range": [
+          3,
+          3
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W02-D04",
+      "source_occurrence_id": "W02-B-E04",
+      "variant_key": "db_row_b",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "range",
+          "min_reps": 8,
+          "max_reps": 12
+        },
+        "per_side": true,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Support free hand on bench; rest after both sides.",
+        "authored_details": {
+          "source_occurrence_id": "W02-B-E04",
+          "source_repetitions_or_duration": "8–12/side",
+          "source_rir": "3",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "90"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 90,
+        "rir_range": [
+          3,
+          3
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W02-D04",
+      "source_occurrence_id": "W02-B-E05",
+      "variant_key": "db_farmer_carry",
+      "exercise_id": "EX-101",
+      "intake_status": "VERIFIED_LOCAL_MATCH",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "duration",
+          "text": "40 sec",
+          "duration_seconds": 40
+        },
+        "per_side": false,
+        "tempo": "Normal walking; tall posture; no running",
+        "coach_cue": "Heavy enough to challenge grip with tall posture.",
+        "authored_details": {
+          "source_occurrence_id": "W02-B-E05",
+          "source_repetitions_or_duration": "40 sec",
+          "source_rir": "N/A",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "90"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 90,
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W02-D04",
+      "source_occurrence_id": "W02-B-E06",
+      "variant_key": "single_leg_db_calf",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "range",
+          "min_reps": 10,
+          "max_reps": 15
+        },
+        "per_side": true,
+        "tempo": "~2 sec up, 1 sec top pause, ~2 sec down",
+        "coach_cue": "Use prescribed calf tempo; rest after both sides.",
+        "authored_details": {
+          "source_occurrence_id": "W02-B-E06",
+          "source_repetitions_or_duration": "10–15/leg",
+          "source_rir": "3",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "60"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 60,
+        "rir_range": [
+          3,
+          3
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W02-D04",
+      "source_occurrence_id": "W02-B-E07",
+      "variant_key": "reverse_crunch",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "range",
+          "min_reps": 10,
+          "max_reps": 15
+        },
+        "per_side": false,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Controlled pelvic curl, no swing.",
+        "authored_details": {
+          "source_occurrence_id": "W02-B-E07",
+          "source_repetitions_or_duration": "10–15",
+          "source_rir": "3",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "60"
+        },
+        "rest_seconds": 60,
+        "rir_range": [
+          3,
+          3
+        ]
+      }
+    },
+    {
+      "session_id": "LW10K-W03-D01",
+      "source_occurrence_id": "W03-A-E01",
+      "variant_key": "reverse_lunge_db",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "exact",
+          "exact_reps": 5
+        },
+        "per_side": true,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Small maintenance dose; controlled step, no soreness chasing.",
+        "authored_details": {
+          "source_occurrence_id": "W03-A-E01",
+          "source_repetitions_or_duration": "5/leg",
+          "source_rir": "3",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "90"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 90,
+        "rir_range": [
+          3,
+          3
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W03-D01",
+      "source_occurrence_id": "W03-A-E02",
+      "variant_key": "pull_up_choice",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 3,
+        "reps": {
+          "type": "range",
+          "min_reps": 5,
+          "max_reps": 8
+        },
+        "per_side": false,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Bodyweight or athlete-selected added load/assistance.",
+        "authored_details": {
+          "source_occurrence_id": "W03-A-E02",
+          "source_repetitions_or_duration": "5–8",
+          "source_rir": "2",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "120"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 120,
+        "rir_range": [
+          2,
+          2
+        ]
+      }
+    },
+    {
+      "session_id": "LW10K-W03-D01",
+      "source_occurrence_id": "W03-A-E03",
+      "variant_key": "db_overhead_press",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 3,
+        "reps": {
+          "type": "range",
+          "min_reps": 6,
+          "max_reps": 10
+        },
+        "per_side": false,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Comfortable range; neutral grip permitted.",
+        "authored_details": {
+          "source_occurrence_id": "W03-A-E03",
+          "source_repetitions_or_duration": "6–10",
+          "source_rir": "2",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "90"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 90,
+        "rir_range": [
+          2,
+          2
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W03-D01",
+      "source_occurrence_id": "W03-A-E04",
+      "variant_key": "db_row_a",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "range",
+          "min_reps": 8,
+          "max_reps": 12
+        },
+        "per_side": true,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Rest after both sides.",
+        "authored_details": {
+          "source_occurrence_id": "W03-A-E04",
+          "source_repetitions_or_duration": "8–12/side",
+          "source_rir": "2",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "90"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 90,
+        "rir_range": [
+          2,
+          2
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W03-D01",
+      "source_occurrence_id": "W03-A-E05",
+      "variant_key": "db_lateral_raise",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "range",
+          "min_reps": 12,
+          "max_reps": 15
+        },
+        "per_side": false,
+        "tempo": "Controlled both ways",
+        "coach_cue": "No swinging.",
+        "authored_details": {
+          "source_occurrence_id": "W03-A-E05",
+          "source_repetitions_or_duration": "12–15",
+          "source_rir": "2",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "60"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 60,
+        "rir_range": [
+          2,
+          2
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W03-D01",
+      "source_occurrence_id": "W03-A-E06",
+      "variant_key": "side_plank",
+      "exercise_id": "EX-116",
+      "intake_status": "VERIFIED_LOCAL_MATCH",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "duration",
+          "text": "30–40 sec/side"
+        },
+        "per_side": true,
+        "tempo": "Hold position; stop before posture loss",
+        "coach_cue": "Stop before posture loss.",
+        "authored_details": {
+          "source_occurrence_id": "W03-A-E06",
+          "source_repetitions_or_duration": "30–40 sec/side",
+          "source_rir": "N/A",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "45"
+        },
+        "rest_seconds": 45
+      }
+    },
+    {
+      "session_id": "LW10K-W03-D04",
+      "source_occurrence_id": "W03-B-E01",
+      "variant_key": "back_squat",
+      "exercise_id": "EX-073",
+      "intake_status": "VERIFIED_LOCAL_MATCH",
+      "prescription": {
+        "sets": 3,
+        "reps": {
+          "type": "range",
+          "min_reps": 4,
+          "max_reps": 6
+        },
+        "per_side": false,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Familiar stance/depth; no grinding.",
+        "authored_details": {
+          "source_occurrence_id": "W03-B-E01",
+          "source_repetitions_or_duration": "4–6",
+          "source_rir": "2–3",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "150–180"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds_range": [
+          150,
+          180
+        ],
+        "rir_range": [
+          2,
+          3
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "Total barbell load"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W03-D04",
+      "source_occurrence_id": "W03-B-E02",
+      "variant_key": "barbell_rdl",
+      "exercise_id": "EX-078",
+      "intake_status": "VERIFIED_LOCAL_MATCH",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "range",
+          "min_reps": 6,
+          "max_reps": 8
+        },
+        "per_side": false,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Controlled hinge; stop before spinal position changes.",
+        "authored_details": {
+          "source_occurrence_id": "W03-B-E02",
+          "source_repetitions_or_duration": "6–8",
+          "source_rir": "2–3",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "120"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 120,
+        "rir_range": [
+          2,
+          3
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "Total barbell load"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W03-D04",
+      "source_occurrence_id": "W03-B-E03",
+      "variant_key": "flat_db_bench",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 3,
+        "reps": {
+          "type": "range",
+          "min_reps": 6,
+          "max_reps": 10
+        },
+        "per_side": false,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Flat bench; comfortable shoulder range.",
+        "authored_details": {
+          "source_occurrence_id": "W03-B-E03",
+          "source_repetitions_or_duration": "6–10",
+          "source_rir": "2",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "90"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 90,
+        "rir_range": [
+          2,
+          2
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W03-D04",
+      "source_occurrence_id": "W03-B-E04",
+      "variant_key": "db_row_b",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 3,
+        "reps": {
+          "type": "range",
+          "min_reps": 8,
+          "max_reps": 12
+        },
+        "per_side": true,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Support free hand on bench; rest after both sides.",
+        "authored_details": {
+          "source_occurrence_id": "W03-B-E04",
+          "source_repetitions_or_duration": "8–12/side",
+          "source_rir": "2",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "90"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 90,
+        "rir_range": [
+          2,
+          2
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W03-D04",
+      "source_occurrence_id": "W03-B-E05",
+      "variant_key": "db_farmer_carry",
+      "exercise_id": "EX-101",
+      "intake_status": "VERIFIED_LOCAL_MATCH",
+      "prescription": {
+        "sets": 3,
+        "reps": {
+          "type": "duration",
+          "text": "40 sec",
+          "duration_seconds": 40
+        },
+        "per_side": false,
+        "tempo": "Normal walking; tall posture; no running",
+        "coach_cue": "Heavy enough to challenge grip with tall posture.",
+        "authored_details": {
+          "source_occurrence_id": "W03-B-E05",
+          "source_repetitions_or_duration": "40 sec",
+          "source_rir": "N/A",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "90"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 90,
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W03-D04",
+      "source_occurrence_id": "W03-B-E06",
+      "variant_key": "single_leg_db_calf",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "range",
+          "min_reps": 10,
+          "max_reps": 15
+        },
+        "per_side": true,
+        "tempo": "~2 sec up, 1 sec top pause, ~2 sec down",
+        "coach_cue": "Use prescribed calf tempo; rest after both sides.",
+        "authored_details": {
+          "source_occurrence_id": "W03-B-E06",
+          "source_repetitions_or_duration": "10–15/leg",
+          "source_rir": "2",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "60"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 60,
+        "rir_range": [
+          2,
+          2
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W03-D04",
+      "source_occurrence_id": "W03-B-E07",
+      "variant_key": "reverse_crunch",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "range",
+          "min_reps": 10,
+          "max_reps": 15
+        },
+        "per_side": false,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Controlled pelvic curl, no swing.",
+        "authored_details": {
+          "source_occurrence_id": "W03-B-E07",
+          "source_repetitions_or_duration": "10–15",
+          "source_rir": "2",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "60"
+        },
+        "rest_seconds": 60,
+        "rir_range": [
+          2,
+          2
+        ]
+      }
+    },
+    {
+      "session_id": "LW10K-W04-D01",
+      "source_occurrence_id": "W04-A-E01",
+      "variant_key": "reverse_lunge_db",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 1,
+        "reps": {
+          "type": "exact",
+          "exact_reps": 5
+        },
+        "per_side": true,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Small maintenance dose; controlled step, no soreness chasing.",
+        "authored_details": {
+          "source_occurrence_id": "W04-A-E01",
+          "source_repetitions_or_duration": "5/leg",
+          "source_rir": "3",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "90"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 90,
+        "rir_range": [
+          3,
+          3
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W04-D01",
+      "source_occurrence_id": "W04-A-E02",
+      "variant_key": "pull_up_choice",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "range",
+          "min_reps": 5,
+          "max_reps": 8
+        },
+        "per_side": false,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Bodyweight or athlete-selected added load/assistance.",
+        "authored_details": {
+          "source_occurrence_id": "W04-A-E02",
+          "source_repetitions_or_duration": "5–8",
+          "source_rir": "3",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "120"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 120,
+        "rir_range": [
+          3,
+          3
+        ]
+      }
+    },
+    {
+      "session_id": "LW10K-W04-D01",
+      "source_occurrence_id": "W04-A-E03",
+      "variant_key": "db_overhead_press",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "range",
+          "min_reps": 6,
+          "max_reps": 10
+        },
+        "per_side": false,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Comfortable range; neutral grip permitted.",
+        "authored_details": {
+          "source_occurrence_id": "W04-A-E03",
+          "source_repetitions_or_duration": "6–10",
+          "source_rir": "3",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "90"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 90,
+        "rir_range": [
+          3,
+          3
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W04-D01",
+      "source_occurrence_id": "W04-A-E04",
+      "variant_key": "db_row_a",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "range",
+          "min_reps": 8,
+          "max_reps": 12
+        },
+        "per_side": true,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Rest after both sides.",
+        "authored_details": {
+          "source_occurrence_id": "W04-A-E04",
+          "source_repetitions_or_duration": "8–12/side",
+          "source_rir": "3",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "90"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 90,
+        "rir_range": [
+          3,
+          3
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W04-D01",
+      "source_occurrence_id": "W04-A-E05",
+      "variant_key": "db_lateral_raise",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "range",
+          "min_reps": 12,
+          "max_reps": 15
+        },
+        "per_side": false,
+        "tempo": "Controlled both ways",
+        "coach_cue": "No swinging.",
+        "authored_details": {
+          "source_occurrence_id": "W04-A-E05",
+          "source_repetitions_or_duration": "12–15",
+          "source_rir": "3",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "60"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 60,
+        "rir_range": [
+          3,
+          3
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W04-D01",
+      "source_occurrence_id": "W04-A-E06",
+      "variant_key": "side_plank",
+      "exercise_id": "EX-116",
+      "intake_status": "VERIFIED_LOCAL_MATCH",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "duration",
+          "text": "30–40 sec/side"
+        },
+        "per_side": true,
+        "tempo": "Hold position; stop before posture loss",
+        "coach_cue": "Stop before posture loss.",
+        "authored_details": {
+          "source_occurrence_id": "W04-A-E06",
+          "source_repetitions_or_duration": "30–40 sec/side",
+          "source_rir": "N/A",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "45"
+        },
+        "rest_seconds": 45
+      }
+    },
+    {
+      "session_id": "LW10K-W04-D04",
+      "source_occurrence_id": "W04-B-E01",
+      "variant_key": "back_squat",
+      "exercise_id": "EX-073",
+      "intake_status": "VERIFIED_LOCAL_MATCH",
+      "prescription": {
+        "sets": 1,
+        "reps": {
+          "type": "range",
+          "min_reps": 4,
+          "max_reps": 6
+        },
+        "per_side": false,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Familiar stance/depth; no grinding.",
+        "authored_details": {
+          "source_occurrence_id": "W04-B-E01",
+          "source_repetitions_or_duration": "4–6",
+          "source_rir": "3",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "150–180"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds_range": [
+          150,
+          180
+        ],
+        "rir_range": [
+          3,
+          3
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "Total barbell load"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W04-D04",
+      "source_occurrence_id": "W04-B-E02",
+      "variant_key": "barbell_rdl",
+      "exercise_id": "EX-078",
+      "intake_status": "VERIFIED_LOCAL_MATCH",
+      "prescription": {
+        "sets": 1,
+        "reps": {
+          "type": "range",
+          "min_reps": 6,
+          "max_reps": 8
+        },
+        "per_side": false,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Controlled hinge; stop before spinal position changes.",
+        "authored_details": {
+          "source_occurrence_id": "W04-B-E02",
+          "source_repetitions_or_duration": "6–8",
+          "source_rir": "3",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "120"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 120,
+        "rir_range": [
+          3,
+          3
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "Total barbell load"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W04-D04",
+      "source_occurrence_id": "W04-B-E03",
+      "variant_key": "flat_db_bench",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "range",
+          "min_reps": 6,
+          "max_reps": 10
+        },
+        "per_side": false,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Flat bench; comfortable shoulder range.",
+        "authored_details": {
+          "source_occurrence_id": "W04-B-E03",
+          "source_repetitions_or_duration": "6–10",
+          "source_rir": "3",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "90"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 90,
+        "rir_range": [
+          3,
+          3
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W04-D04",
+      "source_occurrence_id": "W04-B-E04",
+      "variant_key": "db_row_b",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "range",
+          "min_reps": 8,
+          "max_reps": 12
+        },
+        "per_side": true,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Support free hand on bench; rest after both sides.",
+        "authored_details": {
+          "source_occurrence_id": "W04-B-E04",
+          "source_repetitions_or_duration": "8–12/side",
+          "source_rir": "3",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "90"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 90,
+        "rir_range": [
+          3,
+          3
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W04-D04",
+      "source_occurrence_id": "W04-B-E05",
+      "variant_key": "db_farmer_carry",
+      "exercise_id": "EX-101",
+      "intake_status": "VERIFIED_LOCAL_MATCH",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "duration",
+          "text": "40 sec",
+          "duration_seconds": 40
+        },
+        "per_side": false,
+        "tempo": "Normal walking; tall posture; no running",
+        "coach_cue": "Heavy enough to challenge grip with tall posture.",
+        "authored_details": {
+          "source_occurrence_id": "W04-B-E05",
+          "source_repetitions_or_duration": "40 sec",
+          "source_rir": "N/A",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "90"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 90,
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W04-D04",
+      "source_occurrence_id": "W04-B-E06",
+      "variant_key": "single_leg_db_calf",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "range",
+          "min_reps": 10,
+          "max_reps": 15
+        },
+        "per_side": true,
+        "tempo": "~2 sec up, 1 sec top pause, ~2 sec down",
+        "coach_cue": "Use prescribed calf tempo; rest after both sides.",
+        "authored_details": {
+          "source_occurrence_id": "W04-B-E06",
+          "source_repetitions_or_duration": "10–15/leg",
+          "source_rir": "3",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "60"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 60,
+        "rir_range": [
+          3,
+          3
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W04-D04",
+      "source_occurrence_id": "W04-B-E07",
+      "variant_key": "reverse_crunch",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "range",
+          "min_reps": 10,
+          "max_reps": 15
+        },
+        "per_side": false,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Controlled pelvic curl, no swing.",
+        "authored_details": {
+          "source_occurrence_id": "W04-B-E07",
+          "source_repetitions_or_duration": "10–15",
+          "source_rir": "3",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "60"
+        },
+        "rest_seconds": 60,
+        "rir_range": [
+          3,
+          3
+        ]
+      }
+    },
+    {
+      "session_id": "LW10K-W05-D01",
+      "source_occurrence_id": "W05-A-E01",
+      "variant_key": "reverse_lunge_db",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "exact",
+          "exact_reps": 5
+        },
+        "per_side": true,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Small maintenance dose; controlled step, no soreness chasing.",
+        "authored_details": {
+          "source_occurrence_id": "W05-A-E01",
+          "source_repetitions_or_duration": "5/leg",
+          "source_rir": "3",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "90"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 90,
+        "rir_range": [
+          3,
+          3
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W05-D01",
+      "source_occurrence_id": "W05-A-E02",
+      "variant_key": "pull_up_choice",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 3,
+        "reps": {
+          "type": "range",
+          "min_reps": 5,
+          "max_reps": 8
+        },
+        "per_side": false,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Bodyweight or athlete-selected added load/assistance.",
+        "authored_details": {
+          "source_occurrence_id": "W05-A-E02",
+          "source_repetitions_or_duration": "5–8",
+          "source_rir": "2",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "120"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 120,
+        "rir_range": [
+          2,
+          2
+        ]
+      }
+    },
+    {
+      "session_id": "LW10K-W05-D01",
+      "source_occurrence_id": "W05-A-E03",
+      "variant_key": "db_overhead_press",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 3,
+        "reps": {
+          "type": "range",
+          "min_reps": 6,
+          "max_reps": 10
+        },
+        "per_side": false,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Comfortable range; neutral grip permitted.",
+        "authored_details": {
+          "source_occurrence_id": "W05-A-E03",
+          "source_repetitions_or_duration": "6–10",
+          "source_rir": "2",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "90"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 90,
+        "rir_range": [
+          2,
+          2
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W05-D01",
+      "source_occurrence_id": "W05-A-E04",
+      "variant_key": "db_row_a",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "range",
+          "min_reps": 8,
+          "max_reps": 12
+        },
+        "per_side": true,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Rest after both sides.",
+        "authored_details": {
+          "source_occurrence_id": "W05-A-E04",
+          "source_repetitions_or_duration": "8–12/side",
+          "source_rir": "2",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "90"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 90,
+        "rir_range": [
+          2,
+          2
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W05-D01",
+      "source_occurrence_id": "W05-A-E05",
+      "variant_key": "db_lateral_raise",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "range",
+          "min_reps": 12,
+          "max_reps": 15
+        },
+        "per_side": false,
+        "tempo": "Controlled both ways",
+        "coach_cue": "No swinging.",
+        "authored_details": {
+          "source_occurrence_id": "W05-A-E05",
+          "source_repetitions_or_duration": "12–15",
+          "source_rir": "2",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "60"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 60,
+        "rir_range": [
+          2,
+          2
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W05-D01",
+      "source_occurrence_id": "W05-A-E06",
+      "variant_key": "side_plank",
+      "exercise_id": "EX-116",
+      "intake_status": "VERIFIED_LOCAL_MATCH",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "duration",
+          "text": "30–40 sec/side"
+        },
+        "per_side": true,
+        "tempo": "Hold position; stop before posture loss",
+        "coach_cue": "Stop before posture loss.",
+        "authored_details": {
+          "source_occurrence_id": "W05-A-E06",
+          "source_repetitions_or_duration": "30–40 sec/side",
+          "source_rir": "N/A",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "45"
+        },
+        "rest_seconds": 45
+      }
+    },
+    {
+      "session_id": "LW10K-W05-D04",
+      "source_occurrence_id": "W05-B-E01",
+      "variant_key": "back_squat",
+      "exercise_id": "EX-073",
+      "intake_status": "VERIFIED_LOCAL_MATCH",
+      "prescription": {
+        "sets": 3,
+        "reps": {
+          "type": "range",
+          "min_reps": 4,
+          "max_reps": 6
+        },
+        "per_side": false,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Familiar stance/depth; no grinding.",
+        "authored_details": {
+          "source_occurrence_id": "W05-B-E01",
+          "source_repetitions_or_duration": "4–6",
+          "source_rir": "2–3",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "150–180"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds_range": [
+          150,
+          180
+        ],
+        "rir_range": [
+          2,
+          3
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "Total barbell load"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W05-D04",
+      "source_occurrence_id": "W05-B-E02",
+      "variant_key": "barbell_rdl",
+      "exercise_id": "EX-078",
+      "intake_status": "VERIFIED_LOCAL_MATCH",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "range",
+          "min_reps": 6,
+          "max_reps": 8
+        },
+        "per_side": false,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Controlled hinge; stop before spinal position changes.",
+        "authored_details": {
+          "source_occurrence_id": "W05-B-E02",
+          "source_repetitions_or_duration": "6–8",
+          "source_rir": "2–3",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "120"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 120,
+        "rir_range": [
+          2,
+          3
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "Total barbell load"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W05-D04",
+      "source_occurrence_id": "W05-B-E03",
+      "variant_key": "flat_db_bench",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 3,
+        "reps": {
+          "type": "range",
+          "min_reps": 6,
+          "max_reps": 10
+        },
+        "per_side": false,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Flat bench; comfortable shoulder range.",
+        "authored_details": {
+          "source_occurrence_id": "W05-B-E03",
+          "source_repetitions_or_duration": "6–10",
+          "source_rir": "2",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "90"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 90,
+        "rir_range": [
+          2,
+          2
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W05-D04",
+      "source_occurrence_id": "W05-B-E04",
+      "variant_key": "db_row_b",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 3,
+        "reps": {
+          "type": "range",
+          "min_reps": 8,
+          "max_reps": 12
+        },
+        "per_side": true,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Support free hand on bench; rest after both sides.",
+        "authored_details": {
+          "source_occurrence_id": "W05-B-E04",
+          "source_repetitions_or_duration": "8–12/side",
+          "source_rir": "2",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "90"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 90,
+        "rir_range": [
+          2,
+          2
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W05-D04",
+      "source_occurrence_id": "W05-B-E05",
+      "variant_key": "db_farmer_carry",
+      "exercise_id": "EX-101",
+      "intake_status": "VERIFIED_LOCAL_MATCH",
+      "prescription": {
+        "sets": 3,
+        "reps": {
+          "type": "duration",
+          "text": "40 sec",
+          "duration_seconds": 40
+        },
+        "per_side": false,
+        "tempo": "Normal walking; tall posture; no running",
+        "coach_cue": "Heavy enough to challenge grip with tall posture.",
+        "authored_details": {
+          "source_occurrence_id": "W05-B-E05",
+          "source_repetitions_or_duration": "40 sec",
+          "source_rir": "N/A",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "90"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 90,
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W05-D04",
+      "source_occurrence_id": "W05-B-E06",
+      "variant_key": "single_leg_db_calf",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "range",
+          "min_reps": 10,
+          "max_reps": 15
+        },
+        "per_side": true,
+        "tempo": "~2 sec up, 1 sec top pause, ~2 sec down",
+        "coach_cue": "Use prescribed calf tempo; rest after both sides.",
+        "authored_details": {
+          "source_occurrence_id": "W05-B-E06",
+          "source_repetitions_or_duration": "10–15/leg",
+          "source_rir": "2",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "60"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 60,
+        "rir_range": [
+          2,
+          2
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W05-D04",
+      "source_occurrence_id": "W05-B-E07",
+      "variant_key": "reverse_crunch",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "range",
+          "min_reps": 10,
+          "max_reps": 15
+        },
+        "per_side": false,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Controlled pelvic curl, no swing.",
+        "authored_details": {
+          "source_occurrence_id": "W05-B-E07",
+          "source_repetitions_or_duration": "10–15",
+          "source_rir": "2",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "60"
+        },
+        "rest_seconds": 60,
+        "rir_range": [
+          2,
+          2
+        ]
+      }
+    },
+    {
+      "session_id": "LW10K-W06-D01",
+      "source_occurrence_id": "W06-A-E01",
+      "variant_key": "reverse_lunge_db",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "exact",
+          "exact_reps": 5
+        },
+        "per_side": true,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Small maintenance dose; controlled step, no soreness chasing.",
+        "authored_details": {
+          "source_occurrence_id": "W06-A-E01",
+          "source_repetitions_or_duration": "5/leg",
+          "source_rir": "3",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "90"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 90,
+        "rir_range": [
+          3,
+          3
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W06-D01",
+      "source_occurrence_id": "W06-A-E02",
+      "variant_key": "pull_up_choice",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 3,
+        "reps": {
+          "type": "range",
+          "min_reps": 5,
+          "max_reps": 8
+        },
+        "per_side": false,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Bodyweight or athlete-selected added load/assistance.",
+        "authored_details": {
+          "source_occurrence_id": "W06-A-E02",
+          "source_repetitions_or_duration": "5–8",
+          "source_rir": "2",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "120"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 120,
+        "rir_range": [
+          2,
+          2
+        ]
+      }
+    },
+    {
+      "session_id": "LW10K-W06-D01",
+      "source_occurrence_id": "W06-A-E03",
+      "variant_key": "db_overhead_press",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 3,
+        "reps": {
+          "type": "range",
+          "min_reps": 6,
+          "max_reps": 10
+        },
+        "per_side": false,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Comfortable range; neutral grip permitted.",
+        "authored_details": {
+          "source_occurrence_id": "W06-A-E03",
+          "source_repetitions_or_duration": "6–10",
+          "source_rir": "2",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "90"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 90,
+        "rir_range": [
+          2,
+          2
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W06-D01",
+      "source_occurrence_id": "W06-A-E04",
+      "variant_key": "db_row_a",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "range",
+          "min_reps": 8,
+          "max_reps": 12
+        },
+        "per_side": true,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Rest after both sides.",
+        "authored_details": {
+          "source_occurrence_id": "W06-A-E04",
+          "source_repetitions_or_duration": "8–12/side",
+          "source_rir": "2",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "90"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 90,
+        "rir_range": [
+          2,
+          2
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W06-D01",
+      "source_occurrence_id": "W06-A-E05",
+      "variant_key": "db_lateral_raise",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "range",
+          "min_reps": 12,
+          "max_reps": 15
+        },
+        "per_side": false,
+        "tempo": "Controlled both ways",
+        "coach_cue": "No swinging.",
+        "authored_details": {
+          "source_occurrence_id": "W06-A-E05",
+          "source_repetitions_or_duration": "12–15",
+          "source_rir": "2",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "60"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 60,
+        "rir_range": [
+          2,
+          2
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W06-D01",
+      "source_occurrence_id": "W06-A-E06",
+      "variant_key": "side_plank",
+      "exercise_id": "EX-116",
+      "intake_status": "VERIFIED_LOCAL_MATCH",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "duration",
+          "text": "30–40 sec/side"
+        },
+        "per_side": true,
+        "tempo": "Hold position; stop before posture loss",
+        "coach_cue": "Stop before posture loss.",
+        "authored_details": {
+          "source_occurrence_id": "W06-A-E06",
+          "source_repetitions_or_duration": "30–40 sec/side",
+          "source_rir": "N/A",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "45"
+        },
+        "rest_seconds": 45
+      }
+    },
+    {
+      "session_id": "LW10K-W06-D04",
+      "source_occurrence_id": "W06-B-E01",
+      "variant_key": "back_squat",
+      "exercise_id": "EX-073",
+      "intake_status": "VERIFIED_LOCAL_MATCH",
+      "prescription": {
+        "sets": 3,
+        "reps": {
+          "type": "range",
+          "min_reps": 4,
+          "max_reps": 6
+        },
+        "per_side": false,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Familiar stance/depth; no grinding.",
+        "authored_details": {
+          "source_occurrence_id": "W06-B-E01",
+          "source_repetitions_or_duration": "4–6",
+          "source_rir": "2–3",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "150–180"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds_range": [
+          150,
+          180
+        ],
+        "rir_range": [
+          2,
+          3
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "Total barbell load"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W06-D04",
+      "source_occurrence_id": "W06-B-E02",
+      "variant_key": "barbell_rdl",
+      "exercise_id": "EX-078",
+      "intake_status": "VERIFIED_LOCAL_MATCH",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "range",
+          "min_reps": 6,
+          "max_reps": 8
+        },
+        "per_side": false,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Controlled hinge; stop before spinal position changes.",
+        "authored_details": {
+          "source_occurrence_id": "W06-B-E02",
+          "source_repetitions_or_duration": "6–8",
+          "source_rir": "2–3",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "120"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 120,
+        "rir_range": [
+          2,
+          3
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "Total barbell load"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W06-D04",
+      "source_occurrence_id": "W06-B-E03",
+      "variant_key": "flat_db_bench",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 3,
+        "reps": {
+          "type": "range",
+          "min_reps": 6,
+          "max_reps": 10
+        },
+        "per_side": false,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Flat bench; comfortable shoulder range.",
+        "authored_details": {
+          "source_occurrence_id": "W06-B-E03",
+          "source_repetitions_or_duration": "6–10",
+          "source_rir": "2",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "90"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 90,
+        "rir_range": [
+          2,
+          2
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W06-D04",
+      "source_occurrence_id": "W06-B-E04",
+      "variant_key": "db_row_b",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 3,
+        "reps": {
+          "type": "range",
+          "min_reps": 8,
+          "max_reps": 12
+        },
+        "per_side": true,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Support free hand on bench; rest after both sides.",
+        "authored_details": {
+          "source_occurrence_id": "W06-B-E04",
+          "source_repetitions_or_duration": "8–12/side",
+          "source_rir": "2",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "90"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 90,
+        "rir_range": [
+          2,
+          2
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W06-D04",
+      "source_occurrence_id": "W06-B-E05",
+      "variant_key": "db_farmer_carry",
+      "exercise_id": "EX-101",
+      "intake_status": "VERIFIED_LOCAL_MATCH",
+      "prescription": {
+        "sets": 3,
+        "reps": {
+          "type": "duration",
+          "text": "40 sec",
+          "duration_seconds": 40
+        },
+        "per_side": false,
+        "tempo": "Normal walking; tall posture; no running",
+        "coach_cue": "Heavy enough to challenge grip with tall posture.",
+        "authored_details": {
+          "source_occurrence_id": "W06-B-E05",
+          "source_repetitions_or_duration": "40 sec",
+          "source_rir": "N/A",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "90"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 90,
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W06-D04",
+      "source_occurrence_id": "W06-B-E06",
+      "variant_key": "single_leg_db_calf",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "range",
+          "min_reps": 10,
+          "max_reps": 15
+        },
+        "per_side": true,
+        "tempo": "~2 sec up, 1 sec top pause, ~2 sec down",
+        "coach_cue": "Use prescribed calf tempo; rest after both sides.",
+        "authored_details": {
+          "source_occurrence_id": "W06-B-E06",
+          "source_repetitions_or_duration": "10–15/leg",
+          "source_rir": "2",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "60"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 60,
+        "rir_range": [
+          2,
+          2
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W06-D04",
+      "source_occurrence_id": "W06-B-E07",
+      "variant_key": "reverse_crunch",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "range",
+          "min_reps": 10,
+          "max_reps": 15
+        },
+        "per_side": false,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Controlled pelvic curl, no swing.",
+        "authored_details": {
+          "source_occurrence_id": "W06-B-E07",
+          "source_repetitions_or_duration": "10–15",
+          "source_rir": "2",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "60"
+        },
+        "rest_seconds": 60,
+        "rir_range": [
+          2,
+          2
+        ]
+      }
+    },
+    {
+      "session_id": "LW10K-W07-D01",
+      "source_occurrence_id": "W07-A-E01",
+      "variant_key": "reverse_lunge_db",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 1,
+        "reps": {
+          "type": "exact",
+          "exact_reps": 5
+        },
+        "per_side": true,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Small maintenance dose; controlled step, no soreness chasing.",
+        "authored_details": {
+          "source_occurrence_id": "W07-A-E01",
+          "source_repetitions_or_duration": "5/leg",
+          "source_rir": "3",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "90"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 90,
+        "rir_range": [
+          3,
+          3
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W07-D01",
+      "source_occurrence_id": "W07-A-E02",
+      "variant_key": "pull_up_choice",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "range",
+          "min_reps": 5,
+          "max_reps": 8
+        },
+        "per_side": false,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Bodyweight or athlete-selected added load/assistance.",
+        "authored_details": {
+          "source_occurrence_id": "W07-A-E02",
+          "source_repetitions_or_duration": "5–8",
+          "source_rir": "3",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "120"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 120,
+        "rir_range": [
+          3,
+          3
+        ]
+      }
+    },
+    {
+      "session_id": "LW10K-W07-D01",
+      "source_occurrence_id": "W07-A-E03",
+      "variant_key": "db_overhead_press",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "range",
+          "min_reps": 6,
+          "max_reps": 10
+        },
+        "per_side": false,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Comfortable range; neutral grip permitted.",
+        "authored_details": {
+          "source_occurrence_id": "W07-A-E03",
+          "source_repetitions_or_duration": "6–10",
+          "source_rir": "3",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "90"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 90,
+        "rir_range": [
+          3,
+          3
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W07-D01",
+      "source_occurrence_id": "W07-A-E04",
+      "variant_key": "db_row_a",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "range",
+          "min_reps": 8,
+          "max_reps": 12
+        },
+        "per_side": true,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Rest after both sides.",
+        "authored_details": {
+          "source_occurrence_id": "W07-A-E04",
+          "source_repetitions_or_duration": "8–12/side",
+          "source_rir": "3",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "90"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 90,
+        "rir_range": [
+          3,
+          3
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W07-D01",
+      "source_occurrence_id": "W07-A-E05",
+      "variant_key": "db_lateral_raise",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "range",
+          "min_reps": 12,
+          "max_reps": 15
+        },
+        "per_side": false,
+        "tempo": "Controlled both ways",
+        "coach_cue": "No swinging.",
+        "authored_details": {
+          "source_occurrence_id": "W07-A-E05",
+          "source_repetitions_or_duration": "12–15",
+          "source_rir": "3",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "60"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 60,
+        "rir_range": [
+          3,
+          3
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W07-D01",
+      "source_occurrence_id": "W07-A-E06",
+      "variant_key": "side_plank",
+      "exercise_id": "EX-116",
+      "intake_status": "VERIFIED_LOCAL_MATCH",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "duration",
+          "text": "30–40 sec/side"
+        },
+        "per_side": true,
+        "tempo": "Hold position; stop before posture loss",
+        "coach_cue": "Stop before posture loss.",
+        "authored_details": {
+          "source_occurrence_id": "W07-A-E06",
+          "source_repetitions_or_duration": "30–40 sec/side",
+          "source_rir": "N/A",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "45"
+        },
+        "rest_seconds": 45
+      }
+    },
+    {
+      "session_id": "LW10K-W07-D04",
+      "source_occurrence_id": "W07-B-E01",
+      "variant_key": "back_squat",
+      "exercise_id": "EX-073",
+      "intake_status": "VERIFIED_LOCAL_MATCH",
+      "prescription": {
+        "sets": 1,
+        "reps": {
+          "type": "range",
+          "min_reps": 4,
+          "max_reps": 6
+        },
+        "per_side": false,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Familiar stance/depth; no grinding.",
+        "authored_details": {
+          "source_occurrence_id": "W07-B-E01",
+          "source_repetitions_or_duration": "4–6",
+          "source_rir": "3",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "150–180"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds_range": [
+          150,
+          180
+        ],
+        "rir_range": [
+          3,
+          3
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "Total barbell load"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W07-D04",
+      "source_occurrence_id": "W07-B-E02",
+      "variant_key": "barbell_rdl",
+      "exercise_id": "EX-078",
+      "intake_status": "VERIFIED_LOCAL_MATCH",
+      "prescription": {
+        "sets": 1,
+        "reps": {
+          "type": "range",
+          "min_reps": 6,
+          "max_reps": 8
+        },
+        "per_side": false,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Controlled hinge; stop before spinal position changes.",
+        "authored_details": {
+          "source_occurrence_id": "W07-B-E02",
+          "source_repetitions_or_duration": "6–8",
+          "source_rir": "3",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "120"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 120,
+        "rir_range": [
+          3,
+          3
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "Total barbell load"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W07-D04",
+      "source_occurrence_id": "W07-B-E03",
+      "variant_key": "flat_db_bench",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "range",
+          "min_reps": 6,
+          "max_reps": 10
+        },
+        "per_side": false,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Flat bench; comfortable shoulder range.",
+        "authored_details": {
+          "source_occurrence_id": "W07-B-E03",
+          "source_repetitions_or_duration": "6–10",
+          "source_rir": "3",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "90"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 90,
+        "rir_range": [
+          3,
+          3
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W07-D04",
+      "source_occurrence_id": "W07-B-E04",
+      "variant_key": "db_row_b",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "range",
+          "min_reps": 8,
+          "max_reps": 12
+        },
+        "per_side": true,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Support free hand on bench; rest after both sides.",
+        "authored_details": {
+          "source_occurrence_id": "W07-B-E04",
+          "source_repetitions_or_duration": "8–12/side",
+          "source_rir": "3",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "90"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 90,
+        "rir_range": [
+          3,
+          3
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W07-D04",
+      "source_occurrence_id": "W07-B-E05",
+      "variant_key": "db_farmer_carry",
+      "exercise_id": "EX-101",
+      "intake_status": "VERIFIED_LOCAL_MATCH",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "duration",
+          "text": "40 sec",
+          "duration_seconds": 40
+        },
+        "per_side": false,
+        "tempo": "Normal walking; tall posture; no running",
+        "coach_cue": "Heavy enough to challenge grip with tall posture.",
+        "authored_details": {
+          "source_occurrence_id": "W07-B-E05",
+          "source_repetitions_or_duration": "40 sec",
+          "source_rir": "N/A",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "90"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 90,
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W07-D04",
+      "source_occurrence_id": "W07-B-E06",
+      "variant_key": "single_leg_db_calf",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "range",
+          "min_reps": 10,
+          "max_reps": 15
+        },
+        "per_side": true,
+        "tempo": "~2 sec up, 1 sec top pause, ~2 sec down",
+        "coach_cue": "Use prescribed calf tempo; rest after both sides.",
+        "authored_details": {
+          "source_occurrence_id": "W07-B-E06",
+          "source_repetitions_or_duration": "10–15/leg",
+          "source_rir": "3",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "60"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 60,
+        "rir_range": [
+          3,
+          3
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W07-D04",
+      "source_occurrence_id": "W07-B-E07",
+      "variant_key": "reverse_crunch",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "range",
+          "min_reps": 10,
+          "max_reps": 15
+        },
+        "per_side": false,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Controlled pelvic curl, no swing.",
+        "authored_details": {
+          "source_occurrence_id": "W07-B-E07",
+          "source_repetitions_or_duration": "10–15",
+          "source_rir": "3",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "60"
+        },
+        "rest_seconds": 60,
+        "rir_range": [
+          3,
+          3
+        ]
+      }
+    },
+    {
+      "session_id": "LW10K-W08-D01",
+      "source_occurrence_id": "W08-A-E01",
+      "variant_key": "reverse_lunge_db",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "exact",
+          "exact_reps": 5
+        },
+        "per_side": true,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Small maintenance dose; controlled step, no soreness chasing.",
+        "authored_details": {
+          "source_occurrence_id": "W08-A-E01",
+          "source_repetitions_or_duration": "5/leg",
+          "source_rir": "3",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "90"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 90,
+        "rir_range": [
+          3,
+          3
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W08-D01",
+      "source_occurrence_id": "W08-A-E02",
+      "variant_key": "pull_up_choice",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 3,
+        "reps": {
+          "type": "range",
+          "min_reps": 5,
+          "max_reps": 8
+        },
+        "per_side": false,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Bodyweight or athlete-selected added load/assistance.",
+        "authored_details": {
+          "source_occurrence_id": "W08-A-E02",
+          "source_repetitions_or_duration": "5–8",
+          "source_rir": "2",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "120"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 120,
+        "rir_range": [
+          2,
+          2
+        ]
+      }
+    },
+    {
+      "session_id": "LW10K-W08-D01",
+      "source_occurrence_id": "W08-A-E03",
+      "variant_key": "db_overhead_press",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 3,
+        "reps": {
+          "type": "range",
+          "min_reps": 6,
+          "max_reps": 10
+        },
+        "per_side": false,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Comfortable range; neutral grip permitted.",
+        "authored_details": {
+          "source_occurrence_id": "W08-A-E03",
+          "source_repetitions_or_duration": "6–10",
+          "source_rir": "2",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "90"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 90,
+        "rir_range": [
+          2,
+          2
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W08-D01",
+      "source_occurrence_id": "W08-A-E04",
+      "variant_key": "db_row_a",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "range",
+          "min_reps": 8,
+          "max_reps": 12
+        },
+        "per_side": true,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Rest after both sides.",
+        "authored_details": {
+          "source_occurrence_id": "W08-A-E04",
+          "source_repetitions_or_duration": "8–12/side",
+          "source_rir": "2",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "90"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 90,
+        "rir_range": [
+          2,
+          2
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W08-D01",
+      "source_occurrence_id": "W08-A-E05",
+      "variant_key": "db_lateral_raise",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "range",
+          "min_reps": 12,
+          "max_reps": 15
+        },
+        "per_side": false,
+        "tempo": "Controlled both ways",
+        "coach_cue": "No swinging.",
+        "authored_details": {
+          "source_occurrence_id": "W08-A-E05",
+          "source_repetitions_or_duration": "12–15",
+          "source_rir": "2",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "60"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 60,
+        "rir_range": [
+          2,
+          2
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W08-D01",
+      "source_occurrence_id": "W08-A-E06",
+      "variant_key": "side_plank",
+      "exercise_id": "EX-116",
+      "intake_status": "VERIFIED_LOCAL_MATCH",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "duration",
+          "text": "30–40 sec/side"
+        },
+        "per_side": true,
+        "tempo": "Hold position; stop before posture loss",
+        "coach_cue": "Stop before posture loss.",
+        "authored_details": {
+          "source_occurrence_id": "W08-A-E06",
+          "source_repetitions_or_duration": "30–40 sec/side",
+          "source_rir": "N/A",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "45"
+        },
+        "rest_seconds": 45
+      }
+    },
+    {
+      "session_id": "LW10K-W08-D04",
+      "source_occurrence_id": "W08-B-E01",
+      "variant_key": "back_squat",
+      "exercise_id": "EX-073",
+      "intake_status": "VERIFIED_LOCAL_MATCH",
+      "prescription": {
+        "sets": 3,
+        "reps": {
+          "type": "range",
+          "min_reps": 4,
+          "max_reps": 6
+        },
+        "per_side": false,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Familiar stance/depth; no grinding.",
+        "authored_details": {
+          "source_occurrence_id": "W08-B-E01",
+          "source_repetitions_or_duration": "4–6",
+          "source_rir": "2–3",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "150–180"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds_range": [
+          150,
+          180
+        ],
+        "rir_range": [
+          2,
+          3
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "Total barbell load"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W08-D04",
+      "source_occurrence_id": "W08-B-E02",
+      "variant_key": "barbell_rdl",
+      "exercise_id": "EX-078",
+      "intake_status": "VERIFIED_LOCAL_MATCH",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "range",
+          "min_reps": 6,
+          "max_reps": 8
+        },
+        "per_side": false,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Controlled hinge; stop before spinal position changes.",
+        "authored_details": {
+          "source_occurrence_id": "W08-B-E02",
+          "source_repetitions_or_duration": "6–8",
+          "source_rir": "2–3",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "120"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 120,
+        "rir_range": [
+          2,
+          3
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "Total barbell load"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W08-D04",
+      "source_occurrence_id": "W08-B-E03",
+      "variant_key": "flat_db_bench",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 3,
+        "reps": {
+          "type": "range",
+          "min_reps": 6,
+          "max_reps": 10
+        },
+        "per_side": false,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Flat bench; comfortable shoulder range.",
+        "authored_details": {
+          "source_occurrence_id": "W08-B-E03",
+          "source_repetitions_or_duration": "6–10",
+          "source_rir": "2",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "90"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 90,
+        "rir_range": [
+          2,
+          2
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W08-D04",
+      "source_occurrence_id": "W08-B-E04",
+      "variant_key": "db_row_b",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 3,
+        "reps": {
+          "type": "range",
+          "min_reps": 8,
+          "max_reps": 12
+        },
+        "per_side": true,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Support free hand on bench; rest after both sides.",
+        "authored_details": {
+          "source_occurrence_id": "W08-B-E04",
+          "source_repetitions_or_duration": "8–12/side",
+          "source_rir": "2",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "90"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 90,
+        "rir_range": [
+          2,
+          2
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W08-D04",
+      "source_occurrence_id": "W08-B-E05",
+      "variant_key": "db_farmer_carry",
+      "exercise_id": "EX-101",
+      "intake_status": "VERIFIED_LOCAL_MATCH",
+      "prescription": {
+        "sets": 3,
+        "reps": {
+          "type": "duration",
+          "text": "40 sec",
+          "duration_seconds": 40
+        },
+        "per_side": false,
+        "tempo": "Normal walking; tall posture; no running",
+        "coach_cue": "Heavy enough to challenge grip with tall posture.",
+        "authored_details": {
+          "source_occurrence_id": "W08-B-E05",
+          "source_repetitions_or_duration": "40 sec",
+          "source_rir": "N/A",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "90"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 90,
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W08-D04",
+      "source_occurrence_id": "W08-B-E06",
+      "variant_key": "single_leg_db_calf",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "range",
+          "min_reps": 10,
+          "max_reps": 15
+        },
+        "per_side": true,
+        "tempo": "~2 sec up, 1 sec top pause, ~2 sec down",
+        "coach_cue": "Use prescribed calf tempo; rest after both sides.",
+        "authored_details": {
+          "source_occurrence_id": "W08-B-E06",
+          "source_repetitions_or_duration": "10–15/leg",
+          "source_rir": "2",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "60"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 60,
+        "rir_range": [
+          2,
+          2
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W08-D04",
+      "source_occurrence_id": "W08-B-E07",
+      "variant_key": "reverse_crunch",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "range",
+          "min_reps": 10,
+          "max_reps": 15
+        },
+        "per_side": false,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Controlled pelvic curl, no swing.",
+        "authored_details": {
+          "source_occurrence_id": "W08-B-E07",
+          "source_repetitions_or_duration": "10–15",
+          "source_rir": "2",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "60"
+        },
+        "rest_seconds": 60,
+        "rir_range": [
+          2,
+          2
+        ]
+      }
+    },
+    {
+      "session_id": "LW10K-W09-D01",
+      "source_occurrence_id": "W09-A-E01",
+      "variant_key": "reverse_lunge_db",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 1,
+        "reps": {
+          "type": "exact",
+          "exact_reps": 5
+        },
+        "per_side": true,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Small maintenance dose; controlled step, no soreness chasing.",
+        "authored_details": {
+          "source_occurrence_id": "W09-A-E01",
+          "source_repetitions_or_duration": "5/leg",
+          "source_rir": "3",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "90"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 90,
+        "rir_range": [
+          3,
+          3
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W09-D01",
+      "source_occurrence_id": "W09-A-E02",
+      "variant_key": "pull_up_choice",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 3,
+        "reps": {
+          "type": "range",
+          "min_reps": 5,
+          "max_reps": 8
+        },
+        "per_side": false,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Bodyweight or athlete-selected added load/assistance.",
+        "authored_details": {
+          "source_occurrence_id": "W09-A-E02",
+          "source_repetitions_or_duration": "5–8",
+          "source_rir": "2",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "120"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 120,
+        "rir_range": [
+          2,
+          2
+        ]
+      }
+    },
+    {
+      "session_id": "LW10K-W09-D01",
+      "source_occurrence_id": "W09-A-E03",
+      "variant_key": "db_overhead_press",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 3,
+        "reps": {
+          "type": "range",
+          "min_reps": 6,
+          "max_reps": 10
+        },
+        "per_side": false,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Comfortable range; neutral grip permitted.",
+        "authored_details": {
+          "source_occurrence_id": "W09-A-E03",
+          "source_repetitions_or_duration": "6–10",
+          "source_rir": "2",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "90"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 90,
+        "rir_range": [
+          2,
+          2
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W09-D01",
+      "source_occurrence_id": "W09-A-E04",
+      "variant_key": "db_row_a",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "range",
+          "min_reps": 8,
+          "max_reps": 12
+        },
+        "per_side": true,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Rest after both sides.",
+        "authored_details": {
+          "source_occurrence_id": "W09-A-E04",
+          "source_repetitions_or_duration": "8–12/side",
+          "source_rir": "2",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "90"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 90,
+        "rir_range": [
+          2,
+          2
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W09-D01",
+      "source_occurrence_id": "W09-A-E05",
+      "variant_key": "db_lateral_raise",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "range",
+          "min_reps": 12,
+          "max_reps": 15
+        },
+        "per_side": false,
+        "tempo": "Controlled both ways",
+        "coach_cue": "No swinging.",
+        "authored_details": {
+          "source_occurrence_id": "W09-A-E05",
+          "source_repetitions_or_duration": "12–15",
+          "source_rir": "2",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "60"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 60,
+        "rir_range": [
+          2,
+          2
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W09-D01",
+      "source_occurrence_id": "W09-A-E06",
+      "variant_key": "side_plank",
+      "exercise_id": "EX-116",
+      "intake_status": "VERIFIED_LOCAL_MATCH",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "duration",
+          "text": "30–40 sec/side"
+        },
+        "per_side": true,
+        "tempo": "Hold position; stop before posture loss",
+        "coach_cue": "Stop before posture loss.",
+        "authored_details": {
+          "source_occurrence_id": "W09-A-E06",
+          "source_repetitions_or_duration": "30–40 sec/side",
+          "source_rir": "N/A",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "45"
+        },
+        "rest_seconds": 45
+      }
+    },
+    {
+      "session_id": "LW10K-W09-D04",
+      "source_occurrence_id": "W09-B-E01",
+      "variant_key": "back_squat",
+      "exercise_id": "EX-073",
+      "intake_status": "VERIFIED_LOCAL_MATCH",
+      "prescription": {
+        "sets": 1,
+        "reps": {
+          "type": "range",
+          "min_reps": 4,
+          "max_reps": 6
+        },
+        "per_side": false,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Familiar stance/depth; no grinding.",
+        "authored_details": {
+          "source_occurrence_id": "W09-B-E01",
+          "source_repetitions_or_duration": "4–6",
+          "source_rir": "2–3",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "150–180"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds_range": [
+          150,
+          180
+        ],
+        "rir_range": [
+          2,
+          3
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "Total barbell load"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W09-D04",
+      "source_occurrence_id": "W09-B-E02",
+      "variant_key": "barbell_rdl",
+      "exercise_id": "EX-078",
+      "intake_status": "VERIFIED_LOCAL_MATCH",
+      "prescription": {
+        "sets": 1,
+        "reps": {
+          "type": "range",
+          "min_reps": 6,
+          "max_reps": 8
+        },
+        "per_side": false,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Controlled hinge; stop before spinal position changes.",
+        "authored_details": {
+          "source_occurrence_id": "W09-B-E02",
+          "source_repetitions_or_duration": "6–8",
+          "source_rir": "2–3",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "120"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 120,
+        "rir_range": [
+          2,
+          3
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "Total barbell load"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W09-D04",
+      "source_occurrence_id": "W09-B-E03",
+      "variant_key": "flat_db_bench",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 3,
+        "reps": {
+          "type": "range",
+          "min_reps": 6,
+          "max_reps": 10
+        },
+        "per_side": false,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Flat bench; comfortable shoulder range.",
+        "authored_details": {
+          "source_occurrence_id": "W09-B-E03",
+          "source_repetitions_or_duration": "6–10",
+          "source_rir": "2",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "90"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 90,
+        "rir_range": [
+          2,
+          2
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W09-D04",
+      "source_occurrence_id": "W09-B-E04",
+      "variant_key": "db_row_b",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 3,
+        "reps": {
+          "type": "range",
+          "min_reps": 8,
+          "max_reps": 12
+        },
+        "per_side": true,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Support free hand on bench; rest after both sides.",
+        "authored_details": {
+          "source_occurrence_id": "W09-B-E04",
+          "source_repetitions_or_duration": "8–12/side",
+          "source_rir": "2",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "90"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 90,
+        "rir_range": [
+          2,
+          2
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W09-D04",
+      "source_occurrence_id": "W09-B-E05",
+      "variant_key": "db_farmer_carry",
+      "exercise_id": "EX-101",
+      "intake_status": "VERIFIED_LOCAL_MATCH",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "duration",
+          "text": "40 sec",
+          "duration_seconds": 40
+        },
+        "per_side": false,
+        "tempo": "Normal walking; tall posture; no running",
+        "coach_cue": "Heavy enough to challenge grip with tall posture.",
+        "authored_details": {
+          "source_occurrence_id": "W09-B-E05",
+          "source_repetitions_or_duration": "40 sec",
+          "source_rir": "N/A",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "90"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 90,
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W09-D04",
+      "source_occurrence_id": "W09-B-E06",
+      "variant_key": "single_leg_db_calf",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "range",
+          "min_reps": 10,
+          "max_reps": 15
+        },
+        "per_side": true,
+        "tempo": "~2 sec up, 1 sec top pause, ~2 sec down",
+        "coach_cue": "Use prescribed calf tempo; rest after both sides.",
+        "authored_details": {
+          "source_occurrence_id": "W09-B-E06",
+          "source_repetitions_or_duration": "10–15/leg",
+          "source_rir": "2",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "60"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 60,
+        "rir_range": [
+          2,
+          2
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W09-D04",
+      "source_occurrence_id": "W09-B-E07",
+      "variant_key": "reverse_crunch",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "range",
+          "min_reps": 10,
+          "max_reps": 15
+        },
+        "per_side": false,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Controlled pelvic curl, no swing.",
+        "authored_details": {
+          "source_occurrence_id": "W09-B-E07",
+          "source_repetitions_or_duration": "10–15",
+          "source_rir": "2",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "60"
+        },
+        "rest_seconds": 60,
+        "rir_range": [
+          2,
+          2
+        ]
+      }
+    },
+    {
+      "session_id": "LW10K-W10-D01",
+      "source_occurrence_id": "W10-A-E02",
+      "variant_key": "pull_up_choice",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "range",
+          "min_reps": 5,
+          "max_reps": 8
+        },
+        "per_side": false,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Bodyweight or athlete-selected added load/assistance.",
+        "authored_details": {
+          "source_occurrence_id": "W10-A-E02",
+          "source_repetitions_or_duration": "5–8",
+          "source_rir": "3–4",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "120"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 120,
+        "rir_range": [
+          3,
+          4
+        ]
+      }
+    },
+    {
+      "session_id": "LW10K-W10-D01",
+      "source_occurrence_id": "W10-A-E03",
+      "variant_key": "db_overhead_press",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "range",
+          "min_reps": 6,
+          "max_reps": 10
+        },
+        "per_side": false,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Comfortable range; neutral grip permitted.",
+        "authored_details": {
+          "source_occurrence_id": "W10-A-E03",
+          "source_repetitions_or_duration": "6–10",
+          "source_rir": "3–4",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "90"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 90,
+        "rir_range": [
+          3,
+          4
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W10-D01",
+      "source_occurrence_id": "W10-A-E04",
+      "variant_key": "db_row_a",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "range",
+          "min_reps": 8,
+          "max_reps": 12
+        },
+        "per_side": true,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Rest after both sides.",
+        "authored_details": {
+          "source_occurrence_id": "W10-A-E04",
+          "source_repetitions_or_duration": "8–12/side",
+          "source_rir": "3–4",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "90"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 90,
+        "rir_range": [
+          3,
+          4
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W10-D01",
+      "source_occurrence_id": "W10-A-E05",
+      "variant_key": "db_lateral_raise",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 1,
+        "reps": {
+          "type": "range",
+          "min_reps": 12,
+          "max_reps": 15
+        },
+        "per_side": false,
+        "tempo": "Controlled both ways",
+        "coach_cue": "No swinging.",
+        "authored_details": {
+          "source_occurrence_id": "W10-A-E05",
+          "source_repetitions_or_duration": "12–15",
+          "source_rir": "3–4",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "60"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 60,
+        "rir_range": [
+          3,
+          4
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W10-D01",
+      "source_occurrence_id": "W10-A-E06",
+      "variant_key": "side_plank",
+      "exercise_id": "EX-116",
+      "intake_status": "VERIFIED_LOCAL_MATCH",
+      "prescription": {
+        "sets": 1,
+        "reps": {
+          "type": "duration",
+          "text": "30–40 sec/side"
+        },
+        "per_side": true,
+        "tempo": "Hold position; stop before posture loss",
+        "coach_cue": "Stop before posture loss.",
+        "authored_details": {
+          "source_occurrence_id": "W10-A-E06",
+          "source_repetitions_or_duration": "30–40 sec/side",
+          "source_rir": "N/A",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "45"
+        },
+        "rest_seconds": 45
+      }
+    },
+    {
+      "session_id": "LW10K-W10-D04",
+      "source_occurrence_id": "W10-B-E01",
+      "variant_key": "db_overhead_press",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "range",
+          "min_reps": 6,
+          "max_reps": 10
+        },
+        "per_side": false,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Comfortable range; neutral grip permitted. Comfortable upper-body work only; at least 3 RIR; no lower-body lifting. At least 3 RIR; no invented upper RIR bound.",
+        "authored_details": {
+          "source_occurrence_id": "W10-B-E01",
+          "source_repetitions_or_duration": "6–10",
+          "source_rir": "at least 3",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "90"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 90,
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
+    },
+    {
+      "session_id": "LW10K-W10-D04",
+      "source_occurrence_id": "W10-B-E02",
+      "variant_key": "db_row_b",
+      "exercise_id": null,
+      "intake_status": "UNRESOLVED_NO_SUBSTITUTION",
+      "prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "range",
+          "min_reps": 8,
+          "max_reps": 12
+        },
+        "per_side": true,
+        "tempo": "~2 sec lowering; no forced pause; purposeful lift",
+        "coach_cue": "Support free hand on bench; rest after both sides. Comfortable upper-body work only; at least 3 RIR; no lower-body lifting. At least 3 RIR; no invented upper RIR bound.",
+        "authored_details": {
+          "source_occurrence_id": "W10-B-E02",
+          "source_repetitions_or_duration": "8–12/side",
+          "source_rir": "at least 3",
+          "source_tempo_reference": "Shared standard; calf-specific tempo if calf raise",
+          "source_rest_seconds": "90"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 90,
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
+    }
+  ],
+  "verified_matches_do_not_create": [
+    "canonical definition versions",
+    "publication events",
+    "current hosted state",
+    "content approval"
+  ]
+}
