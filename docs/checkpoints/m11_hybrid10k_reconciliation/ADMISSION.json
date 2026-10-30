@@ -1,0 +1,452 @@
+{
+  "date": "2026-10-30",
+  "base": "0f0c40dae54c87e7b3f739b205c0fe6b8edf847a",
+  "classification": "GENUINE_DRAFT_LOCAL_CONTRACT_PROBES_NOT_PUBLICATION",
+  "content_authority": "Four replacement runs founder-selected; other detailed content not blanket approved",
+  "canonical_acquisition_start_completion": "NOT_ATTEMPTED_NO_AUTHORISATION",
+  "full_schedule": [
+    {
+      "schema": 1,
+      "scheduled_sessions": 60,
+      "compile": "PASS",
+      "schedule_sha256": "ad89b86bf449f34329e2756381e787a99ed4f9697ef3bb88a8fef01a8d65e007",
+      "complete_graph_admission": "protocol_graph_scope_mismatch",
+      "reason": "20 strength graphs remain incomplete; no null IDs or empty placeholder bodies submitted"
+    },
+    {
+      "schema": 2,
+      "scheduled_sessions": 60,
+      "compile": "PASS",
+      "schedule_sha256": "9b4da70bfcdbbe3d32e72642da95af4d5de1d248c1b6972cda00391400f6c819",
+      "complete_graph_admission": "protocol_graph_scope_mismatch",
+      "reason": "20 strength graphs remain incomplete; no null IDs or empty placeholder bodies submitted"
+    }
+  ],
+  "running_bodies": [
+    {
+      "source_session_id": "LW10K-W01-D02",
+      "v1_v2": [
+        "accepted_local_graph",
+        "accepted_local_graph"
+      ],
+      "fixed_seconds": 1500,
+      "distance_metres": 0,
+      "canonical_start_or_resume": "NOT_ATTEMPTED"
+    },
+    {
+      "source_session_id": "LW10K-W01-D03",
+      "v1_v2": [
+        "accepted_local_graph",
+        "accepted_local_graph"
+      ],
+      "fixed_seconds": 1500,
+      "distance_metres": 0,
+      "canonical_start_or_resume": "NOT_ATTEMPTED"
+    },
+    {
+      "source_session_id": "LW10K-W01-D05",
+      "v1_v2": [
+        "accepted_local_graph",
+        "accepted_local_graph"
+      ],
+      "fixed_seconds": 1500,
+      "distance_metres": 0,
+      "canonical_start_or_resume": "NOT_ATTEMPTED"
+    },
+    {
+      "source_session_id": "LW10K-W01-D07",
+      "v1_v2": [
+        "accepted_local_graph",
+        "accepted_local_graph"
+      ],
+      "fixed_seconds": 2100,
+      "distance_metres": 0,
+      "canonical_start_or_resume": "NOT_ATTEMPTED"
+    },
+    {
+      "source_session_id": "LW10K-W02-D02",
+      "v1_v2": [
+        "accepted_local_graph",
+        "accepted_local_graph"
+      ],
+      "fixed_seconds": 1800,
+      "distance_metres": 0,
+      "canonical_start_or_resume": "NOT_ATTEMPTED"
+    },
+    {
+      "source_session_id": "LW10K-W02-D03",
+      "v1_v2": [
+        "accepted_local_graph",
+        "accepted_local_graph"
+      ],
+      "fixed_seconds": 1500,
+      "distance_metres": 0,
+      "canonical_start_or_resume": "NOT_ATTEMPTED"
+    },
+    {
+      "source_session_id": "LW10K-W02-D05",
+      "v1_v2": [
+        "accepted_local_graph",
+        "accepted_local_graph"
+      ],
+      "fixed_seconds": 1500,
+      "distance_metres": 0,
+      "canonical_start_or_resume": "NOT_ATTEMPTED"
+    },
+    {
+      "source_session_id": "LW10K-W02-D07",
+      "v1_v2": [
+        "accepted_local_graph",
+        "accepted_local_graph"
+      ],
+      "fixed_seconds": 2400,
+      "distance_metres": 0,
+      "canonical_start_or_resume": "NOT_ATTEMPTED"
+    },
+    {
+      "source_session_id": "LW10K-W03-D02",
+      "v1_v2": [
+        "accepted_local_graph",
+        "accepted_local_graph"
+      ],
+      "fixed_seconds": 2160,
+      "distance_metres": 0,
+      "canonical_start_or_resume": "NOT_ATTEMPTED"
+    },
+    {
+      "source_session_id": "LW10K-W03-D03",
+      "v1_v2": [
+        "accepted_local_graph",
+        "accepted_local_graph"
+      ],
+      "fixed_seconds": 1800,
+      "distance_metres": 0,
+      "canonical_start_or_resume": "NOT_ATTEMPTED"
+    },
+    {
+      "source_session_id": "LW10K-W03-D05",
+      "v1_v2": [
+        "accepted_local_graph",
+        "accepted_local_graph"
+      ],
+      "fixed_seconds": 1800,
+      "distance_metres": 0,
+      "canonical_start_or_resume": "NOT_ATTEMPTED"
+    },
+    {
+      "source_session_id": "LW10K-W03-D07",
+      "v1_v2": [
+        "accepted_local_graph",
+        "accepted_local_graph"
+      ],
+      "fixed_seconds": 2700,
+      "distance_metres": 0,
+      "canonical_start_or_resume": "NOT_ATTEMPTED"
+    },
+    {
+      "source_session_id": "LW10K-W04-D02",
+      "v1_v2": [
+        "accepted_local_graph",
+        "accepted_local_graph"
+      ],
+      "fixed_seconds": 2550,
+      "distance_metres": 0,
+      "canonical_start_or_resume": "NOT_ATTEMPTED"
+    },
+    {
+      "source_session_id": "LW10K-W04-D03",
+      "v1_v2": [
+        "accepted_local_graph",
+        "accepted_local_graph"
+      ],
+      "fixed_seconds": 1500,
+      "distance_metres": 0,
+      "canonical_start_or_resume": "NOT_ATTEMPTED"
+    },
+    {
+      "source_session_id": "LW10K-W04-D05",
+      "v1_v2": [
+        "accepted_local_graph",
+        "accepted_local_graph"
+      ],
+      "fixed_seconds": 1800,
+      "distance_metres": 0,
+      "canonical_start_or_resume": "NOT_ATTEMPTED"
+    },
+    {
+      "source_session_id": "LW10K-W04-D07",
+      "v1_v2": [
+        "accepted_local_graph",
+        "accepted_local_graph"
+      ],
+      "fixed_seconds": 2400,
+      "distance_metres": 0,
+      "canonical_start_or_resume": "NOT_ATTEMPTED"
+    },
+    {
+      "source_session_id": "LW10K-W05-D02",
+      "v1_v2": [
+        "accepted_local_graph",
+        "accepted_local_graph"
+      ],
+      "fixed_seconds": 2640,
+      "distance_metres": 0,
+      "canonical_start_or_resume": "NOT_ATTEMPTED"
+    },
+    {
+      "source_session_id": "LW10K-W05-D03",
+      "v1_v2": [
+        "accepted_local_graph",
+        "accepted_local_graph"
+      ],
+      "fixed_seconds": 2100,
+      "distance_metres": 0,
+      "canonical_start_or_resume": "NOT_ATTEMPTED"
+    },
+    {
+      "source_session_id": "LW10K-W05-D05",
+      "v1_v2": [
+        "accepted_local_graph",
+        "accepted_local_graph"
+      ],
+      "fixed_seconds": 2100,
+      "distance_metres": 0,
+      "canonical_start_or_resume": "NOT_ATTEMPTED"
+    },
+    {
+      "source_session_id": "LW10K-W05-D07",
+      "v1_v2": [
+        "accepted_local_graph",
+        "accepted_local_graph"
+      ],
+      "fixed_seconds": 3000,
+      "distance_metres": 0,
+      "canonical_start_or_resume": "NOT_ATTEMPTED"
+    },
+    {
+      "source_session_id": "LW10K-W06-D02",
+      "v1_v2": [
+        "accepted_local_graph",
+        "accepted_local_graph"
+      ],
+      "fixed_seconds": 3000,
+      "distance_metres": 0,
+      "canonical_start_or_resume": "NOT_ATTEMPTED"
+    },
+    {
+      "source_session_id": "LW10K-W06-D03",
+      "v1_v2": [
+        "accepted_local_graph",
+        "accepted_local_graph"
+      ],
+      "fixed_seconds": 2100,
+      "distance_metres": 0,
+      "canonical_start_or_resume": "NOT_ATTEMPTED"
+    },
+    {
+      "source_session_id": "LW10K-W06-D05",
+      "v1_v2": [
+        "accepted_local_graph",
+        "accepted_local_graph"
+      ],
+      "fixed_seconds": 2100,
+      "distance_metres": 0,
+      "canonical_start_or_resume": "NOT_ATTEMPTED"
+    },
+    {
+      "source_session_id": "LW10K-W06-D07",
+      "v1_v2": [
+        "accepted_local_graph",
+        "accepted_local_graph"
+      ],
+      "fixed_seconds": 3300,
+      "distance_metres": 0,
+      "canonical_start_or_resume": "NOT_ATTEMPTED"
+    },
+    {
+      "source_session_id": "LW10K-W07-D02",
+      "v1_v2": [
+        "accepted_local_graph",
+        "accepted_local_graph"
+      ],
+      "fixed_seconds": 2460,
+      "distance_metres": 0,
+      "canonical_start_or_resume": "NOT_ATTEMPTED"
+    },
+    {
+      "source_session_id": "LW10K-W07-D03",
+      "v1_v2": [
+        "accepted_local_graph",
+        "accepted_local_graph"
+      ],
+      "fixed_seconds": 1800,
+      "distance_metres": 0,
+      "canonical_start_or_resume": "NOT_ATTEMPTED"
+    },
+    {
+      "source_session_id": "LW10K-W07-D05",
+      "v1_v2": [
+        "accepted_local_graph",
+        "accepted_local_graph"
+      ],
+      "fixed_seconds": 1800,
+      "distance_metres": 0,
+      "canonical_start_or_resume": "NOT_ATTEMPTED"
+    },
+    {
+      "source_session_id": "LW10K-W07-D07",
+      "v1_v2": [
+        "accepted_local_graph",
+        "accepted_local_graph"
+      ],
+      "fixed_seconds": 2700,
+      "distance_metres": 0,
+      "canonical_start_or_resume": "NOT_ATTEMPTED"
+    },
+    {
+      "source_session_id": "LW10K-W08-D02",
+      "v1_v2": [
+        "accepted_local_graph",
+        "accepted_local_graph"
+      ],
+      "fixed_seconds": 2940,
+      "distance_metres": 0,
+      "canonical_start_or_resume": "NOT_ATTEMPTED"
+    },
+    {
+      "source_session_id": "LW10K-W08-D03",
+      "v1_v2": [
+        "accepted_local_graph",
+        "accepted_local_graph"
+      ],
+      "fixed_seconds": 2400,
+      "distance_metres": 0,
+      "canonical_start_or_resume": "NOT_ATTEMPTED"
+    },
+    {
+      "source_session_id": "LW10K-W08-D05",
+      "v1_v2": [
+        "accepted_local_graph",
+        "accepted_local_graph"
+      ],
+      "fixed_seconds": 2100,
+      "distance_metres": 0,
+      "canonical_start_or_resume": "NOT_ATTEMPTED"
+    },
+    {
+      "source_session_id": "LW10K-W08-D07",
+      "v1_v2": [
+        "accepted_local_graph",
+        "accepted_local_graph"
+      ],
+      "fixed_seconds": 3600,
+      "distance_metres": 0,
+      "canonical_start_or_resume": "NOT_ATTEMPTED"
+    },
+    {
+      "source_session_id": "LW10K-W09-D02",
+      "v1_v2": [
+        "accepted_local_graph",
+        "accepted_local_graph"
+      ],
+      "fixed_seconds": 2400,
+      "distance_metres": 0,
+      "canonical_start_or_resume": "NOT_ATTEMPTED"
+    },
+    {
+      "source_session_id": "LW10K-W09-D03",
+      "v1_v2": [
+        "accepted_local_graph",
+        "accepted_local_graph"
+      ],
+      "fixed_seconds": 2100,
+      "distance_metres": 0,
+      "canonical_start_or_resume": "NOT_ATTEMPTED"
+    },
+    {
+      "source_session_id": "LW10K-W09-D05",
+      "v1_v2": [
+        "accepted_local_graph",
+        "accepted_local_graph"
+      ],
+      "fixed_seconds": 1800,
+      "distance_metres": 0,
+      "canonical_start_or_resume": "NOT_ATTEMPTED"
+    },
+    {
+      "source_session_id": "LW10K-W09-D07",
+      "v1_v2": [
+        "accepted_local_graph",
+        "accepted_local_graph"
+      ],
+      "fixed_seconds": 3000,
+      "distance_metres": 0,
+      "canonical_start_or_resume": "NOT_ATTEMPTED"
+    },
+    {
+      "source_session_id": "LW10K-W10-D02",
+      "v1_v2": [
+        "accepted_local_graph",
+        "accepted_local_graph"
+      ],
+      "fixed_seconds": 1680,
+      "distance_metres": 0,
+      "canonical_start_or_resume": "NOT_ATTEMPTED"
+    },
+    {
+      "source_session_id": "LW10K-W10-D03",
+      "v1_v2": [
+        "accepted_local_graph",
+        "accepted_local_graph"
+      ],
+      "fixed_seconds": 1500,
+      "distance_metres": 0,
+      "canonical_start_or_resume": "NOT_ATTEMPTED"
+    },
+    {
+      "source_session_id": "LW10K-W10-D05",
+      "v1_v2": [
+        "accepted_local_graph",
+        "accepted_local_graph"
+      ],
+      "fixed_seconds": 1200,
+      "distance_metres": 0,
+      "canonical_start_or_resume": "NOT_ATTEMPTED"
+    },
+    {
+      "source_session_id": "LW10K-W10-D07",
+      "v1_v2": [
+        "unsupported_timed_running_body",
+        "unsupported_timed_running_body"
+      ],
+      "fixed_seconds": 1980,
+      "distance_metres": 10000,
+      "canonical_start_or_resume": "NOT_ATTEMPTED"
+    }
+  ],
+  "selected_replacement_vectors": "PASS_2550_2940_2400_1680_SECONDS_NO_FINAL_WORK_RECOVERY",
+  "strength_identity": {
+    "verified_local_occurrences": 37,
+    "unresolved_occurrences": 87,
+    "unique_bound_ids": [
+      "EX-073",
+      "EX-078",
+      "EX-101",
+      "EX-116"
+    ],
+    "canonical_definition_versions_or_publication_events_created": false,
+    "evidence_scope": "Pinned existing v1/v2 repository row declarations, not current hosted state or v3 definition publication",
+    "unique_unresolved_source_labels": [
+      "DB bench press",
+      "DB lateral raise",
+      "DB overhead press",
+      "DB reverse lunge",
+      "One-arm DB row",
+      "Pull-up",
+      "Reverse crunch",
+      "Standing single-leg DB calf raise"
+    ]
+  },
+  "native_prescription_round_trips": 124,
+  "new_runtime_or_schema_intake_fix_required": false
+}

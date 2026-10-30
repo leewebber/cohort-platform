@@ -1,5 +1,11 @@
 # Genuine draft source → local runtime coverage
 
+> **Historical 28 October result:** the [30 October reconciliation](../m11_hybrid10k_reconciliation/COVERAGE.md)
+> now controls: 40 runs / 20 strength / 10 rests, 39 timed runs and the final
+> distance 10K, with 37 source occurrences resolved from pinned legitimate local
+> v1/v2 row evidence. The five-distance/empty-catalogue results below are retained
+> as actual earlier attempts, not current source counts or a standing blocker list.
+
 2026-10-28. **M1.1 PARTIAL — consolidated and locally probed; complete genuine
 programme admission BLOCKED. Gate A OPEN.** [Actual probe output](ADMISSION.json).
 

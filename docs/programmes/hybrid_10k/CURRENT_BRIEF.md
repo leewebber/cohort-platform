@@ -1,5 +1,21 @@
 # Hybrid 10K — retained direction and Lee-specific draft
 
+## Current general source reconciliation — 2026-10-30
+
+The [general Hybrid 10K PB draft](general_draft_2026_10_30/README.md) now controls
+source intake. The founder explicitly resolved general scope, the retained Week 10
+Thursday upper-body session, Zone 2 primacy and original M2.3 rule precedence, then
+selected exact timed W4/W8/W9/W10 Tuesday replacements. Counts: 40 runs, 20 strength,
+10 rest; 39 timed bodies and the final measured 10K. No in-programme 5K assessment.
+Lee's personal return/travel adjustment remains separate. Four run prescriptions
+are founder-selected; other detailed content is not blanket approved.
+
+[Current coverage](../../checkpoints/m11_hybrid10k_reconciliation/COVERAGE.md)
+records actual v1/v2 schedule/graph/intake checks and unique unresolved variants.
+The older Lee draft and dated general direction below remain provenance; their
+conflicting counts, target wording and four superseded distance workouts do not
+override the new explicit decisions. No programme publication or athlete operation.
+
 ## Current M1.1 source intake — 2026-10-28
 
 The [new retained Lee draft](lee_draft_2026_10_28/README.md) supplies ten complete

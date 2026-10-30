@@ -1,5 +1,27 @@
 # Current repository checkpoint
 
+> **M1.1 general Hybrid 10K reconciliation — partial, 2026-10-30:**
+> [Current handoff](./m11_hybrid10k_reconciliation/HANDOFF.md) retains the founder's
+> general-PB scope and exact W4/W8/W9/W10 Tuesday timed replacements. All source
+> discrepancies are reconciled: **40 runs / 20 strength / 10 rests; 39 timed runs
+> and one final distance-ended 10K**. W10 Thursday has two comfortable sets each
+> retained shoulder press/bench-supported DB row, at least 3 RIR, no lower body.
+> There is no in-programme 5K test. Confirmed Zone 2 is primary EASY work; original
+> approved M2.3 versions/selection/freshness/rounding/freeze remain unchanged.
+> Four replacement runs are founder-selected; other detailed content is draft.
+> Full v1/v2 schedules compile with 60 session references; 39 individual timed
+> graphs validate, final 10K refuses the time-only runner. Exact pinned v1/v2 local
+> row intake resolves 37/124 strength occurrences; 87 stay unresolved across eight
+> unique source labels. No complete graph/programme is admitted or published.
+> Native prescription round-trips preserve all 124 range/side/load/RIR expressions;
+> no runtime/schema fix or generic infrastructure was needed. M2.5 was not rerun.
+> Founder reports Forerunner 255, application not submitted; firmware/Connect/HR
+> remain unconfirmed. Hosted state stays unknown. All retained heads, indices,
+> dirty files, .temp, prior 20-commit chain through 0f0c40d and original bundle are
+> preserved. GitHub DNS fails; no push without live ancestry verification.
+> **Next single point: M1.1 unique movement identity/setup completion and exact
+> remaining content review**, then full private v1/v2 graph admission. Gate A OPEN.
+
 > **M1.1 Hybrid 10K consolidation — partial, 2026-10-28:**
 > Gate A's current single point is M1.1 under the founder's latest request.
 > [Handoff](./m11_hybrid10k_consolidation/HANDOFF.md) retains the supplied genuine

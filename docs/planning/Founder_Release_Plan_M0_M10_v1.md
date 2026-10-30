@@ -6,7 +6,32 @@ This plan controls delivery priorities. It preserves technical authority contrac
 it does not grant implementation, content, hosted, account or release authority.
 [M0 findings and critical path](../checkpoints/m0_alpha_baseline/HANDOFF.md).
 
-## Current single point — M1.1 (2026-10-28)
+## Current single point — M1.1 (2026-10-30)
+
+**General Hybrid 10K source reconciled; complete local graph admission still open.**
+[Current checkpoint](../checkpoints/m11_hybrid10k_reconciliation/HANDOFF.md) records
+40 runs, 20 strength sessions and 10 rests. Four exact founder-selected timed
+replacements remove the old in-programme 5K and three distance repetition sessions;
+39 runs are timed and only the final 10K remains distance-ended. W10 Thursday
+retains two comfortable upper-body press/row sets each, at least 3 RIR. General PB
+scope, confirmed Zone 2 primacy and unchanged approved M2.3 quality rules control;
+Lee's personal adjustment stays separate. This is not blanket detailed content
+approval or publication authority.
+
+**Next single point: M1.1 unique movement identity/setup completion and exact
+remaining content review**, then complete private v1/v2 graph admission. Thirty-nine
+timed graphs validate locally; exact local row evidence resolves 37 of 124 strength
+occurrences. Twenty full strength graphs, final-10K distance execution, authorised
+publication/recipient enablement and authenticated device proof remain incomplete.
+No hosted/account/athlete operation follows. Preserve original chain/checkouts/bundle;
+normal main-only Git publication still requires live remote ancestry verification.
+
+M2.5 remains externally blocked and was not repeated. Founder reports Forerunner 255
+and application not submitted; firmware/Connect/HR source remain unconfirmed.
+Access/contracts, authoritative binary FIT proof, adaptation, distribution/device
+acceptance, held migrations and inherited bootstrap triage remain Gate A gates.
+
+## Retained M1.1 consolidation direction (2026-10-28)
 
 **Consolidate genuine Hybrid 10K source and prepare local programme admission.**
 The founder returned Gate A's single point to M1.1 after the local M2.5 harness.

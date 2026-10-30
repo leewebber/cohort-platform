@@ -1,0 +1,14 @@
+[
+  {
+    "control": "changed_founder_selection",
+    "rejected": true
+  },
+  {
+    "control": "changed_catalogue_declaration",
+    "rejected": true
+  },
+  {
+    "control": "changed_historical_calendar",
+    "rejected": true
+  }
+]

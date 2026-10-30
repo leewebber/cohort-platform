@@ -1,5 +1,12 @@
 # Founder review — source decisions only
 
+> **Superseded source questions, 2026-10-30:** the founder resolved general scope,
+> Week 10 Thursday, confirmed-Zone-2 primacy and M2.3 rule precedence, and selected
+> exact timed replacements for all four earlier non-final distance runs. These
+> questions must not be repeated. See the [current reconciliation](../m11_hybrid10k_reconciliation/COVERAGE.md)
+> for the unique remaining identity/content items. The dated record below remains
+> historical; detailed blanket content/publication approval is still absent.
+
 2026-10-28. **Template accepted; M2.3 target rules approved; detailed attached
 workouts remain proposed.** Source [exact draft](../../programmes/hybrid_10k/lee_draft_2026_10_28/SOURCE.md)
 SHA-256 `d932e7103b03036e136249e0ab35d48378b0175c75feba84282386fc6ca00f40`.

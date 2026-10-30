@@ -1,0 +1,141 @@
+{
+  "date": "2026-10-30",
+  "timezone": "Asia/Makassar",
+  "base": "0f0c40dae54c87e7b3f739b205c0fe6b8edf847a",
+  "m11": "PARTIAL_SOURCE_RECONCILED_COMPLETE_ADMISSION_BLOCKED",
+  "gate_a": "OPEN",
+  "source_envelope_sha256": "5e0777a54b1783e17d64b126090803fe679ec171a69fde105054cb45fcfd3c49",
+  "source_envelope_hash_definition": "SHA256 of sorted compact JSON filename-to-SHA256 mapping for source directory files; not a publication approval",
+  "source_files": {
+    "AUDIT.json": "827640f030ab1534e37ab1488d6c561d3ef9b7d902d9d3c6558bab2e182b0019",
+    "SOURCE.json": "3a610154a8be27d31ecfe7cbf2fdfb16908a305e1bd35e1ada22b7e4b1bee486",
+    "RUNNING_BODIES.json": "3eaa1b932b9251c1ca5d6c299d856436a0291ff4d7ade2663155eebb30d02c60",
+    "SCHEDULE_CANDIDATE.json": "d60803201b0986f67f6ab8ce6a9d8693e74fbd5b94a6d23e4f6d3c4aa9d9a092",
+    "FOUNDER_CLARIFICATION.md": "8e16f59f8963efbc0db40b0c4b0532dcc4104e52ca6af391a604fa17cb5a48eb",
+    "README.md": "6bf30242f57ac582d6b8c1a0458dcb91a960d951892eb44a991b2b09e64ccfbf",
+    "IDENTITY_INTAKE.json": "2229c3f72f3fba97de7dead7abe8ba6a172fa2293eff3f310fa2cef3f3306b10",
+    "GENERAL_GUIDANCE.md": "1aabcb3034f88efb0d2a29e280ffc141b759371c9364c28015d2dc51c79370c3",
+    "ORDERED_REVIEW.md": "80788f8cf880de083499ddd065b2af103661c5a001024dcd2c47f2c0e7828da0"
+  },
+  "checks": [
+    {
+      "command": "python3 tool/programmes/hybrid_10k/reconcile_general_source.py --check",
+      "exit": 0,
+      "result": "40 runs / 20 strength / 10 rests, 39 timed / final 10K, exact selected durations, 124 unique occurrences, source pins and regeneration"
+    },
+    {
+      "command": "flutter test --no-pub tool/programmes/hybrid_10k/general_admission_probe_test.dart test/founder_programme_import/founder_programme_identity_bridge_integration_test.dart test/programmes/private_protocol_graph_builder_test.dart test/session/quality_target_admission_test.dart test/session/zone2_target_admission_test.dart test/session/authored_timed_running_test.dart",
+      "exit": 0,
+      "passed": 87,
+      "log_sha256": "f946c26a9342d2b651043e33cd08748631c9678978407b4b638fa420acbdacfa"
+    },
+    {
+      "command": "flutter test --no-pub tool/programmes/hybrid_10k/general_admission_probe_test.dart",
+      "exit": 0,
+      "passed": 5,
+      "counts_overlap": true,
+      "note": "Final rerun after preserving unspecified hold/core load and tightening source pins",
+      "log_sha256": "b19dc16964eac4ed8da5a59c1944fb329c115e2af3058ee37273e431a42c22c5"
+    },
+    {
+      "command": "flutter analyze --no-pub tool/programmes/hybrid_10k/general_admission_probe_test.dart",
+      "exit": 0,
+      "diagnostics": 0,
+      "log_sha256": "e639d3d9f720a2986bf322ec410d06fab685694b962b1f9ff097fc79ec461182"
+    },
+    {
+      "command": "./tool/testing/run_phase2_consolidation_safety_gate.sh",
+      "exit": 0,
+      "groups_passed": 6,
+      "groups_failed": 0,
+      "log_sha256": "cab36d117af2811b061b87b89bd9b4f8fe7a170e4c0a3ff2bd86eee976073b13"
+    },
+    {
+      "check": "source authority corruption controls",
+      "rejected": 3,
+      "artifact": "SOURCE_NEGATIVE_CONTROLS.json"
+    },
+    {
+      "check": "JSON, links, Python syntax and Git diff whitespace",
+      "result": "PASS"
+    }
+  ],
+  "no_runtime_schema_or_dependency_change": true,
+  "no_m25_harness_implementation_or_verification": true,
+  "protected_unchanged_sha256": {
+    "lib/domain/running_workout/alpha_quality_targets.dart": "b8e5f22c9c75adcaa3201a2cf1f9b768b2b30474b2b1a92b5e6a180dcb49c1ec",
+    "lib/features/session/models/running_target_admission.dart": "729046caec3f8ec3827ac21c1034af2ad343c4a69eae4dc7fa41391e97492c89",
+    "docs/checkpoints/m23_quality_target_admission/DECISIONS.md": "968ed2c3a84923a422a9f13797a282da454e5cde714315c856c97cf3144c1efa",
+    "supabase/migrations/20261026110000_training_setup_private_alpha_acquisition.sql": "59cb7a97e5c5bcd6e5bc230631a1c34942ce4cd7610aa253b1556510df7248f5",
+    "supabase/migrations/20261026120000_durable_publication_approval_events.sql": "526881b82d7ab20e3e246db4ea808970300ef7570fdd03dd8d43a2b753b9f588",
+    "supabase/migrations/20261027120000_confirmed_running_zone_targets.sql": "26038e82bae21130982ccaed65be14ee49ad4581256f99476ccb5ba071b0de6a",
+    "supabase/migrations/20261027130000_alpha_quality_running_targets.sql": "5c49656c6fa85f6ef0c4524491d61dc53ff42a0bb7e61bbfe33a24ab0dc3b520",
+    "supabase/migrations/20261028120000_terminal_completion_retry.sql": "00c5f094d6c49716109fa67066d6d570e4af27ee24f0bd9b5237433e6d3a0ffa"
+  },
+  "artifact_sha256": {
+    "docs/checkpoints/m11_hybrid10k_reconciliation/ADMISSION.json": "26667be06d546f523d7f3c80c061f641bfd2a3d0e87fda17839c54198c24207d",
+    "docs/checkpoints/m11_hybrid10k_reconciliation/SOURCE_NEGATIVE_CONTROLS.json": "c4655debcebe6e43c9cccb0decec34f96f51cb29202ae4f1832e31c25fe7d488",
+    "docs/programmes/hybrid_10k/general_draft_2026_10_30/AUDIT.json": "827640f030ab1534e37ab1488d6c561d3ef9b7d902d9d3c6558bab2e182b0019",
+    "docs/programmes/hybrid_10k/general_draft_2026_10_30/FOUNDER_CLARIFICATION.md": "8e16f59f8963efbc0db40b0c4b0532dcc4104e52ca6af391a604fa17cb5a48eb",
+    "docs/programmes/hybrid_10k/general_draft_2026_10_30/GENERAL_GUIDANCE.md": "1aabcb3034f88efb0d2a29e280ffc141b759371c9364c28015d2dc51c79370c3",
+    "docs/programmes/hybrid_10k/general_draft_2026_10_30/IDENTITY_INTAKE.json": "2229c3f72f3fba97de7dead7abe8ba6a172fa2293eff3f310fa2cef3f3306b10",
+    "docs/programmes/hybrid_10k/general_draft_2026_10_30/ORDERED_REVIEW.md": "80788f8cf880de083499ddd065b2af103661c5a001024dcd2c47f2c0e7828da0",
+    "docs/programmes/hybrid_10k/general_draft_2026_10_30/README.md": "6bf30242f57ac582d6b8c1a0458dcb91a960d951892eb44a991b2b09e64ccfbf",
+    "docs/programmes/hybrid_10k/general_draft_2026_10_30/RUNNING_BODIES.json": "3eaa1b932b9251c1ca5d6c299d856436a0291ff4d7ade2663155eebb30d02c60",
+    "docs/programmes/hybrid_10k/general_draft_2026_10_30/SCHEDULE_CANDIDATE.json": "d60803201b0986f67f6ab8ce6a9d8693e74fbd5b94a6d23e4f6d3c4aa9d9a092",
+    "docs/programmes/hybrid_10k/general_draft_2026_10_30/SOURCE.json": "3a610154a8be27d31ecfe7cbf2fdfb16908a305e1bd35e1ada22b7e4b1bee486",
+    "tool/programmes/hybrid_10k/general_admission_probe_test.dart": "8e2a0a71b1c3e9740df7fce414b364c7c5fd7a950bbf601d2c5d5081db5573e2",
+    "tool/programmes/hybrid_10k/reconcile_general_source.py": "b0973714ea85b35fb06c5bf7c6924276024bf53c0e6e92be8df3abe846d80533"
+  },
+  "preservation": {
+    "existing_checkouts": 25,
+    "registered_absent": 28,
+    "before_after_identical": true,
+    "inventory_sha256": "1168b13f0836253fabc1a07afe20072f3c37d672d71d06568ef0aceb4626d07b",
+    "prior_linear_commits_after_1cca598": [
+      "341fbad192c7d85074189af9ce10c8103ebc061b",
+      "632ff8393b8bd07c5b2297517a9ba2728fc4c0c6",
+      "2710185c43c36892f032358ca2ce2f5c0b3ba4b9",
+      "dade09f5e40a87768bb23b62b805022d4fb4461c",
+      "618c53f9c26565a2509bf79be81dafb348333315",
+      "d53786aff61fe7768cbfb852410ebac0ebdadc3c",
+      "544a3bbd7fc6ba1c6afd6fe3e68448636369d2b5",
+      "1963338cff87fc6165c2f9fb754afe153547f279",
+      "eb8fe4efde2c97ffa6fc545fadb2f563fdd50e0f",
+      "5d260bca7490bbc62d890d3aebc90b35ec5d000b",
+      "ce9ec89b79cb5c2fe6dcb4b7eb556bec73fff1fb",
+      "0caee794e63c9d7ce79aebffc65898cef1f2db11",
+      "a67e69c1bbbb5edae4d3a802de9c5c910444841a",
+      "7cc471b71125cf516b17e8bda03256614b474bc3",
+      "25b641a78c17fb49349729bde04c2ff54dc6db51",
+      "125ad8d309aa78e8f21c42fafc34798a5e585156",
+      "7d53cbd2212c6af451913455e420abe813e90311",
+      "d88acd96b2647e94e70a8ee96d0f5bb18f078a7c",
+      "fc42a6240f96b8c87d173004aa5ad2c6f4211daf",
+      "0f0c40dae54c87e7b3f739b205c0fe6b8edf847a"
+    ],
+    "original_backup_bundle_sha256": "db9348edd795f7e669a722b4bdba7376577b3554a50c88c1ec19c0ac213880dd",
+    "original_backup_bundle_bytes": 8558001,
+    "original_backup_bundle_ref": "0f0c40dae54c87e7b3f739b205c0fe6b8edf847a"
+  },
+  "git": {
+    "work_clone": "/private/tmp/cohort_m11_reconciliation",
+    "remote_ancestry": "UNVERIFIED",
+    "ordinary_lookups": 2,
+    "lookup_error": "Could not resolve host: github.com",
+    "push_attempted": false,
+    "force_or_alternate_route": false
+  },
+  "no_hosted_migrations_publication_accounts_eligibility_athlete_changes": true,
+  "browser_desktop_control": false,
+  "hosted_supabase": "UNVERIFIED_NO_CONTACT",
+  "not_run": [
+    "M2.5 harness or SDK proof",
+    "full default Flutter suite",
+    "full repository analysis",
+    "SQL/authenticated DB gate",
+    "hosted/device acceptance"
+  ],
+  "next_single_point": "M1.1 unique movement identity/setup completion and exact remaining content review, then full private v1/v2 graph admission",
+  "source_and_intake_commit": "529fd4e71bc5d0a3485f3f32fb26221bfbf4cafd"
+}
