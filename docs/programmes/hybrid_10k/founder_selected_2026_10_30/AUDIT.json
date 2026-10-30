@@ -1,6 +1,7 @@
 {
-  "base": "398a7fe9dc61791db71410fa46ba8d3a1e6c3991",
+  "base": "15627ecd7c41ab0f5f593ba6a08075374f7316fe",
   "selection_sha256": "dd7e08cc1b026b46307b42c491216543899879e202c3f665ce837f486bc0d6d8",
+  "dose_clarification_sha256": "e38cba504a1b40dcfe93e1fa72cee4b1804b0f4bee5078e7e240e41df9457b76",
   "inherited_source_sha256": {
     "SOURCE.json": "3a610154a8be27d31ecfe7cbf2fdfb16908a305e1bd35e1ada22b7e4b1bee486",
     "RUNNING_BODIES.json": "3eaa1b932b9251c1ca5d6c299d856436a0291ff4d7ade2663155eebb30d02c60",
@@ -13,11 +14,45 @@
     "running": 40,
     "rest": 10
   },
-  "strength_occurrences_in_review": 106,
-  "selected_template_occurrences": 97,
-  "unapproved_rdl_carryover_occurrences": 9,
+  "strength_occurrences_in_review": 105,
+  "selected_template_occurrences": 105,
+  "rdl_membership": "EXPLICITLY_SELECTED",
+  "weekly_strength_work_sets": [
+    27,
+    27,
+    27,
+    21,
+    27,
+    27,
+    27,
+    27,
+    16,
+    12
+  ],
+  "strength_work_sets": 238,
+  "omitted_work": [
+    {
+      "week": 9,
+      "variant": "reverse_lunge_db",
+      "authority": "Explicit founder W9 omission"
+    }
+  ],
+  "phase_reconciliation": [
+    {
+      "previous_label": "W7 consolidation: reduce running and lifting volume",
+      "resolution": "Removed; W7 uses standard strength; exact selected running preserved"
+    },
+    {
+      "surviving_running_label": "W8 Peak 10K specificity",
+      "scope": "Selected run label only; does not override W8 lower-body strength effort control"
+    },
+    {
+      "surviving_numeric_pattern": "W7 running time and threshold minutes remain lower than W6",
+      "scope": "Explicitly preserve selected running prescriptions; no retiming or implied strength deload"
+    }
+  ],
   "verified_local_identity_occurrences": 47,
-  "unresolved_identity_occurrences": 59,
+  "unresolved_identity_occurrences": 58,
   "weekly_running": [
     {
       "week": 1,
@@ -222,12 +257,7 @@
   "running_execution_steps_targets_and_identity_unchanged": true,
   "timed_runs": 39,
   "distance_runs": 1,
-  "content_hold_counts": {
-    "C4": 9,
-    "C1": 10,
-    "C2": 1,
-    "C3": 4
-  },
+  "content_hold_counts": {},
   "full_programme_approval": false,
   "publication": false
 }

@@ -1,5 +1,24 @@
 # Current repository checkpoint
 
+> **M1.1 dose reconciliation — 2026-10-30:**
+> [Current handoff](./m11_hybrid10k_dose_reconciliation/HANDOFF.md) applies the
+> explicit RDL and W4/W8/W9/W10 doses plus the W7 follow-up. All former strength
+> membership/dose holds are resolved. RDL is selected template work, W7 uses
+> standard strength, and the superseded W7 consolidation label/reductions are
+> removed. The complete [TEN_WEEK_REVIEW.md](../programmes/hybrid_10k/founder_selected_2026_10_30/TEN_WEEK_REVIEW.md)
+> groups surviving older phase wording and retains every selected running body,
+> target and identity. Preparation remains separate from working sets. D8/full
+> programme approval is pending. The six exact missing identity records and
+> responsible authority/actions are listed in the review and its bounded intake
+> handoff; no further movement-choice/occurrence audit is needed. Full v1/v2
+> schedules compile; known-identity partial/native codec contracts pass; full
+> strength admission still stops at `exact_identity_records_required`. No invented
+> publication evidence, v3 dependency, hosted/athlete/UI/Garmin operation. Final
+> 10K remains distance-ended and unsupported. Prior checkouts/indices/HEADs/.temp,
+> dirty files, history and four bundles remain preserved; no push without fresh
+> remote ancestry. **Next: M1.1 D8 programme review and six-record trusted intake,
+> then full private v1/v2 graph admission. Gate A OPEN.**
+
 > **M1.1 D1–D7 selected strength — partial, 2026-10-30:**
 > [Current handoff](./m11_hybrid10k_selected_strength/HANDOFF.md) and single
 > [complete ten-week programme review](../programmes/hybrid_10k/founder_selected_2026_10_30/TEN_WEEK_REVIEW.md)

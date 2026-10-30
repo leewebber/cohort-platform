@@ -14,9 +14,9 @@
   "sessions": [
     {
       "session_key": "LW10K-W01-D01",
-      "protocol_id": "LW10K-W01-D01-DRAFT-R2",
+      "protocol_id": "LW10K-W01-D01-DRAFT-R3",
       "session_lineage_id": "379bb177-55b7-5535-8527-9047568a5ce9",
-      "revision_number": 2,
+      "revision_number": 3,
       "title": "Monday selected strength"
     },
     {
@@ -35,9 +35,9 @@
     },
     {
       "session_key": "LW10K-W01-D04",
-      "protocol_id": "LW10K-W01-D04-DRAFT-R2",
+      "protocol_id": "LW10K-W01-D04-DRAFT-R3",
       "session_lineage_id": "21fc299c-06ba-5506-8553-0209780cbfe3",
-      "revision_number": 2,
+      "revision_number": 3,
       "title": "Thursday selected strength"
     },
     {
@@ -56,9 +56,9 @@
     },
     {
       "session_key": "LW10K-W02-D01",
-      "protocol_id": "LW10K-W02-D01-DRAFT-R2",
+      "protocol_id": "LW10K-W02-D01-DRAFT-R3",
       "session_lineage_id": "6aec11af-45d5-5fb9-9e4d-fbcc49d9e767",
-      "revision_number": 2,
+      "revision_number": 3,
       "title": "Monday selected strength"
     },
     {
@@ -77,9 +77,9 @@
     },
     {
       "session_key": "LW10K-W02-D04",
-      "protocol_id": "LW10K-W02-D04-DRAFT-R2",
+      "protocol_id": "LW10K-W02-D04-DRAFT-R3",
       "session_lineage_id": "e7f72978-bb3e-5252-bcbd-ee996d53ac3e",
-      "revision_number": 2,
+      "revision_number": 3,
       "title": "Thursday selected strength"
     },
     {
@@ -98,9 +98,9 @@
     },
     {
       "session_key": "LW10K-W03-D01",
-      "protocol_id": "LW10K-W03-D01-DRAFT-R2",
+      "protocol_id": "LW10K-W03-D01-DRAFT-R3",
       "session_lineage_id": "da3a1810-a65f-5e19-a7dc-e7d276839e44",
-      "revision_number": 2,
+      "revision_number": 3,
       "title": "Monday selected strength"
     },
     {
@@ -119,9 +119,9 @@
     },
     {
       "session_key": "LW10K-W03-D04",
-      "protocol_id": "LW10K-W03-D04-DRAFT-R2",
+      "protocol_id": "LW10K-W03-D04-DRAFT-R3",
       "session_lineage_id": "2052df8e-b4dd-58e0-9c03-17f98f138e24",
-      "revision_number": 2,
+      "revision_number": 3,
       "title": "Thursday selected strength"
     },
     {
@@ -140,9 +140,9 @@
     },
     {
       "session_key": "LW10K-W04-D01",
-      "protocol_id": "LW10K-W04-D01-DRAFT-R2",
+      "protocol_id": "LW10K-W04-D01-DRAFT-R3",
       "session_lineage_id": "2d045c4d-0da3-583f-823c-f6d2fa3c0443",
-      "revision_number": 2,
+      "revision_number": 3,
       "title": "Monday selected strength"
     },
     {
@@ -161,9 +161,9 @@
     },
     {
       "session_key": "LW10K-W04-D04",
-      "protocol_id": "LW10K-W04-D04-DRAFT-R2",
+      "protocol_id": "LW10K-W04-D04-DRAFT-R3",
       "session_lineage_id": "d5f28dd7-25fd-53e3-ba85-b297c17420e4",
-      "revision_number": 2,
+      "revision_number": 3,
       "title": "Thursday selected strength"
     },
     {
@@ -182,9 +182,9 @@
     },
     {
       "session_key": "LW10K-W05-D01",
-      "protocol_id": "LW10K-W05-D01-DRAFT-R2",
+      "protocol_id": "LW10K-W05-D01-DRAFT-R3",
       "session_lineage_id": "c2b9a2a5-a0fd-5b32-9b5a-db285799c0a3",
-      "revision_number": 2,
+      "revision_number": 3,
       "title": "Monday selected strength"
     },
     {
@@ -203,9 +203,9 @@
     },
     {
       "session_key": "LW10K-W05-D04",
-      "protocol_id": "LW10K-W05-D04-DRAFT-R2",
+      "protocol_id": "LW10K-W05-D04-DRAFT-R3",
       "session_lineage_id": "eb3d69ec-b232-5fb8-ba32-c7cf00cc794d",
-      "revision_number": 2,
+      "revision_number": 3,
       "title": "Thursday selected strength"
     },
     {
@@ -224,9 +224,9 @@
     },
     {
       "session_key": "LW10K-W06-D01",
-      "protocol_id": "LW10K-W06-D01-DRAFT-R2",
+      "protocol_id": "LW10K-W06-D01-DRAFT-R3",
       "session_lineage_id": "18d0f55a-76b8-5d60-9fc4-2ea5698fdf7b",
-      "revision_number": 2,
+      "revision_number": 3,
       "title": "Monday selected strength"
     },
     {
@@ -245,9 +245,9 @@
     },
     {
       "session_key": "LW10K-W06-D04",
-      "protocol_id": "LW10K-W06-D04-DRAFT-R2",
+      "protocol_id": "LW10K-W06-D04-DRAFT-R3",
       "session_lineage_id": "661a1086-1435-5e43-8dea-845528a38643",
-      "revision_number": 2,
+      "revision_number": 3,
       "title": "Thursday selected strength"
     },
     {
@@ -266,9 +266,9 @@
     },
     {
       "session_key": "LW10K-W07-D01",
-      "protocol_id": "LW10K-W07-D01-DRAFT-R2",
+      "protocol_id": "LW10K-W07-D01-DRAFT-R3",
       "session_lineage_id": "e1978da3-e34b-5d08-a740-350a80d1926c",
-      "revision_number": 2,
+      "revision_number": 3,
       "title": "Monday selected strength"
     },
     {
@@ -287,9 +287,9 @@
     },
     {
       "session_key": "LW10K-W07-D04",
-      "protocol_id": "LW10K-W07-D04-DRAFT-R2",
+      "protocol_id": "LW10K-W07-D04-DRAFT-R3",
       "session_lineage_id": "696dede4-268c-5a31-8e3a-0e555a8f8b0c",
-      "revision_number": 2,
+      "revision_number": 3,
       "title": "Thursday selected strength"
     },
     {
@@ -308,9 +308,9 @@
     },
     {
       "session_key": "LW10K-W08-D01",
-      "protocol_id": "LW10K-W08-D01-DRAFT-R2",
+      "protocol_id": "LW10K-W08-D01-DRAFT-R3",
       "session_lineage_id": "308b82a9-d6b7-5c6d-a94b-b83c0b0d349a",
-      "revision_number": 2,
+      "revision_number": 3,
       "title": "Monday selected strength"
     },
     {
@@ -329,9 +329,9 @@
     },
     {
       "session_key": "LW10K-W08-D04",
-      "protocol_id": "LW10K-W08-D04-DRAFT-R2",
+      "protocol_id": "LW10K-W08-D04-DRAFT-R3",
       "session_lineage_id": "d44b2d25-63fb-5508-97a8-172f611fd422",
-      "revision_number": 2,
+      "revision_number": 3,
       "title": "Thursday selected strength"
     },
     {
@@ -350,9 +350,9 @@
     },
     {
       "session_key": "LW10K-W09-D01",
-      "protocol_id": "LW10K-W09-D01-DRAFT-R2",
+      "protocol_id": "LW10K-W09-D01-DRAFT-R3",
       "session_lineage_id": "2a69637d-75c7-557d-b5dc-ba5e49b257d0",
-      "revision_number": 2,
+      "revision_number": 3,
       "title": "Monday selected strength"
     },
     {
@@ -371,9 +371,9 @@
     },
     {
       "session_key": "LW10K-W09-D04",
-      "protocol_id": "LW10K-W09-D04-DRAFT-R2",
+      "protocol_id": "LW10K-W09-D04-DRAFT-R3",
       "session_lineage_id": "0a6de07f-0ee6-5850-b903-acee407ca491",
-      "revision_number": 2,
+      "revision_number": 3,
       "title": "Thursday selected strength"
     },
     {
@@ -392,9 +392,9 @@
     },
     {
       "session_key": "LW10K-W10-D01",
-      "protocol_id": "LW10K-W10-D01-DRAFT-R2",
+      "protocol_id": "LW10K-W10-D01-DRAFT-R3",
       "session_lineage_id": "13a6135f-439c-5e10-ac06-bc3e506596f9",
-      "revision_number": 2,
+      "revision_number": 3,
       "title": "Monday selected strength"
     },
     {
@@ -427,9 +427,9 @@
     },
     {
       "session_key": "LW10K-W10-D04",
-      "protocol_id": "LW10K-W10-D04-DRAFT-R2",
+      "protocol_id": "LW10K-W10-D04-DRAFT-R3",
       "session_lineage_id": "02346200-732e-56d4-a637-f20e7d75b7b4",
-      "revision_number": 2,
+      "revision_number": 3,
       "title": "Upper-body taper exception"
     }
   ],
@@ -451,7 +451,7 @@
               "session_key": "LW10K-W01-D01",
               "display_title": "Monday selected strength",
               "progression": {
-                "prescription_summary": "D1–D7 standard selections; exact retained reductions/reference doses and D8 holds in TEN_WEEK_REVIEW.md. No automatic progression."
+                "prescription_summary": "D1–D7 plus exact founder-selected week doses; D8 full-programme review in TEN_WEEK_REVIEW.md. No automatic progression."
               }
             }
           ]
@@ -502,7 +502,7 @@
               "session_key": "LW10K-W01-D04",
               "display_title": "Thursday selected strength",
               "progression": {
-                "prescription_summary": "D1–D7 standard selections; exact retained reductions/reference doses and D8 holds in TEN_WEEK_REVIEW.md. No automatic progression."
+                "prescription_summary": "D1–D7 plus exact founder-selected week doses; D8 full-programme review in TEN_WEEK_REVIEW.md. No automatic progression."
               }
             }
           ]
@@ -566,7 +566,7 @@
               "session_key": "LW10K-W02-D01",
               "display_title": "Monday selected strength",
               "progression": {
-                "prescription_summary": "D1–D7 standard selections; exact retained reductions/reference doses and D8 holds in TEN_WEEK_REVIEW.md. No automatic progression."
+                "prescription_summary": "D1–D7 plus exact founder-selected week doses; D8 full-programme review in TEN_WEEK_REVIEW.md. No automatic progression."
               }
             }
           ]
@@ -617,7 +617,7 @@
               "session_key": "LW10K-W02-D04",
               "display_title": "Thursday selected strength",
               "progression": {
-                "prescription_summary": "D1–D7 standard selections; exact retained reductions/reference doses and D8 holds in TEN_WEEK_REVIEW.md. No automatic progression."
+                "prescription_summary": "D1–D7 plus exact founder-selected week doses; D8 full-programme review in TEN_WEEK_REVIEW.md. No automatic progression."
               }
             }
           ]
@@ -681,7 +681,7 @@
               "session_key": "LW10K-W03-D01",
               "display_title": "Monday selected strength",
               "progression": {
-                "prescription_summary": "D1–D7 standard selections; exact retained reductions/reference doses and D8 holds in TEN_WEEK_REVIEW.md. No automatic progression."
+                "prescription_summary": "D1–D7 plus exact founder-selected week doses; D8 full-programme review in TEN_WEEK_REVIEW.md. No automatic progression."
               }
             }
           ]
@@ -732,7 +732,7 @@
               "session_key": "LW10K-W03-D04",
               "display_title": "Thursday selected strength",
               "progression": {
-                "prescription_summary": "D1–D7 standard selections; exact retained reductions/reference doses and D8 holds in TEN_WEEK_REVIEW.md. No automatic progression."
+                "prescription_summary": "D1–D7 plus exact founder-selected week doses; D8 full-programme review in TEN_WEEK_REVIEW.md. No automatic progression."
               }
             }
           ]
@@ -782,7 +782,7 @@
     },
     {
       "week_number": 4,
-      "title": "Consolidation threshold; no in-programme 5K test",
+      "title": "Consolidation in W4; selected running retained",
       "days": [
         {
           "day_key": "day_1",
@@ -796,7 +796,7 @@
               "session_key": "LW10K-W04-D01",
               "display_title": "Monday selected strength",
               "progression": {
-                "prescription_summary": "D1–D7 standard selections; exact retained reductions/reference doses and D8 holds in TEN_WEEK_REVIEW.md. No automatic progression."
+                "prescription_summary": "D1–D7 plus exact founder-selected week doses; D8 full-programme review in TEN_WEEK_REVIEW.md. No automatic progression."
               }
             }
           ]
@@ -847,7 +847,7 @@
               "session_key": "LW10K-W04-D04",
               "display_title": "Thursday selected strength",
               "progression": {
-                "prescription_summary": "D1–D7 standard selections; exact retained reductions/reference doses and D8 holds in TEN_WEEK_REVIEW.md. No automatic progression."
+                "prescription_summary": "D1–D7 plus exact founder-selected week doses; D8 full-programme review in TEN_WEEK_REVIEW.md. No automatic progression."
               }
             }
           ]
@@ -897,7 +897,7 @@
     },
     {
       "week_number": 5,
-      "title": "Build threshold duration and aerobic endurance",
+      "title": "Build W5–7; threshold duration and endurance",
       "days": [
         {
           "day_key": "day_1",
@@ -911,7 +911,7 @@
               "session_key": "LW10K-W05-D01",
               "display_title": "Monday selected strength",
               "progression": {
-                "prescription_summary": "D1–D7 standard selections; exact retained reductions/reference doses and D8 holds in TEN_WEEK_REVIEW.md. No automatic progression."
+                "prescription_summary": "D1–D7 plus exact founder-selected week doses; D8 full-programme review in TEN_WEEK_REVIEW.md. No automatic progression."
               }
             }
           ]
@@ -962,7 +962,7 @@
               "session_key": "LW10K-W05-D04",
               "display_title": "Thursday selected strength",
               "progression": {
-                "prescription_summary": "D1–D7 standard selections; exact retained reductions/reference doses and D8 holds in TEN_WEEK_REVIEW.md. No automatic progression."
+                "prescription_summary": "D1–D7 plus exact founder-selected week doses; D8 full-programme review in TEN_WEEK_REVIEW.md. No automatic progression."
               }
             }
           ]
@@ -1012,7 +1012,7 @@
     },
     {
       "week_number": 6,
-      "title": "Extend repeatable threshold work",
+      "title": "Build W5–7; repeatable threshold work",
       "days": [
         {
           "day_key": "day_1",
@@ -1026,7 +1026,7 @@
               "session_key": "LW10K-W06-D01",
               "display_title": "Monday selected strength",
               "progression": {
-                "prescription_summary": "D1–D7 standard selections; exact retained reductions/reference doses and D8 holds in TEN_WEEK_REVIEW.md. No automatic progression."
+                "prescription_summary": "D1–D7 plus exact founder-selected week doses; D8 full-programme review in TEN_WEEK_REVIEW.md. No automatic progression."
               }
             }
           ]
@@ -1077,7 +1077,7 @@
               "session_key": "LW10K-W06-D04",
               "display_title": "Thursday selected strength",
               "progression": {
-                "prescription_summary": "D1–D7 standard selections; exact retained reductions/reference doses and D8 holds in TEN_WEEK_REVIEW.md. No automatic progression."
+                "prescription_summary": "D1–D7 plus exact founder-selected week doses; D8 full-programme review in TEN_WEEK_REVIEW.md. No automatic progression."
               }
             }
           ]
@@ -1127,7 +1127,7 @@
     },
     {
       "week_number": 7,
-      "title": "Consolidation: reduce running and lifting volume",
+      "title": "Build W5–7; standard strength; selected running retained",
       "days": [
         {
           "day_key": "day_1",
@@ -1141,7 +1141,7 @@
               "session_key": "LW10K-W07-D01",
               "display_title": "Monday selected strength",
               "progression": {
-                "prescription_summary": "D1–D7 standard selections; exact retained reductions/reference doses and D8 holds in TEN_WEEK_REVIEW.md. No automatic progression."
+                "prescription_summary": "D1–D7 plus exact founder-selected week doses; D8 full-programme review in TEN_WEEK_REVIEW.md. No automatic progression."
               }
             }
           ]
@@ -1192,7 +1192,7 @@
               "session_key": "LW10K-W07-D04",
               "display_title": "Thursday selected strength",
               "progression": {
-                "prescription_summary": "D1–D7 standard selections; exact retained reductions/reference doses and D8 holds in TEN_WEEK_REVIEW.md. No automatic progression."
+                "prescription_summary": "D1–D7 plus exact founder-selected week doses; D8 full-programme review in TEN_WEEK_REVIEW.md. No automatic progression."
               }
             }
           ]
@@ -1242,7 +1242,7 @@
     },
     {
       "week_number": 8,
-      "title": "10K-specific repetitions while retaining aerobic volume",
+      "title": "Control lower-body effort; selected 10K-specific running retained",
       "days": [
         {
           "day_key": "day_1",
@@ -1256,7 +1256,7 @@
               "session_key": "LW10K-W08-D01",
               "display_title": "Monday selected strength",
               "progression": {
-                "prescription_summary": "D1–D7 standard selections; exact retained reductions/reference doses and D8 holds in TEN_WEEK_REVIEW.md. No automatic progression."
+                "prescription_summary": "D1–D7 plus exact founder-selected week doses; D8 full-programme review in TEN_WEEK_REVIEW.md. No automatic progression."
               }
             }
           ]
@@ -1307,7 +1307,7 @@
               "session_key": "LW10K-W08-D04",
               "display_title": "Thursday selected strength",
               "progression": {
-                "prescription_summary": "D1–D7 standard selections; exact retained reductions/reference doses and D8 holds in TEN_WEEK_REVIEW.md. No automatic progression."
+                "prescription_summary": "D1–D7 plus exact founder-selected week doses; D8 full-programme review in TEN_WEEK_REVIEW.md. No automatic progression."
               }
             }
           ]
@@ -1357,7 +1357,7 @@
     },
     {
       "week_number": 9,
-      "title": "Final 10K-specific development; reduce lower-body lifting",
+      "title": "Reduce workload; selected running retained",
       "days": [
         {
           "day_key": "day_1",
@@ -1371,7 +1371,7 @@
               "session_key": "LW10K-W09-D01",
               "display_title": "Monday selected strength",
               "progression": {
-                "prescription_summary": "D1–D7 standard selections; exact retained reductions/reference doses and D8 holds in TEN_WEEK_REVIEW.md. No automatic progression."
+                "prescription_summary": "D1–D7 plus exact founder-selected week doses; D8 full-programme review in TEN_WEEK_REVIEW.md. No automatic progression."
               }
             }
           ]
@@ -1422,7 +1422,7 @@
               "session_key": "LW10K-W09-D04",
               "display_title": "Thursday selected strength",
               "progression": {
-                "prescription_summary": "D1–D7 standard selections; exact retained reductions/reference doses and D8 holds in TEN_WEEK_REVIEW.md. No automatic progression."
+                "prescription_summary": "D1–D7 plus exact founder-selected week doses; D8 full-programme review in TEN_WEEK_REVIEW.md. No automatic progression."
               }
             }
           ]
@@ -1472,7 +1472,7 @@
     },
     {
       "week_number": 10,
-      "title": "Freshen up, sharpen and test 10K on Sunday",
+      "title": "Reduce workload and sharpen; final 10K test",
       "days": [
         {
           "day_key": "day_1",
@@ -1486,7 +1486,7 @@
               "session_key": "LW10K-W10-D01",
               "display_title": "Monday selected strength",
               "progression": {
-                "prescription_summary": "D1–D7 standard selections; exact retained reductions/reference doses and D8 holds in TEN_WEEK_REVIEW.md. No automatic progression."
+                "prescription_summary": "D1–D7 plus exact founder-selected week doses; D8 full-programme review in TEN_WEEK_REVIEW.md. No automatic progression."
               }
             }
           ]
@@ -1537,7 +1537,7 @@
               "session_key": "LW10K-W10-D04",
               "display_title": "Upper-body taper exception",
               "progression": {
-                "prescription_summary": "D1–D7 standard selections; exact retained reductions/reference doses and D8 holds in TEN_WEEK_REVIEW.md. No automatic progression."
+                "prescription_summary": "D1–D7 plus exact founder-selected week doses; D8 full-programme review in TEN_WEEK_REVIEW.md. No automatic progression."
               }
             }
           ]

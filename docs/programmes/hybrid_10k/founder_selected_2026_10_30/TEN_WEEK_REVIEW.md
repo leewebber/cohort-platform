@@ -1,6 +1,6 @@
 # General Hybrid 10K PB — complete ten-week founder review
 
-**D1–D7 movements and standard doses are founder-selected. D8 remains pending. This is not full programme approval, publication, eligibility or athlete assignment.**
+**D1–D7, RDL membership and all week-specific strength doses below are founder-selected. D8 remains pending. This is not full programme approval, publication, eligibility or athlete assignment.**
 
 Scope: already-fit, competent runner pursuing a 10K PB. Lee’s personal return-to-running/travel adjustment remains separate. Calendar dates below are illustrative retained source dates, not assignment authority.
 
@@ -8,30 +8,35 @@ The complete schedule has **40 runs, 20 strength sessions and 10 rest days**: Mo
 
 Every session is printed below. Shared preparation/target/progression instructions here apply to each specified session; no external document is needed to interpret the doses. Within-session strength order is shown for review and remains part of D8. No actual load, BPM or pace is guessed.
 
-## Remaining content decisions — one list
+## Source clarification status and remaining review
 
-| Ref | Decision actually still needed | Boundary |
-|---|---|---|
-| C1 | W4/W7 consolidation doses for changed incline press, bilateral row, seated press, DB lunge and bilateral calf. Each occurrence shows the exact new standard and old proposal; select reduced doses without transferring flat/unilateral/unsupported setups. | Same-movement pull-up, lateral raise and Thursday row reductions are retained exactly as **proposals**, not final D8 approval. Core keeps the selected D3 doses; old core RIR/durations are not copied. |
-| C2 | W9 lunge: newly selected standard is 1×6/leg at 2–3 RIR; old reduced proposal was 1×5/leg at 3 RIR. Confirm the W9 dose. | Do not invent a fractional/zero set or assume the old 5-rep dose remains selected. |
-| C3 | W10 Monday incline, bilateral chest-supported row and Pallof inclusion/doses; W10 Thursday seated-press rest (old proposed 90 sec vs new standard 120 sec). | Thursday remains exactly two comfortable press sets and two row sets, ≥3 RIR, no lower-body lifting; row rest 90 sec agrees. Existing Monday pull-up/lateral taper proposals stay visible. |
-| C4 | Retain or remove the barbell RDL source carryover (9 Thursdays), with the unchanged doses printed below. | RDL was in the older brief/attachment, but not selected by D1–D7 and not explicitly removed. It is not silently approved or deleted. |
+The previous dose holds are resolved: RDL belongs to the template; W4 uses two sets for standard three-set upper-body exercises, with normal core/calf/lunge; W7 uses standard strength, not consolidation; W8 controls lower-body effort; W9 reduces workload and omits lunges; W10 has the exact selected Monday doses and Thursday press/row exception. Rest periods and standard effort instructions remain unchanged unless explicitly stated below.
 
-**D8 also requires review of the remaining programme as a whole:** general entry workload (including W1/W2), unselected run details, proposed strength order, preparation, progression, fatigue/adaptation and taper guidance. These are not new questions about the accepted weekly template or approved target rules. No extra scalar RPE fallback is required for the existing pace path.
+**D8/full-programme approval remains pending founder review of this document.** It still covers general entry workload, remaining run details, strength order and preparation/progression/fatigue guidance. The resolved membership/dose choices are not new questions. Exact identity retention is a separate technical boundary, listed once below.
+
+## Phase labels — reconciled together
+
+| Wording or pattern | Current interpretation |
+|---|---|
+| W4 consolidation; W5–7 build; W8 lower-body effort control; W9–10 workload reduction | Controlling founder progression. W7 strength is standard; no old W7 reductions survive. |
+| Old W7 consolidation label | Removed from current source, schedule titles and this review. It survives only in historical source/provenance records. |
+| W7 running time/threshold work remains lower than W6 | Explicitly preserved selected running prescriptions. This numerical running pattern does not reintroduce a W7 strength deload or a consolidation phase label. |
+| W8 run title “Peak 10K specificity” | Retained label for that selected running session only; it does not override W8 lower-body strength effort control. |
+| W9 former “Final 10K-specific development” week label | Current week overview says reduce workload; the selected running session remains unchanged. W10 sharpening/final-test labels remain compatible with taper. |
 
 ## Strength source corrections and authority
 
 - Working back squats (9 occurrences) and DB farmer carries (9) came from the supplied attachment’s Thursday work tables. They were outside the selected strength template and are removed from current work graphs. They were never preparation sets.
 - Ten bodyweight squats and eight unloaded hinges in shared gym preparation are **preparation**, not working barbell squat/RDL sets. Warm-up/ramp sets are separate from the listed work sets. W10 Thursday has upper-body preparation only.
 - Flat DB bench, unilateral DB calf and reverse crunch are superseded. Incline press is Monday; machine calf is Thursday; Pallof is Monday; side plank is Thursday. Standard doses use the founder’s new numbers, not the attachment’s doses. Shoulder press is Thursday seated/back-supported/neutral grip; Monday row is bilateral chest-supported, Thursday row is single-arm/bench-supported.
-- RDL remains an explicitly unapproved carryover for C4, not an extra selected template lift. Review contains 97 selected-template occurrences plus 9 RDL carryovers = 106. Unknown effective reduction/taper doses are shown as **HELD**, with exact reference/proposal doses; there is no invented final weekly strength-set total.
+- Barbell RDL is explicitly selected template work, not an unintended carryover. Standard dose is 2×5–6, 2–3 RIR, 120–180 seconds rest, with the exact W8/W9 exceptions below. Earlier carryover/membership and dose-hold labels are superseded, not current questions.
 - Old W2 Sunday personal travel-option wording is excluded from this general source. Its 40-minute base run, steps, targets and identity are unchanged. Old Monday-lunge/squat-removal fatigue rules are inapplicable after these selections; no replacement adjustment is invented.
 
 ## Exact strength setup, preparation and logging
 
 Monday standard work: approximately 30° bilateral incline DB press 3×6–10, 2 RIR, 120 sec rest; strict shoulder-width overhand pull-up 3×5–8, 2 RIR, 120 sec rest, bodyweight initially; bilateral chest-supported DB row 3×8–12, 1–2 RIR, 90 sec rest; DB lateral raise 3×12–20, 1–2 RIR, 60 sec rest; standing square-stance cable Pallof at chest height, both hands on handle, no torso rotation, 2×10/side, controlled, 45–60 sec rest, no RIR/failure requirement.
 
-Thursday standard selected work: two DBs at sides, neutral grip reverse lunge 1×6/leg, 2–3 RIR, one side then the other, 90 sec rest after both; seated near-upright back-supported two-DB neutral strict press without leg drive 3×6–10, 2 RIR, 120 sec rest; free-hand bench-supported single-arm DB row 3×8–12/side, 1–2 RIR, 90 sec after both sides; bilateral machine standing calf 2×10–15, 2 RIR, 60–90 sec rest; bodyweight side plank 2×30–45 sec/side, 45–60 sec rest, stop before posture loss, no failure target. The separately labelled RDL carryover is not in this selected list.
+Thursday standard selected work: barbell RDL 2×5–6, 2–3 RIR, 120–180 seconds rest; two DBs at sides, neutral grip reverse lunge 1×6/leg, 2–3 RIR, one side then the other, 90 sec rest after both; seated near-upright back-supported two-DB neutral strict press without leg drive 3×6–10, 2 RIR, 120 sec rest; free-hand bench-supported single-arm DB row 3×8–12/side, 1–2 RIR, 90 sec after both sides; bilateral machine standing calf 2×10–15, 2 RIR, 60–90 sec rest; bodyweight side plank 2×30–45 sec/side, 45–60 sec rest, stop before posture loss, no failure target.
 
 Gym preparation (retained proposal except the W10 Thursday restriction): 5 minutes brisk walking/marching; 10 bodyweight squats; 8 unloaded hinges; 8 scapular pull-ups OR shoulder-blade movements; 8 arm circles in each direction. For the first loaded lower-body exercise add 2–4 progressively loaded warm-up sets; for each new upper-body pattern add 1–2 light sets as needed. No warm-up set to failure. W10 Thursday: upper-body preparation only, 1–2 light sets per new upper-body pattern as needed; no squat/hinge or loaded lower-body work inserted. Finish every gym session with 3–5 minutes easy walking.
 
@@ -39,7 +44,7 @@ Retained proposed tempo: controlled lowering approximately 2 seconds, no forced 
 
 Choose actual loads from current ability; no guessed kg. DB load is external load **per dumbbell** (including bilateral rows), barbell RDL is total external barbell load. Machine/cable resistance retains actual displayed unit and setup; do not assume cross-machine equivalence. Bodyweight is the initial pull-up branch. Added load is conditional on an exact retained supported weighted identity and explicit selection; do not silently change canonical exercise identity as “progression”. Foot-assisted and machine-assisted branches remain unresolved and separate; never encode assistance as negative added load. Do not prefill actuals.
 
-Retained proposed progression: once ALL work sets reach the top of the rep range at target RIR on two exposures, the athlete may accept the smallest available load increase (typically 1–2 kg per DB, 2–2.5 kg upper-body barbell or 2.5–5 kg lower-body barbell), returning to the bottom of the range. Never force a load jump or progress automatically. Maintain if running quality/recovery is affected. No 1RM or failure tests. This is D8 review content, not automatic runtime authority.
+Retained proposed progression: once ALL work sets reach the top of the rep range at target RIR on two exposures, the athlete may accept the smallest available load increase (typically 1–2 kg per DB, 2–2.5 kg upper-body barbell or 2.5–5 kg lower-body barbell), returning to the bottom of the range. Never force a load jump or progress automatically. Maintain if running quality/recovery is affected. No 1RM or failure tests. Week-specific no-planned-load-increase instructions override this generic proposal (W4 RDL; W8 lower-body work). This is D8 review content, not automatic runtime authority.
 
 ## Controlling targets
 
@@ -127,7 +132,7 @@ changes only future starts after review. Started/completed prescriptions stay fr
 ## Progression, fatigue and taper boundaries
 
 Preserve the authored phase/week structure, repeat counts, work/recovery order,
-consolidation weeks and reduced lower-body work. Do not derive later progression
+W4 consolidation, W5–7 build, W8 lower-body effort control and W9–10 workload reduction. Selected running prescriptions stay unchanged. Do not derive later progression
 from logged results. The original generic fatigue/pain guidance remains proposed:
 stop/shorten affected work for focal or worsening pain/altered gait; an athlete may
 review a 20–30% easy/long reduction or equal-duration easy variant for accumulated
@@ -164,30 +169,32 @@ The running range subtracts the four explicitly optional five-minute walking coo
 | 1 — Retained proposed opening doses; general-plan suitability pending review | 110:00 | 110:00–110:00 | 0:00 | 0:00 | 0:00 | 0:00 | 0:00 | None |
 | 2 — Retained proposed opening progression; no personal travel variant | 120:00 | 120:00–120:00 | 0:00 | 0:00 | 0:00 | 5:00 | 0:00 | None |
 | 3 — First controlled threshold session | 141:00 | 130:20–141:00 | 12:00 | 0:00 | 12:00 | 0:00 | 1:20 | None |
-| 4 — Consolidation threshold; no in-programme 5K test | 137:30 | 125:50–137:30 | 20:00 | 0:00 | 20:00 | 0:00 | 2:20 | None |
-| 5 — Build threshold duration and aerobic endurance | 164:00 | 153:20–164:00 | 18:00 | 0:00 | 18:00 | 0:00 | 1:20 | None |
-| 6 — Extend repeatable threshold work | 175:00 | 161:00–175:00 | 24:00 | 0:00 | 24:00 | 0:00 | 2:00 | None |
-| 7 — Consolidation: reduce running and lifting volume | 146:00 | 136:20–146:00 | 16:00 | 0:00 | 16:00 | 0:00 | 1:20 | None |
-| 8 — 10K-specific repetitions while retaining aerobic volume | 184:00 | 169:00–184:00 | 0:00 | 27:00 | 27:00 | 0:00 | 3:00 | None |
-| 9 — Final 10K-specific development; reduce lower-body lifting | 155:00 | 143:20–155:00 | 0:00 | 18:00 | 18:00 | 0:00 | 2:20 | None |
-| 10 — Freshen up, sharpen and test 10K on Sunday | 106:00 + actual 10K time | 87:20–106:00 + actual 10K time | 0:00 | 6:00 | 6:00 | 0:00 | 3:20 | 10,000 m; time unknown until measured |
+| 4 — Consolidation in W4; selected running retained | 137:30 | 125:50–137:30 | 20:00 | 0:00 | 20:00 | 0:00 | 2:20 | None |
+| 5 — Build W5–7; threshold duration and endurance | 164:00 | 153:20–164:00 | 18:00 | 0:00 | 18:00 | 0:00 | 1:20 | None |
+| 6 — Build W5–7; repeatable threshold work | 175:00 | 161:00–175:00 | 24:00 | 0:00 | 24:00 | 0:00 | 2:00 | None |
+| 7 — Build W5–7; standard strength; selected running retained | 146:00 | 136:20–146:00 | 16:00 | 0:00 | 16:00 | 0:00 | 1:20 | None |
+| 8 — Control lower-body effort; selected 10K-specific running retained | 184:00 | 169:00–184:00 | 0:00 | 27:00 | 27:00 | 0:00 | 3:00 | None |
+| 9 — Reduce workload; selected running retained | 155:00 | 143:20–155:00 | 0:00 | 18:00 | 18:00 | 0:00 | 2:20 | None |
+| 10 — Reduce workload and sharpen; final 10K test | 106:00 + actual 10K time | 87:20–106:00 + actual 10K time | 0:00 | 6:00 | 6:00 | 0:00 | 3:20 | 10,000 m; time unknown until measured |
 
 All recoveries are expanded explicitly below. For normal stride blocks the final 100-second recovery IS included. For the four selected Tuesday workouts, work recoveries are BETWEEN repetitions only, with no recovery after the last work repetition; their warm-up includes all three acceleration recoveries.
 
-## Exact local identity status — not content approval
+## Exact local identity retention — six records/actions
 
-| Movement | Legitimate evidence/result | Remaining action |
+The retained legacy rows support the selected incline DB press (`EX-084`), cable Pallof (`EX-114`), bilateral machine standing calf (`EX-125`), side plank (`EX-116`) and barbell RDL (`EX-078`). RDL membership is now confirmed. This is local row evidence, not a new published version/event or current hosted-state verification.
+
+| Selected movement | Exact missing record | Authority/action needed |
 |---|---|---|
-| Incline DB press / square-stance cable Pallof / bilateral machine standing calf / side plank | Exact legacy row matches `EX-084` / `EX-114` / `EX-125` / `EX-116`, respectively. Source selects a supported equipment/laterality branch; no extra standard/version is invented. **38 selected-template occurrences bound.** | Effective reduction/taper content holds still apply where shown. |
-| Barbell RDL carryover | Exact legacy row `EX-078`, 9 occurrences, unchanged proposed doses. | C4 membership decision; not an approved extra lift. |
-| Strict bodyweight pull-up | `EX-053` historical row and approved identity bridge; no supplied trusted published runtime row. | Retain exact trusted row, including support for selected strict overhand setup. Weighted `EX-095` is a separately verified weight-belt option, not the initial bodyweight identity. |
-| Bilateral chest-supported DB row | `EX-090` published local row says “Chest Supported Row Machine or Bench”; it does not establish the DB implement. Another programme’s candidate/proposal cannot fill that gap. | Trusted evidence that the DB variant is covered, or actual exact identity authoring/intake. No automatic acceptance from its name. |
-| DB lateral raise / Thursday one-arm DB row | Historical `EX-044` / `EX-038` equipment/execution descriptions agree, but candidate evidence only. | Exact trusted published v1/v2 row retention; not a new founder setup question. |
-| Seated back-supported neutral-grip DB press | Historical `EX-037` strict press lacks the required seated/back-support setup. | Retain exact trusted setup evidence/identity; no standing-press or HYROX proposal substitution. |
-| Two-DB side-held reverse lunge | No exact loaded DB row; `EX-026` is equipment None. | Trusted producer deduplication/actual exact identity; no fabricated ID/version/event. |
-| Assisted pull-up branches | Foot-assisted and machine-assisted remain separate, unselected, unresolved. | Exact setup/identity and separate assistance representation before use. They are not silently deleted and are not negative added load. |
+| Strict shoulder-width overhand **bodyweight pull-up** | Actual trusted published legacy `exercises_v2` row for `EX-053`, with source provenance. The approved `cohort.exercise.pull_up → EX-053` bridge identifies the strict/bodyweight branch but is not that row. | Catalogue owner/trusted source producer retains the real row through the existing private v1/v2 boundary and confirms the selected branch is covered. Do not use weighted `EX-095` as the initial identity. |
+| Bilateral **chest-supported dumbbell row** | A trusted implement/setup binding showing that the bench branch of `EX-090` covers this DB variant, or the actual exact DB-specific published row. The retained `EX-090` row says “Chest Supported Row Machine or Bench”, without establishing dumbbells. | Catalogue/definition owner verifies the DB branch and supplies its legitimate identity evidence; if absent, perform normal exact identity authoring/intake. Another programme's unpublished DB-row proposal cannot establish it. |
+| **Dumbbell lateral raise** | Actual trusted published legacy row `EX-044`. The retained historical authoring CSV describes dumbbells/controlled execution but is candidate evidence only. | Trusted source producer retains that actual row with provenance; verify selected DB equipment/execution. No new founder movement decision is needed. |
+| **Single-arm DB row, free hand on bench** | Actual trusted published legacy row `EX-038`. The historical “One Dumbbell, Bench” row description agrees but lacks admissible publication-source retention. | Trusted source producer retains the actual row with provenance; preserve unilateral setup and per-DB load. Do not substitute bilateral/cable rows. |
+| **Seated near-upright back-supported, neutral-grip two-DB strict press** | Actual published legacy row plus trusted setup binding covering seated back support/neutral grip/no leg drive. `EX-037` is only a historical strict-press lead and does not establish this setup. | Catalogue/definition owner verifies whether the selected variant belongs to `EX-037` or another existing exact identity; if absent, use established authoring/intake. No standing, barbell or push-press substitution. |
+| **Two-DB side-held neutral-grip reverse lunge**, one side then the other | Actual exact loaded reverse-lunge published identity/row and source provenance. No admissible ID is retained; `EX-026` has equipment None. | Trusted producer checks the real catalogue for this exact variant; retain the real existing record or author through the established process if absent. Do not assign a made-up ID or promote the bodyweight row. |
 
-**Actual full admission:** v1/v2 schedule compilation and partial known-identity graph probes are separate evidence. All twenty full strength graphs remain withheld by 59 unresolved identity occurrences and C1–C4 source holds; no genuine programme is published, acquired, started, logged, completed or restored here. Final 10K execution remains unsupported by the time-only runner. Local v1/v2 does not require inventing v3 definitions/events or deferred HYROX infrastructure.
+A trusted catalogue/definition owner must provide the actual records/setup bindings above through the established private v1/v2 boundary. The narrowly scoped SQL retention request is prepared but not executed; hosted target/read authority is separate. No new founder movement choice is being requested. Foot-assisted and machine-assisted pull-ups remain separate unresolved branches, never negative added load; weighted EX-095 is a separate retained weight-belt option, not the initial bodyweight identity.
+
+**Actual full admission:** both v1/v2 schedules compile; known-identity partial graph/codec checks pass. Full strength admission remains blocked by the exact identity records above, with no unresolved dose holds. D8/full-programme approval is still pending. Nothing is published, acquired, started, logged, completed or restored for an athlete here. The final 10K remains distance-ended and unsupported by the current runner.
 
 ## All ten weeks — every session
 
@@ -195,17 +202,17 @@ All recoveries are expanded explicitly below. For normal stride blocks the final
 
 ### Monday — Monday selected strength (2026-11-02)
 
-Review reference: `LW10K-W01-D01`. Status: selected standard template / D8 and marked holds pending.
+Review reference: `LW10K-W01-D01`. Status: exact selected standard/week-specific strength doses; full-programme D8 pending.
 
 Retained proposed preparation: 5 minutes walking/marching; 10 bodyweight squats; 8 unloaded hinges; 8 scapular pull-ups OR shoulder-blade movements; 8 arm circles each direction. First loaded lower-body pattern: 2–4 progressively loaded warm-up sets; each new upper-body pattern: 1–2 light sets as needed; no failure. Bodyweight squats/unloaded hinges are preparation, not working squat/RDL prescriptions.
 
-| Review order / working lift | Exact selected/reference or retained proposed dose | Effective status |
+| Review order / working lift | Exact selected working dose | Review status |
 |---|---|---|
-| 1. Bilateral incline DB press | 3 × 6–10; 2 RIR; rest 120 seconds | Founder-selected standard/exception; D8 full programme pending |
-| 2. Strict bodyweight pull-up | 3 × 5–8; 2 RIR; rest 120 seconds | Founder-selected standard/exception; D8 full programme pending |
-| 3. Bilateral chest-supported DB row | 3 × 8–12; 1–2 RIR; rest 90 seconds | Founder-selected standard/exception; D8 full programme pending |
-| 4. DB lateral raise | 3 × 12–20; 1–2 RIR; rest 60 seconds | Founder-selected standard/exception; D8 full programme pending |
-| 5. Square-stance cable Pallof press | 2 × 10/side; no RIR/failure target; rest 45–60 seconds | Founder-selected standard/exception; D8 full programme pending |
+| 1. Bilateral incline DB press | 3 × 6–10; 2 RIR; rest 120 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 2. Strict bodyweight pull-up | 3 × 5–8; 2 RIR; rest 120 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 3. Bilateral chest-supported DB row | 3 × 8–12; 1–2 RIR; rest 90 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 4. DB lateral raise | 3 × 12–20; 1–2 RIR; rest 60 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 5. Square-stance cable Pallof press | 2 × 10/side; no RIR/failure target; rest 45–60 seconds | Exact founder-selected dose; D8 full-programme review pending |
 
 1. **Bilateral incline DB press setup:** Approximately 30° bench; bilateral dumbbells. Log external load per dumbbell. Tempo: Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift.
 2. **Strict bodyweight pull-up setup:** Shoulder-width overhand grip; strict. Bodyweight initially; no invented body mass or zero-kg actual. Added load requires the exact supported weighted identity and explicit selection; assistance remains separate. Tempo: Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift.
@@ -239,20 +246,20 @@ Finish outside this body: 3–5 min easy walking.
 
 ### Thursday — Thursday selected strength (2026-11-05)
 
-Review reference: `LW10K-W01-D04`. Status: selected standard template / D8 and marked holds pending.
+Review reference: `LW10K-W01-D04`. Status: exact selected standard/week-specific strength doses; full-programme D8 pending.
 
 Retained proposed preparation: 5 minutes walking/marching; 10 bodyweight squats; 8 unloaded hinges; 8 scapular pull-ups OR shoulder-blade movements; 8 arm circles each direction. First loaded lower-body pattern: 2–4 progressively loaded warm-up sets; each new upper-body pattern: 1–2 light sets as needed; no failure. Bodyweight squats/unloaded hinges are preparation, not working squat/RDL prescriptions.
 
-| Review order / working lift | Exact selected/reference or retained proposed dose | Effective status |
+| Review order / working lift | Exact selected working dose | Review status |
 |---|---|---|
-| 1. Barbell Romanian deadlift | 2 × 6–8; 3 RIR; rest 120 seconds | **HELD C4: reference only; no selected effective prescription** |
-| 2. DB reverse lunge | 1 × 6/leg; 2–3 RIR; rest 90 seconds | Founder-selected standard/exception; D8 full programme pending |
-| 3. Seated back-supported neutral-grip DB press | 3 × 6–10; 2 RIR; rest 120 seconds | Founder-selected standard/exception; D8 full programme pending |
-| 4. Bench-supported single-arm DB row | 3 × 8–12/side; 1–2 RIR; rest 90 seconds | Founder-selected standard/exception; D8 full programme pending |
-| 5. Bilateral machine standing calf raise | 2 × 10–15; 2 RIR; rest 60–90 seconds | Founder-selected standard/exception; D8 full programme pending |
-| 6. Bodyweight side plank | 2 × 30–45 sec/side; no RIR/failure target; rest 45–60 seconds | Founder-selected standard/exception; D8 full programme pending |
+| 1. Barbell Romanian deadlift | 2 × 5–6; 2–3 RIR; rest 120–180 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 2. DB reverse lunge | 1 × 6/leg; 2–3 RIR; rest 90 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 3. Seated back-supported neutral-grip DB press | 3 × 6–10; 2 RIR; rest 120 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 4. Bench-supported single-arm DB row | 3 × 8–12/side; 1–2 RIR; rest 90 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 5. Bilateral machine standing calf raise | 2 × 10–15; 2 RIR; rest 60–90 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 6. Bodyweight side plank | 2 × 30–45 sec/side; no RIR/failure target; rest 45–60 seconds | Exact founder-selected dose; D8 full-programme review pending |
 
-1. **Barbell Romanian deadlift setup:** Controlled hinge; stop before spinal position changes. Not part of D1–D7 selections; retain/remove decision pending. Total external barbell load. Tempo: ~2 seconds lowering; no forced pause; purposeful lift.
+1. **Barbell Romanian deadlift setup:** Thursday barbell RDL; controlled hinge, stop before spinal position changes. Log total external barbell load. Membership and dose explicitly selected. Tempo: Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift.
 2. **DB reverse lunge setup:** Two dumbbells at sides, neutral grip; complete one side then the other. Rest 90 seconds after both sides. Log external load per dumbbell. Tempo: Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift.
 3. **Seated back-supported neutral-grip DB press setup:** Near-upright back support; seated, two dumbbells, neutral grip, strict without leg drive. External load per dumbbell. Tempo: Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift.
 4. **Bench-supported single-arm DB row setup:** Free hand supported on bench; complete both sides, then rest 90 seconds. External load per dumbbell. Tempo: Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift.
@@ -293,17 +300,17 @@ Finish outside this body: 3–5 min easy walking.
 
 ### Monday — Monday selected strength (2026-11-09)
 
-Review reference: `LW10K-W02-D01`. Status: selected standard template / D8 and marked holds pending.
+Review reference: `LW10K-W02-D01`. Status: exact selected standard/week-specific strength doses; full-programme D8 pending.
 
 Retained proposed preparation: 5 minutes walking/marching; 10 bodyweight squats; 8 unloaded hinges; 8 scapular pull-ups OR shoulder-blade movements; 8 arm circles each direction. First loaded lower-body pattern: 2–4 progressively loaded warm-up sets; each new upper-body pattern: 1–2 light sets as needed; no failure. Bodyweight squats/unloaded hinges are preparation, not working squat/RDL prescriptions.
 
-| Review order / working lift | Exact selected/reference or retained proposed dose | Effective status |
+| Review order / working lift | Exact selected working dose | Review status |
 |---|---|---|
-| 1. Bilateral incline DB press | 3 × 6–10; 2 RIR; rest 120 seconds | Founder-selected standard/exception; D8 full programme pending |
-| 2. Strict bodyweight pull-up | 3 × 5–8; 2 RIR; rest 120 seconds | Founder-selected standard/exception; D8 full programme pending |
-| 3. Bilateral chest-supported DB row | 3 × 8–12; 1–2 RIR; rest 90 seconds | Founder-selected standard/exception; D8 full programme pending |
-| 4. DB lateral raise | 3 × 12–20; 1–2 RIR; rest 60 seconds | Founder-selected standard/exception; D8 full programme pending |
-| 5. Square-stance cable Pallof press | 2 × 10/side; no RIR/failure target; rest 45–60 seconds | Founder-selected standard/exception; D8 full programme pending |
+| 1. Bilateral incline DB press | 3 × 6–10; 2 RIR; rest 120 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 2. Strict bodyweight pull-up | 3 × 5–8; 2 RIR; rest 120 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 3. Bilateral chest-supported DB row | 3 × 8–12; 1–2 RIR; rest 90 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 4. DB lateral raise | 3 × 12–20; 1–2 RIR; rest 60 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 5. Square-stance cable Pallof press | 2 × 10/side; no RIR/failure target; rest 45–60 seconds | Exact founder-selected dose; D8 full-programme review pending |
 
 1. **Bilateral incline DB press setup:** Approximately 30° bench; bilateral dumbbells. Log external load per dumbbell. Tempo: Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift.
 2. **Strict bodyweight pull-up setup:** Shoulder-width overhand grip; strict. Bodyweight initially; no invented body mass or zero-kg actual. Added load requires the exact supported weighted identity and explicit selection; assistance remains separate. Tempo: Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift.
@@ -339,20 +346,20 @@ Finish outside this body: 3–5 min easy walking.
 
 ### Thursday — Thursday selected strength (2026-11-12)
 
-Review reference: `LW10K-W02-D04`. Status: selected standard template / D8 and marked holds pending.
+Review reference: `LW10K-W02-D04`. Status: exact selected standard/week-specific strength doses; full-programme D8 pending.
 
 Retained proposed preparation: 5 minutes walking/marching; 10 bodyweight squats; 8 unloaded hinges; 8 scapular pull-ups OR shoulder-blade movements; 8 arm circles each direction. First loaded lower-body pattern: 2–4 progressively loaded warm-up sets; each new upper-body pattern: 1–2 light sets as needed; no failure. Bodyweight squats/unloaded hinges are preparation, not working squat/RDL prescriptions.
 
-| Review order / working lift | Exact selected/reference or retained proposed dose | Effective status |
+| Review order / working lift | Exact selected working dose | Review status |
 |---|---|---|
-| 1. Barbell Romanian deadlift | 2 × 6–8; 3 RIR; rest 120 seconds | **HELD C4: reference only; no selected effective prescription** |
-| 2. DB reverse lunge | 1 × 6/leg; 2–3 RIR; rest 90 seconds | Founder-selected standard/exception; D8 full programme pending |
-| 3. Seated back-supported neutral-grip DB press | 3 × 6–10; 2 RIR; rest 120 seconds | Founder-selected standard/exception; D8 full programme pending |
-| 4. Bench-supported single-arm DB row | 3 × 8–12/side; 1–2 RIR; rest 90 seconds | Founder-selected standard/exception; D8 full programme pending |
-| 5. Bilateral machine standing calf raise | 2 × 10–15; 2 RIR; rest 60–90 seconds | Founder-selected standard/exception; D8 full programme pending |
-| 6. Bodyweight side plank | 2 × 30–45 sec/side; no RIR/failure target; rest 45–60 seconds | Founder-selected standard/exception; D8 full programme pending |
+| 1. Barbell Romanian deadlift | 2 × 5–6; 2–3 RIR; rest 120–180 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 2. DB reverse lunge | 1 × 6/leg; 2–3 RIR; rest 90 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 3. Seated back-supported neutral-grip DB press | 3 × 6–10; 2 RIR; rest 120 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 4. Bench-supported single-arm DB row | 3 × 8–12/side; 1–2 RIR; rest 90 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 5. Bilateral machine standing calf raise | 2 × 10–15; 2 RIR; rest 60–90 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 6. Bodyweight side plank | 2 × 30–45 sec/side; no RIR/failure target; rest 45–60 seconds | Exact founder-selected dose; D8 full-programme review pending |
 
-1. **Barbell Romanian deadlift setup:** Controlled hinge; stop before spinal position changes. Not part of D1–D7 selections; retain/remove decision pending. Total external barbell load. Tempo: ~2 seconds lowering; no forced pause; purposeful lift.
+1. **Barbell Romanian deadlift setup:** Thursday barbell RDL; controlled hinge, stop before spinal position changes. Log total external barbell load. Membership and dose explicitly selected. Tempo: Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift.
 2. **DB reverse lunge setup:** Two dumbbells at sides, neutral grip; complete one side then the other. Rest 90 seconds after both sides. Log external load per dumbbell. Tempo: Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift.
 3. **Seated back-supported neutral-grip DB press setup:** Near-upright back support; seated, two dumbbells, neutral grip, strict without leg drive. External load per dumbbell. Tempo: Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift.
 4. **Bench-supported single-arm DB row setup:** Free hand supported on bench; complete both sides, then rest 90 seconds. External load per dumbbell. Tempo: Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift.
@@ -393,17 +400,17 @@ Finish outside this body: 3–5 min easy walking.
 
 ### Monday — Monday selected strength (2026-11-16)
 
-Review reference: `LW10K-W03-D01`. Status: selected standard template / D8 and marked holds pending.
+Review reference: `LW10K-W03-D01`. Status: exact selected standard/week-specific strength doses; full-programme D8 pending.
 
 Retained proposed preparation: 5 minutes walking/marching; 10 bodyweight squats; 8 unloaded hinges; 8 scapular pull-ups OR shoulder-blade movements; 8 arm circles each direction. First loaded lower-body pattern: 2–4 progressively loaded warm-up sets; each new upper-body pattern: 1–2 light sets as needed; no failure. Bodyweight squats/unloaded hinges are preparation, not working squat/RDL prescriptions.
 
-| Review order / working lift | Exact selected/reference or retained proposed dose | Effective status |
+| Review order / working lift | Exact selected working dose | Review status |
 |---|---|---|
-| 1. Bilateral incline DB press | 3 × 6–10; 2 RIR; rest 120 seconds | Founder-selected standard/exception; D8 full programme pending |
-| 2. Strict bodyweight pull-up | 3 × 5–8; 2 RIR; rest 120 seconds | Founder-selected standard/exception; D8 full programme pending |
-| 3. Bilateral chest-supported DB row | 3 × 8–12; 1–2 RIR; rest 90 seconds | Founder-selected standard/exception; D8 full programme pending |
-| 4. DB lateral raise | 3 × 12–20; 1–2 RIR; rest 60 seconds | Founder-selected standard/exception; D8 full programme pending |
-| 5. Square-stance cable Pallof press | 2 × 10/side; no RIR/failure target; rest 45–60 seconds | Founder-selected standard/exception; D8 full programme pending |
+| 1. Bilateral incline DB press | 3 × 6–10; 2 RIR; rest 120 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 2. Strict bodyweight pull-up | 3 × 5–8; 2 RIR; rest 120 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 3. Bilateral chest-supported DB row | 3 × 8–12; 1–2 RIR; rest 90 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 4. DB lateral raise | 3 × 12–20; 1–2 RIR; rest 60 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 5. Square-stance cable Pallof press | 2 × 10/side; no RIR/failure target; rest 45–60 seconds | Exact founder-selected dose; D8 full-programme review pending |
 
 1. **Bilateral incline DB press setup:** Approximately 30° bench; bilateral dumbbells. Log external load per dumbbell. Tempo: Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift.
 2. **Strict bodyweight pull-up setup:** Shoulder-width overhand grip; strict. Bodyweight initially; no invented body mass or zero-kg actual. Added load requires the exact supported weighted identity and explicit selection; assistance remains separate. Tempo: Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift.
@@ -443,20 +450,20 @@ Finish outside this body: 3–5 min easy walking.
 
 ### Thursday — Thursday selected strength (2026-11-19)
 
-Review reference: `LW10K-W03-D04`. Status: selected standard template / D8 and marked holds pending.
+Review reference: `LW10K-W03-D04`. Status: exact selected standard/week-specific strength doses; full-programme D8 pending.
 
 Retained proposed preparation: 5 minutes walking/marching; 10 bodyweight squats; 8 unloaded hinges; 8 scapular pull-ups OR shoulder-blade movements; 8 arm circles each direction. First loaded lower-body pattern: 2–4 progressively loaded warm-up sets; each new upper-body pattern: 1–2 light sets as needed; no failure. Bodyweight squats/unloaded hinges are preparation, not working squat/RDL prescriptions.
 
-| Review order / working lift | Exact selected/reference or retained proposed dose | Effective status |
+| Review order / working lift | Exact selected working dose | Review status |
 |---|---|---|
-| 1. Barbell Romanian deadlift | 2 × 6–8; 2–3 RIR; rest 120 seconds | **HELD C4: reference only; no selected effective prescription** |
-| 2. DB reverse lunge | 1 × 6/leg; 2–3 RIR; rest 90 seconds | Founder-selected standard/exception; D8 full programme pending |
-| 3. Seated back-supported neutral-grip DB press | 3 × 6–10; 2 RIR; rest 120 seconds | Founder-selected standard/exception; D8 full programme pending |
-| 4. Bench-supported single-arm DB row | 3 × 8–12/side; 1–2 RIR; rest 90 seconds | Founder-selected standard/exception; D8 full programme pending |
-| 5. Bilateral machine standing calf raise | 2 × 10–15; 2 RIR; rest 60–90 seconds | Founder-selected standard/exception; D8 full programme pending |
-| 6. Bodyweight side plank | 2 × 30–45 sec/side; no RIR/failure target; rest 45–60 seconds | Founder-selected standard/exception; D8 full programme pending |
+| 1. Barbell Romanian deadlift | 2 × 5–6; 2–3 RIR; rest 120–180 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 2. DB reverse lunge | 1 × 6/leg; 2–3 RIR; rest 90 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 3. Seated back-supported neutral-grip DB press | 3 × 6–10; 2 RIR; rest 120 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 4. Bench-supported single-arm DB row | 3 × 8–12/side; 1–2 RIR; rest 90 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 5. Bilateral machine standing calf raise | 2 × 10–15; 2 RIR; rest 60–90 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 6. Bodyweight side plank | 2 × 30–45 sec/side; no RIR/failure target; rest 45–60 seconds | Exact founder-selected dose; D8 full-programme review pending |
 
-1. **Barbell Romanian deadlift setup:** Controlled hinge; stop before spinal position changes. Not part of D1–D7 selections; retain/remove decision pending. Total external barbell load. Tempo: ~2 seconds lowering; no forced pause; purposeful lift.
+1. **Barbell Romanian deadlift setup:** Thursday barbell RDL; controlled hinge, stop before spinal position changes. Log total external barbell load. Membership and dose explicitly selected. Tempo: Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift.
 2. **DB reverse lunge setup:** Two dumbbells at sides, neutral grip; complete one side then the other. Rest 90 seconds after both sides. Log external load per dumbbell. Tempo: Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift.
 3. **Seated back-supported neutral-grip DB press setup:** Near-upright back support; seated, two dumbbells, neutral grip, strict without leg drive. External load per dumbbell. Tempo: Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift.
 4. **Bench-supported single-arm DB row setup:** Free hand supported on bench; complete both sides, then rest 90 seconds. External load per dumbbell. Tempo: Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift.
@@ -501,30 +508,26 @@ Preparation outside this body: 3–5 min brisk walk, 10 ankle rocks/side, 10 cal
 Body total: **45:00**.
 Finish outside this body: 3–5 min easy walking.
 
-## Week 4 — Consolidation threshold; no in-programme 5K test
+## Week 4 — Consolidation in W4; selected running retained
 
 ### Monday — Monday selected strength (2026-11-23)
 
-Review reference: `LW10K-W04-D01`. Status: selected standard template / D8 and marked holds pending.
+Review reference: `LW10K-W04-D01`. Status: exact selected standard/week-specific strength doses; full-programme D8 pending.
 
 Retained proposed preparation: 5 minutes walking/marching; 10 bodyweight squats; 8 unloaded hinges; 8 scapular pull-ups OR shoulder-blade movements; 8 arm circles each direction. First loaded lower-body pattern: 2–4 progressively loaded warm-up sets; each new upper-body pattern: 1–2 light sets as needed; no failure. Bodyweight squats/unloaded hinges are preparation, not working squat/RDL prescriptions.
 
-| Review order / working lift | Exact selected/reference or retained proposed dose | Effective status |
+| Review order / working lift | Exact selected working dose | Review status |
 |---|---|---|
-| 1. Bilateral incline DB press | 3 × 6–10; 2 RIR; rest 120 seconds | **HELD C1: reference only; no selected effective prescription** |
-| 2. Strict bodyweight pull-up | 2 × 5–8; 3 RIR; rest 120 seconds | **Exact retained reduction proposal, D8 pending** |
-| 3. Bilateral chest-supported DB row | 3 × 8–12; 1–2 RIR; rest 90 seconds | **HELD C1: reference only; no selected effective prescription** |
-| 4. DB lateral raise | 2 × 12–15; 3 RIR; rest 60 seconds | **Exact retained reduction proposal, D8 pending** |
-| 5. Square-stance cable Pallof press | 2 × 10/side; no RIR/failure target; rest 45–60 seconds | Founder-selected standard/exception; D8 full programme pending |
+| 1. Bilateral incline DB press | 2 × 6–10; 2 RIR; rest 120 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 2. Strict bodyweight pull-up | 2 × 5–8; 2 RIR; rest 120 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 3. Bilateral chest-supported DB row | 2 × 8–12; 1–2 RIR; rest 90 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 4. DB lateral raise | 2 × 12–20; 1–2 RIR; rest 60 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 5. Square-stance cable Pallof press | 2 × 10/side; no RIR/failure target; rest 45–60 seconds | Exact founder-selected dose; D8 full-programme review pending |
 
 1. **Bilateral incline DB press setup:** Approximately 30° bench; bilateral dumbbells. Log external load per dumbbell. Tempo: Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift.
-   Retained source proposal: DB bench press — 2 × 6–10; 3 RIR; rest 90 seconds. Changed variant, day or standard dose: no automatic transfer of the old reduction.
 2. **Strict bodyweight pull-up setup:** Shoulder-width overhand grip; strict. Bodyweight initially; no invented body mass or zero-kg actual. Added load requires the exact supported weighted identity and explicit selection; assistance remains separate. Tempo: Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift.
-   Retained source proposal: Pull-up — 2 × 5–8; 3 RIR; rest 120 seconds. Retained exact proposal for the same selected movement/branch.
 3. **Bilateral chest-supported DB row setup:** Bilateral dumbbells, chest supported. Log external load per dumbbell; not a unilateral or machine substitute. Tempo: Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift.
-   Retained source proposal: One-arm DB row — 2 × 8–12/side; 3 RIR; rest 90 seconds. Changed variant, day or standard dose: no automatic transfer of the old reduction.
 4. **DB lateral raise setup:** Bilateral dumbbells; no swinging. Log external load per dumbbell. Tempo: Controlled both ways.
-   Retained source proposal: DB lateral raise — 2 × 12–15; 3 RIR; rest 60 seconds. Retained exact proposal for the same selected movement/branch.
 5. **Square-stance cable Pallof press setup:** Standing square stance; cable at chest height, both hands on handle; press without torso rotation. Each side has 10 reps; both sides form one set. No failure requirement or invented RIR. Tempo: Controlled execution.
 
 Finish: 3–5 minutes easy walking. Preparation/ramp sets are additional to the listed work sets. Gym elapsed time is unknown, not an invented exact session duration.
@@ -571,28 +574,24 @@ Finish outside this body: 3–5 min easy walking.
 
 ### Thursday — Thursday selected strength (2026-11-26)
 
-Review reference: `LW10K-W04-D04`. Status: selected standard template / D8 and marked holds pending.
+Review reference: `LW10K-W04-D04`. Status: exact selected standard/week-specific strength doses; full-programme D8 pending.
 
 Retained proposed preparation: 5 minutes walking/marching; 10 bodyweight squats; 8 unloaded hinges; 8 scapular pull-ups OR shoulder-blade movements; 8 arm circles each direction. First loaded lower-body pattern: 2–4 progressively loaded warm-up sets; each new upper-body pattern: 1–2 light sets as needed; no failure. Bodyweight squats/unloaded hinges are preparation, not working squat/RDL prescriptions.
 
-| Review order / working lift | Exact selected/reference or retained proposed dose | Effective status |
+| Review order / working lift | Exact selected working dose | Review status |
 |---|---|---|
-| 1. Barbell Romanian deadlift | 1 × 6–8; 3 RIR; rest 120 seconds | **HELD C4: reference only; no selected effective prescription** |
-| 2. DB reverse lunge | 1 × 6/leg; 2–3 RIR; rest 90 seconds | **HELD C1: reference only; no selected effective prescription** |
-| 3. Seated back-supported neutral-grip DB press | 3 × 6–10; 2 RIR; rest 120 seconds | **HELD C1: reference only; no selected effective prescription** |
-| 4. Bench-supported single-arm DB row | 2 × 8–12/side; 3 RIR; rest 90 seconds | **Exact retained reduction proposal, D8 pending** |
-| 5. Bilateral machine standing calf raise | 2 × 10–15; 2 RIR; rest 60–90 seconds | **HELD C1: reference only; no selected effective prescription** |
-| 6. Bodyweight side plank | 2 × 30–45 sec/side; no RIR/failure target; rest 45–60 seconds | Founder-selected standard/exception; D8 full programme pending |
+| 1. Barbell Romanian deadlift | 2 × 5–6; 2–3 RIR; rest 120–180 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 2. DB reverse lunge | 1 × 6/leg; 2–3 RIR; rest 90 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 3. Seated back-supported neutral-grip DB press | 2 × 6–10; 2 RIR; rest 120 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 4. Bench-supported single-arm DB row | 2 × 8–12/side; 1–2 RIR; rest 90 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 5. Bilateral machine standing calf raise | 2 × 10–15; 2 RIR; rest 60–90 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 6. Bodyweight side plank | 2 × 30–45 sec/side; no RIR/failure target; rest 45–60 seconds | Exact founder-selected dose; D8 full-programme review pending |
 
-1. **Barbell Romanian deadlift setup:** Controlled hinge; stop before spinal position changes. Not part of D1–D7 selections; retain/remove decision pending. Total external barbell load. Tempo: ~2 seconds lowering; no forced pause; purposeful lift.
+1. **Barbell Romanian deadlift setup:** Thursday barbell RDL; controlled hinge, stop before spinal position changes. Log total external barbell load. Membership and dose explicitly selected. No planned load increase this week. Tempo: Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift.
 2. **DB reverse lunge setup:** Two dumbbells at sides, neutral grip; complete one side then the other. Rest 90 seconds after both sides. Log external load per dumbbell. Tempo: Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift.
-   Retained source proposal: DB reverse lunge — 1 × 5/leg; 3 RIR; rest 90 seconds. Changed variant, day or standard dose: no automatic transfer of the old reduction.
 3. **Seated back-supported neutral-grip DB press setup:** Near-upright back support; seated, two dumbbells, neutral grip, strict without leg drive. External load per dumbbell. Tempo: Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift.
-   Retained source proposal: DB overhead press — 2 × 6–10; 3 RIR; rest 90 seconds. Changed variant, day or standard dose: no automatic transfer of the old reduction.
 4. **Bench-supported single-arm DB row setup:** Free hand supported on bench; complete both sides, then rest 90 seconds. External load per dumbbell. Tempo: Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift.
-   Retained source proposal: One-arm DB row — 2 × 8–12/side; 3 RIR; rest 90 seconds. Retained exact proposal for the same selected movement/branch.
 5. **Bilateral machine standing calf raise setup:** Standing calf machine, bilateral; no unilateral DB substitution. Record actual machine resistance with its displayed unit/setup; no invented load or cross-machine equivalence. Tempo: ~2 seconds up, 1-second top pause, ~2 seconds down; full comfortable range (retained proposed tempo).
-   Retained source proposal: Standing single-leg DB calf raise — 2 × 10–15/leg; 3 RIR; rest 60 seconds. Changed variant, day or standard dose: no automatic transfer of the old reduction.
 6. **Bodyweight side plank setup:** Each side 30–45 seconds; both sides form one set. Stop before posture loss; no external load or failure requirement. Tempo: Controlled hold; stop before posture loss.
 
 Finish: 3–5 minutes easy walking. Preparation/ramp sets are additional to the listed work sets. Gym elapsed time is unknown, not an invented exact session duration.
@@ -633,21 +632,21 @@ Preparation outside this body: 3–5 min brisk walk, 10 ankle rocks/side, 10 cal
 Body total: **40:00**.
 Finish outside this body: 3–5 min easy walking.
 
-## Week 5 — Build threshold duration and aerobic endurance
+## Week 5 — Build W5–7; threshold duration and endurance
 
 ### Monday — Monday selected strength (2026-11-30)
 
-Review reference: `LW10K-W05-D01`. Status: selected standard template / D8 and marked holds pending.
+Review reference: `LW10K-W05-D01`. Status: exact selected standard/week-specific strength doses; full-programme D8 pending.
 
 Retained proposed preparation: 5 minutes walking/marching; 10 bodyweight squats; 8 unloaded hinges; 8 scapular pull-ups OR shoulder-blade movements; 8 arm circles each direction. First loaded lower-body pattern: 2–4 progressively loaded warm-up sets; each new upper-body pattern: 1–2 light sets as needed; no failure. Bodyweight squats/unloaded hinges are preparation, not working squat/RDL prescriptions.
 
-| Review order / working lift | Exact selected/reference or retained proposed dose | Effective status |
+| Review order / working lift | Exact selected working dose | Review status |
 |---|---|---|
-| 1. Bilateral incline DB press | 3 × 6–10; 2 RIR; rest 120 seconds | Founder-selected standard/exception; D8 full programme pending |
-| 2. Strict bodyweight pull-up | 3 × 5–8; 2 RIR; rest 120 seconds | Founder-selected standard/exception; D8 full programme pending |
-| 3. Bilateral chest-supported DB row | 3 × 8–12; 1–2 RIR; rest 90 seconds | Founder-selected standard/exception; D8 full programme pending |
-| 4. DB lateral raise | 3 × 12–20; 1–2 RIR; rest 60 seconds | Founder-selected standard/exception; D8 full programme pending |
-| 5. Square-stance cable Pallof press | 2 × 10/side; no RIR/failure target; rest 45–60 seconds | Founder-selected standard/exception; D8 full programme pending |
+| 1. Bilateral incline DB press | 3 × 6–10; 2 RIR; rest 120 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 2. Strict bodyweight pull-up | 3 × 5–8; 2 RIR; rest 120 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 3. Bilateral chest-supported DB row | 3 × 8–12; 1–2 RIR; rest 90 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 4. DB lateral raise | 3 × 12–20; 1–2 RIR; rest 60 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 5. Square-stance cable Pallof press | 2 × 10/side; no RIR/failure target; rest 45–60 seconds | Exact founder-selected dose; D8 full-programme review pending |
 
 1. **Bilateral incline DB press setup:** Approximately 30° bench; bilateral dumbbells. Log external load per dumbbell. Tempo: Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift.
 2. **Strict bodyweight pull-up setup:** Shoulder-width overhand grip; strict. Bodyweight initially; no invented body mass or zero-kg actual. Added load requires the exact supported weighted identity and explicit selection; assistance remains separate. Tempo: Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift.
@@ -687,20 +686,20 @@ Finish outside this body: 3–5 min easy walking.
 
 ### Thursday — Thursday selected strength (2026-12-03)
 
-Review reference: `LW10K-W05-D04`. Status: selected standard template / D8 and marked holds pending.
+Review reference: `LW10K-W05-D04`. Status: exact selected standard/week-specific strength doses; full-programme D8 pending.
 
 Retained proposed preparation: 5 minutes walking/marching; 10 bodyweight squats; 8 unloaded hinges; 8 scapular pull-ups OR shoulder-blade movements; 8 arm circles each direction. First loaded lower-body pattern: 2–4 progressively loaded warm-up sets; each new upper-body pattern: 1–2 light sets as needed; no failure. Bodyweight squats/unloaded hinges are preparation, not working squat/RDL prescriptions.
 
-| Review order / working lift | Exact selected/reference or retained proposed dose | Effective status |
+| Review order / working lift | Exact selected working dose | Review status |
 |---|---|---|
-| 1. Barbell Romanian deadlift | 2 × 6–8; 2–3 RIR; rest 120 seconds | **HELD C4: reference only; no selected effective prescription** |
-| 2. DB reverse lunge | 1 × 6/leg; 2–3 RIR; rest 90 seconds | Founder-selected standard/exception; D8 full programme pending |
-| 3. Seated back-supported neutral-grip DB press | 3 × 6–10; 2 RIR; rest 120 seconds | Founder-selected standard/exception; D8 full programme pending |
-| 4. Bench-supported single-arm DB row | 3 × 8–12/side; 1–2 RIR; rest 90 seconds | Founder-selected standard/exception; D8 full programme pending |
-| 5. Bilateral machine standing calf raise | 2 × 10–15; 2 RIR; rest 60–90 seconds | Founder-selected standard/exception; D8 full programme pending |
-| 6. Bodyweight side plank | 2 × 30–45 sec/side; no RIR/failure target; rest 45–60 seconds | Founder-selected standard/exception; D8 full programme pending |
+| 1. Barbell Romanian deadlift | 2 × 5–6; 2–3 RIR; rest 120–180 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 2. DB reverse lunge | 1 × 6/leg; 2–3 RIR; rest 90 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 3. Seated back-supported neutral-grip DB press | 3 × 6–10; 2 RIR; rest 120 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 4. Bench-supported single-arm DB row | 3 × 8–12/side; 1–2 RIR; rest 90 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 5. Bilateral machine standing calf raise | 2 × 10–15; 2 RIR; rest 60–90 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 6. Bodyweight side plank | 2 × 30–45 sec/side; no RIR/failure target; rest 45–60 seconds | Exact founder-selected dose; D8 full-programme review pending |
 
-1. **Barbell Romanian deadlift setup:** Controlled hinge; stop before spinal position changes. Not part of D1–D7 selections; retain/remove decision pending. Total external barbell load. Tempo: ~2 seconds lowering; no forced pause; purposeful lift.
+1. **Barbell Romanian deadlift setup:** Thursday barbell RDL; controlled hinge, stop before spinal position changes. Log total external barbell load. Membership and dose explicitly selected. Tempo: Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift.
 2. **DB reverse lunge setup:** Two dumbbells at sides, neutral grip; complete one side then the other. Rest 90 seconds after both sides. Log external load per dumbbell. Tempo: Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift.
 3. **Seated back-supported neutral-grip DB press setup:** Near-upright back support; seated, two dumbbells, neutral grip, strict without leg drive. External load per dumbbell. Tempo: Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift.
 4. **Bench-supported single-arm DB row setup:** Free hand supported on bench; complete both sides, then rest 90 seconds. External load per dumbbell. Tempo: Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift.
@@ -745,21 +744,21 @@ Preparation outside this body: 3–5 min brisk walk, 10 ankle rocks/side, 10 cal
 Body total: **50:00**.
 Finish outside this body: 3–5 min easy walking.
 
-## Week 6 — Extend repeatable threshold work
+## Week 6 — Build W5–7; repeatable threshold work
 
 ### Monday — Monday selected strength (2026-12-07)
 
-Review reference: `LW10K-W06-D01`. Status: selected standard template / D8 and marked holds pending.
+Review reference: `LW10K-W06-D01`. Status: exact selected standard/week-specific strength doses; full-programme D8 pending.
 
 Retained proposed preparation: 5 minutes walking/marching; 10 bodyweight squats; 8 unloaded hinges; 8 scapular pull-ups OR shoulder-blade movements; 8 arm circles each direction. First loaded lower-body pattern: 2–4 progressively loaded warm-up sets; each new upper-body pattern: 1–2 light sets as needed; no failure. Bodyweight squats/unloaded hinges are preparation, not working squat/RDL prescriptions.
 
-| Review order / working lift | Exact selected/reference or retained proposed dose | Effective status |
+| Review order / working lift | Exact selected working dose | Review status |
 |---|---|---|
-| 1. Bilateral incline DB press | 3 × 6–10; 2 RIR; rest 120 seconds | Founder-selected standard/exception; D8 full programme pending |
-| 2. Strict bodyweight pull-up | 3 × 5–8; 2 RIR; rest 120 seconds | Founder-selected standard/exception; D8 full programme pending |
-| 3. Bilateral chest-supported DB row | 3 × 8–12; 1–2 RIR; rest 90 seconds | Founder-selected standard/exception; D8 full programme pending |
-| 4. DB lateral raise | 3 × 12–20; 1–2 RIR; rest 60 seconds | Founder-selected standard/exception; D8 full programme pending |
-| 5. Square-stance cable Pallof press | 2 × 10/side; no RIR/failure target; rest 45–60 seconds | Founder-selected standard/exception; D8 full programme pending |
+| 1. Bilateral incline DB press | 3 × 6–10; 2 RIR; rest 120 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 2. Strict bodyweight pull-up | 3 × 5–8; 2 RIR; rest 120 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 3. Bilateral chest-supported DB row | 3 × 8–12; 1–2 RIR; rest 90 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 4. DB lateral raise | 3 × 12–20; 1–2 RIR; rest 60 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 5. Square-stance cable Pallof press | 2 × 10/side; no RIR/failure target; rest 45–60 seconds | Exact founder-selected dose; D8 full-programme review pending |
 
 1. **Bilateral incline DB press setup:** Approximately 30° bench; bilateral dumbbells. Log external load per dumbbell. Tempo: Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift.
 2. **Strict bodyweight pull-up setup:** Shoulder-width overhand grip; strict. Bodyweight initially; no invented body mass or zero-kg actual. Added load requires the exact supported weighted identity and explicit selection; assistance remains separate. Tempo: Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift.
@@ -799,20 +798,20 @@ Finish outside this body: 3–5 min easy walking.
 
 ### Thursday — Thursday selected strength (2026-12-10)
 
-Review reference: `LW10K-W06-D04`. Status: selected standard template / D8 and marked holds pending.
+Review reference: `LW10K-W06-D04`. Status: exact selected standard/week-specific strength doses; full-programme D8 pending.
 
 Retained proposed preparation: 5 minutes walking/marching; 10 bodyweight squats; 8 unloaded hinges; 8 scapular pull-ups OR shoulder-blade movements; 8 arm circles each direction. First loaded lower-body pattern: 2–4 progressively loaded warm-up sets; each new upper-body pattern: 1–2 light sets as needed; no failure. Bodyweight squats/unloaded hinges are preparation, not working squat/RDL prescriptions.
 
-| Review order / working lift | Exact selected/reference or retained proposed dose | Effective status |
+| Review order / working lift | Exact selected working dose | Review status |
 |---|---|---|
-| 1. Barbell Romanian deadlift | 2 × 6–8; 2–3 RIR; rest 120 seconds | **HELD C4: reference only; no selected effective prescription** |
-| 2. DB reverse lunge | 1 × 6/leg; 2–3 RIR; rest 90 seconds | Founder-selected standard/exception; D8 full programme pending |
-| 3. Seated back-supported neutral-grip DB press | 3 × 6–10; 2 RIR; rest 120 seconds | Founder-selected standard/exception; D8 full programme pending |
-| 4. Bench-supported single-arm DB row | 3 × 8–12/side; 1–2 RIR; rest 90 seconds | Founder-selected standard/exception; D8 full programme pending |
-| 5. Bilateral machine standing calf raise | 2 × 10–15; 2 RIR; rest 60–90 seconds | Founder-selected standard/exception; D8 full programme pending |
-| 6. Bodyweight side plank | 2 × 30–45 sec/side; no RIR/failure target; rest 45–60 seconds | Founder-selected standard/exception; D8 full programme pending |
+| 1. Barbell Romanian deadlift | 2 × 5–6; 2–3 RIR; rest 120–180 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 2. DB reverse lunge | 1 × 6/leg; 2–3 RIR; rest 90 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 3. Seated back-supported neutral-grip DB press | 3 × 6–10; 2 RIR; rest 120 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 4. Bench-supported single-arm DB row | 3 × 8–12/side; 1–2 RIR; rest 90 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 5. Bilateral machine standing calf raise | 2 × 10–15; 2 RIR; rest 60–90 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 6. Bodyweight side plank | 2 × 30–45 sec/side; no RIR/failure target; rest 45–60 seconds | Exact founder-selected dose; D8 full-programme review pending |
 
-1. **Barbell Romanian deadlift setup:** Controlled hinge; stop before spinal position changes. Not part of D1–D7 selections; retain/remove decision pending. Total external barbell load. Tempo: ~2 seconds lowering; no forced pause; purposeful lift.
+1. **Barbell Romanian deadlift setup:** Thursday barbell RDL; controlled hinge, stop before spinal position changes. Log total external barbell load. Membership and dose explicitly selected. Tempo: Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift.
 2. **DB reverse lunge setup:** Two dumbbells at sides, neutral grip; complete one side then the other. Rest 90 seconds after both sides. Log external load per dumbbell. Tempo: Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift.
 3. **Seated back-supported neutral-grip DB press setup:** Near-upright back support; seated, two dumbbells, neutral grip, strict without leg drive. External load per dumbbell. Tempo: Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift.
 4. **Bench-supported single-arm DB row setup:** Free hand supported on bench; complete both sides, then rest 90 seconds. External load per dumbbell. Tempo: Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift.
@@ -861,30 +860,26 @@ Preparation outside this body: 3–5 min brisk walk, 10 ankle rocks/side, 10 cal
 Body total: **55:00**.
 Finish outside this body: 3–5 min easy walking.
 
-## Week 7 — Consolidation: reduce running and lifting volume
+## Week 7 — Build W5–7; standard strength; selected running retained
 
 ### Monday — Monday selected strength (2026-12-14)
 
-Review reference: `LW10K-W07-D01`. Status: selected standard template / D8 and marked holds pending.
+Review reference: `LW10K-W07-D01`. Status: exact selected standard/week-specific strength doses; full-programme D8 pending.
 
 Retained proposed preparation: 5 minutes walking/marching; 10 bodyweight squats; 8 unloaded hinges; 8 scapular pull-ups OR shoulder-blade movements; 8 arm circles each direction. First loaded lower-body pattern: 2–4 progressively loaded warm-up sets; each new upper-body pattern: 1–2 light sets as needed; no failure. Bodyweight squats/unloaded hinges are preparation, not working squat/RDL prescriptions.
 
-| Review order / working lift | Exact selected/reference or retained proposed dose | Effective status |
+| Review order / working lift | Exact selected working dose | Review status |
 |---|---|---|
-| 1. Bilateral incline DB press | 3 × 6–10; 2 RIR; rest 120 seconds | **HELD C1: reference only; no selected effective prescription** |
-| 2. Strict bodyweight pull-up | 2 × 5–8; 3 RIR; rest 120 seconds | **Exact retained reduction proposal, D8 pending** |
-| 3. Bilateral chest-supported DB row | 3 × 8–12; 1–2 RIR; rest 90 seconds | **HELD C1: reference only; no selected effective prescription** |
-| 4. DB lateral raise | 2 × 12–15; 3 RIR; rest 60 seconds | **Exact retained reduction proposal, D8 pending** |
-| 5. Square-stance cable Pallof press | 2 × 10/side; no RIR/failure target; rest 45–60 seconds | Founder-selected standard/exception; D8 full programme pending |
+| 1. Bilateral incline DB press | 3 × 6–10; 2 RIR; rest 120 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 2. Strict bodyweight pull-up | 3 × 5–8; 2 RIR; rest 120 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 3. Bilateral chest-supported DB row | 3 × 8–12; 1–2 RIR; rest 90 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 4. DB lateral raise | 3 × 12–20; 1–2 RIR; rest 60 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 5. Square-stance cable Pallof press | 2 × 10/side; no RIR/failure target; rest 45–60 seconds | Exact founder-selected dose; D8 full-programme review pending |
 
 1. **Bilateral incline DB press setup:** Approximately 30° bench; bilateral dumbbells. Log external load per dumbbell. Tempo: Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift.
-   Retained source proposal: DB bench press — 2 × 6–10; 3 RIR; rest 90 seconds. Changed variant, day or standard dose: no automatic transfer of the old reduction.
 2. **Strict bodyweight pull-up setup:** Shoulder-width overhand grip; strict. Bodyweight initially; no invented body mass or zero-kg actual. Added load requires the exact supported weighted identity and explicit selection; assistance remains separate. Tempo: Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift.
-   Retained source proposal: Pull-up — 2 × 5–8; 3 RIR; rest 120 seconds. Retained exact proposal for the same selected movement/branch.
 3. **Bilateral chest-supported DB row setup:** Bilateral dumbbells, chest supported. Log external load per dumbbell; not a unilateral or machine substitute. Tempo: Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift.
-   Retained source proposal: One-arm DB row — 2 × 8–12/side; 3 RIR; rest 90 seconds. Changed variant, day or standard dose: no automatic transfer of the old reduction.
 4. **DB lateral raise setup:** Bilateral dumbbells; no swinging. Log external load per dumbbell. Tempo: Controlled both ways.
-   Retained source proposal: DB lateral raise — 2 × 12–15; 3 RIR; rest 60 seconds. Retained exact proposal for the same selected movement/branch.
 5. **Square-stance cable Pallof press setup:** Standing square stance; cable at chest height, both hands on handle; press without torso rotation. Each side has 10 reps; both sides form one set. No failure requirement or invented RIR. Tempo: Controlled execution.
 
 Finish: 3–5 minutes easy walking. Preparation/ramp sets are additional to the listed work sets. Gym elapsed time is unknown, not an invented exact session duration.
@@ -917,28 +912,24 @@ Finish outside this body: 3–5 min easy walking.
 
 ### Thursday — Thursday selected strength (2026-12-17)
 
-Review reference: `LW10K-W07-D04`. Status: selected standard template / D8 and marked holds pending.
+Review reference: `LW10K-W07-D04`. Status: exact selected standard/week-specific strength doses; full-programme D8 pending.
 
 Retained proposed preparation: 5 minutes walking/marching; 10 bodyweight squats; 8 unloaded hinges; 8 scapular pull-ups OR shoulder-blade movements; 8 arm circles each direction. First loaded lower-body pattern: 2–4 progressively loaded warm-up sets; each new upper-body pattern: 1–2 light sets as needed; no failure. Bodyweight squats/unloaded hinges are preparation, not working squat/RDL prescriptions.
 
-| Review order / working lift | Exact selected/reference or retained proposed dose | Effective status |
+| Review order / working lift | Exact selected working dose | Review status |
 |---|---|---|
-| 1. Barbell Romanian deadlift | 1 × 6–8; 3 RIR; rest 120 seconds | **HELD C4: reference only; no selected effective prescription** |
-| 2. DB reverse lunge | 1 × 6/leg; 2–3 RIR; rest 90 seconds | **HELD C1: reference only; no selected effective prescription** |
-| 3. Seated back-supported neutral-grip DB press | 3 × 6–10; 2 RIR; rest 120 seconds | **HELD C1: reference only; no selected effective prescription** |
-| 4. Bench-supported single-arm DB row | 2 × 8–12/side; 3 RIR; rest 90 seconds | **Exact retained reduction proposal, D8 pending** |
-| 5. Bilateral machine standing calf raise | 2 × 10–15; 2 RIR; rest 60–90 seconds | **HELD C1: reference only; no selected effective prescription** |
-| 6. Bodyweight side plank | 2 × 30–45 sec/side; no RIR/failure target; rest 45–60 seconds | Founder-selected standard/exception; D8 full programme pending |
+| 1. Barbell Romanian deadlift | 2 × 5–6; 2–3 RIR; rest 120–180 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 2. DB reverse lunge | 1 × 6/leg; 2–3 RIR; rest 90 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 3. Seated back-supported neutral-grip DB press | 3 × 6–10; 2 RIR; rest 120 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 4. Bench-supported single-arm DB row | 3 × 8–12/side; 1–2 RIR; rest 90 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 5. Bilateral machine standing calf raise | 2 × 10–15; 2 RIR; rest 60–90 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 6. Bodyweight side plank | 2 × 30–45 sec/side; no RIR/failure target; rest 45–60 seconds | Exact founder-selected dose; D8 full-programme review pending |
 
-1. **Barbell Romanian deadlift setup:** Controlled hinge; stop before spinal position changes. Not part of D1–D7 selections; retain/remove decision pending. Total external barbell load. Tempo: ~2 seconds lowering; no forced pause; purposeful lift.
+1. **Barbell Romanian deadlift setup:** Thursday barbell RDL; controlled hinge, stop before spinal position changes. Log total external barbell load. Membership and dose explicitly selected. Tempo: Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift.
 2. **DB reverse lunge setup:** Two dumbbells at sides, neutral grip; complete one side then the other. Rest 90 seconds after both sides. Log external load per dumbbell. Tempo: Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift.
-   Retained source proposal: DB reverse lunge — 1 × 5/leg; 3 RIR; rest 90 seconds. Changed variant, day or standard dose: no automatic transfer of the old reduction.
 3. **Seated back-supported neutral-grip DB press setup:** Near-upright back support; seated, two dumbbells, neutral grip, strict without leg drive. External load per dumbbell. Tempo: Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift.
-   Retained source proposal: DB overhead press — 2 × 6–10; 3 RIR; rest 90 seconds. Changed variant, day or standard dose: no automatic transfer of the old reduction.
 4. **Bench-supported single-arm DB row setup:** Free hand supported on bench; complete both sides, then rest 90 seconds. External load per dumbbell. Tempo: Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift.
-   Retained source proposal: One-arm DB row — 2 × 8–12/side; 3 RIR; rest 90 seconds. Retained exact proposal for the same selected movement/branch.
 5. **Bilateral machine standing calf raise setup:** Standing calf machine, bilateral; no unilateral DB substitution. Record actual machine resistance with its displayed unit/setup; no invented load or cross-machine equivalence. Tempo: ~2 seconds up, 1-second top pause, ~2 seconds down; full comfortable range (retained proposed tempo).
-   Retained source proposal: Standing single-leg DB calf raise — 2 × 10–15/leg; 3 RIR; rest 60 seconds. Changed variant, day or standard dose: no automatic transfer of the old reduction.
 6. **Bodyweight side plank setup:** Each side 30–45 seconds; both sides form one set. Stop before posture loss; no external load or failure requirement. Tempo: Controlled hold; stop before posture loss.
 
 Finish: 3–5 minutes easy walking. Preparation/ramp sets are additional to the listed work sets. Gym elapsed time is unknown, not an invented exact session duration.
@@ -979,21 +970,21 @@ Preparation outside this body: 3–5 min brisk walk, 10 ankle rocks/side, 10 cal
 Body total: **45:00**.
 Finish outside this body: 3–5 min easy walking.
 
-## Week 8 — 10K-specific repetitions while retaining aerobic volume
+## Week 8 — Control lower-body effort; selected 10K-specific running retained
 
 ### Monday — Monday selected strength (2026-12-21)
 
-Review reference: `LW10K-W08-D01`. Status: selected standard template / D8 and marked holds pending.
+Review reference: `LW10K-W08-D01`. Status: exact selected standard/week-specific strength doses; full-programme D8 pending.
 
 Retained proposed preparation: 5 minutes walking/marching; 10 bodyweight squats; 8 unloaded hinges; 8 scapular pull-ups OR shoulder-blade movements; 8 arm circles each direction. First loaded lower-body pattern: 2–4 progressively loaded warm-up sets; each new upper-body pattern: 1–2 light sets as needed; no failure. Bodyweight squats/unloaded hinges are preparation, not working squat/RDL prescriptions.
 
-| Review order / working lift | Exact selected/reference or retained proposed dose | Effective status |
+| Review order / working lift | Exact selected working dose | Review status |
 |---|---|---|
-| 1. Bilateral incline DB press | 3 × 6–10; 2 RIR; rest 120 seconds | Founder-selected standard/exception; D8 full programme pending |
-| 2. Strict bodyweight pull-up | 3 × 5–8; 2 RIR; rest 120 seconds | Founder-selected standard/exception; D8 full programme pending |
-| 3. Bilateral chest-supported DB row | 3 × 8–12; 1–2 RIR; rest 90 seconds | Founder-selected standard/exception; D8 full programme pending |
-| 4. DB lateral raise | 3 × 12–20; 1–2 RIR; rest 60 seconds | Founder-selected standard/exception; D8 full programme pending |
-| 5. Square-stance cable Pallof press | 2 × 10/side; no RIR/failure target; rest 45–60 seconds | Founder-selected standard/exception; D8 full programme pending |
+| 1. Bilateral incline DB press | 3 × 6–10; 2 RIR; rest 120 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 2. Strict bodyweight pull-up | 3 × 5–8; 2 RIR; rest 120 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 3. Bilateral chest-supported DB row | 3 × 8–12; 1–2 RIR; rest 90 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 4. DB lateral raise | 3 × 12–20; 1–2 RIR; rest 60 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 5. Square-stance cable Pallof press | 2 × 10/side; no RIR/failure target; rest 45–60 seconds | Exact founder-selected dose; D8 full-programme review pending |
 
 1. **Bilateral incline DB press setup:** Approximately 30° bench; bilateral dumbbells. Log external load per dumbbell. Tempo: Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift.
 2. **Strict bodyweight pull-up setup:** Shoulder-width overhand grip; strict. Bodyweight initially; no invented body mass or zero-kg actual. Added load requires the exact supported weighted identity and explicit selection; assistance remains separate. Tempo: Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift.
@@ -1043,24 +1034,24 @@ Finish outside this body: 3–5 min easy walking.
 
 ### Thursday — Thursday selected strength (2026-12-24)
 
-Review reference: `LW10K-W08-D04`. Status: selected standard template / D8 and marked holds pending.
+Review reference: `LW10K-W08-D04`. Status: exact selected standard/week-specific strength doses; full-programme D8 pending.
 
 Retained proposed preparation: 5 minutes walking/marching; 10 bodyweight squats; 8 unloaded hinges; 8 scapular pull-ups OR shoulder-blade movements; 8 arm circles each direction. First loaded lower-body pattern: 2–4 progressively loaded warm-up sets; each new upper-body pattern: 1–2 light sets as needed; no failure. Bodyweight squats/unloaded hinges are preparation, not working squat/RDL prescriptions.
 
-| Review order / working lift | Exact selected/reference or retained proposed dose | Effective status |
+| Review order / working lift | Exact selected working dose | Review status |
 |---|---|---|
-| 1. Barbell Romanian deadlift | 2 × 6–8; 2–3 RIR; rest 120 seconds | **HELD C4: reference only; no selected effective prescription** |
-| 2. DB reverse lunge | 1 × 6/leg; 2–3 RIR; rest 90 seconds | Founder-selected standard/exception; D8 full programme pending |
-| 3. Seated back-supported neutral-grip DB press | 3 × 6–10; 2 RIR; rest 120 seconds | Founder-selected standard/exception; D8 full programme pending |
-| 4. Bench-supported single-arm DB row | 3 × 8–12/side; 1–2 RIR; rest 90 seconds | Founder-selected standard/exception; D8 full programme pending |
-| 5. Bilateral machine standing calf raise | 2 × 10–15; 2 RIR; rest 60–90 seconds | Founder-selected standard/exception; D8 full programme pending |
-| 6. Bodyweight side plank | 2 × 30–45 sec/side; no RIR/failure target; rest 45–60 seconds | Founder-selected standard/exception; D8 full programme pending |
+| 1. Barbell Romanian deadlift | 2 × 5; 3 RIR; rest 120–180 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 2. DB reverse lunge | 1 × 6/leg; 3 RIR; rest 90 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 3. Seated back-supported neutral-grip DB press | 3 × 6–10; 2 RIR; rest 120 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 4. Bench-supported single-arm DB row | 3 × 8–12/side; 1–2 RIR; rest 90 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 5. Bilateral machine standing calf raise | 2 × 10–15; 2 RIR; rest 60–90 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 6. Bodyweight side plank | 2 × 30–45 sec/side; no RIR/failure target; rest 45–60 seconds | Exact founder-selected dose; D8 full-programme review pending |
 
-1. **Barbell Romanian deadlift setup:** Controlled hinge; stop before spinal position changes. Not part of D1–D7 selections; retain/remove decision pending. Total external barbell load. Tempo: ~2 seconds lowering; no forced pause; purposeful lift.
-2. **DB reverse lunge setup:** Two dumbbells at sides, neutral grip; complete one side then the other. Rest 90 seconds after both sides. Log external load per dumbbell. Tempo: Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift.
+1. **Barbell Romanian deadlift setup:** Thursday barbell RDL; controlled hinge, stop before spinal position changes. Log total external barbell load. Membership and dose explicitly selected. No planned load increase this week. Tempo: Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift.
+2. **DB reverse lunge setup:** Two dumbbells at sides, neutral grip; complete one side then the other. Rest 90 seconds after both sides. Log external load per dumbbell. No planned load increase this week. Tempo: Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift.
 3. **Seated back-supported neutral-grip DB press setup:** Near-upright back support; seated, two dumbbells, neutral grip, strict without leg drive. External load per dumbbell. Tempo: Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift.
 4. **Bench-supported single-arm DB row setup:** Free hand supported on bench; complete both sides, then rest 90 seconds. External load per dumbbell. Tempo: Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift.
-5. **Bilateral machine standing calf raise setup:** Standing calf machine, bilateral; no unilateral DB substitution. Record actual machine resistance with its displayed unit/setup; no invented load or cross-machine equivalence. Tempo: ~2 seconds up, 1-second top pause, ~2 seconds down; full comfortable range (retained proposed tempo).
+5. **Bilateral machine standing calf raise setup:** Standing calf machine, bilateral; no unilateral DB substitution. Record actual machine resistance with its displayed unit/setup; no invented load or cross-machine equivalence. No planned load increase this week. Tempo: ~2 seconds up, 1-second top pause, ~2 seconds down; full comfortable range (retained proposed tempo).
 6. **Bodyweight side plank setup:** Each side 30–45 seconds; both sides form one set. Stop before posture loss; no external load or failure requirement. Tempo: Controlled hold; stop before posture loss.
 
 Finish: 3–5 minutes easy walking. Preparation/ramp sets are additional to the listed work sets. Gym elapsed time is unknown, not an invented exact session duration.
@@ -1105,21 +1096,21 @@ Preparation outside this body: 3–5 min brisk walk, 10 ankle rocks/side, 10 cal
 Body total: **60:00**.
 Finish outside this body: 3–5 min easy walking.
 
-## Week 9 — Final 10K-specific development; reduce lower-body lifting
+## Week 9 — Reduce workload; selected running retained
 
 ### Monday — Monday selected strength (2026-12-28)
 
-Review reference: `LW10K-W09-D01`. Status: selected standard template / D8 and marked holds pending.
+Review reference: `LW10K-W09-D01`. Status: exact selected standard/week-specific strength doses; full-programme D8 pending.
 
 Retained proposed preparation: 5 minutes walking/marching; 10 bodyweight squats; 8 unloaded hinges; 8 scapular pull-ups OR shoulder-blade movements; 8 arm circles each direction. First loaded lower-body pattern: 2–4 progressively loaded warm-up sets; each new upper-body pattern: 1–2 light sets as needed; no failure. Bodyweight squats/unloaded hinges are preparation, not working squat/RDL prescriptions.
 
-| Review order / working lift | Exact selected/reference or retained proposed dose | Effective status |
+| Review order / working lift | Exact selected working dose | Review status |
 |---|---|---|
-| 1. Bilateral incline DB press | 3 × 6–10; 2 RIR; rest 120 seconds | Founder-selected standard/exception; D8 full programme pending |
-| 2. Strict bodyweight pull-up | 3 × 5–8; 2 RIR; rest 120 seconds | Founder-selected standard/exception; D8 full programme pending |
-| 3. Bilateral chest-supported DB row | 3 × 8–12; 1–2 RIR; rest 90 seconds | Founder-selected standard/exception; D8 full programme pending |
-| 4. DB lateral raise | 3 × 12–20; 1–2 RIR; rest 60 seconds | Founder-selected standard/exception; D8 full programme pending |
-| 5. Square-stance cable Pallof press | 2 × 10/side; no RIR/failure target; rest 45–60 seconds | Founder-selected standard/exception; D8 full programme pending |
+| 1. Bilateral incline DB press | 2 × 6–10; 2 RIR; rest 120 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 2. Strict bodyweight pull-up | 2 × 5–8; 2 RIR; rest 120 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 3. Bilateral chest-supported DB row | 2 × 8–12; 1–2 RIR; rest 90 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 4. DB lateral raise | 2 × 12–20; 1–2 RIR; rest 60 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 5. Square-stance cable Pallof press | 1 × 10/side; no RIR/failure target; rest 45–60 seconds | Exact founder-selected dose; D8 full-programme review pending |
 
 1. **Bilateral incline DB press setup:** Approximately 30° bench; bilateral dumbbells. Log external load per dumbbell. Tempo: Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift.
 2. **Strict bodyweight pull-up setup:** Shoulder-width overhand grip; strict. Bodyweight initially; no invented body mass or zero-kg actual. Added load requires the exact supported weighted identity and explicit selection; assistance remains separate. Tempo: Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift.
@@ -1169,26 +1160,23 @@ Finish outside this body: 3–5 min easy walking.
 
 ### Thursday — Thursday selected strength (2026-12-31)
 
-Review reference: `LW10K-W09-D04`. Status: selected standard template / D8 and marked holds pending.
+Review reference: `LW10K-W09-D04`. Status: exact selected standard/week-specific strength doses; full-programme D8 pending.
 
 Retained proposed preparation: 5 minutes walking/marching; 10 bodyweight squats; 8 unloaded hinges; 8 scapular pull-ups OR shoulder-blade movements; 8 arm circles each direction. First loaded lower-body pattern: 2–4 progressively loaded warm-up sets; each new upper-body pattern: 1–2 light sets as needed; no failure. Bodyweight squats/unloaded hinges are preparation, not working squat/RDL prescriptions.
 
-| Review order / working lift | Exact selected/reference or retained proposed dose | Effective status |
+| Review order / working lift | Exact selected working dose | Review status |
 |---|---|---|
-| 1. Barbell Romanian deadlift | 1 × 6–8; 2–3 RIR; rest 120 seconds | **HELD C4: reference only; no selected effective prescription** |
-| 2. DB reverse lunge | 1 × 6/leg; 2–3 RIR; rest 90 seconds | **HELD C2: reference only; no selected effective prescription** |
-| 3. Seated back-supported neutral-grip DB press | 3 × 6–10; 2 RIR; rest 120 seconds | Founder-selected standard/exception; D8 full programme pending |
-| 4. Bench-supported single-arm DB row | 3 × 8–12/side; 1–2 RIR; rest 90 seconds | Founder-selected standard/exception; D8 full programme pending |
-| 5. Bilateral machine standing calf raise | 2 × 10–15; 2 RIR; rest 60–90 seconds | Founder-selected standard/exception; D8 full programme pending |
-| 6. Bodyweight side plank | 2 × 30–45 sec/side; no RIR/failure target; rest 45–60 seconds | Founder-selected standard/exception; D8 full programme pending |
+| 1. Barbell Romanian deadlift | 1 × 5; 3 RIR; rest 120–180 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 2. Seated back-supported neutral-grip DB press | 2 × 6–10; 2 RIR; rest 120 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 3. Bench-supported single-arm DB row | 2 × 8–12/side; 1–2 RIR; rest 90 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 4. Bilateral machine standing calf raise | 1 × 10–15; 2 RIR; rest 60–90 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 5. Bodyweight side plank | 1 × 30–45 sec/side; no RIR/failure target; rest 45–60 seconds | Exact founder-selected dose; D8 full-programme review pending |
 
-1. **Barbell Romanian deadlift setup:** Controlled hinge; stop before spinal position changes. Not part of D1–D7 selections; retain/remove decision pending. Total external barbell load. Tempo: ~2 seconds lowering; no forced pause; purposeful lift.
-2. **DB reverse lunge setup:** Two dumbbells at sides, neutral grip; complete one side then the other. Rest 90 seconds after both sides. Log external load per dumbbell. Tempo: Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift.
-   Retained source proposal: DB reverse lunge — 1 × 5/leg; 3 RIR; rest 90 seconds. Old reduced 1×5/leg conflicts with newly selected standard 1×6/leg; no fractional/zero-set reduction invented.
-3. **Seated back-supported neutral-grip DB press setup:** Near-upright back support; seated, two dumbbells, neutral grip, strict without leg drive. External load per dumbbell. Tempo: Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift.
-4. **Bench-supported single-arm DB row setup:** Free hand supported on bench; complete both sides, then rest 90 seconds. External load per dumbbell. Tempo: Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift.
-5. **Bilateral machine standing calf raise setup:** Standing calf machine, bilateral; no unilateral DB substitution. Record actual machine resistance with its displayed unit/setup; no invented load or cross-machine equivalence. Tempo: ~2 seconds up, 1-second top pause, ~2 seconds down; full comfortable range (retained proposed tempo).
-6. **Bodyweight side plank setup:** Each side 30–45 seconds; both sides form one set. Stop before posture loss; no external load or failure requirement. Tempo: Controlled hold; stop before posture loss.
+1. **Barbell Romanian deadlift setup:** Thursday barbell RDL; controlled hinge, stop before spinal position changes. Log total external barbell load. Membership and dose explicitly selected. Tempo: Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift.
+2. **Seated back-supported neutral-grip DB press setup:** Near-upright back support; seated, two dumbbells, neutral grip, strict without leg drive. External load per dumbbell. Tempo: Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift.
+3. **Bench-supported single-arm DB row setup:** Free hand supported on bench; complete both sides, then rest 90 seconds. External load per dumbbell. Tempo: Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift.
+4. **Bilateral machine standing calf raise setup:** Standing calf machine, bilateral; no unilateral DB substitution. Record actual machine resistance with its displayed unit/setup; no invented load or cross-machine equivalence. Tempo: ~2 seconds up, 1-second top pause, ~2 seconds down; full comfortable range (retained proposed tempo).
+5. **Bodyweight side plank setup:** Each side 30–45 seconds; both sides form one set. Stop before posture loss; no external load or failure requirement. Tempo: Controlled hold; stop before posture loss.
 
 Finish: 3–5 minutes easy walking. Preparation/ramp sets are additional to the listed work sets. Gym elapsed time is unknown, not an invented exact session duration.
 
@@ -1228,32 +1216,27 @@ Preparation outside this body: 3–5 min brisk walk, 10 ankle rocks/side, 10 cal
 Body total: **50:00**.
 Finish outside this body: 3–5 min easy walking.
 
-## Week 10 — Freshen up, sharpen and test 10K on Sunday
+## Week 10 — Reduce workload and sharpen; final 10K test
 
 ### Monday — Monday selected strength (2027-01-04)
 
-Review reference: `LW10K-W10-D01`. Status: selected standard template / D8 and marked holds pending.
+Review reference: `LW10K-W10-D01`. Status: exact selected standard/week-specific strength doses; full-programme D8 pending.
 
 Retained proposed preparation: 5 minutes walking/marching; 10 bodyweight squats; 8 unloaded hinges; 8 scapular pull-ups OR shoulder-blade movements; 8 arm circles each direction. First loaded lower-body pattern: 2–4 progressively loaded warm-up sets; each new upper-body pattern: 1–2 light sets as needed; no failure. Bodyweight squats/unloaded hinges are preparation, not working squat/RDL prescriptions.
 
-| Review order / working lift | Exact selected/reference or retained proposed dose | Effective status |
+| Review order / working lift | Exact selected working dose | Review status |
 |---|---|---|
-| 1. Bilateral incline DB press | 3 × 6–10; 2 RIR; rest 120 seconds | **HELD C3: reference only; no selected effective prescription** |
-| 2. Strict bodyweight pull-up | 2 × 5–8; 3–4 RIR; rest 120 seconds | **Exact retained reduction proposal, D8 pending** |
-| 3. Bilateral chest-supported DB row | 3 × 8–12; 1–2 RIR; rest 90 seconds | **HELD C3: reference only; no selected effective prescription** |
-| 4. DB lateral raise | 1 × 12–15; 3–4 RIR; rest 60 seconds | **Exact retained reduction proposal, D8 pending** |
-| 5. Square-stance cable Pallof press | 2 × 10/side; no RIR/failure target; rest 45–60 seconds | **HELD C3: reference only; no selected effective prescription** |
+| 1. Bilateral incline DB press | 2 × 6–10; 2 RIR; rest 120 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 2. Strict bodyweight pull-up | 2 × 5–8; 2 RIR; rest 120 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 3. Bilateral chest-supported DB row | 2 × 8–12; 1–2 RIR; rest 90 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 4. DB lateral raise | 1 × 12–20; 1–2 RIR; rest 60 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 5. Square-stance cable Pallof press | 1 × 10/side; no RIR/failure target; rest 45–60 seconds | Exact founder-selected dose; D8 full-programme review pending |
 
 1. **Bilateral incline DB press setup:** Approximately 30° bench; bilateral dumbbells. Log external load per dumbbell. Tempo: Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift.
-   Retained source context: No flat/incline chest press in old W10 template; Monday incline inclusion/dose requires explicit taper choice.
 2. **Strict bodyweight pull-up setup:** Shoulder-width overhand grip; strict. Bodyweight initially; no invented body mass or zero-kg actual. Added load requires the exact supported weighted identity and explicit selection; assistance remains separate. Tempo: Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift.
-   Retained source proposal: Pull-up — 2 × 5–8; 3–4 RIR; rest 120 seconds. Same-movement exact retained taper proposal, not final D8 approval.
 3. **Bilateral chest-supported DB row setup:** Bilateral dumbbells, chest supported. Log external load per dumbbell; not a unilateral or machine substitute. Tempo: Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift.
-   Retained source proposal: One-arm DB row — 2 × 8–12/side; 3–4 RIR; rest 90 seconds. Unilateral row taper dose cannot silently become bilateral DB row dose.
 4. **DB lateral raise setup:** Bilateral dumbbells; no swinging. Log external load per dumbbell. Tempo: Controlled both ways.
-   Retained source proposal: DB lateral raise — 1 × 12–15; 3–4 RIR; rest 60 seconds. Same-movement exact retained taper proposal, not final D8 approval.
 5. **Square-stance cable Pallof press setup:** Standing square stance; cable at chest height, both hands on handle; press without torso rotation. Each side has 10 reps; both sides form one set. No failure requirement or invented RIR. Tempo: Controlled execution.
-   Retained source proposal: Side plank — 1 × 30–40 sec/side; no RIR/failure target; rest 45 seconds. One timed side-plank set cannot silently become a Pallof dose.
 
 Finish: 3–5 minutes easy walking. Preparation/ramp sets are additional to the listed work sets. Gym elapsed time is unknown, not an invented exact session duration.
 
@@ -1297,18 +1280,17 @@ Finish outside this body: 3–5 min easy walking.
 
 ### Thursday — Upper-body taper exception (2027-01-07)
 
-Review reference: `LW10K-W10-D04`. Status: selected standard template / D8 and marked holds pending.
+Review reference: `LW10K-W10-D04`. Status: exact selected standard/week-specific strength doses; full-programme D8 pending.
 
 Upper-body preparation only; 1–2 light sets per new upper-body pattern as needed, no failure. No lower-body lifting or squat/hinge warm-up inserted.
 
-| Review order / working lift | Exact selected/reference or retained proposed dose | Effective status |
+| Review order / working lift | Exact selected working dose | Review status |
 |---|---|---|
-| 1. Seated back-supported neutral-grip DB press | 2 × 6–10; at least 3 RIR; rest 120 seconds | **HELD C3: reference only; no selected effective prescription** |
-| 2. Bench-supported single-arm DB row | 2 × 8–12/side; at least 3 RIR; rest 90 seconds | Founder-selected standard/exception; D8 full programme pending |
+| 1. Seated back-supported neutral-grip DB press | 2 × 6–10; at least 3 RIR; rest 120 seconds | Exact founder-selected dose; D8 full-programme review pending |
+| 2. Bench-supported single-arm DB row | 2 × 8–12/side; at least 3 RIR; rest 90 seconds | Exact founder-selected dose; D8 full-programme review pending |
 
-1. **Seated back-supported neutral-grip DB press setup:** Near-upright back support; seated, two dumbbells, neutral grip, strict without leg drive. External load per dumbbell. Comfortable upper-body work; at least 3 RIR, no invented upper bound; no lower-body lifting. Tempo: Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift.
-   Retained source proposal: DB overhead press — 2 × 6–10; at least 3 RIR; rest 90 seconds. Sets and minimum RIR are selected; prior proposed 90-second rest conflicts with new standard 120 seconds. Rest requires decision.
-2. **Bench-supported single-arm DB row setup:** Free hand supported on bench; complete both sides, then rest 90 seconds. External load per dumbbell. Comfortable upper-body work; at least 3 RIR, no invented upper bound; no lower-body lifting. Tempo: Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift.
+1. **Seated back-supported neutral-grip DB press setup:** Near-upright back support; seated, two dumbbells, neutral grip, strict without leg drive. External load per dumbbell. Comfortable upper-body work; at least 3 RIR, no invented upper bound; no lower-body lifting or additional working exercises. Tempo: Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift.
+2. **Bench-supported single-arm DB row setup:** Free hand supported on bench; complete both sides, then rest 90 seconds. External load per dumbbell. Comfortable upper-body work; at least 3 RIR, no invented upper bound; no lower-body lifting or additional working exercises. Tempo: Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift.
 
 Finish: 3–5 minutes easy walking. Preparation/ramp sets are additional to the listed work sets. Gym elapsed time is unknown, not an invented exact session duration.
 

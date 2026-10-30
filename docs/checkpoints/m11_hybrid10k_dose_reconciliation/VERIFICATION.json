@@ -1,0 +1,157 @@
+{
+  "date": "2026-10-30",
+  "base": "15627ecd7c41ab0f5f593ba6a08075374f7316fe",
+  "status": "DOSE_MEMBERSHIP_HOLDS_RESOLVED_D8_PENDING",
+  "gate_a": "OPEN",
+  "checks": [
+    {
+      "command": "python3 tool/programmes/hybrid_10k/apply_strength_selections.py --check; python3 tool/programmes/hybrid_10k/render_selected_review.py --check",
+      "exit": 0,
+      "log_sha256": "861420d5c81517d47f2308564d5117bdeea4abdffbd3aacafdcf4c50950adf31"
+    },
+    {
+      "command": "python3 tool/programmes/hybrid_10k/selected_source_test.py -v",
+      "passed": 7,
+      "exit": 0,
+      "log_sha256": "70eb5c61dfaefeb07943ccc7bbb97b6f00e738f5fb61a78411c1f017e9bae8e8"
+    },
+    {
+      "command": "flutter test --no-pub tool/programmes/hybrid_10k/selected_admission_probe_test.dart test/programmes/private_protocol_graph_builder_test.dart",
+      "passed": 14,
+      "exit": 0,
+      "log_sha256": "44c7cb07f0d1901d507739878a827935004230422c4977424c54b85f61ecb896"
+    },
+    {
+      "command": "dart analyze tool/programmes/hybrid_10k/selected_admission_probe_test.dart",
+      "issues": 0,
+      "exit": 0,
+      "log_sha256": "63393a4bafa8228c2b90a25229f6fffd3a71f1f47230a4d295caf5b8637a8549"
+    },
+    {
+      "command": "./tool/testing/run_phase2_consolidation_safety_gate.sh",
+      "groups_passed": 6,
+      "groups_failed": 0,
+      "exit": 0,
+      "log_sha256": "7a45613c7e9a77f35773e0ee795cf16e8dcd83813f10db5cc026425f25fe7d06"
+    }
+  ],
+  "source_authority": {
+    "original_D1_D7_sha256": "dd7e08cc1b026b46307b42c491216543899879e202c3f665ce837f486bc0d6d8",
+    "dose_clarification_and_W7_reply_sha256": "e38cba504a1b40dcfe93e1fa72cee4b1804b0f4bee5078e7e240e41df9457b76",
+    "full_programme_approval": false,
+    "publication_eligibility_assignment": false
+  },
+  "actual_admission": {
+    "v1_v2_schedule_compile": "PASS",
+    "all_review_bodies_cover_schedule": true,
+    "dose_holds": [],
+    "exact_identity_gaps": 6,
+    "full_strength_graphs_admitted": 0,
+    "source_guard": "exact_identity_records_required",
+    "known_identity_partial_graph_and_native_plan_codec": "PASS",
+    "native_selected_prescription_validation_round_trip": "PASS",
+    "canonical_start_log_complete_restore": "NOT_ATTEMPTED"
+  },
+  "identity_action_packet": "docs/programmes/hybrid_10k/founder_selected_2026_10_30/EXACT_IDENTITY_ACTIONS.md",
+  "identity_result": "No new admissible published rows/setup bindings found. One exact missing record and owner/producer action per unique selected variant; bounded SELECT request is unexecuted.",
+  "phase_reconciliation": [
+    "W4 consolidation",
+    "W5–7 build; W7 standard strength",
+    "W8 lower-body effort control",
+    "W9–10 reduce workload",
+    "Selected runs unchanged; surviving W7 running dip/W8 run-only Peak title flagged together"
+  ],
+  "reused_running_evidence": {
+    "commit": "a22249e23a385ebb6064b8f05e3d2fb17af3914e",
+    "path": "docs/checkpoints/m11_hybrid10k_reconciliation/ADMISSION.json",
+    "sha256": "26667be06d546f523d7f3c80c061f641bfd2a3d0e87fda17839c54198c24207d",
+    "running_body_bytes_equal_to_15627ec": true,
+    "timed_graph_count": 39,
+    "final_distance_metres": 10000,
+    "final_runner_result": "unsupported_timed_running_body",
+    "rerun": false
+  },
+  "protected_unchanged_sha256": {
+    "lib/domain/running_workout/alpha_quality_targets.dart": "b8e5f22c9c75adcaa3201a2cf1f9b768b2b30474b2b1a92b5e6a180dcb49c1ec",
+    "lib/features/session/models/running_target_admission.dart": "729046caec3f8ec3827ac21c1034af2ad343c4a69eae4dc7fa41391e97492c89",
+    "docs/checkpoints/m23_quality_target_admission/DECISIONS.md": "968ed2c3a84923a422a9f13797a282da454e5cde714315c856c97cf3144c1efa",
+    "supabase/migrations/20261026110000_training_setup_private_alpha_acquisition.sql": "59cb7a97e5c5bcd6e5bc230631a1c34942ce4cd7610aa253b1556510df7248f5",
+    "supabase/migrations/20261026120000_durable_publication_approval_events.sql": "526881b82d7ab20e3e246db4ea808970300ef7570fdd03dd8d43a2b753b9f588",
+    "supabase/migrations/20261027120000_confirmed_running_zone_targets.sql": "26038e82bae21130982ccaed65be14ee49ad4581256f99476ccb5ba071b0de6a",
+    "supabase/migrations/20261027130000_alpha_quality_running_targets.sql": "5c49656c6fa85f6ef0c4524491d61dc53ff42a0bb7e61bbfe33a24ab0dc3b520",
+    "supabase/migrations/20261028120000_terminal_completion_retry.sql": "00c5f094d6c49716109fa67066d6d570e4af27ee24f0bd9b5237433e6d3a0ffa"
+  },
+  "artifact_sha256": {
+    "docs/programmes/hybrid_10k/founder_selected_2026_10_30/AUDIT.json": "bb292d1b235b3fb0fd85fcf3c61262604f8a9c453fba5c29e70d616b22c3dd47",
+    "docs/programmes/hybrid_10k/founder_selected_2026_10_30/SOURCE.json": "f12b5df97f0a9dc813c9610021ee82233414d2e2b1e6187dd0ae09745e3ecdf5",
+    "docs/programmes/hybrid_10k/founder_selected_2026_10_30/RUNNING_BODIES.json": "5d36176a57d8b610799cd72bf8be452bbf9a68fa7396ce4bf41877f83959491b",
+    "docs/programmes/hybrid_10k/founder_selected_2026_10_30/TRUSTED_INTAKE_REQUESTS.json": "c260109b6aaa4908844b7c34795a02053fae9c5f75524f99a1093cd635c8de2f",
+    "docs/programmes/hybrid_10k/founder_selected_2026_10_30/SCHEDULE_CANDIDATE.json": "bf1edeb6f4edae9f936def8675090d46cb563a67058594b38c146ff5b80e329d",
+    "docs/programmes/hybrid_10k/founder_selected_2026_10_30/README.md": "8490fcd3ce44a5388c01761c2cefd490b812ee68c2a89c0ef5117caeb8d14a98",
+    "docs/programmes/hybrid_10k/founder_selected_2026_10_30/EXACT_ROW_RETENTION_REQUEST.sql": "5834c56489e7856805651257ab7ab4403094381aed5e729abb8035e239d8d6a8",
+    "docs/programmes/hybrid_10k/founder_selected_2026_10_30/STRENGTH_REVIEW_GRAPHS.json": "20e8e8b38820c0d8f9064ff564c83ac8fe7d9ffe10bc66175e5f4d2a69952621",
+    "docs/programmes/hybrid_10k/founder_selected_2026_10_30/DOSE_CLARIFICATIONS.md": "e38cba504a1b40dcfe93e1fa72cee4b1804b0f4bee5078e7e240e41df9457b76",
+    "docs/programmes/hybrid_10k/founder_selected_2026_10_30/EXACT_IDENTITY_ACTIONS.md": "04d61e6cc8f58202890984c030405898996b47a720a22765f8dbeedd10b18c55",
+    "docs/programmes/hybrid_10k/founder_selected_2026_10_30/FOUNDER_SELECTIONS.md": "dd7e08cc1b026b46307b42c491216543899879e202c3f665ce837f486bc0d6d8",
+    "docs/programmes/hybrid_10k/founder_selected_2026_10_30/IDENTITY_INTAKE.json": "a5edbbc5901591742213ed7d9087a901e2aa62d3110694e741c718df733890ab",
+    "docs/programmes/hybrid_10k/founder_selected_2026_10_30/TEN_WEEK_REVIEW.md": "fbe96e59135b52d42bc77e58a1f08907926728a24de0b4608b16cd69eeb5866e",
+    "tool/programmes/hybrid_10k/apply_strength_selections.py": "65081f2b8b1bee976d7f08c70b71995e3fae7af6d3937b40e269f6907961fa09",
+    "tool/programmes/hybrid_10k/render_selected_review.py": "7f53f6b87846fa0d9159d49e1aa7393819bc037020fea90062d79f5e6924009d",
+    "tool/programmes/hybrid_10k/selected_source_test.py": "20bbe7b2c6e9f49862e109a6baad087630c1542dc7dd905b95f5005c96be311e",
+    "tool/programmes/hybrid_10k/selected_admission_probe_test.dart": "53501c561b9821ada7d3e05585c31a02d2d72b502926974a8cf49908d45752a1",
+    "docs/checkpoints/m11_hybrid10k_dose_reconciliation/ADMISSION.json": "933f2fefa06d7dd0e5c7a536bccf294388439c3dc922e2a014b4787d88a3fdc3"
+  },
+  "preservation": {
+    "existing_checkouts": 28,
+    "registered_absent": 28,
+    "before_after_identical": true,
+    "snapshot_sha256": "766e08655e0f86138dbeb1c5e87e4108876d9ab5a7f494a6d69740d8e0a79721",
+    "all_prior_task_preserved_entries_unchanged": true,
+    "prior_linear_commits_after_1cca598": 25,
+    "prior_merge_count": 0,
+    "prior_complete_history_bundles": {
+      "Cohort-M1.1-main.bundle": {
+        "bytes": 8558001,
+        "sha256": "db9348edd795f7e669a722b4bdba7376577b3554a50c88c1ec19c0ac213880dd",
+        "verify_exit": 0
+      },
+      "Cohort-M1.1-movement-review-2026-10-30.bundle": {
+        "bytes": 8676845,
+        "sha256": "ccf622cddf1a18013d2a9cec487ec249b136cd0a0adf07d9ea1db28a131caacf",
+        "verify_exit": 0
+      },
+      "Cohort-M1.1-reconciled-2026-10-30.bundle": {
+        "bytes": 8625627,
+        "sha256": "6b21cb6d9fb61420d124812b5650e0ce7f3bae2eb0fc11ece568d12d65bea206",
+        "verify_exit": 0
+      },
+      "Cohort-M1.1-selected-strength-2026-10-30.bundle": {
+        "bytes": 8754243,
+        "sha256": "5dd23b6491ff92b45e55918dfb719d9952df2e8019e3f91f831d1f6dab78ddfc",
+        "verify_exit": 0
+      }
+    }
+  },
+  "git": {
+    "work_clone": "/private/tmp/cohort_m11_doses",
+    "retained_15627ec_checkout": "UNCHANGED",
+    "original_developer_checkout": "DIRTY_AT_a331f52_UNCHANGED",
+    "branch": "main",
+    "copied_origin_main": "15627ec_NOT_LIVE_REMOTE_TRUTH",
+    "ordinary_remote_lookups": 2,
+    "remote_ancestry": "UNVERIFIED_NORMAL_GITHUB_DNS_FAILURE",
+    "push_attempted": false,
+    "force_or_alternate_route": false
+  },
+  "hosted_supabase": "UNVERIFIED_NO_CONTACT",
+  "browser_desktop_control": false,
+  "no_hosted_mutations_publication_athlete_changes": true,
+  "not_run": [
+    "Garmin/M2.5/SDK work",
+    "new broad audit",
+    "full default suite or repository analysis",
+    "SQL/authenticated DB gates",
+    "hosted/device operations"
+  ],
+  "next_single_point": "M1.1 D8 review of updated TEN_WEEK_REVIEW.md and exact six-record retention, then full private v1/v2 graph admission"
+}

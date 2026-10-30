@@ -1,39 +1,33 @@
-# Founder-selected Hybrid 10K source — D8 review pending
+# Hybrid 10K — clarified strength doses; D8 review pending
 
-Read **[TEN_WEEK_REVIEW.md](TEN_WEEK_REVIEW.md)** for the single self-contained,
-human-readable ten-week programme: all seventy days, exact strength reference/
-selected/proposed doses, ordered run steps, preparation, targets, progression,
-consolidation/taper, weekly running totals and quality minutes, source corrections
-and the one remaining content/identity list. A held dose is not an invented final
-prescription. D1–D7 are selected; D8/full programme/publication remain unapproved.
+Read **[TEN_WEEK_REVIEW.md](TEN_WEEK_REVIEW.md)** for the one self-contained
+programme review: all seventy days, exact working doses/rests/targets, preparation,
+progression, phased strength reductions, running totals and quality minutes.
 
-[FOUNDER_SELECTIONS.md](FOUNDER_SELECTIONS.md) retains the actual human selections,
-SHA-256 `dd7e08cc1b026b46307b42c491216543899879e202c3f665ce837f486bc0d6d8`.
-[SOURCE.json](SOURCE.json) is the regenerated genuine general source.
-[AUDIT.json](AUDIT.json) records exact totals and carryover provenance.
-[IDENTITY_INTAKE.json](IDENTITY_INTAKE.json) and
-[TRUSTED_INTAKE_REQUESTS.json](TRUSTED_INTAKE_REQUESTS.json) distinguish five exact
-local legacy row bindings, six unresolved selected variants and conditional
-weighted/assisted branches. No candidate ID is automatically a match, and no
-published row/version/event is invented. Prior flat/unilateral-calf/reverse-crunch
-proposals and standing-press suggestions are historical, superseded alternatives.
+[FOUNDER_SELECTIONS.md](FOUNDER_SELECTIONS.md) retains D1–D7.
+[DOSE_CLARIFICATIONS.md](DOSE_CLARIFICATIONS.md) supersedes its earlier RDL note
+and resolves every prior dose/membership hold, including the explicit W7 follow-up.
+RDL is selected template work. W4 consolidates; W5–7 build with standard W7
+strength; W8 controls lower-body effort; W9–10 reduce workload. Running prescriptions
+are unchanged. Surviving older phase wording/patterns are grouped in the review.
+**D8/full programme approval, publication, eligibility and assignment remain pending.**
 
-[STRENGTH_REVIEW_GRAPHS.json](STRENGTH_REVIEW_GRAPHS.json) has all twenty ordered
-review bodies. It is **not an admissible publication artifact**: unknown identities
-remain null; C1–C4 holds keep unknown effective prescriptions null while retaining
-exact reference/proposal doses. The local `DRAFT-R2` protocol references are new
-unpublished review revisions, not claimed published programme/exercise versions.
-Source-specific preflight refuses any graph not exactly regenerated from pinned
-inputs; the ordinary private graph decoder is not a catalogue identity validator.
+[SOURCE.json](SOURCE.json), [AUDIT.json](AUDIT.json) and the twenty
+[review graphs](STRENGTH_REVIEW_GRAPHS.json) regenerate exact selected doses.
+Preparation stays separate from working sets. The graphs use unpublished local
+`DRAFT-R3` review revisions; no published version/event is manufactured. The final
+test stays distance-ended. Prior source versions remain at their original Git
+commits/checkouts and in verified bundles.
 
-The [running bodies](RUNNING_BODIES.json) preserve every executable step, target,
-duration, distance and identity from `398a7fe`/the prior reconciliation. Only the
-demonstrably misplaced personal W2 travel option is removed from general notes;
-the 40-minute run is unchanged. Running-time bounds now explicitly distinguish
-inherited optional walking recoveries from workout-clock minutes. No Garmin or
-running harness verification is repeated. The final test stays distance-ended.
+The six technical dependencies are specific records, not further founder movement
+choices: [EXACT_IDENTITY_ACTIONS.md](EXACT_IDENTITY_ACTIONS.md) names each missing
+row/setup binding, authority and action. The bounded
+[SELECT request](EXACT_ROW_RETENTION_REQUEST.sql) is **unexecuted**.
+[Identity evidence](IDENTITY_INTAKE.json) distinguishes legitimate retained rows
+from candidates and separate conditional assisted/weighted pull-up branches.
+There is no demonstrated need for deferred v3 producer infrastructure.
 
-Reproduce without SQL, network, accounts or athlete operations:
+Reproduce locally without SQL/network/accounts/athlete operations:
 
 ```sh
 python3 tool/programmes/hybrid_10k/apply_strength_selections.py --check
@@ -42,10 +36,9 @@ python3 tool/programmes/hybrid_10k/selected_source_test.py -v
 flutter test --no-pub tool/programmes/hybrid_10k/selected_admission_probe_test.dart test/programmes/private_protocol_graph_builder_test.dart
 ```
 
-[Actual admission](../../../checkpoints/m11_hybrid10k_selected_strength/ADMISSION.json)
-and [handoff](../../../checkpoints/m11_hybrid10k_selected_strength/HANDOFF.md)
-retain the limits: schedules compile; 47 known-identity reference links pass
-partial contracts; 59 identity occurrences/C1–C4 prevent complete admission.
-The full genuine programme has not been acquired, started, logged, completed or
-restored. Existing private v1/v2 is sufficient for this intake; no v3 producer or
-hosted operation is added.
+[Actual admission](../../../checkpoints/m11_hybrid10k_dose_reconciliation/ADMISSION.json)
+and [handoff](../../../checkpoints/m11_hybrid10k_dose_reconciliation/HANDOFF.md):
+v1/v2 schedules compile; known-identity partial graph/codec checks pass; full
+strength admission remains blocked by the six exact identity records. No genuine
+programme is published, acquired, started, logged, completed or restored for an
+athlete. No hosted, Garmin or device work occurred.

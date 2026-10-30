@@ -18,7 +18,7 @@ import reconcile_general_source as prior
 ROOT = Path(__file__).resolve().parents[3]
 OLD = ROOT / 'docs/programmes/hybrid_10k/general_draft_2026_10_30'
 OUT = ROOT / 'docs/programmes/hybrid_10k/founder_selected_2026_10_30'
-BASE = '398a7fe9dc61791db71410fa46ba8d3a1e6c3991'
+BASE = '15627ecd7c41ab0f5f593ba6a08075374f7316fe'
 PINS = {
     'SOURCE.json': '3a610154a8be27d31ecfe7cbf2fdfb16908a305e1bd35e1ada22b7e4b1bee486',
     'RUNNING_BODIES.json': '3eaa1b932b9251c1ca5d6c299d856436a0291ff4d7ade2663155eebb30d02c60',
@@ -27,19 +27,19 @@ PINS = {
     'IDENTITY_INTAKE.json': '2229c3f72f3fba97de7dead7abe8ba6a172fa2293eff3f310fa2cef3f3306b10',
 }
 SELECTION_HASH = 'dd7e08cc1b026b46307b42c491216543899879e202c3f665ce837f486bc0d6d8'
+DOSE_HASH = 'e38cba504a1b40dcfe93e1fa72cee4b1804b0f4bee5078e7e240e41df9457b76'
 WAVE = 'supabase/migrations/20260724140000_founder_exercise_library_wave1.sql'
 WAVE_HASH = '22a2683b81d09e071b99adda3c120dff06cb6410fcc4a2b53029beffca73d0c8'
 BOUND = {'incline_db_press': 'EX-084', 'cable_pallof_square': 'EX-114',
          'machine_standing_calf': 'EX-125', 'side_plank': 'EX-116',
-         'barbell_rdl_carryover': 'EX-078'}
+         'barbell_rdl': 'EX-078'}
 CANDIDATES = {'pull_up_bodyweight': 'EX-053', 'chest_supported_db_row': 'EX-090',
               'db_lateral_raise': 'EX-044', 'bench_supported_db_row': 'EX-038',
               'seated_supported_db_press': 'EX-037', 'reverse_lunge_db': None}
 MONDAY = ['incline_db_press', 'pull_up_bodyweight', 'chest_supported_db_row',
           'db_lateral_raise', 'cable_pallof_square']
-THURSDAY = ['barbell_rdl_carryover', 'reverse_lunge_db', 'seated_supported_db_press',
+THURSDAY = ['barbell_rdl', 'reverse_lunge_db', 'seated_supported_db_press',
             'bench_supported_db_row', 'machine_standing_calf', 'side_plank']
-CONSOLIDATION = {4, 7}
 
 
 def encode(value):
@@ -60,6 +60,8 @@ def verify_pins():
             raise ValueError('retained_source_changed:' + name)
     if sha((OUT / 'FOUNDER_SELECTIONS.md').read_bytes()) != SELECTION_HASH:
         raise ValueError('founder_selection_changed')
+    if sha((OUT / 'DOSE_CLARIFICATIONS.md').read_bytes()) != DOSE_HASH:
+        raise ValueError('founder_dose_clarification_changed')
     if sha((ROOT / WAVE).read_bytes()) != WAVE_HASH:
         raise ValueError('trusted_row_source_changed')
 
@@ -101,6 +103,8 @@ def exercise(key, label, sets, reps, rir, rest, notes, decision, tempo=None):
 
 def standards():
     return {
+        'barbell_rdl': exercise('barbell_rdl', 'Barbell Romanian deadlift', 2, '5–6', '2–3', '120–180',
+            'Thursday barbell RDL; controlled hinge, stop before spinal position changes. Log total external barbell load. Membership and dose explicitly selected.', 'RDL clarification'),
         'incline_db_press': exercise('incline_db_press', 'Bilateral incline DB press', 3, '6–10', '2', '120',
             'Approximately 30° bench; bilateral dumbbells. Log external load per dumbbell.', 'D1'),
         'pull_up_bodyweight': exercise('pull_up_bodyweight', 'Strict bodyweight pull-up', 3, '5–8', '2', '120',
@@ -130,6 +134,8 @@ def native(e):
     p['tempo'] = e['tempo']
     p['authored_details'].update(selection=e['authority'], variant_key=e['variant_key'],
                                 source_dose_status=e['dose_status'])
+    if e.get('planned_load_increase') is False:
+        p['authored_details']['planned_load_increase'] = False
     if e['variant_key'] == 'machine_standing_calf':
         p['load'] = {'type': 'athleteSelected'}
         p['performance_capture'] = {'load_label': 'Machine-indicated resistance; retain actual unit and setup'}
@@ -142,37 +148,61 @@ def native(e):
     return p
 
 
-def old_ex(source, week, label, day=None):
-    return next(e for s in source['sessions'] if s['week'] == week and s['type'] == 'strength'
-                and (day is None or s['day'] == day) for e in s['exercises'] if e['exercise'] == label)
-
-
-def add_reduction(e, original, explanation, hold=None, apply=False):
-    e['retained_reduction_proposals'].append({'source_occurrence_id': original['exercise_occurrence_id'],
-        'original_label': original['exercise'], 'sets': original['sets'],
-        'repetitions_or_duration': original['repetitions_or_duration'], 'rir': original['rir'],
-        'rest_seconds': original['rest_seconds'], 'explanation': explanation,
-        'applied_as_proposed_only': apply})
-    if hold:
-        e['content_holds'].append(hold)
-        e['effective_dose_status'] = 'UNRESOLVED_REDUCTION_REFERENCE_DOSE_ONLY'
-    if apply:
-        e['standard_week_reference'] = {k: e[k] for k in ['sets', 'repetitions_or_duration', 'rir', 'rest_seconds']}
-        for k in ['sets', 'repetitions_or_duration', 'rir', 'rest_seconds']:
-            e[k] = original[k]
-        e['dose_status'] = 'RETAINED_PROPOSED_REDUCTION_NOT_FINAL_CONTENT_APPROVAL'
-        e['effective_dose_status'] = 'EXACT_RETAINED_PROPOSAL_PENDING_D8'
+def apply_week_dose(e, week, day):
+    """Apply the selected week rules, never old occurrence-dose transfers."""
+    key = e['variant_key']
+    if week in {4, 9} and e['sets'] == 3:
+        e['sets'] = 2
+    if week == 4 and key == 'barbell_rdl':
+        e['planned_load_increase'] = False
+    if week == 8:
+        if key == 'barbell_rdl':
+            e.update(repetitions_or_duration='5', rir='3')
+        elif key == 'reverse_lunge_db':
+            e['rir'] = '3'
+        if key in {'barbell_rdl', 'reverse_lunge_db', 'machine_standing_calf'}:
+            e['planned_load_increase'] = False
+    if week == 9:
+        if key == 'barbell_rdl':
+            e.update(sets=1, repetitions_or_duration='5', rir='3')
+        elif key in {'machine_standing_calf', 'cable_pallof_square', 'side_plank'}:
+            e['sets'] = 1
+    if week == 10:
+        if day == 1:
+            e['sets'] = {'pull_up_bodyweight': 2, 'incline_db_press': 2,
+                         'chest_supported_db_row': 2, 'db_lateral_raise': 1,
+                         'cable_pallof_square': 1}[key]
+        else:
+            e.update(sets=2, rir='at least 3')
+            e['notes'] += ' Comfortable upper-body work; at least 3 RIR, no invented upper bound; no lower-body lifting or additional working exercises.'
+    if week in {4, 8, 9, 10}:
+        e['dose_status'] = 'FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE'
+        e['authority'] += '; DOSE_CLARIFICATIONS.md'
+    e['effective_dose_status'] = 'EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING'
+    if e.get('planned_load_increase') is False:
+        e['notes'] += ' No planned load increase this week.'
+    return e
 
 
 def build():
     verify_pins()
     original = load('SOURCE.json')
     source = copy.deepcopy(original)
-    source.update(source_schema='hybrid10k-founder-selected-review/2',
+    source.update(source_schema='hybrid10k-founder-selected-review/3',
                   title='General Hybrid 10K PB — founder-selected strength, D8 review pending',
-                  content_status='D1_D7_STANDARD_SELECTIONS_APPROVED_D8_PENDING',
+                  content_status='D1_D7_AND_WEEK_DOSES_SELECTED_D8_PENDING',
                   shared_rules_location='TEN_WEEK_REVIEW.md in this source directory',
-                  authority_source='FOUNDER_SELECTIONS.md', publication_approved=False)
+                  authority_source='FOUNDER_SELECTIONS.md + DOSE_CLARIFICATIONS.md', publication_approved=False)
+    phase_focus = {4: 'Consolidation in W4; selected running retained',
+                   5: 'Build W5–7; threshold duration and endurance',
+                   6: 'Build W5–7; repeatable threshold work',
+                   7: 'Build W5–7; standard strength; selected running retained',
+                   8: 'Control lower-body effort; selected 10K-specific running retained',
+                   9: 'Reduce workload; selected running retained',
+                   10: 'Reduce workload and sharpen; final 10K test'}
+    for w in source['weeks']:
+        if w['week'] in phase_focus:
+            w['focus'] = phase_focus[w['week']]
     standard = standards()
     bindings, graphs = [], []
     for s in source['sessions']:
@@ -180,57 +210,13 @@ def build():
             continue
         week, day = s['week'], s['day']
         keys = MONDAY if day == 1 else (['seated_supported_db_press', 'bench_supported_db_row'] if week == 10 else THURSDAY)
+        if week == 9 and day == 4:
+            keys = [key for key in keys if key != 'reverse_lunge_db']
         exercises = []
         for key in keys:
-            if key == 'barbell_rdl_carryover':
-                e = copy.deepcopy(old_ex(original, week, 'Barbell Romanian deadlift'))
-                e['retained_source_occurrence_id'] = e['exercise_occurrence_id']
-                e.update(variant_key=key, authority='RETAINED_UNSELECTED_ATTACHMENT_CARRYOVER',
-                         dose_status='UNAPPROVED_SOURCE_CARRYOVER', effective_dose_status='TEMPLATE_MEMBERSHIP_UNRESOLVED',
-                         effective_prescription=None, content_holds=['C4'], retained_reduction_proposals=[])
-                e['tempo'] = '~2 seconds lowering; no forced pause; purposeful lift'
-                e['notes'] += ' Not part of D1–D7 selections; retain/remove decision pending. Total external barbell load.'
-            else:
-                e = copy.deepcopy(standard[key])
+            e = copy.deepcopy(standard[key])
             e['exercise_occurrence_id'] = f'W{week:02}-{"A" if day == 1 else "B"}-{key}'
-            if week in CONSOLIDATION:
-                mapping = {'incline_db_press': ('DB bench press', 'C1', False),
-                           'chest_supported_db_row': ('One-arm DB row', 'C1', False),
-                           'reverse_lunge_db': ('DB reverse lunge', 'C1', False),
-                           'seated_supported_db_press': ('DB overhead press', 'C1', False),
-                           'machine_standing_calf': ('Standing single-leg DB calf raise', 'C1', False),
-                           'pull_up_bodyweight': ('Pull-up', None, True),
-                           'db_lateral_raise': ('DB lateral raise', None, True),
-                           'bench_supported_db_row': ('One-arm DB row', None, True)}
-                if key in mapping:
-                    label, hold, apply = mapping[key]
-                    oldday = 1 if key == 'chest_supported_db_row' else 4 if key == 'bench_supported_db_row' else None
-                    add_reduction(e, old_ex(original, week, label, oldday),
-                        'Retained exact proposal for the same selected movement/branch.' if apply else
-                        'Changed variant, day or standard dose: no automatic transfer of the old reduction.', hold, apply)
-            if week == 9 and key == 'reverse_lunge_db':
-                add_reduction(e, old_ex(original, week, 'DB reverse lunge'),
-                              'Old reduced 1×5/leg conflicts with newly selected standard 1×6/leg; no fractional/zero-set reduction invented.', 'C2')
-            if week == 10 and day == 1:
-                if key in ['pull_up_bodyweight', 'db_lateral_raise']:
-                    label = 'Pull-up' if key == 'pull_up_bodyweight' else 'DB lateral raise'
-                    add_reduction(e, old_ex(original, 10, label), 'Same-movement exact retained taper proposal, not final D8 approval.', apply=True)
-                else:
-                    e['content_holds'].append('C3')
-                    e['effective_dose_status'] = 'W10_NEW_OR_CHANGED_MOVEMENT_TAPER_DOSE_UNRESOLVED'
-                    if key == 'chest_supported_db_row':
-                        add_reduction(e, old_ex(original, 10, 'One-arm DB row'), 'Unilateral row taper dose cannot silently become bilateral DB row dose.')
-                    elif key == 'cable_pallof_square':
-                        add_reduction(e, old_ex(original, 10, 'Side plank'), 'One timed side-plank set cannot silently become a Pallof dose.')
-                    else:
-                        e['retained_reduction_proposals'].append({'explanation': 'No flat/incline chest press in old W10 template; Monday incline inclusion/dose requires explicit taper choice.'})
-            if week == 10 and day == 4:
-                e.update(sets=2, rir='at least 3', dose_status='FOUNDER_SELECTED_W10_EXCEPTION',
-                         effective_dose_status='SELECTED_W10_EXCEPTION')
-                if key == 'seated_supported_db_press':
-                    add_reduction(e, old_ex(original, 10, 'DB overhead press', 4),
-                        'Sets and minimum RIR are selected; prior proposed 90-second rest conflicts with new standard 120 seconds. Rest requires decision.', 'C3')
-                e['notes'] += ' Comfortable upper-body work; at least 3 RIR, no invented upper bound; no lower-body lifting.'
+            apply_week_dose(e, week, day)
             p = native(e)
             if not e['content_holds']:
                 e['effective_prescription'] = copy.deepcopy(p)
@@ -251,11 +237,11 @@ def build():
                 'Bodyweight squats/unloaded hinges are preparation, not working squat/RDL prescriptions.')
         if week == 10 and day == 4:
             prep = 'Upper-body preparation only; 1–2 light sets per new upper-body pattern as needed, no failure. No lower-body lifting or squat/hinge warm-up inserted.'
-        graphs.append({'source_session_id': s['session_id'], 'protocol_id': s['session_id'] + '-DRAFT-R2',
-            'revision_number': 2, 'classification': 'REVIEW_ONLY_NOT_ADMITTED_OR_PUBLISHED',
+        graphs.append({'source_session_id': s['session_id'], 'protocol_id': s['session_id'] + '-DRAFT-R3',
+            'revision_number': 3, 'classification': 'REVIEW_ONLY_NOT_ADMITTED_OR_PUBLISHED',
             'blocks': [
                 {'position': 1, 'block_type': 'warm_up', 'title': 'Preparation', 'content': prep, 'workout_format': 'none', 'exercises': []},
-                {'position': 2, 'block_type': 'strength', 'title': s['title'], 'content': 'Selected standards, exact retained proposals and unresolved reference doses remain distinct.',
+                {'position': 2, 'block_type': 'strength', 'title': s['title'], 'content': 'Exact founder-selected standard and week-specific doses; full programme D8 review pending.',
                  'workout_format': 'none', 'performance_capture_mode': 'auto', 'exercises': [
                     {'position': i, 'exercise_id': BOUND.get(e['variant_key']), 'variant_key': e['variant_key'],
                      'source_occurrence_id': e['exercise_occurrence_id'], 'display_label_override': e['exercise'],
@@ -285,15 +271,16 @@ def build():
     for ref in schedule['sessions']:
         s = next(s for s in source['sessions'] if s['session_id'] == ref['session_key'])
         if s['type'] == 'strength':
-            ref.update(protocol_id=s['session_id'] + '-DRAFT-R2', revision_number=2, title=s['title'])
+            ref.update(protocol_id=s['session_id'] + '-DRAFT-R3', revision_number=3, title=s['title'])
     for w in schedule['weeks']:
+        w['title'] = source['weeks'][w['week_number'] - 1]['focus']
         for day in w['days']:
             day_source = next(s for s in source['sessions'] if s['week'] == w['week_number'] and s['day'] == day['day_order'])
             day['title'] = day_source['title']
             for slot in day['slots']:
                 if any(g['source_session_id'] == slot['session_key'] for g in graphs):
                     slot['display_title'] = day_source['title']
-                    slot['progression']['prescription_summary'] = 'D1–D7 standard selections; exact retained reductions/reference doses and D8 holds in TEN_WEEK_REVIEW.md. No automatic progression.'
+                    slot['progression']['prescription_summary'] = 'D1–D7 plus exact founder-selected week doses; D8 full-programme review in TEN_WEEK_REVIEW.md. No automatic progression.'
     statistics = weekly_stats(runs)
     evidence = {'scope': 'TRUSTED_LOCAL_PRIVATE_V1_V2_ROW_INTAKE_NOT_V3_OR_HOSTED', 'base': BASE,
         'repository_rows': rows(), 'historical_candidate_rows': load('IDENTITY_INTAKE.json')['candidate_export'],
@@ -324,10 +311,16 @@ def build():
              }[key]}
             for key in CANDIDATES],
         'conditional_not_initial_blockers': evidence['assisted_branches'] + [evidence['weighted_option']]}
-    audit = {'base': BASE, 'selection_sha256': SELECTION_HASH, 'inherited_source_sha256': PINS,
+    audit = {'base': BASE, 'selection_sha256': SELECTION_HASH, 'dose_clarification_sha256': DOSE_HASH, 'inherited_source_sha256': PINS,
         'counts': dict(collections.Counter(s['type'] for s in source['sessions'])), 'strength_occurrences_in_review': len(bindings),
-        'selected_template_occurrences': sum(b['variant_key'] != 'barbell_rdl_carryover' for b in bindings),
-        'unapproved_rdl_carryover_occurrences': 9,
+        'selected_template_occurrences': len(bindings),
+        'rdl_membership': 'EXPLICITLY_SELECTED',
+        'weekly_strength_work_sets': [sum(e['sets'] for s in source['sessions'] if s['week'] == w for e in s.get('exercises', [])) for w in range(1, 11)],
+        'strength_work_sets': sum(e['sets'] for s in source['sessions'] for e in s.get('exercises', [])),
+        'omitted_work': [{'week': 9, 'variant': 'reverse_lunge_db', 'authority': 'Explicit founder W9 omission'}],
+        'phase_reconciliation': [{'previous_label': 'W7 consolidation: reduce running and lifting volume', 'resolution': 'Removed; W7 uses standard strength; exact selected running preserved'},
+                                 {'surviving_running_label': 'W8 Peak 10K specificity', 'scope': 'Selected run label only; does not override W8 lower-body strength effort control'},
+                                 {'surviving_numeric_pattern': 'W7 running time and threshold minutes remain lower than W6', 'scope': 'Explicitly preserve selected running prescriptions; no retiming or implied strength deload'}],
         'verified_local_identity_occurrences': sum(b['exercise_id'] is not None for b in bindings),
         'unresolved_identity_occurrences': sum(b['exercise_id'] is None for b in bindings),
         'weekly_running': statistics, 'removed_personal_notes': removed_personal_notes,
@@ -343,7 +336,7 @@ def build():
         'content_hold_counts': dict(collections.Counter(h for b in bindings for h in b['content_holds'])),
         'full_programme_approval': False, 'publication': False}
     assert audit['counts'] == {'strength': 20, 'running': 40, 'rest': 10}
-    assert len(bindings) == 106 and audit['verified_local_identity_occurrences'] == 47
+    assert len(bindings) == 105 and audit['verified_local_identity_occurrences'] == 47
     assert audit['running_execution_steps_targets_and_identity_unchanged']
     return {'SOURCE.json': source, 'RUNNING_BODIES.json': runs, 'SCHEDULE_CANDIDATE.json': schedule,
             'IDENTITY_INTAKE.json': evidence, 'TRUSTED_INTAKE_REQUESTS.json': requests,
@@ -376,7 +369,7 @@ def admission_preflight(graphs):
         raise ValueError('not_exact_selected_source_review')
     unresolved = [e for g in graphs for b in g['blocks'] for e in b['exercises'] if e['exercise_id'] is None]
     holds = sorted({h for g in graphs for b in g['blocks'] for e in b['exercises'] for h in e['content_holds']})
-    return {'admitted': False, 'code': 'source_identity_and_content_holds',
+    return {'admitted': False, 'code': 'exact_identity_records_required',
             'unresolved_identity_occurrences': len(unresolved), 'unique_content_holds': holds,
             'full_strength_graphs_admitted': 0, 'complete_programme_approval': 'D8_PENDING',
             'canonical_private_decoder_called_for_incomplete_graphs': False}

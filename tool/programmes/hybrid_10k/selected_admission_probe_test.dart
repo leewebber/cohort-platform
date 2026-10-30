@@ -24,8 +24,8 @@ dynamic read(String file) => jsonDecode(File(file).readAsStringSync());
 void main() {
   final report = <String, dynamic>{
     'classification': 'GENUINE_DRAFT_LOCAL_CONTRACT_PROBE_NOT_PUBLICATION',
-    'base': '398a7fe9dc61791db71410fa46ba8d3a1e6c3991',
-    'content_approval': 'D1_D7_STANDARDS_SELECTED_D8_PENDING',
+    'base': '15627ecd7c41ab0f5f593ba6a08075374f7316fe',
+    'content_approval': 'D1_D7_AND_WEEK_DOSES_SELECTED_D8_PENDING',
     'canonical_acquisition_start_logging_completion_restore': 'NOT_ATTEMPTED',
     'running_evidence': {
       'reused_immutable_checkpoint':
@@ -37,7 +37,7 @@ void main() {
   };
   tearDownAll(() {
     final file = File(
-      'docs/checkpoints/m11_hybrid10k_selected_strength/ADMISSION.json',
+      'docs/checkpoints/m11_hybrid10k_dose_reconciliation/ADMISSION.json',
     );
     file.parent.createSync(recursive: true);
     file.writeAsStringSync(
@@ -46,7 +46,7 @@ void main() {
   });
 
   test(
-    'trusted exact-row catalogue intake resolves 47 references and holds all 59 candidates without name substitution',
+    'trusted exact-row catalogue intake resolves 47 references and holds all missing exact records without name substitution',
     () {
       final evidence = read('$source/IDENTITY_INTAKE.json') as Map;
       final rows = evidence['repository_rows'] as Map;
@@ -127,7 +127,7 @@ void main() {
         catalogue,
       ).resolveDocument(document);
       expect(resolved.canonicalIds, hasLength(47));
-      expect(resolved.issues, hasLength(59));
+      expect(resolved.issues, hasLength(58));
       expect(resolved.canonicalIds.values.toSet(), {
         'EX-078',
         'EX-084',
@@ -141,9 +141,8 @@ void main() {
       );
       report['trusted_identity_intake'] = {
         'verified_legacy_row_occurrences': 47,
-        'selected_template_occurrences_bound': 38,
-        'unapproved_rdl_carryovers_bound': 9,
-        'unresolved_identity_occurrences': 59,
+        'selected_template_occurrences_bound': 47,
+        'unresolved_identity_occurrences': 58,
         'full_published_row_or_version_event_created': false,
         'current_hosted_catalogue_state': 'NOT_VERIFIED',
       };
@@ -175,8 +174,8 @@ void main() {
       expect(preflight.exitCode, 0, reason: preflight.stderr.toString());
       final held = jsonDecode(preflight.stdout.toString()) as Map;
       expect(held['admitted'], isFalse);
-      expect(held['unresolved_identity_occurrences'], 59);
-      expect(held['unique_content_holds'], ['C1', 'C2', 'C3', 'C4']);
+      expect(held['unresolved_identity_occurrences'], 58);
+      expect(held['unique_content_holds'], isEmpty);
       report['source_guard'] = held;
       final results = <Map>[];
       for (final version in [1, 2]) {
@@ -199,7 +198,7 @@ void main() {
           'complete_review_graph_scope': 60,
           'schedule_compile': 'PASS',
           'schedule_sha256': compiled.contentHashSha256,
-          'full_admission': 'source_identity_and_content_holds',
+          'full_admission': 'exact_identity_records_required',
           'complete_strength_graphs_admitted': 0,
           'private_decoder_called_for_incomplete_graphs': false,
         });
@@ -323,8 +322,7 @@ void main() {
         'private_v1_v2_graph_check': 'PASS',
         'native_plan_serialization_restore': 'PASS',
         'complete_sessions_or_canonical_started_state': false,
-        'prescription_scope':
-            'REFERENCE_ONLY_WHERE_CONTENT_HELD_NOT_APPROVED_EFFECTIVE_DOSES',
+        'prescription_scope': 'EXACT_SELECTED_DOSES_FULL_PROGRAMME_D8_PENDING',
       };
     },
   );
@@ -363,7 +361,7 @@ void main() {
           expect(e['exercise_id'], expected['exercise_id']);
         }
       }
-      expect(total, 106);
+      expect(total, 105);
       final taper = graphs.singleWhere(
         (g) => g['source_session_id'] == 'LW10K-W10-D04',
       );
@@ -385,7 +383,7 @@ void main() {
       report['review_graphs'] = {
         'sessions': 20,
         'occurrences': total,
-        'final_effective_work_sets': 'UNKNOWN_UNTIL_C1_C4_RESOLVED',
+        'selected_work_set_prescriptions': 238,
         'whole_sessions_withheld': 20,
       };
     },

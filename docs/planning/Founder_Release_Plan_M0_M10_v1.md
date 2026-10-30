@@ -8,43 +8,32 @@ it does not grant implementation, content, hosted, account or release authority.
 
 ## Current single point — M1.1 (2026-10-30)
 
-**D1–D7 strength selections applied; D8 and complete graph admission remain open.**
-[Current handoff](../checkpoints/m11_hybrid10k_selected_strength/HANDOFF.md) and the
-single [complete ten-week programme review](../programmes/hybrid_10k/founder_selected_2026_10_30/TEN_WEEK_REVIEW.md)
-contain every session, exact doses/rests/targets/preparation/progression, visible
-consolidation/taper proposals, running totals and quality minutes. New standard
-strength doses supersede conflicting attachment doses. Working squat/farmer-carry
-carryovers are removed; preparation is separate. RDL's nine unchanged prescriptions
-remain explicitly unapproved carryovers awaiting membership review. D1–D7 choice
-approval is not whole-programme/publication/eligibility/assignment authority.
+**Strength dose/membership holds resolved; D8 and six exact identity records remain.**
+[Current handoff](../checkpoints/m11_hybrid10k_dose_reconciliation/HANDOFF.md) and
+[updated complete TEN_WEEK_REVIEW.md](../programmes/hybrid_10k/founder_selected_2026_10_30/TEN_WEEK_REVIEW.md)
+apply the founder's exact RDL standard, W4 consolidation, W8 lower-body effort,
+W9 reduction and W10 exception. The explicit follow-up makes W7 standard strength
+and removes its former consolidation label/reductions: W5–7 build, W8 controls
+lower-body effort, W9–10 reduce workload. Selected runs and original approved M2.3
+behaviour remain unchanged; the review groups surviving older phase wording.
+Preparation is separate from working sets; no working squat/carry returns.
 
-General PB scope, 40 runs / 20 strength / 10 rests, the four selected timed run
-replacements, confirmed Zone 2 and approved original M2.3 rules remain controlling.
-Executable running steps/targets/identities are unchanged: 39 timed and final
-10,000 m distance-ended. The review separates workout-clock time from permitted
-walking and preserves final-test duration as unknown. Lee's personal adjustment
-stays separate; misplaced travel wording is removed from general notes only.
+RDL membership and all numeric strength doses are selected. D8/full-programme
+approval remains pending review of the single complete document. Exact missing
+legacy rows/setup bindings for six selected variants, and the authority/action
+needed for each, are recorded in the bounded intake handoff. No occurrence audit,
+similar-movement substitution, invented published evidence or deferred v3 producer
+is required. Full v1/v2 schedules compile and known-identity partial contracts pass;
+full strength admission remains blocked by those exact records, with no dose holds.
 
-Full v1/v2 schedules compile with exact 60-body review scope. Trusted exact row
-intake resolves 47/106 strength references (38 selected-template plus 9 held RDL),
-leaving six selected variants / 59 identity occurrences unresolved. All twenty full
-strength graphs remain withheld; partial graph/codec proof is not canonical start.
-C1–C4 collect genuine remaining reduction/taper/RDL decisions; D8 retains the rest
-of programme/entry-workload review. No published rows, versions/events or deferred
-v3 producer dependency are invented.
-
-**Next single point: M1.1 D8 review of the one ten-week programme plus exact trusted
-row retention for the six selected unresolved variants, followed by complete
-private v1/v2 graph admission.** Final-10K execution, held migrations, separately
-authorised publication/access enablement, actual adaptation, distribution/device
-acceptance and inherited bootstrap triage remain alpha requirements. Supabase
-hosted status stays unverified; no hosted/account/athlete/UI operation follows.
-
-M2.5 remains externally blocked and is not repeated. Garmin access/contracts,
-authoritative binary FIT proof and missing firmware/Connect/HR details stay open.
-Preserve all prior checkouts/indices/heads/dirty files/.temp, the full Git chain
-and three verified bundles. Normal main-only Git publication requires fresh remote
-ancestry verification; ordinary GitHub DNS still fails, with no alternate route.
+**Next single point: M1.1 D8 review of the updated complete programme plus retention
+of the six exact trusted identities, then complete private v1/v2 graph admission.**
+Final distance-ended 10K execution, held migrations, separate publication/access
+enablement, adaptation, distribution/authenticated device acceptance and inherited
+bootstrap triage remain Gate A requirements. M2.5 is externally blocked and is not
+repeated. Supabase hosted status remains unverified; no hosted/athlete/UI operation.
+Preserve all prior checkouts/HEADs/indices/dirty files/.temp, full chain and four
+verified bundles; normal main-only Git publication needs fresh remote ancestry.
 
 ## Retained M1.1 consolidation direction (2026-10-28)
 

@@ -1,6 +1,6 @@
 {
   "scope": "TRUSTED_LOCAL_PRIVATE_V1_V2_ROW_INTAKE_NOT_V3_OR_HOSTED",
-  "base": "398a7fe9dc61791db71410fa46ba8d3a1e6c3991",
+  "base": "15627ecd7c41ab0f5f593ba6a08075374f7316fe",
   "repository_rows": {
     "EX-078": {
       "catalogue_row": {
@@ -20,7 +20,7 @@
       "row_sha256": "8c0f0b5c484906eaaf76993ede47eaef1647d5b62371727951abe66216666f55",
       "source_path": "supabase/migrations/20260724140000_founder_exercise_library_wave1.sql",
       "source_sha256": "22a2683b81d09e071b99adda3c120dff06cb6410fcc4a2b53029beffca73d0c8",
-      "snapshot_git_revision": "398a7fe9dc61791db71410fa46ba8d3a1e6c3991",
+      "snapshot_git_revision": "15627ecd7c41ab0f5f593ba6a08075374f7316fe",
       "canonical_definition_version": null,
       "publication_event": null,
       "hosted_state": "UNVERIFIED"
@@ -43,7 +43,7 @@
       "row_sha256": "85ce03477196f7f3aeee61bd8f5f81534decf32ab0c743bf882bbf9fc60faabd",
       "source_path": "supabase/migrations/20260724140000_founder_exercise_library_wave1.sql",
       "source_sha256": "22a2683b81d09e071b99adda3c120dff06cb6410fcc4a2b53029beffca73d0c8",
-      "snapshot_git_revision": "398a7fe9dc61791db71410fa46ba8d3a1e6c3991",
+      "snapshot_git_revision": "15627ecd7c41ab0f5f593ba6a08075374f7316fe",
       "canonical_definition_version": null,
       "publication_event": null,
       "hosted_state": "UNVERIFIED"
@@ -66,7 +66,7 @@
       "row_sha256": "d9155f877066f00d01848bfcf341cb85ffe8c553b7e710ab019bee9c846d0c2b",
       "source_path": "supabase/migrations/20260724140000_founder_exercise_library_wave1.sql",
       "source_sha256": "22a2683b81d09e071b99adda3c120dff06cb6410fcc4a2b53029beffca73d0c8",
-      "snapshot_git_revision": "398a7fe9dc61791db71410fa46ba8d3a1e6c3991",
+      "snapshot_git_revision": "15627ecd7c41ab0f5f593ba6a08075374f7316fe",
       "canonical_definition_version": null,
       "publication_event": null,
       "hosted_state": "UNVERIFIED"
@@ -89,7 +89,7 @@
       "row_sha256": "d53708b2ea382335dc3937e6499fdd39fc369a033fe26ff84bcc395b0ea18c8c",
       "source_path": "supabase/migrations/20260724140000_founder_exercise_library_wave1.sql",
       "source_sha256": "22a2683b81d09e071b99adda3c120dff06cb6410fcc4a2b53029beffca73d0c8",
-      "snapshot_git_revision": "398a7fe9dc61791db71410fa46ba8d3a1e6c3991",
+      "snapshot_git_revision": "15627ecd7c41ab0f5f593ba6a08075374f7316fe",
       "canonical_definition_version": null,
       "publication_event": null,
       "hosted_state": "UNVERIFIED"
@@ -112,7 +112,7 @@
       "row_sha256": "a916eea4c41bcb966a502c5a6b481b6fe85625189aa1e91f270bb2d0f9e2c887",
       "source_path": "supabase/migrations/20260724140000_founder_exercise_library_wave1.sql",
       "source_sha256": "22a2683b81d09e071b99adda3c120dff06cb6410fcc4a2b53029beffca73d0c8",
-      "snapshot_git_revision": "398a7fe9dc61791db71410fa46ba8d3a1e6c3991",
+      "snapshot_git_revision": "15627ecd7c41ab0f5f593ba6a08075374f7316fe",
       "canonical_definition_version": null,
       "publication_event": null,
       "hosted_state": "UNVERIFIED"
@@ -135,7 +135,7 @@
       "row_sha256": "64c266e3aeed827245b8e45588fc0df6de8badb548e985300cf338c08f7e9ea5",
       "source_path": "supabase/migrations/20260724140000_founder_exercise_library_wave1.sql",
       "source_sha256": "22a2683b81d09e071b99adda3c120dff06cb6410fcc4a2b53029beffca73d0c8",
-      "snapshot_git_revision": "398a7fe9dc61791db71410fa46ba8d3a1e6c3991",
+      "snapshot_git_revision": "15627ecd7c41ab0f5f593ba6a08075374f7316fe",
       "canonical_definition_version": null,
       "publication_event": null,
       "hosted_state": "UNVERIFIED"
@@ -158,7 +158,7 @@
       "row_sha256": "c1feee9e6e85a6c5b5bceb247e29b25d3d367794061e92dd70f342be3653f4b9",
       "source_path": "supabase/migrations/20260724140000_founder_exercise_library_wave1.sql",
       "source_sha256": "22a2683b81d09e071b99adda3c120dff06cb6410fcc4a2b53029beffca73d0c8",
-      "snapshot_git_revision": "398a7fe9dc61791db71410fa46ba8d3a1e6c3991",
+      "snapshot_git_revision": "15627ecd7c41ab0f5f593ba6a08075374f7316fe",
       "canonical_definition_version": null,
       "publication_event": null,
       "hosted_state": "UNVERIFIED"
@@ -278,7 +278,7 @@
     "cable_pallof_square": "EX-114",
     "machine_standing_calf": "EX-125",
     "side_plank": "EX-116",
-    "barbell_rdl_carryover": "EX-078"
+    "barbell_rdl": "EX-078"
   },
   "candidate_leads": {
     "pull_up_bodyweight": "EX-053",
@@ -298,7 +298,7 @@
       "identity_status": "VERIFIED_LOCAL_LEGACY_ROW_MATCH",
       "content_holds": [],
       "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "SELECTED_STANDARD_NO_REDUCTION_CONFLICT",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 3,
         "reps": {
@@ -375,7 +375,7 @@
       "identity_status": "UNRESOLVED_EXACT_IDENTITY",
       "content_holds": [],
       "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "SELECTED_STANDARD_NO_REDUCTION_CONFLICT",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 3,
         "reps": {
@@ -444,7 +444,7 @@
       "identity_status": "UNRESOLVED_EXACT_IDENTITY",
       "content_holds": [],
       "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "SELECTED_STANDARD_NO_REDUCTION_CONFLICT",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 3,
         "reps": {
@@ -521,7 +521,7 @@
       "identity_status": "UNRESOLVED_EXACT_IDENTITY",
       "content_holds": [],
       "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "SELECTED_STANDARD_NO_REDUCTION_CONFLICT",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 3,
         "reps": {
@@ -598,7 +598,7 @@
       "identity_status": "VERIFIED_LOCAL_LEGACY_ROW_MATCH",
       "content_holds": [],
       "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "SELECTED_STANDARD_NO_REDUCTION_CONFLICT",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 2,
         "reps": {
@@ -662,42 +662,43 @@
     },
     {
       "session_id": "LW10K-W01-D04",
-      "source_occurrence_id": "W01-B-barbell_rdl_carryover",
-      "variant_key": "barbell_rdl_carryover",
+      "source_occurrence_id": "W01-B-barbell_rdl",
+      "variant_key": "barbell_rdl",
       "exercise_id": "EX-078",
       "candidate_exercise_id": null,
       "identity_status": "VERIFIED_LOCAL_LEGACY_ROW_MATCH",
-      "content_holds": [
-        "C4"
-      ],
-      "dose_status": "UNAPPROVED_SOURCE_CARRYOVER",
-      "effective_dose_status": "TEMPLATE_MEMBERSHIP_UNRESOLVED",
+      "content_holds": [],
+      "dose_status": "FOUNDER_SELECTED_STANDARD",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 2,
         "reps": {
           "type": "range",
-          "min_reps": 6,
-          "max_reps": 8
+          "min_reps": 5,
+          "max_reps": 6
         },
         "per_side": false,
-        "tempo": "~2 seconds lowering; no forced pause; purposeful lift",
-        "coach_cue": "Controlled hinge; stop before spinal position changes. Not part of D1–D7 selections; retain/remove decision pending. Total external barbell load.",
+        "tempo": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
+        "coach_cue": "Thursday barbell RDL; controlled hinge, stop before spinal position changes. Log total external barbell load. Membership and dose explicitly selected.",
         "authored_details": {
-          "source_occurrence_id": "W01-B-barbell_rdl_carryover",
-          "source_repetitions_or_duration": "6–8",
-          "source_rir": "3",
-          "source_tempo_reference": "~2 seconds lowering; no forced pause; purposeful lift",
-          "source_rest_seconds": "120",
-          "selection": "RETAINED_UNSELECTED_ATTACHMENT_CARRYOVER",
-          "variant_key": "barbell_rdl_carryover",
-          "source_dose_status": "UNAPPROVED_SOURCE_CARRYOVER"
+          "source_occurrence_id": "W01-B-barbell_rdl",
+          "source_repetitions_or_duration": "5–6",
+          "source_rir": "2–3",
+          "source_tempo_reference": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
+          "source_rest_seconds": "120–180",
+          "selection": "RDL clarification",
+          "variant_key": "barbell_rdl",
+          "source_dose_status": "FOUNDER_SELECTED_STANDARD"
         },
         "load": {
           "type": "athleteSelected"
         },
-        "rest_seconds": 120,
+        "rest_seconds_range": [
+          120,
+          180
+        ],
         "rir_range": [
-          3,
+          2,
           3
         ],
         "performance_capture": {
@@ -705,7 +706,42 @@
           "load_label": "Total barbell load"
         }
       },
-      "effective_prescription": null
+      "effective_prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "range",
+          "min_reps": 5,
+          "max_reps": 6
+        },
+        "per_side": false,
+        "tempo": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
+        "coach_cue": "Thursday barbell RDL; controlled hinge, stop before spinal position changes. Log total external barbell load. Membership and dose explicitly selected.",
+        "authored_details": {
+          "source_occurrence_id": "W01-B-barbell_rdl",
+          "source_repetitions_or_duration": "5–6",
+          "source_rir": "2–3",
+          "source_tempo_reference": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
+          "source_rest_seconds": "120–180",
+          "selection": "RDL clarification",
+          "variant_key": "barbell_rdl",
+          "source_dose_status": "FOUNDER_SELECTED_STANDARD"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds_range": [
+          120,
+          180
+        ],
+        "rir_range": [
+          2,
+          3
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "Total barbell load"
+        }
+      }
     },
     {
       "session_id": "LW10K-W01-D04",
@@ -716,7 +752,7 @@
       "identity_status": "UNRESOLVED_EXACT_IDENTITY",
       "content_holds": [],
       "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "SELECTED_STANDARD_NO_REDUCTION_CONFLICT",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 1,
         "reps": {
@@ -791,7 +827,7 @@
       "identity_status": "UNRESOLVED_EXACT_IDENTITY",
       "content_holds": [],
       "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "SELECTED_STANDARD_NO_REDUCTION_CONFLICT",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 3,
         "reps": {
@@ -868,7 +904,7 @@
       "identity_status": "UNRESOLVED_EXACT_IDENTITY",
       "content_holds": [],
       "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "SELECTED_STANDARD_NO_REDUCTION_CONFLICT",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 3,
         "reps": {
@@ -945,7 +981,7 @@
       "identity_status": "VERIFIED_LOCAL_LEGACY_ROW_MATCH",
       "content_holds": [],
       "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "SELECTED_STANDARD_NO_REDUCTION_CONFLICT",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 2,
         "reps": {
@@ -1026,7 +1062,7 @@
       "identity_status": "VERIFIED_LOCAL_LEGACY_ROW_MATCH",
       "content_holds": [],
       "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "SELECTED_STANDARD_NO_REDUCTION_CONFLICT",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 2,
         "reps": {
@@ -1085,7 +1121,7 @@
       "identity_status": "VERIFIED_LOCAL_LEGACY_ROW_MATCH",
       "content_holds": [],
       "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "SELECTED_STANDARD_NO_REDUCTION_CONFLICT",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 3,
         "reps": {
@@ -1162,7 +1198,7 @@
       "identity_status": "UNRESOLVED_EXACT_IDENTITY",
       "content_holds": [],
       "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "SELECTED_STANDARD_NO_REDUCTION_CONFLICT",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 3,
         "reps": {
@@ -1231,7 +1267,7 @@
       "identity_status": "UNRESOLVED_EXACT_IDENTITY",
       "content_holds": [],
       "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "SELECTED_STANDARD_NO_REDUCTION_CONFLICT",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 3,
         "reps": {
@@ -1308,7 +1344,7 @@
       "identity_status": "UNRESOLVED_EXACT_IDENTITY",
       "content_holds": [],
       "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "SELECTED_STANDARD_NO_REDUCTION_CONFLICT",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 3,
         "reps": {
@@ -1385,7 +1421,7 @@
       "identity_status": "VERIFIED_LOCAL_LEGACY_ROW_MATCH",
       "content_holds": [],
       "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "SELECTED_STANDARD_NO_REDUCTION_CONFLICT",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 2,
         "reps": {
@@ -1449,42 +1485,43 @@
     },
     {
       "session_id": "LW10K-W02-D04",
-      "source_occurrence_id": "W02-B-barbell_rdl_carryover",
-      "variant_key": "barbell_rdl_carryover",
+      "source_occurrence_id": "W02-B-barbell_rdl",
+      "variant_key": "barbell_rdl",
       "exercise_id": "EX-078",
       "candidate_exercise_id": null,
       "identity_status": "VERIFIED_LOCAL_LEGACY_ROW_MATCH",
-      "content_holds": [
-        "C4"
-      ],
-      "dose_status": "UNAPPROVED_SOURCE_CARRYOVER",
-      "effective_dose_status": "TEMPLATE_MEMBERSHIP_UNRESOLVED",
+      "content_holds": [],
+      "dose_status": "FOUNDER_SELECTED_STANDARD",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 2,
         "reps": {
           "type": "range",
-          "min_reps": 6,
-          "max_reps": 8
+          "min_reps": 5,
+          "max_reps": 6
         },
         "per_side": false,
-        "tempo": "~2 seconds lowering; no forced pause; purposeful lift",
-        "coach_cue": "Controlled hinge; stop before spinal position changes. Not part of D1–D7 selections; retain/remove decision pending. Total external barbell load.",
+        "tempo": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
+        "coach_cue": "Thursday barbell RDL; controlled hinge, stop before spinal position changes. Log total external barbell load. Membership and dose explicitly selected.",
         "authored_details": {
-          "source_occurrence_id": "W02-B-barbell_rdl_carryover",
-          "source_repetitions_or_duration": "6–8",
-          "source_rir": "3",
-          "source_tempo_reference": "~2 seconds lowering; no forced pause; purposeful lift",
-          "source_rest_seconds": "120",
-          "selection": "RETAINED_UNSELECTED_ATTACHMENT_CARRYOVER",
-          "variant_key": "barbell_rdl_carryover",
-          "source_dose_status": "UNAPPROVED_SOURCE_CARRYOVER"
+          "source_occurrence_id": "W02-B-barbell_rdl",
+          "source_repetitions_or_duration": "5–6",
+          "source_rir": "2–3",
+          "source_tempo_reference": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
+          "source_rest_seconds": "120–180",
+          "selection": "RDL clarification",
+          "variant_key": "barbell_rdl",
+          "source_dose_status": "FOUNDER_SELECTED_STANDARD"
         },
         "load": {
           "type": "athleteSelected"
         },
-        "rest_seconds": 120,
+        "rest_seconds_range": [
+          120,
+          180
+        ],
         "rir_range": [
-          3,
+          2,
           3
         ],
         "performance_capture": {
@@ -1492,7 +1529,42 @@
           "load_label": "Total barbell load"
         }
       },
-      "effective_prescription": null
+      "effective_prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "range",
+          "min_reps": 5,
+          "max_reps": 6
+        },
+        "per_side": false,
+        "tempo": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
+        "coach_cue": "Thursday barbell RDL; controlled hinge, stop before spinal position changes. Log total external barbell load. Membership and dose explicitly selected.",
+        "authored_details": {
+          "source_occurrence_id": "W02-B-barbell_rdl",
+          "source_repetitions_or_duration": "5–6",
+          "source_rir": "2–3",
+          "source_tempo_reference": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
+          "source_rest_seconds": "120–180",
+          "selection": "RDL clarification",
+          "variant_key": "barbell_rdl",
+          "source_dose_status": "FOUNDER_SELECTED_STANDARD"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds_range": [
+          120,
+          180
+        ],
+        "rir_range": [
+          2,
+          3
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "Total barbell load"
+        }
+      }
     },
     {
       "session_id": "LW10K-W02-D04",
@@ -1503,7 +1575,7 @@
       "identity_status": "UNRESOLVED_EXACT_IDENTITY",
       "content_holds": [],
       "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "SELECTED_STANDARD_NO_REDUCTION_CONFLICT",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 1,
         "reps": {
@@ -1578,7 +1650,7 @@
       "identity_status": "UNRESOLVED_EXACT_IDENTITY",
       "content_holds": [],
       "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "SELECTED_STANDARD_NO_REDUCTION_CONFLICT",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 3,
         "reps": {
@@ -1655,7 +1727,7 @@
       "identity_status": "UNRESOLVED_EXACT_IDENTITY",
       "content_holds": [],
       "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "SELECTED_STANDARD_NO_REDUCTION_CONFLICT",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 3,
         "reps": {
@@ -1732,7 +1804,7 @@
       "identity_status": "VERIFIED_LOCAL_LEGACY_ROW_MATCH",
       "content_holds": [],
       "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "SELECTED_STANDARD_NO_REDUCTION_CONFLICT",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 2,
         "reps": {
@@ -1813,7 +1885,7 @@
       "identity_status": "VERIFIED_LOCAL_LEGACY_ROW_MATCH",
       "content_holds": [],
       "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "SELECTED_STANDARD_NO_REDUCTION_CONFLICT",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 2,
         "reps": {
@@ -1872,7 +1944,7 @@
       "identity_status": "VERIFIED_LOCAL_LEGACY_ROW_MATCH",
       "content_holds": [],
       "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "SELECTED_STANDARD_NO_REDUCTION_CONFLICT",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 3,
         "reps": {
@@ -1949,7 +2021,7 @@
       "identity_status": "UNRESOLVED_EXACT_IDENTITY",
       "content_holds": [],
       "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "SELECTED_STANDARD_NO_REDUCTION_CONFLICT",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 3,
         "reps": {
@@ -2018,7 +2090,7 @@
       "identity_status": "UNRESOLVED_EXACT_IDENTITY",
       "content_holds": [],
       "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "SELECTED_STANDARD_NO_REDUCTION_CONFLICT",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 3,
         "reps": {
@@ -2095,7 +2167,7 @@
       "identity_status": "UNRESOLVED_EXACT_IDENTITY",
       "content_holds": [],
       "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "SELECTED_STANDARD_NO_REDUCTION_CONFLICT",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 3,
         "reps": {
@@ -2172,7 +2244,7 @@
       "identity_status": "VERIFIED_LOCAL_LEGACY_ROW_MATCH",
       "content_holds": [],
       "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "SELECTED_STANDARD_NO_REDUCTION_CONFLICT",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 2,
         "reps": {
@@ -2236,40 +2308,41 @@
     },
     {
       "session_id": "LW10K-W03-D04",
-      "source_occurrence_id": "W03-B-barbell_rdl_carryover",
-      "variant_key": "barbell_rdl_carryover",
+      "source_occurrence_id": "W03-B-barbell_rdl",
+      "variant_key": "barbell_rdl",
       "exercise_id": "EX-078",
       "candidate_exercise_id": null,
       "identity_status": "VERIFIED_LOCAL_LEGACY_ROW_MATCH",
-      "content_holds": [
-        "C4"
-      ],
-      "dose_status": "UNAPPROVED_SOURCE_CARRYOVER",
-      "effective_dose_status": "TEMPLATE_MEMBERSHIP_UNRESOLVED",
+      "content_holds": [],
+      "dose_status": "FOUNDER_SELECTED_STANDARD",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 2,
         "reps": {
           "type": "range",
-          "min_reps": 6,
-          "max_reps": 8
+          "min_reps": 5,
+          "max_reps": 6
         },
         "per_side": false,
-        "tempo": "~2 seconds lowering; no forced pause; purposeful lift",
-        "coach_cue": "Controlled hinge; stop before spinal position changes. Not part of D1–D7 selections; retain/remove decision pending. Total external barbell load.",
+        "tempo": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
+        "coach_cue": "Thursday barbell RDL; controlled hinge, stop before spinal position changes. Log total external barbell load. Membership and dose explicitly selected.",
         "authored_details": {
-          "source_occurrence_id": "W03-B-barbell_rdl_carryover",
-          "source_repetitions_or_duration": "6–8",
+          "source_occurrence_id": "W03-B-barbell_rdl",
+          "source_repetitions_or_duration": "5–6",
           "source_rir": "2–3",
-          "source_tempo_reference": "~2 seconds lowering; no forced pause; purposeful lift",
-          "source_rest_seconds": "120",
-          "selection": "RETAINED_UNSELECTED_ATTACHMENT_CARRYOVER",
-          "variant_key": "barbell_rdl_carryover",
-          "source_dose_status": "UNAPPROVED_SOURCE_CARRYOVER"
+          "source_tempo_reference": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
+          "source_rest_seconds": "120–180",
+          "selection": "RDL clarification",
+          "variant_key": "barbell_rdl",
+          "source_dose_status": "FOUNDER_SELECTED_STANDARD"
         },
         "load": {
           "type": "athleteSelected"
         },
-        "rest_seconds": 120,
+        "rest_seconds_range": [
+          120,
+          180
+        ],
         "rir_range": [
           2,
           3
@@ -2279,7 +2352,42 @@
           "load_label": "Total barbell load"
         }
       },
-      "effective_prescription": null
+      "effective_prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "range",
+          "min_reps": 5,
+          "max_reps": 6
+        },
+        "per_side": false,
+        "tempo": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
+        "coach_cue": "Thursday barbell RDL; controlled hinge, stop before spinal position changes. Log total external barbell load. Membership and dose explicitly selected.",
+        "authored_details": {
+          "source_occurrence_id": "W03-B-barbell_rdl",
+          "source_repetitions_or_duration": "5–6",
+          "source_rir": "2–3",
+          "source_tempo_reference": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
+          "source_rest_seconds": "120–180",
+          "selection": "RDL clarification",
+          "variant_key": "barbell_rdl",
+          "source_dose_status": "FOUNDER_SELECTED_STANDARD"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds_range": [
+          120,
+          180
+        ],
+        "rir_range": [
+          2,
+          3
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "Total barbell load"
+        }
+      }
     },
     {
       "session_id": "LW10K-W03-D04",
@@ -2290,7 +2398,7 @@
       "identity_status": "UNRESOLVED_EXACT_IDENTITY",
       "content_holds": [],
       "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "SELECTED_STANDARD_NO_REDUCTION_CONFLICT",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 1,
         "reps": {
@@ -2365,7 +2473,7 @@
       "identity_status": "UNRESOLVED_EXACT_IDENTITY",
       "content_holds": [],
       "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "SELECTED_STANDARD_NO_REDUCTION_CONFLICT",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 3,
         "reps": {
@@ -2442,7 +2550,7 @@
       "identity_status": "UNRESOLVED_EXACT_IDENTITY",
       "content_holds": [],
       "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "SELECTED_STANDARD_NO_REDUCTION_CONFLICT",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 3,
         "reps": {
@@ -2519,7 +2627,7 @@
       "identity_status": "VERIFIED_LOCAL_LEGACY_ROW_MATCH",
       "content_holds": [],
       "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "SELECTED_STANDARD_NO_REDUCTION_CONFLICT",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 2,
         "reps": {
@@ -2600,7 +2708,7 @@
       "identity_status": "VERIFIED_LOCAL_LEGACY_ROW_MATCH",
       "content_holds": [],
       "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "SELECTED_STANDARD_NO_REDUCTION_CONFLICT",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 2,
         "reps": {
@@ -2657,13 +2765,11 @@
       "exercise_id": "EX-084",
       "candidate_exercise_id": null,
       "identity_status": "VERIFIED_LOCAL_LEGACY_ROW_MATCH",
-      "content_holds": [
-        "C1"
-      ],
-      "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "UNRESOLVED_REDUCTION_REFERENCE_DOSE_ONLY",
+      "content_holds": [],
+      "dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
-        "sets": 3,
+        "sets": 2,
         "reps": {
           "type": "range",
           "min_reps": 6,
@@ -2678,9 +2784,9 @@
           "source_rir": "2",
           "source_tempo_reference": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
           "source_rest_seconds": "120",
-          "selection": "D1",
+          "selection": "D1; DOSE_CLARIFICATIONS.md",
           "variant_key": "incline_db_press",
-          "source_dose_status": "FOUNDER_SELECTED_STANDARD"
+          "source_dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE"
         },
         "load": {
           "type": "athleteSelected"
@@ -2695,7 +2801,39 @@
           "load_label": "External load per dumbbell"
         }
       },
-      "effective_prescription": null
+      "effective_prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "range",
+          "min_reps": 6,
+          "max_reps": 10
+        },
+        "per_side": false,
+        "tempo": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
+        "coach_cue": "Approximately 30° bench; bilateral dumbbells. Log external load per dumbbell.",
+        "authored_details": {
+          "source_occurrence_id": "W04-A-incline_db_press",
+          "source_repetitions_or_duration": "6–10",
+          "source_rir": "2",
+          "source_tempo_reference": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
+          "source_rest_seconds": "120",
+          "selection": "D1; DOSE_CLARIFICATIONS.md",
+          "variant_key": "incline_db_press",
+          "source_dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 120,
+        "rir_range": [
+          2,
+          2
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
     },
     {
       "session_id": "LW10K-W04-D01",
@@ -2705,8 +2843,8 @@
       "candidate_exercise_id": "EX-053",
       "identity_status": "UNRESOLVED_EXACT_IDENTITY",
       "content_holds": [],
-      "dose_status": "RETAINED_PROPOSED_REDUCTION_NOT_FINAL_CONTENT_APPROVAL",
-      "effective_dose_status": "EXACT_RETAINED_PROPOSAL_PENDING_D8",
+      "dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 2,
         "reps": {
@@ -2720,17 +2858,17 @@
         "authored_details": {
           "source_occurrence_id": "W04-A-pull_up_bodyweight",
           "source_repetitions_or_duration": "5–8",
-          "source_rir": "3",
+          "source_rir": "2",
           "source_tempo_reference": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
           "source_rest_seconds": "120",
-          "selection": "D5",
+          "selection": "D5; DOSE_CLARIFICATIONS.md",
           "variant_key": "pull_up_bodyweight",
-          "source_dose_status": "RETAINED_PROPOSED_REDUCTION_NOT_FINAL_CONTENT_APPROVAL"
+          "source_dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE"
         },
         "rest_seconds": 120,
         "rir_range": [
-          3,
-          3
+          2,
+          2
         ],
         "performance_capture": {
           "load_label": "Added external load only after supported weighted-identity selection"
@@ -2749,17 +2887,17 @@
         "authored_details": {
           "source_occurrence_id": "W04-A-pull_up_bodyweight",
           "source_repetitions_or_duration": "5–8",
-          "source_rir": "3",
+          "source_rir": "2",
           "source_tempo_reference": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
           "source_rest_seconds": "120",
-          "selection": "D5",
+          "selection": "D5; DOSE_CLARIFICATIONS.md",
           "variant_key": "pull_up_bodyweight",
-          "source_dose_status": "RETAINED_PROPOSED_REDUCTION_NOT_FINAL_CONTENT_APPROVAL"
+          "source_dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE"
         },
         "rest_seconds": 120,
         "rir_range": [
-          3,
-          3
+          2,
+          2
         ],
         "performance_capture": {
           "load_label": "Added external load only after supported weighted-identity selection"
@@ -2773,13 +2911,11 @@
       "exercise_id": null,
       "candidate_exercise_id": "EX-090",
       "identity_status": "UNRESOLVED_EXACT_IDENTITY",
-      "content_holds": [
-        "C1"
-      ],
-      "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "UNRESOLVED_REDUCTION_REFERENCE_DOSE_ONLY",
+      "content_holds": [],
+      "dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
-        "sets": 3,
+        "sets": 2,
         "reps": {
           "type": "range",
           "min_reps": 8,
@@ -2794,9 +2930,9 @@
           "source_rir": "1–2",
           "source_tempo_reference": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
           "source_rest_seconds": "90",
-          "selection": "D7",
+          "selection": "D7; DOSE_CLARIFICATIONS.md",
           "variant_key": "chest_supported_db_row",
-          "source_dose_status": "FOUNDER_SELECTED_STANDARD"
+          "source_dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE"
         },
         "load": {
           "type": "athleteSelected"
@@ -2811,7 +2947,39 @@
           "load_label": "External load per dumbbell"
         }
       },
-      "effective_prescription": null
+      "effective_prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "range",
+          "min_reps": 8,
+          "max_reps": 12
+        },
+        "per_side": false,
+        "tempo": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
+        "coach_cue": "Bilateral dumbbells, chest supported. Log external load per dumbbell; not a unilateral or machine substitute.",
+        "authored_details": {
+          "source_occurrence_id": "W04-A-chest_supported_db_row",
+          "source_repetitions_or_duration": "8–12",
+          "source_rir": "1–2",
+          "source_tempo_reference": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
+          "source_rest_seconds": "90",
+          "selection": "D7; DOSE_CLARIFICATIONS.md",
+          "variant_key": "chest_supported_db_row",
+          "source_dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 90,
+        "rir_range": [
+          1,
+          2
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
     },
     {
       "session_id": "LW10K-W04-D01",
@@ -2821,35 +2989,35 @@
       "candidate_exercise_id": "EX-044",
       "identity_status": "UNRESOLVED_EXACT_IDENTITY",
       "content_holds": [],
-      "dose_status": "RETAINED_PROPOSED_REDUCTION_NOT_FINAL_CONTENT_APPROVAL",
-      "effective_dose_status": "EXACT_RETAINED_PROPOSAL_PENDING_D8",
+      "dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 2,
         "reps": {
           "type": "range",
           "min_reps": 12,
-          "max_reps": 15
+          "max_reps": 20
         },
         "per_side": false,
         "tempo": "Controlled both ways",
         "coach_cue": "Bilateral dumbbells; no swinging. Log external load per dumbbell.",
         "authored_details": {
           "source_occurrence_id": "W04-A-db_lateral_raise",
-          "source_repetitions_or_duration": "12–15",
-          "source_rir": "3",
+          "source_repetitions_or_duration": "12–20",
+          "source_rir": "1–2",
           "source_tempo_reference": "Controlled both ways",
           "source_rest_seconds": "60",
-          "selection": "D7",
+          "selection": "D7; DOSE_CLARIFICATIONS.md",
           "variant_key": "db_lateral_raise",
-          "source_dose_status": "RETAINED_PROPOSED_REDUCTION_NOT_FINAL_CONTENT_APPROVAL"
+          "source_dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE"
         },
         "load": {
           "type": "athleteSelected"
         },
         "rest_seconds": 60,
         "rir_range": [
-          3,
-          3
+          1,
+          2
         ],
         "performance_capture": {
           "load_unit": "kg",
@@ -2861,28 +3029,28 @@
         "reps": {
           "type": "range",
           "min_reps": 12,
-          "max_reps": 15
+          "max_reps": 20
         },
         "per_side": false,
         "tempo": "Controlled both ways",
         "coach_cue": "Bilateral dumbbells; no swinging. Log external load per dumbbell.",
         "authored_details": {
           "source_occurrence_id": "W04-A-db_lateral_raise",
-          "source_repetitions_or_duration": "12–15",
-          "source_rir": "3",
+          "source_repetitions_or_duration": "12–20",
+          "source_rir": "1–2",
           "source_tempo_reference": "Controlled both ways",
           "source_rest_seconds": "60",
-          "selection": "D7",
+          "selection": "D7; DOSE_CLARIFICATIONS.md",
           "variant_key": "db_lateral_raise",
-          "source_dose_status": "RETAINED_PROPOSED_REDUCTION_NOT_FINAL_CONTENT_APPROVAL"
+          "source_dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE"
         },
         "load": {
           "type": "athleteSelected"
         },
         "rest_seconds": 60,
         "rir_range": [
-          3,
-          3
+          1,
+          2
         ],
         "performance_capture": {
           "load_unit": "kg",
@@ -2898,8 +3066,8 @@
       "candidate_exercise_id": null,
       "identity_status": "VERIFIED_LOCAL_LEGACY_ROW_MATCH",
       "content_holds": [],
-      "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "SELECTED_STANDARD_NO_REDUCTION_CONFLICT",
+      "dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 2,
         "reps": {
@@ -2915,9 +3083,9 @@
           "source_rir": "N/A",
           "source_tempo_reference": "Controlled execution",
           "source_rest_seconds": "45–60",
-          "selection": "D3",
+          "selection": "D3; DOSE_CLARIFICATIONS.md",
           "variant_key": "cable_pallof_square",
-          "source_dose_status": "FOUNDER_SELECTED_STANDARD"
+          "source_dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE"
         },
         "rest_seconds_range": [
           45,
@@ -2945,9 +3113,9 @@
           "source_rir": "N/A",
           "source_tempo_reference": "Controlled execution",
           "source_rest_seconds": "45–60",
-          "selection": "D3",
+          "selection": "D3; DOSE_CLARIFICATIONS.md",
           "variant_key": "cable_pallof_square",
-          "source_dose_status": "FOUNDER_SELECTED_STANDARD"
+          "source_dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE"
         },
         "rest_seconds_range": [
           45,
@@ -2963,42 +3131,44 @@
     },
     {
       "session_id": "LW10K-W04-D04",
-      "source_occurrence_id": "W04-B-barbell_rdl_carryover",
-      "variant_key": "barbell_rdl_carryover",
+      "source_occurrence_id": "W04-B-barbell_rdl",
+      "variant_key": "barbell_rdl",
       "exercise_id": "EX-078",
       "candidate_exercise_id": null,
       "identity_status": "VERIFIED_LOCAL_LEGACY_ROW_MATCH",
-      "content_holds": [
-        "C4"
-      ],
-      "dose_status": "UNAPPROVED_SOURCE_CARRYOVER",
-      "effective_dose_status": "TEMPLATE_MEMBERSHIP_UNRESOLVED",
+      "content_holds": [],
+      "dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
-        "sets": 1,
+        "sets": 2,
         "reps": {
           "type": "range",
-          "min_reps": 6,
-          "max_reps": 8
+          "min_reps": 5,
+          "max_reps": 6
         },
         "per_side": false,
-        "tempo": "~2 seconds lowering; no forced pause; purposeful lift",
-        "coach_cue": "Controlled hinge; stop before spinal position changes. Not part of D1–D7 selections; retain/remove decision pending. Total external barbell load.",
+        "tempo": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
+        "coach_cue": "Thursday barbell RDL; controlled hinge, stop before spinal position changes. Log total external barbell load. Membership and dose explicitly selected. No planned load increase this week.",
         "authored_details": {
-          "source_occurrence_id": "W04-B-barbell_rdl_carryover",
-          "source_repetitions_or_duration": "6–8",
-          "source_rir": "3",
-          "source_tempo_reference": "~2 seconds lowering; no forced pause; purposeful lift",
-          "source_rest_seconds": "120",
-          "selection": "RETAINED_UNSELECTED_ATTACHMENT_CARRYOVER",
-          "variant_key": "barbell_rdl_carryover",
-          "source_dose_status": "UNAPPROVED_SOURCE_CARRYOVER"
+          "source_occurrence_id": "W04-B-barbell_rdl",
+          "source_repetitions_or_duration": "5–6",
+          "source_rir": "2–3",
+          "source_tempo_reference": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
+          "source_rest_seconds": "120–180",
+          "selection": "RDL clarification; DOSE_CLARIFICATIONS.md",
+          "variant_key": "barbell_rdl",
+          "source_dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE",
+          "planned_load_increase": false
         },
         "load": {
           "type": "athleteSelected"
         },
-        "rest_seconds": 120,
+        "rest_seconds_range": [
+          120,
+          180
+        ],
         "rir_range": [
-          3,
+          2,
           3
         ],
         "performance_capture": {
@@ -3006,7 +3176,43 @@
           "load_label": "Total barbell load"
         }
       },
-      "effective_prescription": null
+      "effective_prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "range",
+          "min_reps": 5,
+          "max_reps": 6
+        },
+        "per_side": false,
+        "tempo": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
+        "coach_cue": "Thursday barbell RDL; controlled hinge, stop before spinal position changes. Log total external barbell load. Membership and dose explicitly selected. No planned load increase this week.",
+        "authored_details": {
+          "source_occurrence_id": "W04-B-barbell_rdl",
+          "source_repetitions_or_duration": "5–6",
+          "source_rir": "2–3",
+          "source_tempo_reference": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
+          "source_rest_seconds": "120–180",
+          "selection": "RDL clarification; DOSE_CLARIFICATIONS.md",
+          "variant_key": "barbell_rdl",
+          "source_dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE",
+          "planned_load_increase": false
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds_range": [
+          120,
+          180
+        ],
+        "rir_range": [
+          2,
+          3
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "Total barbell load"
+        }
+      }
     },
     {
       "session_id": "LW10K-W04-D04",
@@ -3015,11 +3221,9 @@
       "exercise_id": null,
       "candidate_exercise_id": null,
       "identity_status": "UNRESOLVED_EXACT_IDENTITY",
-      "content_holds": [
-        "C1"
-      ],
-      "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "UNRESOLVED_REDUCTION_REFERENCE_DOSE_ONLY",
+      "content_holds": [],
+      "dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 1,
         "reps": {
@@ -3035,9 +3239,9 @@
           "source_rir": "2–3",
           "source_tempo_reference": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
           "source_rest_seconds": "90",
-          "selection": "D4",
+          "selection": "D4; DOSE_CLARIFICATIONS.md",
           "variant_key": "reverse_lunge_db",
-          "source_dose_status": "FOUNDER_SELECTED_STANDARD"
+          "source_dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE"
         },
         "load": {
           "type": "athleteSelected"
@@ -3052,7 +3256,38 @@
           "load_label": "External load per dumbbell"
         }
       },
-      "effective_prescription": null
+      "effective_prescription": {
+        "sets": 1,
+        "reps": {
+          "type": "exact",
+          "exact_reps": 6
+        },
+        "per_side": true,
+        "tempo": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
+        "coach_cue": "Two dumbbells at sides, neutral grip; complete one side then the other. Rest 90 seconds after both sides. Log external load per dumbbell.",
+        "authored_details": {
+          "source_occurrence_id": "W04-B-reverse_lunge_db",
+          "source_repetitions_or_duration": "6/leg",
+          "source_rir": "2–3",
+          "source_tempo_reference": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
+          "source_rest_seconds": "90",
+          "selection": "D4; DOSE_CLARIFICATIONS.md",
+          "variant_key": "reverse_lunge_db",
+          "source_dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 90,
+        "rir_range": [
+          2,
+          3
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
     },
     {
       "session_id": "LW10K-W04-D04",
@@ -3061,13 +3296,11 @@
       "exercise_id": null,
       "candidate_exercise_id": "EX-037",
       "identity_status": "UNRESOLVED_EXACT_IDENTITY",
-      "content_holds": [
-        "C1"
-      ],
-      "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "UNRESOLVED_REDUCTION_REFERENCE_DOSE_ONLY",
+      "content_holds": [],
+      "dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
-        "sets": 3,
+        "sets": 2,
         "reps": {
           "type": "range",
           "min_reps": 6,
@@ -3082,9 +3315,9 @@
           "source_rir": "2",
           "source_tempo_reference": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
           "source_rest_seconds": "120",
-          "selection": "D6",
+          "selection": "D6; DOSE_CLARIFICATIONS.md",
           "variant_key": "seated_supported_db_press",
-          "source_dose_status": "FOUNDER_SELECTED_STANDARD"
+          "source_dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE"
         },
         "load": {
           "type": "athleteSelected"
@@ -3099,7 +3332,39 @@
           "load_label": "External load per dumbbell"
         }
       },
-      "effective_prescription": null
+      "effective_prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "range",
+          "min_reps": 6,
+          "max_reps": 10
+        },
+        "per_side": false,
+        "tempo": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
+        "coach_cue": "Near-upright back support; seated, two dumbbells, neutral grip, strict without leg drive. External load per dumbbell.",
+        "authored_details": {
+          "source_occurrence_id": "W04-B-seated_supported_db_press",
+          "source_repetitions_or_duration": "6–10",
+          "source_rir": "2",
+          "source_tempo_reference": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
+          "source_rest_seconds": "120",
+          "selection": "D6; DOSE_CLARIFICATIONS.md",
+          "variant_key": "seated_supported_db_press",
+          "source_dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 120,
+        "rir_range": [
+          2,
+          2
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
     },
     {
       "session_id": "LW10K-W04-D04",
@@ -3109,8 +3374,8 @@
       "candidate_exercise_id": "EX-038",
       "identity_status": "UNRESOLVED_EXACT_IDENTITY",
       "content_holds": [],
-      "dose_status": "RETAINED_PROPOSED_REDUCTION_NOT_FINAL_CONTENT_APPROVAL",
-      "effective_dose_status": "EXACT_RETAINED_PROPOSAL_PENDING_D8",
+      "dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 2,
         "reps": {
@@ -3124,20 +3389,20 @@
         "authored_details": {
           "source_occurrence_id": "W04-B-bench_supported_db_row",
           "source_repetitions_or_duration": "8–12/side",
-          "source_rir": "3",
+          "source_rir": "1–2",
           "source_tempo_reference": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
           "source_rest_seconds": "90",
-          "selection": "D7",
+          "selection": "D7; DOSE_CLARIFICATIONS.md",
           "variant_key": "bench_supported_db_row",
-          "source_dose_status": "RETAINED_PROPOSED_REDUCTION_NOT_FINAL_CONTENT_APPROVAL"
+          "source_dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE"
         },
         "load": {
           "type": "athleteSelected"
         },
         "rest_seconds": 90,
         "rir_range": [
-          3,
-          3
+          1,
+          2
         ],
         "performance_capture": {
           "load_unit": "kg",
@@ -3157,20 +3422,20 @@
         "authored_details": {
           "source_occurrence_id": "W04-B-bench_supported_db_row",
           "source_repetitions_or_duration": "8–12/side",
-          "source_rir": "3",
+          "source_rir": "1–2",
           "source_tempo_reference": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
           "source_rest_seconds": "90",
-          "selection": "D7",
+          "selection": "D7; DOSE_CLARIFICATIONS.md",
           "variant_key": "bench_supported_db_row",
-          "source_dose_status": "RETAINED_PROPOSED_REDUCTION_NOT_FINAL_CONTENT_APPROVAL"
+          "source_dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE"
         },
         "load": {
           "type": "athleteSelected"
         },
         "rest_seconds": 90,
         "rir_range": [
-          3,
-          3
+          1,
+          2
         ],
         "performance_capture": {
           "load_unit": "kg",
@@ -3185,11 +3450,9 @@
       "exercise_id": "EX-125",
       "candidate_exercise_id": null,
       "identity_status": "VERIFIED_LOCAL_LEGACY_ROW_MATCH",
-      "content_holds": [
-        "C1"
-      ],
-      "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "UNRESOLVED_REDUCTION_REFERENCE_DOSE_ONLY",
+      "content_holds": [],
+      "dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 2,
         "reps": {
@@ -3206,9 +3469,9 @@
           "source_rir": "2",
           "source_tempo_reference": "~2 seconds up, 1-second top pause, ~2 seconds down; full comfortable range (retained proposed tempo)",
           "source_rest_seconds": "60–90",
-          "selection": "D2",
+          "selection": "D2; DOSE_CLARIFICATIONS.md",
           "variant_key": "machine_standing_calf",
-          "source_dose_status": "FOUNDER_SELECTED_STANDARD"
+          "source_dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE"
         },
         "rest_seconds_range": [
           60,
@@ -3225,7 +3488,41 @@
           "load_label": "Machine-indicated resistance; retain actual unit and setup"
         }
       },
-      "effective_prescription": null
+      "effective_prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "range",
+          "min_reps": 10,
+          "max_reps": 15
+        },
+        "per_side": false,
+        "tempo": "~2 seconds up, 1-second top pause, ~2 seconds down; full comfortable range (retained proposed tempo)",
+        "coach_cue": "Standing calf machine, bilateral; no unilateral DB substitution. Record actual machine resistance with its displayed unit/setup; no invented load or cross-machine equivalence.",
+        "authored_details": {
+          "source_occurrence_id": "W04-B-machine_standing_calf",
+          "source_repetitions_or_duration": "10–15",
+          "source_rir": "2",
+          "source_tempo_reference": "~2 seconds up, 1-second top pause, ~2 seconds down; full comfortable range (retained proposed tempo)",
+          "source_rest_seconds": "60–90",
+          "selection": "D2; DOSE_CLARIFICATIONS.md",
+          "variant_key": "machine_standing_calf",
+          "source_dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE"
+        },
+        "rest_seconds_range": [
+          60,
+          90
+        ],
+        "rir_range": [
+          2,
+          2
+        ],
+        "load": {
+          "type": "athleteSelected"
+        },
+        "performance_capture": {
+          "load_label": "Machine-indicated resistance; retain actual unit and setup"
+        }
+      }
     },
     {
       "session_id": "LW10K-W04-D04",
@@ -3235,8 +3532,8 @@
       "candidate_exercise_id": null,
       "identity_status": "VERIFIED_LOCAL_LEGACY_ROW_MATCH",
       "content_holds": [],
-      "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "SELECTED_STANDARD_NO_REDUCTION_CONFLICT",
+      "dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 2,
         "reps": {
@@ -3252,9 +3549,9 @@
           "source_rir": "N/A",
           "source_tempo_reference": "Controlled hold; stop before posture loss",
           "source_rest_seconds": "45–60",
-          "selection": "D3",
+          "selection": "D3; DOSE_CLARIFICATIONS.md",
           "variant_key": "side_plank",
-          "source_dose_status": "FOUNDER_SELECTED_STANDARD"
+          "source_dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE"
         },
         "rest_seconds_range": [
           45,
@@ -3276,9 +3573,9 @@
           "source_rir": "N/A",
           "source_tempo_reference": "Controlled hold; stop before posture loss",
           "source_rest_seconds": "45–60",
-          "selection": "D3",
+          "selection": "D3; DOSE_CLARIFICATIONS.md",
           "variant_key": "side_plank",
-          "source_dose_status": "FOUNDER_SELECTED_STANDARD"
+          "source_dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE"
         },
         "rest_seconds_range": [
           45,
@@ -3295,7 +3592,7 @@
       "identity_status": "VERIFIED_LOCAL_LEGACY_ROW_MATCH",
       "content_holds": [],
       "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "SELECTED_STANDARD_NO_REDUCTION_CONFLICT",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 3,
         "reps": {
@@ -3372,7 +3669,7 @@
       "identity_status": "UNRESOLVED_EXACT_IDENTITY",
       "content_holds": [],
       "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "SELECTED_STANDARD_NO_REDUCTION_CONFLICT",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 3,
         "reps": {
@@ -3441,7 +3738,7 @@
       "identity_status": "UNRESOLVED_EXACT_IDENTITY",
       "content_holds": [],
       "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "SELECTED_STANDARD_NO_REDUCTION_CONFLICT",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 3,
         "reps": {
@@ -3518,7 +3815,7 @@
       "identity_status": "UNRESOLVED_EXACT_IDENTITY",
       "content_holds": [],
       "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "SELECTED_STANDARD_NO_REDUCTION_CONFLICT",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 3,
         "reps": {
@@ -3595,7 +3892,7 @@
       "identity_status": "VERIFIED_LOCAL_LEGACY_ROW_MATCH",
       "content_holds": [],
       "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "SELECTED_STANDARD_NO_REDUCTION_CONFLICT",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 2,
         "reps": {
@@ -3659,40 +3956,41 @@
     },
     {
       "session_id": "LW10K-W05-D04",
-      "source_occurrence_id": "W05-B-barbell_rdl_carryover",
-      "variant_key": "barbell_rdl_carryover",
+      "source_occurrence_id": "W05-B-barbell_rdl",
+      "variant_key": "barbell_rdl",
       "exercise_id": "EX-078",
       "candidate_exercise_id": null,
       "identity_status": "VERIFIED_LOCAL_LEGACY_ROW_MATCH",
-      "content_holds": [
-        "C4"
-      ],
-      "dose_status": "UNAPPROVED_SOURCE_CARRYOVER",
-      "effective_dose_status": "TEMPLATE_MEMBERSHIP_UNRESOLVED",
+      "content_holds": [],
+      "dose_status": "FOUNDER_SELECTED_STANDARD",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 2,
         "reps": {
           "type": "range",
-          "min_reps": 6,
-          "max_reps": 8
+          "min_reps": 5,
+          "max_reps": 6
         },
         "per_side": false,
-        "tempo": "~2 seconds lowering; no forced pause; purposeful lift",
-        "coach_cue": "Controlled hinge; stop before spinal position changes. Not part of D1–D7 selections; retain/remove decision pending. Total external barbell load.",
+        "tempo": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
+        "coach_cue": "Thursday barbell RDL; controlled hinge, stop before spinal position changes. Log total external barbell load. Membership and dose explicitly selected.",
         "authored_details": {
-          "source_occurrence_id": "W05-B-barbell_rdl_carryover",
-          "source_repetitions_or_duration": "6–8",
+          "source_occurrence_id": "W05-B-barbell_rdl",
+          "source_repetitions_or_duration": "5–6",
           "source_rir": "2–3",
-          "source_tempo_reference": "~2 seconds lowering; no forced pause; purposeful lift",
-          "source_rest_seconds": "120",
-          "selection": "RETAINED_UNSELECTED_ATTACHMENT_CARRYOVER",
-          "variant_key": "barbell_rdl_carryover",
-          "source_dose_status": "UNAPPROVED_SOURCE_CARRYOVER"
+          "source_tempo_reference": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
+          "source_rest_seconds": "120–180",
+          "selection": "RDL clarification",
+          "variant_key": "barbell_rdl",
+          "source_dose_status": "FOUNDER_SELECTED_STANDARD"
         },
         "load": {
           "type": "athleteSelected"
         },
-        "rest_seconds": 120,
+        "rest_seconds_range": [
+          120,
+          180
+        ],
         "rir_range": [
           2,
           3
@@ -3702,7 +4000,42 @@
           "load_label": "Total barbell load"
         }
       },
-      "effective_prescription": null
+      "effective_prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "range",
+          "min_reps": 5,
+          "max_reps": 6
+        },
+        "per_side": false,
+        "tempo": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
+        "coach_cue": "Thursday barbell RDL; controlled hinge, stop before spinal position changes. Log total external barbell load. Membership and dose explicitly selected.",
+        "authored_details": {
+          "source_occurrence_id": "W05-B-barbell_rdl",
+          "source_repetitions_or_duration": "5–6",
+          "source_rir": "2–3",
+          "source_tempo_reference": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
+          "source_rest_seconds": "120–180",
+          "selection": "RDL clarification",
+          "variant_key": "barbell_rdl",
+          "source_dose_status": "FOUNDER_SELECTED_STANDARD"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds_range": [
+          120,
+          180
+        ],
+        "rir_range": [
+          2,
+          3
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "Total barbell load"
+        }
+      }
     },
     {
       "session_id": "LW10K-W05-D04",
@@ -3713,7 +4046,7 @@
       "identity_status": "UNRESOLVED_EXACT_IDENTITY",
       "content_holds": [],
       "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "SELECTED_STANDARD_NO_REDUCTION_CONFLICT",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 1,
         "reps": {
@@ -3788,7 +4121,7 @@
       "identity_status": "UNRESOLVED_EXACT_IDENTITY",
       "content_holds": [],
       "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "SELECTED_STANDARD_NO_REDUCTION_CONFLICT",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 3,
         "reps": {
@@ -3865,7 +4198,7 @@
       "identity_status": "UNRESOLVED_EXACT_IDENTITY",
       "content_holds": [],
       "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "SELECTED_STANDARD_NO_REDUCTION_CONFLICT",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 3,
         "reps": {
@@ -3942,7 +4275,7 @@
       "identity_status": "VERIFIED_LOCAL_LEGACY_ROW_MATCH",
       "content_holds": [],
       "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "SELECTED_STANDARD_NO_REDUCTION_CONFLICT",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 2,
         "reps": {
@@ -4023,7 +4356,7 @@
       "identity_status": "VERIFIED_LOCAL_LEGACY_ROW_MATCH",
       "content_holds": [],
       "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "SELECTED_STANDARD_NO_REDUCTION_CONFLICT",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 2,
         "reps": {
@@ -4082,7 +4415,7 @@
       "identity_status": "VERIFIED_LOCAL_LEGACY_ROW_MATCH",
       "content_holds": [],
       "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "SELECTED_STANDARD_NO_REDUCTION_CONFLICT",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 3,
         "reps": {
@@ -4159,7 +4492,7 @@
       "identity_status": "UNRESOLVED_EXACT_IDENTITY",
       "content_holds": [],
       "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "SELECTED_STANDARD_NO_REDUCTION_CONFLICT",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 3,
         "reps": {
@@ -4228,7 +4561,7 @@
       "identity_status": "UNRESOLVED_EXACT_IDENTITY",
       "content_holds": [],
       "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "SELECTED_STANDARD_NO_REDUCTION_CONFLICT",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 3,
         "reps": {
@@ -4305,7 +4638,7 @@
       "identity_status": "UNRESOLVED_EXACT_IDENTITY",
       "content_holds": [],
       "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "SELECTED_STANDARD_NO_REDUCTION_CONFLICT",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 3,
         "reps": {
@@ -4382,7 +4715,7 @@
       "identity_status": "VERIFIED_LOCAL_LEGACY_ROW_MATCH",
       "content_holds": [],
       "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "SELECTED_STANDARD_NO_REDUCTION_CONFLICT",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 2,
         "reps": {
@@ -4446,40 +4779,41 @@
     },
     {
       "session_id": "LW10K-W06-D04",
-      "source_occurrence_id": "W06-B-barbell_rdl_carryover",
-      "variant_key": "barbell_rdl_carryover",
+      "source_occurrence_id": "W06-B-barbell_rdl",
+      "variant_key": "barbell_rdl",
       "exercise_id": "EX-078",
       "candidate_exercise_id": null,
       "identity_status": "VERIFIED_LOCAL_LEGACY_ROW_MATCH",
-      "content_holds": [
-        "C4"
-      ],
-      "dose_status": "UNAPPROVED_SOURCE_CARRYOVER",
-      "effective_dose_status": "TEMPLATE_MEMBERSHIP_UNRESOLVED",
+      "content_holds": [],
+      "dose_status": "FOUNDER_SELECTED_STANDARD",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 2,
         "reps": {
           "type": "range",
-          "min_reps": 6,
-          "max_reps": 8
+          "min_reps": 5,
+          "max_reps": 6
         },
         "per_side": false,
-        "tempo": "~2 seconds lowering; no forced pause; purposeful lift",
-        "coach_cue": "Controlled hinge; stop before spinal position changes. Not part of D1–D7 selections; retain/remove decision pending. Total external barbell load.",
+        "tempo": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
+        "coach_cue": "Thursday barbell RDL; controlled hinge, stop before spinal position changes. Log total external barbell load. Membership and dose explicitly selected.",
         "authored_details": {
-          "source_occurrence_id": "W06-B-barbell_rdl_carryover",
-          "source_repetitions_or_duration": "6–8",
+          "source_occurrence_id": "W06-B-barbell_rdl",
+          "source_repetitions_or_duration": "5–6",
           "source_rir": "2–3",
-          "source_tempo_reference": "~2 seconds lowering; no forced pause; purposeful lift",
-          "source_rest_seconds": "120",
-          "selection": "RETAINED_UNSELECTED_ATTACHMENT_CARRYOVER",
-          "variant_key": "barbell_rdl_carryover",
-          "source_dose_status": "UNAPPROVED_SOURCE_CARRYOVER"
+          "source_tempo_reference": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
+          "source_rest_seconds": "120–180",
+          "selection": "RDL clarification",
+          "variant_key": "barbell_rdl",
+          "source_dose_status": "FOUNDER_SELECTED_STANDARD"
         },
         "load": {
           "type": "athleteSelected"
         },
-        "rest_seconds": 120,
+        "rest_seconds_range": [
+          120,
+          180
+        ],
         "rir_range": [
           2,
           3
@@ -4489,7 +4823,42 @@
           "load_label": "Total barbell load"
         }
       },
-      "effective_prescription": null
+      "effective_prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "range",
+          "min_reps": 5,
+          "max_reps": 6
+        },
+        "per_side": false,
+        "tempo": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
+        "coach_cue": "Thursday barbell RDL; controlled hinge, stop before spinal position changes. Log total external barbell load. Membership and dose explicitly selected.",
+        "authored_details": {
+          "source_occurrence_id": "W06-B-barbell_rdl",
+          "source_repetitions_or_duration": "5–6",
+          "source_rir": "2–3",
+          "source_tempo_reference": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
+          "source_rest_seconds": "120–180",
+          "selection": "RDL clarification",
+          "variant_key": "barbell_rdl",
+          "source_dose_status": "FOUNDER_SELECTED_STANDARD"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds_range": [
+          120,
+          180
+        ],
+        "rir_range": [
+          2,
+          3
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "Total barbell load"
+        }
+      }
     },
     {
       "session_id": "LW10K-W06-D04",
@@ -4500,7 +4869,7 @@
       "identity_status": "UNRESOLVED_EXACT_IDENTITY",
       "content_holds": [],
       "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "SELECTED_STANDARD_NO_REDUCTION_CONFLICT",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 1,
         "reps": {
@@ -4575,7 +4944,7 @@
       "identity_status": "UNRESOLVED_EXACT_IDENTITY",
       "content_holds": [],
       "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "SELECTED_STANDARD_NO_REDUCTION_CONFLICT",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 3,
         "reps": {
@@ -4652,7 +5021,7 @@
       "identity_status": "UNRESOLVED_EXACT_IDENTITY",
       "content_holds": [],
       "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "SELECTED_STANDARD_NO_REDUCTION_CONFLICT",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 3,
         "reps": {
@@ -4729,7 +5098,7 @@
       "identity_status": "VERIFIED_LOCAL_LEGACY_ROW_MATCH",
       "content_holds": [],
       "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "SELECTED_STANDARD_NO_REDUCTION_CONFLICT",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 2,
         "reps": {
@@ -4810,7 +5179,7 @@
       "identity_status": "VERIFIED_LOCAL_LEGACY_ROW_MATCH",
       "content_holds": [],
       "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "SELECTED_STANDARD_NO_REDUCTION_CONFLICT",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 2,
         "reps": {
@@ -4867,11 +5236,9 @@
       "exercise_id": "EX-084",
       "candidate_exercise_id": null,
       "identity_status": "VERIFIED_LOCAL_LEGACY_ROW_MATCH",
-      "content_holds": [
-        "C1"
-      ],
+      "content_holds": [],
       "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "UNRESOLVED_REDUCTION_REFERENCE_DOSE_ONLY",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 3,
         "reps": {
@@ -4905,7 +5272,39 @@
           "load_label": "External load per dumbbell"
         }
       },
-      "effective_prescription": null
+      "effective_prescription": {
+        "sets": 3,
+        "reps": {
+          "type": "range",
+          "min_reps": 6,
+          "max_reps": 10
+        },
+        "per_side": false,
+        "tempo": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
+        "coach_cue": "Approximately 30° bench; bilateral dumbbells. Log external load per dumbbell.",
+        "authored_details": {
+          "source_occurrence_id": "W07-A-incline_db_press",
+          "source_repetitions_or_duration": "6–10",
+          "source_rir": "2",
+          "source_tempo_reference": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
+          "source_rest_seconds": "120",
+          "selection": "D1",
+          "variant_key": "incline_db_press",
+          "source_dose_status": "FOUNDER_SELECTED_STANDARD"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 120,
+        "rir_range": [
+          2,
+          2
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
     },
     {
       "session_id": "LW10K-W07-D01",
@@ -4915,10 +5314,10 @@
       "candidate_exercise_id": "EX-053",
       "identity_status": "UNRESOLVED_EXACT_IDENTITY",
       "content_holds": [],
-      "dose_status": "RETAINED_PROPOSED_REDUCTION_NOT_FINAL_CONTENT_APPROVAL",
-      "effective_dose_status": "EXACT_RETAINED_PROPOSAL_PENDING_D8",
+      "dose_status": "FOUNDER_SELECTED_STANDARD",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
-        "sets": 2,
+        "sets": 3,
         "reps": {
           "type": "range",
           "min_reps": 5,
@@ -4930,24 +5329,24 @@
         "authored_details": {
           "source_occurrence_id": "W07-A-pull_up_bodyweight",
           "source_repetitions_or_duration": "5–8",
-          "source_rir": "3",
+          "source_rir": "2",
           "source_tempo_reference": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
           "source_rest_seconds": "120",
           "selection": "D5",
           "variant_key": "pull_up_bodyweight",
-          "source_dose_status": "RETAINED_PROPOSED_REDUCTION_NOT_FINAL_CONTENT_APPROVAL"
+          "source_dose_status": "FOUNDER_SELECTED_STANDARD"
         },
         "rest_seconds": 120,
         "rir_range": [
-          3,
-          3
+          2,
+          2
         ],
         "performance_capture": {
           "load_label": "Added external load only after supported weighted-identity selection"
         }
       },
       "effective_prescription": {
-        "sets": 2,
+        "sets": 3,
         "reps": {
           "type": "range",
           "min_reps": 5,
@@ -4959,17 +5358,17 @@
         "authored_details": {
           "source_occurrence_id": "W07-A-pull_up_bodyweight",
           "source_repetitions_or_duration": "5–8",
-          "source_rir": "3",
+          "source_rir": "2",
           "source_tempo_reference": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
           "source_rest_seconds": "120",
           "selection": "D5",
           "variant_key": "pull_up_bodyweight",
-          "source_dose_status": "RETAINED_PROPOSED_REDUCTION_NOT_FINAL_CONTENT_APPROVAL"
+          "source_dose_status": "FOUNDER_SELECTED_STANDARD"
         },
         "rest_seconds": 120,
         "rir_range": [
-          3,
-          3
+          2,
+          2
         ],
         "performance_capture": {
           "load_label": "Added external load only after supported weighted-identity selection"
@@ -4983,11 +5382,9 @@
       "exercise_id": null,
       "candidate_exercise_id": "EX-090",
       "identity_status": "UNRESOLVED_EXACT_IDENTITY",
-      "content_holds": [
-        "C1"
-      ],
+      "content_holds": [],
       "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "UNRESOLVED_REDUCTION_REFERENCE_DOSE_ONLY",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 3,
         "reps": {
@@ -5021,7 +5418,39 @@
           "load_label": "External load per dumbbell"
         }
       },
-      "effective_prescription": null
+      "effective_prescription": {
+        "sets": 3,
+        "reps": {
+          "type": "range",
+          "min_reps": 8,
+          "max_reps": 12
+        },
+        "per_side": false,
+        "tempo": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
+        "coach_cue": "Bilateral dumbbells, chest supported. Log external load per dumbbell; not a unilateral or machine substitute.",
+        "authored_details": {
+          "source_occurrence_id": "W07-A-chest_supported_db_row",
+          "source_repetitions_or_duration": "8–12",
+          "source_rir": "1–2",
+          "source_tempo_reference": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
+          "source_rest_seconds": "90",
+          "selection": "D7",
+          "variant_key": "chest_supported_db_row",
+          "source_dose_status": "FOUNDER_SELECTED_STANDARD"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 90,
+        "rir_range": [
+          1,
+          2
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
     },
     {
       "session_id": "LW10K-W07-D01",
@@ -5031,35 +5460,35 @@
       "candidate_exercise_id": "EX-044",
       "identity_status": "UNRESOLVED_EXACT_IDENTITY",
       "content_holds": [],
-      "dose_status": "RETAINED_PROPOSED_REDUCTION_NOT_FINAL_CONTENT_APPROVAL",
-      "effective_dose_status": "EXACT_RETAINED_PROPOSAL_PENDING_D8",
+      "dose_status": "FOUNDER_SELECTED_STANDARD",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
-        "sets": 2,
+        "sets": 3,
         "reps": {
           "type": "range",
           "min_reps": 12,
-          "max_reps": 15
+          "max_reps": 20
         },
         "per_side": false,
         "tempo": "Controlled both ways",
         "coach_cue": "Bilateral dumbbells; no swinging. Log external load per dumbbell.",
         "authored_details": {
           "source_occurrence_id": "W07-A-db_lateral_raise",
-          "source_repetitions_or_duration": "12–15",
-          "source_rir": "3",
+          "source_repetitions_or_duration": "12–20",
+          "source_rir": "1–2",
           "source_tempo_reference": "Controlled both ways",
           "source_rest_seconds": "60",
           "selection": "D7",
           "variant_key": "db_lateral_raise",
-          "source_dose_status": "RETAINED_PROPOSED_REDUCTION_NOT_FINAL_CONTENT_APPROVAL"
+          "source_dose_status": "FOUNDER_SELECTED_STANDARD"
         },
         "load": {
           "type": "athleteSelected"
         },
         "rest_seconds": 60,
         "rir_range": [
-          3,
-          3
+          1,
+          2
         ],
         "performance_capture": {
           "load_unit": "kg",
@@ -5067,32 +5496,32 @@
         }
       },
       "effective_prescription": {
-        "sets": 2,
+        "sets": 3,
         "reps": {
           "type": "range",
           "min_reps": 12,
-          "max_reps": 15
+          "max_reps": 20
         },
         "per_side": false,
         "tempo": "Controlled both ways",
         "coach_cue": "Bilateral dumbbells; no swinging. Log external load per dumbbell.",
         "authored_details": {
           "source_occurrence_id": "W07-A-db_lateral_raise",
-          "source_repetitions_or_duration": "12–15",
-          "source_rir": "3",
+          "source_repetitions_or_duration": "12–20",
+          "source_rir": "1–2",
           "source_tempo_reference": "Controlled both ways",
           "source_rest_seconds": "60",
           "selection": "D7",
           "variant_key": "db_lateral_raise",
-          "source_dose_status": "RETAINED_PROPOSED_REDUCTION_NOT_FINAL_CONTENT_APPROVAL"
+          "source_dose_status": "FOUNDER_SELECTED_STANDARD"
         },
         "load": {
           "type": "athleteSelected"
         },
         "rest_seconds": 60,
         "rir_range": [
-          3,
-          3
+          1,
+          2
         ],
         "performance_capture": {
           "load_unit": "kg",
@@ -5109,7 +5538,7 @@
       "identity_status": "VERIFIED_LOCAL_LEGACY_ROW_MATCH",
       "content_holds": [],
       "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "SELECTED_STANDARD_NO_REDUCTION_CONFLICT",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 2,
         "reps": {
@@ -5173,42 +5602,43 @@
     },
     {
       "session_id": "LW10K-W07-D04",
-      "source_occurrence_id": "W07-B-barbell_rdl_carryover",
-      "variant_key": "barbell_rdl_carryover",
+      "source_occurrence_id": "W07-B-barbell_rdl",
+      "variant_key": "barbell_rdl",
       "exercise_id": "EX-078",
       "candidate_exercise_id": null,
       "identity_status": "VERIFIED_LOCAL_LEGACY_ROW_MATCH",
-      "content_holds": [
-        "C4"
-      ],
-      "dose_status": "UNAPPROVED_SOURCE_CARRYOVER",
-      "effective_dose_status": "TEMPLATE_MEMBERSHIP_UNRESOLVED",
+      "content_holds": [],
+      "dose_status": "FOUNDER_SELECTED_STANDARD",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
-        "sets": 1,
+        "sets": 2,
         "reps": {
           "type": "range",
-          "min_reps": 6,
-          "max_reps": 8
+          "min_reps": 5,
+          "max_reps": 6
         },
         "per_side": false,
-        "tempo": "~2 seconds lowering; no forced pause; purposeful lift",
-        "coach_cue": "Controlled hinge; stop before spinal position changes. Not part of D1–D7 selections; retain/remove decision pending. Total external barbell load.",
+        "tempo": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
+        "coach_cue": "Thursday barbell RDL; controlled hinge, stop before spinal position changes. Log total external barbell load. Membership and dose explicitly selected.",
         "authored_details": {
-          "source_occurrence_id": "W07-B-barbell_rdl_carryover",
-          "source_repetitions_or_duration": "6–8",
-          "source_rir": "3",
-          "source_tempo_reference": "~2 seconds lowering; no forced pause; purposeful lift",
-          "source_rest_seconds": "120",
-          "selection": "RETAINED_UNSELECTED_ATTACHMENT_CARRYOVER",
-          "variant_key": "barbell_rdl_carryover",
-          "source_dose_status": "UNAPPROVED_SOURCE_CARRYOVER"
+          "source_occurrence_id": "W07-B-barbell_rdl",
+          "source_repetitions_or_duration": "5–6",
+          "source_rir": "2–3",
+          "source_tempo_reference": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
+          "source_rest_seconds": "120–180",
+          "selection": "RDL clarification",
+          "variant_key": "barbell_rdl",
+          "source_dose_status": "FOUNDER_SELECTED_STANDARD"
         },
         "load": {
           "type": "athleteSelected"
         },
-        "rest_seconds": 120,
+        "rest_seconds_range": [
+          120,
+          180
+        ],
         "rir_range": [
-          3,
+          2,
           3
         ],
         "performance_capture": {
@@ -5216,7 +5646,42 @@
           "load_label": "Total barbell load"
         }
       },
-      "effective_prescription": null
+      "effective_prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "range",
+          "min_reps": 5,
+          "max_reps": 6
+        },
+        "per_side": false,
+        "tempo": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
+        "coach_cue": "Thursday barbell RDL; controlled hinge, stop before spinal position changes. Log total external barbell load. Membership and dose explicitly selected.",
+        "authored_details": {
+          "source_occurrence_id": "W07-B-barbell_rdl",
+          "source_repetitions_or_duration": "5–6",
+          "source_rir": "2–3",
+          "source_tempo_reference": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
+          "source_rest_seconds": "120–180",
+          "selection": "RDL clarification",
+          "variant_key": "barbell_rdl",
+          "source_dose_status": "FOUNDER_SELECTED_STANDARD"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds_range": [
+          120,
+          180
+        ],
+        "rir_range": [
+          2,
+          3
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "Total barbell load"
+        }
+      }
     },
     {
       "session_id": "LW10K-W07-D04",
@@ -5225,11 +5690,9 @@
       "exercise_id": null,
       "candidate_exercise_id": null,
       "identity_status": "UNRESOLVED_EXACT_IDENTITY",
-      "content_holds": [
-        "C1"
-      ],
+      "content_holds": [],
       "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "UNRESOLVED_REDUCTION_REFERENCE_DOSE_ONLY",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 1,
         "reps": {
@@ -5262,7 +5725,38 @@
           "load_label": "External load per dumbbell"
         }
       },
-      "effective_prescription": null
+      "effective_prescription": {
+        "sets": 1,
+        "reps": {
+          "type": "exact",
+          "exact_reps": 6
+        },
+        "per_side": true,
+        "tempo": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
+        "coach_cue": "Two dumbbells at sides, neutral grip; complete one side then the other. Rest 90 seconds after both sides. Log external load per dumbbell.",
+        "authored_details": {
+          "source_occurrence_id": "W07-B-reverse_lunge_db",
+          "source_repetitions_or_duration": "6/leg",
+          "source_rir": "2–3",
+          "source_tempo_reference": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
+          "source_rest_seconds": "90",
+          "selection": "D4",
+          "variant_key": "reverse_lunge_db",
+          "source_dose_status": "FOUNDER_SELECTED_STANDARD"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 90,
+        "rir_range": [
+          2,
+          3
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
     },
     {
       "session_id": "LW10K-W07-D04",
@@ -5271,11 +5765,9 @@
       "exercise_id": null,
       "candidate_exercise_id": "EX-037",
       "identity_status": "UNRESOLVED_EXACT_IDENTITY",
-      "content_holds": [
-        "C1"
-      ],
+      "content_holds": [],
       "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "UNRESOLVED_REDUCTION_REFERENCE_DOSE_ONLY",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 3,
         "reps": {
@@ -5309,7 +5801,39 @@
           "load_label": "External load per dumbbell"
         }
       },
-      "effective_prescription": null
+      "effective_prescription": {
+        "sets": 3,
+        "reps": {
+          "type": "range",
+          "min_reps": 6,
+          "max_reps": 10
+        },
+        "per_side": false,
+        "tempo": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
+        "coach_cue": "Near-upright back support; seated, two dumbbells, neutral grip, strict without leg drive. External load per dumbbell.",
+        "authored_details": {
+          "source_occurrence_id": "W07-B-seated_supported_db_press",
+          "source_repetitions_or_duration": "6–10",
+          "source_rir": "2",
+          "source_tempo_reference": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
+          "source_rest_seconds": "120",
+          "selection": "D6",
+          "variant_key": "seated_supported_db_press",
+          "source_dose_status": "FOUNDER_SELECTED_STANDARD"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 120,
+        "rir_range": [
+          2,
+          2
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
     },
     {
       "session_id": "LW10K-W07-D04",
@@ -5319,10 +5843,10 @@
       "candidate_exercise_id": "EX-038",
       "identity_status": "UNRESOLVED_EXACT_IDENTITY",
       "content_holds": [],
-      "dose_status": "RETAINED_PROPOSED_REDUCTION_NOT_FINAL_CONTENT_APPROVAL",
-      "effective_dose_status": "EXACT_RETAINED_PROPOSAL_PENDING_D8",
+      "dose_status": "FOUNDER_SELECTED_STANDARD",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
-        "sets": 2,
+        "sets": 3,
         "reps": {
           "type": "range",
           "min_reps": 8,
@@ -5334,20 +5858,20 @@
         "authored_details": {
           "source_occurrence_id": "W07-B-bench_supported_db_row",
           "source_repetitions_or_duration": "8–12/side",
-          "source_rir": "3",
+          "source_rir": "1–2",
           "source_tempo_reference": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
           "source_rest_seconds": "90",
           "selection": "D7",
           "variant_key": "bench_supported_db_row",
-          "source_dose_status": "RETAINED_PROPOSED_REDUCTION_NOT_FINAL_CONTENT_APPROVAL"
+          "source_dose_status": "FOUNDER_SELECTED_STANDARD"
         },
         "load": {
           "type": "athleteSelected"
         },
         "rest_seconds": 90,
         "rir_range": [
-          3,
-          3
+          1,
+          2
         ],
         "performance_capture": {
           "load_unit": "kg",
@@ -5355,7 +5879,7 @@
         }
       },
       "effective_prescription": {
-        "sets": 2,
+        "sets": 3,
         "reps": {
           "type": "range",
           "min_reps": 8,
@@ -5367,20 +5891,20 @@
         "authored_details": {
           "source_occurrence_id": "W07-B-bench_supported_db_row",
           "source_repetitions_or_duration": "8–12/side",
-          "source_rir": "3",
+          "source_rir": "1–2",
           "source_tempo_reference": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
           "source_rest_seconds": "90",
           "selection": "D7",
           "variant_key": "bench_supported_db_row",
-          "source_dose_status": "RETAINED_PROPOSED_REDUCTION_NOT_FINAL_CONTENT_APPROVAL"
+          "source_dose_status": "FOUNDER_SELECTED_STANDARD"
         },
         "load": {
           "type": "athleteSelected"
         },
         "rest_seconds": 90,
         "rir_range": [
-          3,
-          3
+          1,
+          2
         ],
         "performance_capture": {
           "load_unit": "kg",
@@ -5395,11 +5919,9 @@
       "exercise_id": "EX-125",
       "candidate_exercise_id": null,
       "identity_status": "VERIFIED_LOCAL_LEGACY_ROW_MATCH",
-      "content_holds": [
-        "C1"
-      ],
+      "content_holds": [],
       "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "UNRESOLVED_REDUCTION_REFERENCE_DOSE_ONLY",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 2,
         "reps": {
@@ -5435,7 +5957,41 @@
           "load_label": "Machine-indicated resistance; retain actual unit and setup"
         }
       },
-      "effective_prescription": null
+      "effective_prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "range",
+          "min_reps": 10,
+          "max_reps": 15
+        },
+        "per_side": false,
+        "tempo": "~2 seconds up, 1-second top pause, ~2 seconds down; full comfortable range (retained proposed tempo)",
+        "coach_cue": "Standing calf machine, bilateral; no unilateral DB substitution. Record actual machine resistance with its displayed unit/setup; no invented load or cross-machine equivalence.",
+        "authored_details": {
+          "source_occurrence_id": "W07-B-machine_standing_calf",
+          "source_repetitions_or_duration": "10–15",
+          "source_rir": "2",
+          "source_tempo_reference": "~2 seconds up, 1-second top pause, ~2 seconds down; full comfortable range (retained proposed tempo)",
+          "source_rest_seconds": "60–90",
+          "selection": "D2",
+          "variant_key": "machine_standing_calf",
+          "source_dose_status": "FOUNDER_SELECTED_STANDARD"
+        },
+        "rest_seconds_range": [
+          60,
+          90
+        ],
+        "rir_range": [
+          2,
+          2
+        ],
+        "load": {
+          "type": "athleteSelected"
+        },
+        "performance_capture": {
+          "load_label": "Machine-indicated resistance; retain actual unit and setup"
+        }
+      }
     },
     {
       "session_id": "LW10K-W07-D04",
@@ -5446,7 +6002,7 @@
       "identity_status": "VERIFIED_LOCAL_LEGACY_ROW_MATCH",
       "content_holds": [],
       "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "SELECTED_STANDARD_NO_REDUCTION_CONFLICT",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 2,
         "reps": {
@@ -5504,8 +6060,8 @@
       "candidate_exercise_id": null,
       "identity_status": "VERIFIED_LOCAL_LEGACY_ROW_MATCH",
       "content_holds": [],
-      "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "SELECTED_STANDARD_NO_REDUCTION_CONFLICT",
+      "dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 3,
         "reps": {
@@ -5522,9 +6078,9 @@
           "source_rir": "2",
           "source_tempo_reference": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
           "source_rest_seconds": "120",
-          "selection": "D1",
+          "selection": "D1; DOSE_CLARIFICATIONS.md",
           "variant_key": "incline_db_press",
-          "source_dose_status": "FOUNDER_SELECTED_STANDARD"
+          "source_dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE"
         },
         "load": {
           "type": "athleteSelected"
@@ -5555,9 +6111,9 @@
           "source_rir": "2",
           "source_tempo_reference": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
           "source_rest_seconds": "120",
-          "selection": "D1",
+          "selection": "D1; DOSE_CLARIFICATIONS.md",
           "variant_key": "incline_db_press",
-          "source_dose_status": "FOUNDER_SELECTED_STANDARD"
+          "source_dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE"
         },
         "load": {
           "type": "athleteSelected"
@@ -5581,8 +6137,8 @@
       "candidate_exercise_id": "EX-053",
       "identity_status": "UNRESOLVED_EXACT_IDENTITY",
       "content_holds": [],
-      "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "SELECTED_STANDARD_NO_REDUCTION_CONFLICT",
+      "dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 3,
         "reps": {
@@ -5599,9 +6155,9 @@
           "source_rir": "2",
           "source_tempo_reference": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
           "source_rest_seconds": "120",
-          "selection": "D5",
+          "selection": "D5; DOSE_CLARIFICATIONS.md",
           "variant_key": "pull_up_bodyweight",
-          "source_dose_status": "FOUNDER_SELECTED_STANDARD"
+          "source_dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE"
         },
         "rest_seconds": 120,
         "rir_range": [
@@ -5628,9 +6184,9 @@
           "source_rir": "2",
           "source_tempo_reference": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
           "source_rest_seconds": "120",
-          "selection": "D5",
+          "selection": "D5; DOSE_CLARIFICATIONS.md",
           "variant_key": "pull_up_bodyweight",
-          "source_dose_status": "FOUNDER_SELECTED_STANDARD"
+          "source_dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE"
         },
         "rest_seconds": 120,
         "rir_range": [
@@ -5650,8 +6206,8 @@
       "candidate_exercise_id": "EX-090",
       "identity_status": "UNRESOLVED_EXACT_IDENTITY",
       "content_holds": [],
-      "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "SELECTED_STANDARD_NO_REDUCTION_CONFLICT",
+      "dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 3,
         "reps": {
@@ -5668,9 +6224,9 @@
           "source_rir": "1–2",
           "source_tempo_reference": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
           "source_rest_seconds": "90",
-          "selection": "D7",
+          "selection": "D7; DOSE_CLARIFICATIONS.md",
           "variant_key": "chest_supported_db_row",
-          "source_dose_status": "FOUNDER_SELECTED_STANDARD"
+          "source_dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE"
         },
         "load": {
           "type": "athleteSelected"
@@ -5701,9 +6257,9 @@
           "source_rir": "1–2",
           "source_tempo_reference": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
           "source_rest_seconds": "90",
-          "selection": "D7",
+          "selection": "D7; DOSE_CLARIFICATIONS.md",
           "variant_key": "chest_supported_db_row",
-          "source_dose_status": "FOUNDER_SELECTED_STANDARD"
+          "source_dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE"
         },
         "load": {
           "type": "athleteSelected"
@@ -5727,8 +6283,8 @@
       "candidate_exercise_id": "EX-044",
       "identity_status": "UNRESOLVED_EXACT_IDENTITY",
       "content_holds": [],
-      "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "SELECTED_STANDARD_NO_REDUCTION_CONFLICT",
+      "dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 3,
         "reps": {
@@ -5745,9 +6301,9 @@
           "source_rir": "1–2",
           "source_tempo_reference": "Controlled both ways",
           "source_rest_seconds": "60",
-          "selection": "D7",
+          "selection": "D7; DOSE_CLARIFICATIONS.md",
           "variant_key": "db_lateral_raise",
-          "source_dose_status": "FOUNDER_SELECTED_STANDARD"
+          "source_dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE"
         },
         "load": {
           "type": "athleteSelected"
@@ -5778,9 +6334,9 @@
           "source_rir": "1–2",
           "source_tempo_reference": "Controlled both ways",
           "source_rest_seconds": "60",
-          "selection": "D7",
+          "selection": "D7; DOSE_CLARIFICATIONS.md",
           "variant_key": "db_lateral_raise",
-          "source_dose_status": "FOUNDER_SELECTED_STANDARD"
+          "source_dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE"
         },
         "load": {
           "type": "athleteSelected"
@@ -5804,8 +6360,8 @@
       "candidate_exercise_id": null,
       "identity_status": "VERIFIED_LOCAL_LEGACY_ROW_MATCH",
       "content_holds": [],
-      "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "SELECTED_STANDARD_NO_REDUCTION_CONFLICT",
+      "dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 2,
         "reps": {
@@ -5821,9 +6377,9 @@
           "source_rir": "N/A",
           "source_tempo_reference": "Controlled execution",
           "source_rest_seconds": "45–60",
-          "selection": "D3",
+          "selection": "D3; DOSE_CLARIFICATIONS.md",
           "variant_key": "cable_pallof_square",
-          "source_dose_status": "FOUNDER_SELECTED_STANDARD"
+          "source_dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE"
         },
         "rest_seconds_range": [
           45,
@@ -5851,9 +6407,9 @@
           "source_rir": "N/A",
           "source_tempo_reference": "Controlled execution",
           "source_rest_seconds": "45–60",
-          "selection": "D3",
+          "selection": "D3; DOSE_CLARIFICATIONS.md",
           "variant_key": "cable_pallof_square",
-          "source_dose_status": "FOUNDER_SELECTED_STANDARD"
+          "source_dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE"
         },
         "rest_seconds_range": [
           45,
@@ -5869,42 +6425,43 @@
     },
     {
       "session_id": "LW10K-W08-D04",
-      "source_occurrence_id": "W08-B-barbell_rdl_carryover",
-      "variant_key": "barbell_rdl_carryover",
+      "source_occurrence_id": "W08-B-barbell_rdl",
+      "variant_key": "barbell_rdl",
       "exercise_id": "EX-078",
       "candidate_exercise_id": null,
       "identity_status": "VERIFIED_LOCAL_LEGACY_ROW_MATCH",
-      "content_holds": [
-        "C4"
-      ],
-      "dose_status": "UNAPPROVED_SOURCE_CARRYOVER",
-      "effective_dose_status": "TEMPLATE_MEMBERSHIP_UNRESOLVED",
+      "content_holds": [],
+      "dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 2,
         "reps": {
-          "type": "range",
-          "min_reps": 6,
-          "max_reps": 8
+          "type": "exact",
+          "exact_reps": 5
         },
         "per_side": false,
-        "tempo": "~2 seconds lowering; no forced pause; purposeful lift",
-        "coach_cue": "Controlled hinge; stop before spinal position changes. Not part of D1–D7 selections; retain/remove decision pending. Total external barbell load.",
+        "tempo": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
+        "coach_cue": "Thursday barbell RDL; controlled hinge, stop before spinal position changes. Log total external barbell load. Membership and dose explicitly selected. No planned load increase this week.",
         "authored_details": {
-          "source_occurrence_id": "W08-B-barbell_rdl_carryover",
-          "source_repetitions_or_duration": "6–8",
-          "source_rir": "2–3",
-          "source_tempo_reference": "~2 seconds lowering; no forced pause; purposeful lift",
-          "source_rest_seconds": "120",
-          "selection": "RETAINED_UNSELECTED_ATTACHMENT_CARRYOVER",
-          "variant_key": "barbell_rdl_carryover",
-          "source_dose_status": "UNAPPROVED_SOURCE_CARRYOVER"
+          "source_occurrence_id": "W08-B-barbell_rdl",
+          "source_repetitions_or_duration": "5",
+          "source_rir": "3",
+          "source_tempo_reference": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
+          "source_rest_seconds": "120–180",
+          "selection": "RDL clarification; DOSE_CLARIFICATIONS.md",
+          "variant_key": "barbell_rdl",
+          "source_dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE",
+          "planned_load_increase": false
         },
         "load": {
           "type": "athleteSelected"
         },
-        "rest_seconds": 120,
+        "rest_seconds_range": [
+          120,
+          180
+        ],
         "rir_range": [
-          2,
+          3,
           3
         ],
         "performance_capture": {
@@ -5912,7 +6469,42 @@
           "load_label": "Total barbell load"
         }
       },
-      "effective_prescription": null
+      "effective_prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "exact",
+          "exact_reps": 5
+        },
+        "per_side": false,
+        "tempo": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
+        "coach_cue": "Thursday barbell RDL; controlled hinge, stop before spinal position changes. Log total external barbell load. Membership and dose explicitly selected. No planned load increase this week.",
+        "authored_details": {
+          "source_occurrence_id": "W08-B-barbell_rdl",
+          "source_repetitions_or_duration": "5",
+          "source_rir": "3",
+          "source_tempo_reference": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
+          "source_rest_seconds": "120–180",
+          "selection": "RDL clarification; DOSE_CLARIFICATIONS.md",
+          "variant_key": "barbell_rdl",
+          "source_dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE",
+          "planned_load_increase": false
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds_range": [
+          120,
+          180
+        ],
+        "rir_range": [
+          3,
+          3
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "Total barbell load"
+        }
+      }
     },
     {
       "session_id": "LW10K-W08-D04",
@@ -5922,8 +6514,8 @@
       "candidate_exercise_id": null,
       "identity_status": "UNRESOLVED_EXACT_IDENTITY",
       "content_holds": [],
-      "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "SELECTED_STANDARD_NO_REDUCTION_CONFLICT",
+      "dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 1,
         "reps": {
@@ -5932,23 +6524,24 @@
         },
         "per_side": true,
         "tempo": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
-        "coach_cue": "Two dumbbells at sides, neutral grip; complete one side then the other. Rest 90 seconds after both sides. Log external load per dumbbell.",
+        "coach_cue": "Two dumbbells at sides, neutral grip; complete one side then the other. Rest 90 seconds after both sides. Log external load per dumbbell. No planned load increase this week.",
         "authored_details": {
           "source_occurrence_id": "W08-B-reverse_lunge_db",
           "source_repetitions_or_duration": "6/leg",
-          "source_rir": "2–3",
+          "source_rir": "3",
           "source_tempo_reference": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
           "source_rest_seconds": "90",
-          "selection": "D4",
+          "selection": "D4; DOSE_CLARIFICATIONS.md",
           "variant_key": "reverse_lunge_db",
-          "source_dose_status": "FOUNDER_SELECTED_STANDARD"
+          "source_dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE",
+          "planned_load_increase": false
         },
         "load": {
           "type": "athleteSelected"
         },
         "rest_seconds": 90,
         "rir_range": [
-          2,
+          3,
           3
         ],
         "performance_capture": {
@@ -5964,23 +6557,24 @@
         },
         "per_side": true,
         "tempo": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
-        "coach_cue": "Two dumbbells at sides, neutral grip; complete one side then the other. Rest 90 seconds after both sides. Log external load per dumbbell.",
+        "coach_cue": "Two dumbbells at sides, neutral grip; complete one side then the other. Rest 90 seconds after both sides. Log external load per dumbbell. No planned load increase this week.",
         "authored_details": {
           "source_occurrence_id": "W08-B-reverse_lunge_db",
           "source_repetitions_or_duration": "6/leg",
-          "source_rir": "2–3",
+          "source_rir": "3",
           "source_tempo_reference": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
           "source_rest_seconds": "90",
-          "selection": "D4",
+          "selection": "D4; DOSE_CLARIFICATIONS.md",
           "variant_key": "reverse_lunge_db",
-          "source_dose_status": "FOUNDER_SELECTED_STANDARD"
+          "source_dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE",
+          "planned_load_increase": false
         },
         "load": {
           "type": "athleteSelected"
         },
         "rest_seconds": 90,
         "rir_range": [
-          2,
+          3,
           3
         ],
         "performance_capture": {
@@ -5997,8 +6591,8 @@
       "candidate_exercise_id": "EX-037",
       "identity_status": "UNRESOLVED_EXACT_IDENTITY",
       "content_holds": [],
-      "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "SELECTED_STANDARD_NO_REDUCTION_CONFLICT",
+      "dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 3,
         "reps": {
@@ -6015,9 +6609,9 @@
           "source_rir": "2",
           "source_tempo_reference": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
           "source_rest_seconds": "120",
-          "selection": "D6",
+          "selection": "D6; DOSE_CLARIFICATIONS.md",
           "variant_key": "seated_supported_db_press",
-          "source_dose_status": "FOUNDER_SELECTED_STANDARD"
+          "source_dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE"
         },
         "load": {
           "type": "athleteSelected"
@@ -6048,9 +6642,9 @@
           "source_rir": "2",
           "source_tempo_reference": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
           "source_rest_seconds": "120",
-          "selection": "D6",
+          "selection": "D6; DOSE_CLARIFICATIONS.md",
           "variant_key": "seated_supported_db_press",
-          "source_dose_status": "FOUNDER_SELECTED_STANDARD"
+          "source_dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE"
         },
         "load": {
           "type": "athleteSelected"
@@ -6074,8 +6668,8 @@
       "candidate_exercise_id": "EX-038",
       "identity_status": "UNRESOLVED_EXACT_IDENTITY",
       "content_holds": [],
-      "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "SELECTED_STANDARD_NO_REDUCTION_CONFLICT",
+      "dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 3,
         "reps": {
@@ -6092,9 +6686,9 @@
           "source_rir": "1–2",
           "source_tempo_reference": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
           "source_rest_seconds": "90",
-          "selection": "D7",
+          "selection": "D7; DOSE_CLARIFICATIONS.md",
           "variant_key": "bench_supported_db_row",
-          "source_dose_status": "FOUNDER_SELECTED_STANDARD"
+          "source_dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE"
         },
         "load": {
           "type": "athleteSelected"
@@ -6125,9 +6719,9 @@
           "source_rir": "1–2",
           "source_tempo_reference": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
           "source_rest_seconds": "90",
-          "selection": "D7",
+          "selection": "D7; DOSE_CLARIFICATIONS.md",
           "variant_key": "bench_supported_db_row",
-          "source_dose_status": "FOUNDER_SELECTED_STANDARD"
+          "source_dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE"
         },
         "load": {
           "type": "athleteSelected"
@@ -6151,8 +6745,8 @@
       "candidate_exercise_id": null,
       "identity_status": "VERIFIED_LOCAL_LEGACY_ROW_MATCH",
       "content_holds": [],
-      "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "SELECTED_STANDARD_NO_REDUCTION_CONFLICT",
+      "dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 2,
         "reps": {
@@ -6162,16 +6756,17 @@
         },
         "per_side": false,
         "tempo": "~2 seconds up, 1-second top pause, ~2 seconds down; full comfortable range (retained proposed tempo)",
-        "coach_cue": "Standing calf machine, bilateral; no unilateral DB substitution. Record actual machine resistance with its displayed unit/setup; no invented load or cross-machine equivalence.",
+        "coach_cue": "Standing calf machine, bilateral; no unilateral DB substitution. Record actual machine resistance with its displayed unit/setup; no invented load or cross-machine equivalence. No planned load increase this week.",
         "authored_details": {
           "source_occurrence_id": "W08-B-machine_standing_calf",
           "source_repetitions_or_duration": "10–15",
           "source_rir": "2",
           "source_tempo_reference": "~2 seconds up, 1-second top pause, ~2 seconds down; full comfortable range (retained proposed tempo)",
           "source_rest_seconds": "60–90",
-          "selection": "D2",
+          "selection": "D2; DOSE_CLARIFICATIONS.md",
           "variant_key": "machine_standing_calf",
-          "source_dose_status": "FOUNDER_SELECTED_STANDARD"
+          "source_dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE",
+          "planned_load_increase": false
         },
         "rest_seconds_range": [
           60,
@@ -6197,16 +6792,17 @@
         },
         "per_side": false,
         "tempo": "~2 seconds up, 1-second top pause, ~2 seconds down; full comfortable range (retained proposed tempo)",
-        "coach_cue": "Standing calf machine, bilateral; no unilateral DB substitution. Record actual machine resistance with its displayed unit/setup; no invented load or cross-machine equivalence.",
+        "coach_cue": "Standing calf machine, bilateral; no unilateral DB substitution. Record actual machine resistance with its displayed unit/setup; no invented load or cross-machine equivalence. No planned load increase this week.",
         "authored_details": {
           "source_occurrence_id": "W08-B-machine_standing_calf",
           "source_repetitions_or_duration": "10–15",
           "source_rir": "2",
           "source_tempo_reference": "~2 seconds up, 1-second top pause, ~2 seconds down; full comfortable range (retained proposed tempo)",
           "source_rest_seconds": "60–90",
-          "selection": "D2",
+          "selection": "D2; DOSE_CLARIFICATIONS.md",
           "variant_key": "machine_standing_calf",
-          "source_dose_status": "FOUNDER_SELECTED_STANDARD"
+          "source_dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE",
+          "planned_load_increase": false
         },
         "rest_seconds_range": [
           60,
@@ -6232,8 +6828,8 @@
       "candidate_exercise_id": null,
       "identity_status": "VERIFIED_LOCAL_LEGACY_ROW_MATCH",
       "content_holds": [],
-      "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "SELECTED_STANDARD_NO_REDUCTION_CONFLICT",
+      "dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 2,
         "reps": {
@@ -6249,9 +6845,9 @@
           "source_rir": "N/A",
           "source_tempo_reference": "Controlled hold; stop before posture loss",
           "source_rest_seconds": "45–60",
-          "selection": "D3",
+          "selection": "D3; DOSE_CLARIFICATIONS.md",
           "variant_key": "side_plank",
-          "source_dose_status": "FOUNDER_SELECTED_STANDARD"
+          "source_dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE"
         },
         "rest_seconds_range": [
           45,
@@ -6273,9 +6869,9 @@
           "source_rir": "N/A",
           "source_tempo_reference": "Controlled hold; stop before posture loss",
           "source_rest_seconds": "45–60",
-          "selection": "D3",
+          "selection": "D3; DOSE_CLARIFICATIONS.md",
           "variant_key": "side_plank",
-          "source_dose_status": "FOUNDER_SELECTED_STANDARD"
+          "source_dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE"
         },
         "rest_seconds_range": [
           45,
@@ -6291,10 +6887,10 @@
       "candidate_exercise_id": null,
       "identity_status": "VERIFIED_LOCAL_LEGACY_ROW_MATCH",
       "content_holds": [],
-      "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "SELECTED_STANDARD_NO_REDUCTION_CONFLICT",
+      "dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
-        "sets": 3,
+        "sets": 2,
         "reps": {
           "type": "range",
           "min_reps": 6,
@@ -6309,9 +6905,9 @@
           "source_rir": "2",
           "source_tempo_reference": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
           "source_rest_seconds": "120",
-          "selection": "D1",
+          "selection": "D1; DOSE_CLARIFICATIONS.md",
           "variant_key": "incline_db_press",
-          "source_dose_status": "FOUNDER_SELECTED_STANDARD"
+          "source_dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE"
         },
         "load": {
           "type": "athleteSelected"
@@ -6327,7 +6923,7 @@
         }
       },
       "effective_prescription": {
-        "sets": 3,
+        "sets": 2,
         "reps": {
           "type": "range",
           "min_reps": 6,
@@ -6342,9 +6938,9 @@
           "source_rir": "2",
           "source_tempo_reference": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
           "source_rest_seconds": "120",
-          "selection": "D1",
+          "selection": "D1; DOSE_CLARIFICATIONS.md",
           "variant_key": "incline_db_press",
-          "source_dose_status": "FOUNDER_SELECTED_STANDARD"
+          "source_dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE"
         },
         "load": {
           "type": "athleteSelected"
@@ -6368,10 +6964,10 @@
       "candidate_exercise_id": "EX-053",
       "identity_status": "UNRESOLVED_EXACT_IDENTITY",
       "content_holds": [],
-      "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "SELECTED_STANDARD_NO_REDUCTION_CONFLICT",
+      "dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
-        "sets": 3,
+        "sets": 2,
         "reps": {
           "type": "range",
           "min_reps": 5,
@@ -6386,9 +6982,9 @@
           "source_rir": "2",
           "source_tempo_reference": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
           "source_rest_seconds": "120",
-          "selection": "D5",
+          "selection": "D5; DOSE_CLARIFICATIONS.md",
           "variant_key": "pull_up_bodyweight",
-          "source_dose_status": "FOUNDER_SELECTED_STANDARD"
+          "source_dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE"
         },
         "rest_seconds": 120,
         "rir_range": [
@@ -6400,7 +6996,7 @@
         }
       },
       "effective_prescription": {
-        "sets": 3,
+        "sets": 2,
         "reps": {
           "type": "range",
           "min_reps": 5,
@@ -6415,9 +7011,9 @@
           "source_rir": "2",
           "source_tempo_reference": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
           "source_rest_seconds": "120",
-          "selection": "D5",
+          "selection": "D5; DOSE_CLARIFICATIONS.md",
           "variant_key": "pull_up_bodyweight",
-          "source_dose_status": "FOUNDER_SELECTED_STANDARD"
+          "source_dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE"
         },
         "rest_seconds": 120,
         "rir_range": [
@@ -6437,10 +7033,10 @@
       "candidate_exercise_id": "EX-090",
       "identity_status": "UNRESOLVED_EXACT_IDENTITY",
       "content_holds": [],
-      "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "SELECTED_STANDARD_NO_REDUCTION_CONFLICT",
+      "dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
-        "sets": 3,
+        "sets": 2,
         "reps": {
           "type": "range",
           "min_reps": 8,
@@ -6455,9 +7051,9 @@
           "source_rir": "1–2",
           "source_tempo_reference": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
           "source_rest_seconds": "90",
-          "selection": "D7",
+          "selection": "D7; DOSE_CLARIFICATIONS.md",
           "variant_key": "chest_supported_db_row",
-          "source_dose_status": "FOUNDER_SELECTED_STANDARD"
+          "source_dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE"
         },
         "load": {
           "type": "athleteSelected"
@@ -6473,7 +7069,7 @@
         }
       },
       "effective_prescription": {
-        "sets": 3,
+        "sets": 2,
         "reps": {
           "type": "range",
           "min_reps": 8,
@@ -6488,9 +7084,9 @@
           "source_rir": "1–2",
           "source_tempo_reference": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
           "source_rest_seconds": "90",
-          "selection": "D7",
+          "selection": "D7; DOSE_CLARIFICATIONS.md",
           "variant_key": "chest_supported_db_row",
-          "source_dose_status": "FOUNDER_SELECTED_STANDARD"
+          "source_dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE"
         },
         "load": {
           "type": "athleteSelected"
@@ -6514,10 +7110,10 @@
       "candidate_exercise_id": "EX-044",
       "identity_status": "UNRESOLVED_EXACT_IDENTITY",
       "content_holds": [],
-      "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "SELECTED_STANDARD_NO_REDUCTION_CONFLICT",
+      "dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
-        "sets": 3,
+        "sets": 2,
         "reps": {
           "type": "range",
           "min_reps": 12,
@@ -6532,9 +7128,9 @@
           "source_rir": "1–2",
           "source_tempo_reference": "Controlled both ways",
           "source_rest_seconds": "60",
-          "selection": "D7",
+          "selection": "D7; DOSE_CLARIFICATIONS.md",
           "variant_key": "db_lateral_raise",
-          "source_dose_status": "FOUNDER_SELECTED_STANDARD"
+          "source_dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE"
         },
         "load": {
           "type": "athleteSelected"
@@ -6550,7 +7146,7 @@
         }
       },
       "effective_prescription": {
-        "sets": 3,
+        "sets": 2,
         "reps": {
           "type": "range",
           "min_reps": 12,
@@ -6565,9 +7161,9 @@
           "source_rir": "1–2",
           "source_tempo_reference": "Controlled both ways",
           "source_rest_seconds": "60",
-          "selection": "D7",
+          "selection": "D7; DOSE_CLARIFICATIONS.md",
           "variant_key": "db_lateral_raise",
-          "source_dose_status": "FOUNDER_SELECTED_STANDARD"
+          "source_dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE"
         },
         "load": {
           "type": "athleteSelected"
@@ -6591,10 +7187,10 @@
       "candidate_exercise_id": null,
       "identity_status": "VERIFIED_LOCAL_LEGACY_ROW_MATCH",
       "content_holds": [],
-      "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "SELECTED_STANDARD_NO_REDUCTION_CONFLICT",
+      "dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
-        "sets": 2,
+        "sets": 1,
         "reps": {
           "type": "exact",
           "exact_reps": 10
@@ -6608,9 +7204,9 @@
           "source_rir": "N/A",
           "source_tempo_reference": "Controlled execution",
           "source_rest_seconds": "45–60",
-          "selection": "D3",
+          "selection": "D3; DOSE_CLARIFICATIONS.md",
           "variant_key": "cable_pallof_square",
-          "source_dose_status": "FOUNDER_SELECTED_STANDARD"
+          "source_dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE"
         },
         "rest_seconds_range": [
           45,
@@ -6624,7 +7220,7 @@
         }
       },
       "effective_prescription": {
-        "sets": 2,
+        "sets": 1,
         "reps": {
           "type": "exact",
           "exact_reps": 10
@@ -6638,9 +7234,9 @@
           "source_rir": "N/A",
           "source_tempo_reference": "Controlled execution",
           "source_rest_seconds": "45–60",
-          "selection": "D3",
+          "selection": "D3; DOSE_CLARIFICATIONS.md",
           "variant_key": "cable_pallof_square",
-          "source_dose_status": "FOUNDER_SELECTED_STANDARD"
+          "source_dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE"
         },
         "rest_seconds_range": [
           45,
@@ -6656,42 +7252,42 @@
     },
     {
       "session_id": "LW10K-W09-D04",
-      "source_occurrence_id": "W09-B-barbell_rdl_carryover",
-      "variant_key": "barbell_rdl_carryover",
+      "source_occurrence_id": "W09-B-barbell_rdl",
+      "variant_key": "barbell_rdl",
       "exercise_id": "EX-078",
       "candidate_exercise_id": null,
       "identity_status": "VERIFIED_LOCAL_LEGACY_ROW_MATCH",
-      "content_holds": [
-        "C4"
-      ],
-      "dose_status": "UNAPPROVED_SOURCE_CARRYOVER",
-      "effective_dose_status": "TEMPLATE_MEMBERSHIP_UNRESOLVED",
+      "content_holds": [],
+      "dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 1,
         "reps": {
-          "type": "range",
-          "min_reps": 6,
-          "max_reps": 8
+          "type": "exact",
+          "exact_reps": 5
         },
         "per_side": false,
-        "tempo": "~2 seconds lowering; no forced pause; purposeful lift",
-        "coach_cue": "Controlled hinge; stop before spinal position changes. Not part of D1–D7 selections; retain/remove decision pending. Total external barbell load.",
+        "tempo": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
+        "coach_cue": "Thursday barbell RDL; controlled hinge, stop before spinal position changes. Log total external barbell load. Membership and dose explicitly selected.",
         "authored_details": {
-          "source_occurrence_id": "W09-B-barbell_rdl_carryover",
-          "source_repetitions_or_duration": "6–8",
-          "source_rir": "2–3",
-          "source_tempo_reference": "~2 seconds lowering; no forced pause; purposeful lift",
-          "source_rest_seconds": "120",
-          "selection": "RETAINED_UNSELECTED_ATTACHMENT_CARRYOVER",
-          "variant_key": "barbell_rdl_carryover",
-          "source_dose_status": "UNAPPROVED_SOURCE_CARRYOVER"
+          "source_occurrence_id": "W09-B-barbell_rdl",
+          "source_repetitions_or_duration": "5",
+          "source_rir": "3",
+          "source_tempo_reference": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
+          "source_rest_seconds": "120–180",
+          "selection": "RDL clarification; DOSE_CLARIFICATIONS.md",
+          "variant_key": "barbell_rdl",
+          "source_dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE"
         },
         "load": {
           "type": "athleteSelected"
         },
-        "rest_seconds": 120,
+        "rest_seconds_range": [
+          120,
+          180
+        ],
         "rir_range": [
-          2,
+          3,
           3
         ],
         "performance_capture": {
@@ -6699,53 +7295,41 @@
           "load_label": "Total barbell load"
         }
       },
-      "effective_prescription": null
-    },
-    {
-      "session_id": "LW10K-W09-D04",
-      "source_occurrence_id": "W09-B-reverse_lunge_db",
-      "variant_key": "reverse_lunge_db",
-      "exercise_id": null,
-      "candidate_exercise_id": null,
-      "identity_status": "UNRESOLVED_EXACT_IDENTITY",
-      "content_holds": [
-        "C2"
-      ],
-      "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "UNRESOLVED_REDUCTION_REFERENCE_DOSE_ONLY",
-      "prescription": {
+      "effective_prescription": {
         "sets": 1,
         "reps": {
           "type": "exact",
-          "exact_reps": 6
+          "exact_reps": 5
         },
-        "per_side": true,
+        "per_side": false,
         "tempo": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
-        "coach_cue": "Two dumbbells at sides, neutral grip; complete one side then the other. Rest 90 seconds after both sides. Log external load per dumbbell.",
+        "coach_cue": "Thursday barbell RDL; controlled hinge, stop before spinal position changes. Log total external barbell load. Membership and dose explicitly selected.",
         "authored_details": {
-          "source_occurrence_id": "W09-B-reverse_lunge_db",
-          "source_repetitions_or_duration": "6/leg",
-          "source_rir": "2–3",
+          "source_occurrence_id": "W09-B-barbell_rdl",
+          "source_repetitions_or_duration": "5",
+          "source_rir": "3",
           "source_tempo_reference": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
-          "source_rest_seconds": "90",
-          "selection": "D4",
-          "variant_key": "reverse_lunge_db",
-          "source_dose_status": "FOUNDER_SELECTED_STANDARD"
+          "source_rest_seconds": "120–180",
+          "selection": "RDL clarification; DOSE_CLARIFICATIONS.md",
+          "variant_key": "barbell_rdl",
+          "source_dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE"
         },
         "load": {
           "type": "athleteSelected"
         },
-        "rest_seconds": 90,
+        "rest_seconds_range": [
+          120,
+          180
+        ],
         "rir_range": [
-          2,
+          3,
           3
         ],
         "performance_capture": {
           "load_unit": "kg",
-          "load_label": "External load per dumbbell"
+          "load_label": "Total barbell load"
         }
-      },
-      "effective_prescription": null
+      }
     },
     {
       "session_id": "LW10K-W09-D04",
@@ -6755,10 +7339,10 @@
       "candidate_exercise_id": "EX-037",
       "identity_status": "UNRESOLVED_EXACT_IDENTITY",
       "content_holds": [],
-      "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "SELECTED_STANDARD_NO_REDUCTION_CONFLICT",
+      "dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
-        "sets": 3,
+        "sets": 2,
         "reps": {
           "type": "range",
           "min_reps": 6,
@@ -6773,9 +7357,9 @@
           "source_rir": "2",
           "source_tempo_reference": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
           "source_rest_seconds": "120",
-          "selection": "D6",
+          "selection": "D6; DOSE_CLARIFICATIONS.md",
           "variant_key": "seated_supported_db_press",
-          "source_dose_status": "FOUNDER_SELECTED_STANDARD"
+          "source_dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE"
         },
         "load": {
           "type": "athleteSelected"
@@ -6791,7 +7375,7 @@
         }
       },
       "effective_prescription": {
-        "sets": 3,
+        "sets": 2,
         "reps": {
           "type": "range",
           "min_reps": 6,
@@ -6806,9 +7390,9 @@
           "source_rir": "2",
           "source_tempo_reference": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
           "source_rest_seconds": "120",
-          "selection": "D6",
+          "selection": "D6; DOSE_CLARIFICATIONS.md",
           "variant_key": "seated_supported_db_press",
-          "source_dose_status": "FOUNDER_SELECTED_STANDARD"
+          "source_dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE"
         },
         "load": {
           "type": "athleteSelected"
@@ -6832,10 +7416,10 @@
       "candidate_exercise_id": "EX-038",
       "identity_status": "UNRESOLVED_EXACT_IDENTITY",
       "content_holds": [],
-      "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "SELECTED_STANDARD_NO_REDUCTION_CONFLICT",
+      "dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
-        "sets": 3,
+        "sets": 2,
         "reps": {
           "type": "range",
           "min_reps": 8,
@@ -6850,9 +7434,9 @@
           "source_rir": "1–2",
           "source_tempo_reference": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
           "source_rest_seconds": "90",
-          "selection": "D7",
+          "selection": "D7; DOSE_CLARIFICATIONS.md",
           "variant_key": "bench_supported_db_row",
-          "source_dose_status": "FOUNDER_SELECTED_STANDARD"
+          "source_dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE"
         },
         "load": {
           "type": "athleteSelected"
@@ -6868,7 +7452,7 @@
         }
       },
       "effective_prescription": {
-        "sets": 3,
+        "sets": 2,
         "reps": {
           "type": "range",
           "min_reps": 8,
@@ -6883,9 +7467,9 @@
           "source_rir": "1–2",
           "source_tempo_reference": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
           "source_rest_seconds": "90",
-          "selection": "D7",
+          "selection": "D7; DOSE_CLARIFICATIONS.md",
           "variant_key": "bench_supported_db_row",
-          "source_dose_status": "FOUNDER_SELECTED_STANDARD"
+          "source_dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE"
         },
         "load": {
           "type": "athleteSelected"
@@ -6909,10 +7493,10 @@
       "candidate_exercise_id": null,
       "identity_status": "VERIFIED_LOCAL_LEGACY_ROW_MATCH",
       "content_holds": [],
-      "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "SELECTED_STANDARD_NO_REDUCTION_CONFLICT",
+      "dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
-        "sets": 2,
+        "sets": 1,
         "reps": {
           "type": "range",
           "min_reps": 10,
@@ -6927,9 +7511,9 @@
           "source_rir": "2",
           "source_tempo_reference": "~2 seconds up, 1-second top pause, ~2 seconds down; full comfortable range (retained proposed tempo)",
           "source_rest_seconds": "60–90",
-          "selection": "D2",
+          "selection": "D2; DOSE_CLARIFICATIONS.md",
           "variant_key": "machine_standing_calf",
-          "source_dose_status": "FOUNDER_SELECTED_STANDARD"
+          "source_dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE"
         },
         "rest_seconds_range": [
           60,
@@ -6947,7 +7531,7 @@
         }
       },
       "effective_prescription": {
-        "sets": 2,
+        "sets": 1,
         "reps": {
           "type": "range",
           "min_reps": 10,
@@ -6962,9 +7546,9 @@
           "source_rir": "2",
           "source_tempo_reference": "~2 seconds up, 1-second top pause, ~2 seconds down; full comfortable range (retained proposed tempo)",
           "source_rest_seconds": "60–90",
-          "selection": "D2",
+          "selection": "D2; DOSE_CLARIFICATIONS.md",
           "variant_key": "machine_standing_calf",
-          "source_dose_status": "FOUNDER_SELECTED_STANDARD"
+          "source_dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE"
         },
         "rest_seconds_range": [
           60,
@@ -6990,10 +7574,10 @@
       "candidate_exercise_id": null,
       "identity_status": "VERIFIED_LOCAL_LEGACY_ROW_MATCH",
       "content_holds": [],
-      "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "SELECTED_STANDARD_NO_REDUCTION_CONFLICT",
+      "dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
-        "sets": 2,
+        "sets": 1,
         "reps": {
           "type": "duration",
           "text": "30–45 sec/side"
@@ -7007,9 +7591,9 @@
           "source_rir": "N/A",
           "source_tempo_reference": "Controlled hold; stop before posture loss",
           "source_rest_seconds": "45–60",
-          "selection": "D3",
+          "selection": "D3; DOSE_CLARIFICATIONS.md",
           "variant_key": "side_plank",
-          "source_dose_status": "FOUNDER_SELECTED_STANDARD"
+          "source_dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE"
         },
         "rest_seconds_range": [
           45,
@@ -7017,7 +7601,7 @@
         ]
       },
       "effective_prescription": {
-        "sets": 2,
+        "sets": 1,
         "reps": {
           "type": "duration",
           "text": "30–45 sec/side"
@@ -7031,9 +7615,9 @@
           "source_rir": "N/A",
           "source_tempo_reference": "Controlled hold; stop before posture loss",
           "source_rest_seconds": "45–60",
-          "selection": "D3",
+          "selection": "D3; DOSE_CLARIFICATIONS.md",
           "variant_key": "side_plank",
-          "source_dose_status": "FOUNDER_SELECTED_STANDARD"
+          "source_dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE"
         },
         "rest_seconds_range": [
           45,
@@ -7048,13 +7632,11 @@
       "exercise_id": "EX-084",
       "candidate_exercise_id": null,
       "identity_status": "VERIFIED_LOCAL_LEGACY_ROW_MATCH",
-      "content_holds": [
-        "C3"
-      ],
-      "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "W10_NEW_OR_CHANGED_MOVEMENT_TAPER_DOSE_UNRESOLVED",
+      "content_holds": [],
+      "dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
-        "sets": 3,
+        "sets": 2,
         "reps": {
           "type": "range",
           "min_reps": 6,
@@ -7069,9 +7651,9 @@
           "source_rir": "2",
           "source_tempo_reference": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
           "source_rest_seconds": "120",
-          "selection": "D1",
+          "selection": "D1; DOSE_CLARIFICATIONS.md",
           "variant_key": "incline_db_press",
-          "source_dose_status": "FOUNDER_SELECTED_STANDARD"
+          "source_dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE"
         },
         "load": {
           "type": "athleteSelected"
@@ -7086,7 +7668,39 @@
           "load_label": "External load per dumbbell"
         }
       },
-      "effective_prescription": null
+      "effective_prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "range",
+          "min_reps": 6,
+          "max_reps": 10
+        },
+        "per_side": false,
+        "tempo": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
+        "coach_cue": "Approximately 30° bench; bilateral dumbbells. Log external load per dumbbell.",
+        "authored_details": {
+          "source_occurrence_id": "W10-A-incline_db_press",
+          "source_repetitions_or_duration": "6–10",
+          "source_rir": "2",
+          "source_tempo_reference": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
+          "source_rest_seconds": "120",
+          "selection": "D1; DOSE_CLARIFICATIONS.md",
+          "variant_key": "incline_db_press",
+          "source_dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 120,
+        "rir_range": [
+          2,
+          2
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
     },
     {
       "session_id": "LW10K-W10-D01",
@@ -7096,8 +7710,8 @@
       "candidate_exercise_id": "EX-053",
       "identity_status": "UNRESOLVED_EXACT_IDENTITY",
       "content_holds": [],
-      "dose_status": "RETAINED_PROPOSED_REDUCTION_NOT_FINAL_CONTENT_APPROVAL",
-      "effective_dose_status": "EXACT_RETAINED_PROPOSAL_PENDING_D8",
+      "dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 2,
         "reps": {
@@ -7111,17 +7725,17 @@
         "authored_details": {
           "source_occurrence_id": "W10-A-pull_up_bodyweight",
           "source_repetitions_or_duration": "5–8",
-          "source_rir": "3–4",
+          "source_rir": "2",
           "source_tempo_reference": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
           "source_rest_seconds": "120",
-          "selection": "D5",
+          "selection": "D5; DOSE_CLARIFICATIONS.md",
           "variant_key": "pull_up_bodyweight",
-          "source_dose_status": "RETAINED_PROPOSED_REDUCTION_NOT_FINAL_CONTENT_APPROVAL"
+          "source_dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE"
         },
         "rest_seconds": 120,
         "rir_range": [
-          3,
-          4
+          2,
+          2
         ],
         "performance_capture": {
           "load_label": "Added external load only after supported weighted-identity selection"
@@ -7140,17 +7754,17 @@
         "authored_details": {
           "source_occurrence_id": "W10-A-pull_up_bodyweight",
           "source_repetitions_or_duration": "5–8",
-          "source_rir": "3–4",
+          "source_rir": "2",
           "source_tempo_reference": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
           "source_rest_seconds": "120",
-          "selection": "D5",
+          "selection": "D5; DOSE_CLARIFICATIONS.md",
           "variant_key": "pull_up_bodyweight",
-          "source_dose_status": "RETAINED_PROPOSED_REDUCTION_NOT_FINAL_CONTENT_APPROVAL"
+          "source_dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE"
         },
         "rest_seconds": 120,
         "rir_range": [
-          3,
-          4
+          2,
+          2
         ],
         "performance_capture": {
           "load_label": "Added external load only after supported weighted-identity selection"
@@ -7164,13 +7778,11 @@
       "exercise_id": null,
       "candidate_exercise_id": "EX-090",
       "identity_status": "UNRESOLVED_EXACT_IDENTITY",
-      "content_holds": [
-        "C3"
-      ],
-      "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "W10_NEW_OR_CHANGED_MOVEMENT_TAPER_DOSE_UNRESOLVED",
+      "content_holds": [],
+      "dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
-        "sets": 3,
+        "sets": 2,
         "reps": {
           "type": "range",
           "min_reps": 8,
@@ -7185,9 +7797,9 @@
           "source_rir": "1–2",
           "source_tempo_reference": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
           "source_rest_seconds": "90",
-          "selection": "D7",
+          "selection": "D7; DOSE_CLARIFICATIONS.md",
           "variant_key": "chest_supported_db_row",
-          "source_dose_status": "FOUNDER_SELECTED_STANDARD"
+          "source_dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE"
         },
         "load": {
           "type": "athleteSelected"
@@ -7202,7 +7814,39 @@
           "load_label": "External load per dumbbell"
         }
       },
-      "effective_prescription": null
+      "effective_prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "range",
+          "min_reps": 8,
+          "max_reps": 12
+        },
+        "per_side": false,
+        "tempo": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
+        "coach_cue": "Bilateral dumbbells, chest supported. Log external load per dumbbell; not a unilateral or machine substitute.",
+        "authored_details": {
+          "source_occurrence_id": "W10-A-chest_supported_db_row",
+          "source_repetitions_or_duration": "8–12",
+          "source_rir": "1–2",
+          "source_tempo_reference": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
+          "source_rest_seconds": "90",
+          "selection": "D7; DOSE_CLARIFICATIONS.md",
+          "variant_key": "chest_supported_db_row",
+          "source_dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 90,
+        "rir_range": [
+          1,
+          2
+        ],
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
     },
     {
       "session_id": "LW10K-W10-D01",
@@ -7212,35 +7856,35 @@
       "candidate_exercise_id": "EX-044",
       "identity_status": "UNRESOLVED_EXACT_IDENTITY",
       "content_holds": [],
-      "dose_status": "RETAINED_PROPOSED_REDUCTION_NOT_FINAL_CONTENT_APPROVAL",
-      "effective_dose_status": "EXACT_RETAINED_PROPOSAL_PENDING_D8",
+      "dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 1,
         "reps": {
           "type": "range",
           "min_reps": 12,
-          "max_reps": 15
+          "max_reps": 20
         },
         "per_side": false,
         "tempo": "Controlled both ways",
         "coach_cue": "Bilateral dumbbells; no swinging. Log external load per dumbbell.",
         "authored_details": {
           "source_occurrence_id": "W10-A-db_lateral_raise",
-          "source_repetitions_or_duration": "12–15",
-          "source_rir": "3–4",
+          "source_repetitions_or_duration": "12–20",
+          "source_rir": "1–2",
           "source_tempo_reference": "Controlled both ways",
           "source_rest_seconds": "60",
-          "selection": "D7",
+          "selection": "D7; DOSE_CLARIFICATIONS.md",
           "variant_key": "db_lateral_raise",
-          "source_dose_status": "RETAINED_PROPOSED_REDUCTION_NOT_FINAL_CONTENT_APPROVAL"
+          "source_dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE"
         },
         "load": {
           "type": "athleteSelected"
         },
         "rest_seconds": 60,
         "rir_range": [
-          3,
-          4
+          1,
+          2
         ],
         "performance_capture": {
           "load_unit": "kg",
@@ -7252,28 +7896,28 @@
         "reps": {
           "type": "range",
           "min_reps": 12,
-          "max_reps": 15
+          "max_reps": 20
         },
         "per_side": false,
         "tempo": "Controlled both ways",
         "coach_cue": "Bilateral dumbbells; no swinging. Log external load per dumbbell.",
         "authored_details": {
           "source_occurrence_id": "W10-A-db_lateral_raise",
-          "source_repetitions_or_duration": "12–15",
-          "source_rir": "3–4",
+          "source_repetitions_or_duration": "12–20",
+          "source_rir": "1–2",
           "source_tempo_reference": "Controlled both ways",
           "source_rest_seconds": "60",
-          "selection": "D7",
+          "selection": "D7; DOSE_CLARIFICATIONS.md",
           "variant_key": "db_lateral_raise",
-          "source_dose_status": "RETAINED_PROPOSED_REDUCTION_NOT_FINAL_CONTENT_APPROVAL"
+          "source_dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE"
         },
         "load": {
           "type": "athleteSelected"
         },
         "rest_seconds": 60,
         "rir_range": [
-          3,
-          4
+          1,
+          2
         ],
         "performance_capture": {
           "load_unit": "kg",
@@ -7288,13 +7932,11 @@
       "exercise_id": "EX-114",
       "candidate_exercise_id": null,
       "identity_status": "VERIFIED_LOCAL_LEGACY_ROW_MATCH",
-      "content_holds": [
-        "C3"
-      ],
-      "dose_status": "FOUNDER_SELECTED_STANDARD",
-      "effective_dose_status": "W10_NEW_OR_CHANGED_MOVEMENT_TAPER_DOSE_UNRESOLVED",
+      "content_holds": [],
+      "dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
-        "sets": 2,
+        "sets": 1,
         "reps": {
           "type": "exact",
           "exact_reps": 10
@@ -7308,9 +7950,9 @@
           "source_rir": "N/A",
           "source_tempo_reference": "Controlled execution",
           "source_rest_seconds": "45–60",
-          "selection": "D3",
+          "selection": "D3; DOSE_CLARIFICATIONS.md",
           "variant_key": "cable_pallof_square",
-          "source_dose_status": "FOUNDER_SELECTED_STANDARD"
+          "source_dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE"
         },
         "rest_seconds_range": [
           45,
@@ -7323,7 +7965,36 @@
           "load_label": "Cable-indicated external resistance; retain actual unit and setup"
         }
       },
-      "effective_prescription": null
+      "effective_prescription": {
+        "sets": 1,
+        "reps": {
+          "type": "exact",
+          "exact_reps": 10
+        },
+        "per_side": true,
+        "tempo": "Controlled execution",
+        "coach_cue": "Standing square stance; cable at chest height, both hands on handle; press without torso rotation. Each side has 10 reps; both sides form one set. No failure requirement or invented RIR.",
+        "authored_details": {
+          "source_occurrence_id": "W10-A-cable_pallof_square",
+          "source_repetitions_or_duration": "10/side",
+          "source_rir": "N/A",
+          "source_tempo_reference": "Controlled execution",
+          "source_rest_seconds": "45–60",
+          "selection": "D3; DOSE_CLARIFICATIONS.md",
+          "variant_key": "cable_pallof_square",
+          "source_dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE"
+        },
+        "rest_seconds_range": [
+          45,
+          60
+        ],
+        "load": {
+          "type": "athleteSelected"
+        },
+        "performance_capture": {
+          "load_label": "Cable-indicated external resistance; retain actual unit and setup"
+        }
+      }
     },
     {
       "session_id": "LW10K-W10-D04",
@@ -7332,11 +8003,9 @@
       "exercise_id": null,
       "candidate_exercise_id": "EX-037",
       "identity_status": "UNRESOLVED_EXACT_IDENTITY",
-      "content_holds": [
-        "C3"
-      ],
-      "dose_status": "FOUNDER_SELECTED_W10_EXCEPTION",
-      "effective_dose_status": "UNRESOLVED_REDUCTION_REFERENCE_DOSE_ONLY",
+      "content_holds": [],
+      "dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 2,
         "reps": {
@@ -7346,16 +8015,16 @@
         },
         "per_side": false,
         "tempo": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
-        "coach_cue": "Near-upright back support; seated, two dumbbells, neutral grip, strict without leg drive. External load per dumbbell. Comfortable upper-body work; at least 3 RIR, no invented upper bound; no lower-body lifting. At least 3 RIR; no invented upper RIR bound.",
+        "coach_cue": "Near-upright back support; seated, two dumbbells, neutral grip, strict without leg drive. External load per dumbbell. Comfortable upper-body work; at least 3 RIR, no invented upper bound; no lower-body lifting or additional working exercises. At least 3 RIR; no invented upper RIR bound.",
         "authored_details": {
           "source_occurrence_id": "W10-B-seated_supported_db_press",
           "source_repetitions_or_duration": "6–10",
           "source_rir": "at least 3",
           "source_tempo_reference": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
           "source_rest_seconds": "120",
-          "selection": "D6",
+          "selection": "D6; DOSE_CLARIFICATIONS.md",
           "variant_key": "seated_supported_db_press",
-          "source_dose_status": "FOUNDER_SELECTED_W10_EXCEPTION"
+          "source_dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE"
         },
         "load": {
           "type": "athleteSelected"
@@ -7366,7 +8035,35 @@
           "load_label": "External load per dumbbell"
         }
       },
-      "effective_prescription": null
+      "effective_prescription": {
+        "sets": 2,
+        "reps": {
+          "type": "range",
+          "min_reps": 6,
+          "max_reps": 10
+        },
+        "per_side": false,
+        "tempo": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
+        "coach_cue": "Near-upright back support; seated, two dumbbells, neutral grip, strict without leg drive. External load per dumbbell. Comfortable upper-body work; at least 3 RIR, no invented upper bound; no lower-body lifting or additional working exercises. At least 3 RIR; no invented upper RIR bound.",
+        "authored_details": {
+          "source_occurrence_id": "W10-B-seated_supported_db_press",
+          "source_repetitions_or_duration": "6–10",
+          "source_rir": "at least 3",
+          "source_tempo_reference": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
+          "source_rest_seconds": "120",
+          "selection": "D6; DOSE_CLARIFICATIONS.md",
+          "variant_key": "seated_supported_db_press",
+          "source_dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE"
+        },
+        "load": {
+          "type": "athleteSelected"
+        },
+        "rest_seconds": 120,
+        "performance_capture": {
+          "load_unit": "kg",
+          "load_label": "External load per dumbbell"
+        }
+      }
     },
     {
       "session_id": "LW10K-W10-D04",
@@ -7376,8 +8073,8 @@
       "candidate_exercise_id": "EX-038",
       "identity_status": "UNRESOLVED_EXACT_IDENTITY",
       "content_holds": [],
-      "dose_status": "FOUNDER_SELECTED_W10_EXCEPTION",
-      "effective_dose_status": "SELECTED_W10_EXCEPTION",
+      "dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE",
+      "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING",
       "prescription": {
         "sets": 2,
         "reps": {
@@ -7387,16 +8084,16 @@
         },
         "per_side": true,
         "tempo": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
-        "coach_cue": "Free hand supported on bench; complete both sides, then rest 90 seconds. External load per dumbbell. Comfortable upper-body work; at least 3 RIR, no invented upper bound; no lower-body lifting. At least 3 RIR; no invented upper RIR bound.",
+        "coach_cue": "Free hand supported on bench; complete both sides, then rest 90 seconds. External load per dumbbell. Comfortable upper-body work; at least 3 RIR, no invented upper bound; no lower-body lifting or additional working exercises. At least 3 RIR; no invented upper RIR bound.",
         "authored_details": {
           "source_occurrence_id": "W10-B-bench_supported_db_row",
           "source_repetitions_or_duration": "8–12/side",
           "source_rir": "at least 3",
           "source_tempo_reference": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
           "source_rest_seconds": "90",
-          "selection": "D7",
+          "selection": "D7; DOSE_CLARIFICATIONS.md",
           "variant_key": "bench_supported_db_row",
-          "source_dose_status": "FOUNDER_SELECTED_W10_EXCEPTION"
+          "source_dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE"
         },
         "load": {
           "type": "athleteSelected"
@@ -7416,16 +8113,16 @@
         },
         "per_side": true,
         "tempo": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
-        "coach_cue": "Free hand supported on bench; complete both sides, then rest 90 seconds. External load per dumbbell. Comfortable upper-body work; at least 3 RIR, no invented upper bound; no lower-body lifting. At least 3 RIR; no invented upper RIR bound.",
+        "coach_cue": "Free hand supported on bench; complete both sides, then rest 90 seconds. External load per dumbbell. Comfortable upper-body work; at least 3 RIR, no invented upper bound; no lower-body lifting or additional working exercises. At least 3 RIR; no invented upper RIR bound.",
         "authored_details": {
           "source_occurrence_id": "W10-B-bench_supported_db_row",
           "source_repetitions_or_duration": "8–12/side",
           "source_rir": "at least 3",
           "source_tempo_reference": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
           "source_rest_seconds": "90",
-          "selection": "D7",
+          "selection": "D7; DOSE_CLARIFICATIONS.md",
           "variant_key": "bench_supported_db_row",
-          "source_dose_status": "FOUNDER_SELECTED_W10_EXCEPTION"
+          "source_dose_status": "FOUNDER_SELECTED_WEEK_SPECIFIC_DOSE"
         },
         "load": {
           "type": "athleteSelected"
