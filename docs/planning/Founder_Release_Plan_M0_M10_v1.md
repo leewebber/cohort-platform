@@ -6,7 +6,27 @@ This plan controls delivery priorities. It preserves technical authority contrac
 it does not grant implementation, content, hosted, account or release authority.
 [M0 findings and critical path](../checkpoints/m0_alpha_baseline/HANDOFF.md).
 
-## Current single build — M2.3 distance execution (2026-11-01)
+## Current single point — M4.5 bootstrap diagnosis (2026-11-01)
+
+**The inherited AuthGate failure is a reproduced fixture defect; locally resolved.**
+[Diagnosis and verification](../checkpoints/m45_auth_bootstrap/HANDOFF.md) retain the
+original shell assertion and supply its missing confirmed-training-setup fixture.
+Production authentication and onboarding authority are unchanged. Four additional
+regressions prove configuration failure, explicit setup confirmation/reopen, Retry
+and stale-response/account isolation. Local GoTrue/SQL fresh/reset proof passes;
+held hosted setup-schema and authenticated installed-device acceptance remain open.
+**M4.5 and Gate A remain OPEN.**
+
+**Next single point: bounded M1.1 founder-authoring allocation using EXISTING
+Programme Studio.** Lee must be able to author a genuine strength session and a
+personalised running session, arrange them in a programme, save an editable draft
+and review athlete prescriptions. Allocate the minimum usable existing workspace;
+this bootstrap task does not begin that implementation or a coach-management
+platform. The three missing exercise setups still need legitimate catalogue
+write/retention authority; new UI does not solve that gap. Do not repeat unchanged
+lookups. No newly demonstrated alpha blocker displaces this next point.
+
+## Retained M2.3 distance execution checkpoint (2026-11-01)
 
 **Bounded athlete-confirmed final 10K execution is locally verified.**
 [Handoff](../checkpoints/m23_distance_execution/HANDOFF.md) and verification retain

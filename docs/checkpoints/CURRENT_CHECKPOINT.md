@@ -1,5 +1,20 @@
 # Current repository checkpoint
 
+> **M4.5 inherited bootstrap diagnosis — locally resolved, 2026-11-01:**
+> [Handoff](./m45_auth_bootstrap/HANDOFF.md) reproduces the exact original line-124
+> shell absence at base `639d6cd`: the older capability fixture omitted M1.2's
+> confirmed-setup store and fell through to uninitialized Supabase. Authentication
+> succeeds; setup correctly fails closed. Test fixture only repaired; production
+> auth/onboarding/access guards unchanged. 14 bootstrap and 91 overlapping relevant
+> regressions pass; local real-GoTrue/SQL setup/acquisition fresh/reset and all six
+> safety groups pass. Analysis retains 362 identical inherited findings, zero errors
+> or changed-file diagnostics. Held hosted setup schema and installed-device journey
+> remain open; **M4.5 and Gate A OPEN**. Prior checkouts/HEADs/indices/files/.temp and
+> bundles are preserved. **Next: bounded founder-authoring allocation using EXISTING
+> Studio** for genuine strength/personalised running, programme arrangement, editable
+> draft save and prescription review. No implementation here. Three missing exercise
+> setups still require legitimate catalogue write/retention authority; no repeat lookup.
+
 > **M2.3 final 10K execution — locally verified, 2026-11-01:**
 > [Handoff](./m23_distance_execution/HANDOFF.md) records the bounded one-step
 > athlete-confirmed 10,000 m path with exact timed preparation/cooldown, active

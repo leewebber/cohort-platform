@@ -1,0 +1,175 @@
+{
+  "date": "2026-11-01",
+  "timezone": "Asia/Makassar",
+  "status": "FIXTURE_DEFECT_RESOLVED_LOCAL_VERIFIED_GATE_A_OPEN",
+  "base": "639d6cd8f8535986cd14fa8230ed51effd14a8c2",
+  "diagnosis": {
+    "original_test": "test/programme/athlete_runtime_capability_bootstrap_test.dart",
+    "original_line": 124,
+    "name": "authenticated athlete reaches Home without waiting on RPC",
+    "expected": "one AthleteAppShell",
+    "actual": "zero AthleteAppShell",
+    "cause": "M1.2 TrainingSetupGate prerequisite omitted by old capability fixture; default store resolves uninitialized Supabase singleton and reports unavailable; authentication succeeds",
+    "introduced_prerequisite_commit": "a59438554072c1413c51acb95f245ca7375675fb",
+    "production_fix_required": false,
+    "demonstrated_real_athlete_auth_regression": false
+  },
+  "verification": {
+    "reproduction": {
+      "command": "flutter test --no-pub test/programme/athlete_runtime_capability_bootstrap_test.dart --reporter expanded",
+      "exit": 1,
+      "passed": 9,
+      "failed": 1
+    },
+    "bootstrap": {
+      "same_command_as_reproduction": true,
+      "exit": 0,
+      "passed": 14,
+      "skipped": 0
+    },
+    "regressions": {
+      "command": "flutter test --no-pub test/auth test/programme_acquisition/acquisition_controller_test.dart test/programme_acquisition/acquisition_widget_test.dart test/programme_acquisition/auth_identity_race_test.dart test/programme/athlete_runtime_capability_bootstrap_test.dart test/programme/enrolment_iana_timezone_test.dart test/programme/programme_completion_history_integrity_test.dart test/core/authenticated_identity_test.dart --reporter expanded",
+      "exit": 0,
+      "passed": 91,
+      "skipped": 0,
+      "includes_bootstrap": true
+    },
+    "authenticated_local": {
+      "command": "./supabase/tests/run_m12_acquisition_gate.sh",
+      "exit": 0,
+      "fresh": "PASS",
+      "repeat": "PASS",
+      "scope": "task-owned disposable loopback GoTrue/PostgREST/SQL; synthetic fixtures; local email confirmation disabled; cleanup completed; not device proof"
+    },
+    "safety": {
+      "command": "./tool/testing/run_phase2_consolidation_safety_gate.sh",
+      "exit": 0,
+      "groups_passed": 6,
+      "groups_failed": 0
+    },
+    "analysis": {
+      "command": "flutter analyze --no-pub",
+      "exit": 1,
+      "reference": "639d6cd retained M2.3 analysis log",
+      "reference_count": 362,
+      "current_count": 362,
+      "identical_diagnostics": true,
+      "errors": 0,
+      "changed_file_diagnostics": []
+    },
+    "full_default_suite_run": false,
+    "installed_device_journey_run": false
+  },
+  "logs": {
+    "original_failure": {
+      "path": "/private/tmp/cohort_m45_red.log",
+      "sha256": "93a68239251e59fef799a56bf4d316f6976c5c488abe4a1c49229367d0ebcf17"
+    },
+    "bootstrap": {
+      "path": "/private/tmp/cohort_m45_focused.log",
+      "sha256": "163bd0df29356a54fc411a7a479470a9a51b282747f90ac66c9103e7dedcc375"
+    },
+    "regressions": {
+      "path": "/private/tmp/cohort_m45_regressions.log",
+      "sha256": "151170ad5331ec9f4d45181da1ad8662bc3e71fc557f7261a8ec98e673e92c61"
+    },
+    "authenticated_local": {
+      "path": "/private/tmp/cohort_m45_authenticated_local.log",
+      "sha256": "dea493e7d28a6f8899d96886e3e12338762d15623e06103a445bb34849ff5da9"
+    },
+    "safety": {
+      "path": "/private/tmp/cohort_m45_safety.log",
+      "sha256": "36c833893a3d3573edaa758af76c3a27807c3d7fe1493f84f8fb2dd7a16ad621"
+    },
+    "analysis": {
+      "path": "/private/tmp/cohort_m45_analysis.log",
+      "sha256": "37165c1f97522bc38e06a46e5fa438cc25feda3acdb526561104b445759dafd8"
+    }
+  },
+  "preservation": {
+    "prior_existing_checkouts": 33,
+    "registered_absent_entries": 28,
+    "prior_inventory_differences": [],
+    "task_clone": "/private/tmp/cohort_m45_auth_bootstrap",
+    "managed_worktrees_created": 0,
+    "snapshots": {
+      "before": "a7910d17f82267de0158609dc5930d01dcac194a193d435cddf60671d702bcbf",
+      "after": "ba1d3e73c14f68500a080e71d6327a079224d74e8c67908f0415703428a54c71"
+    },
+    "bundles": {
+      "Cohort-M1.1-approved-setups-2026-10-30.bundle": {
+        "sha256": "bce58b3b9b61103c9092e2a0f68aa14038d1b17e533d3ded89fa2cca4d024057",
+        "bytes": 8831798,
+        "matches_retained_m23_hash": true,
+        "verify_exit": 0
+      },
+      "Cohort-M1.1-approved-setups-final-2026-10-30.bundle": {
+        "sha256": "89ab5256b7ffc16a1ea209cc3b66c55174539fa073163ab8e28cb4b55fc9bcc6",
+        "bytes": 8887155,
+        "matches_retained_m23_hash": true,
+        "verify_exit": 0
+      },
+      "Cohort-M1.1-dose-reconciled-2026-10-30.bundle": {
+        "sha256": "418203d393a767051eb86a572e7e737390b87882ce63632b484371e7d519b10a",
+        "bytes": 8788054,
+        "matches_retained_m23_hash": true,
+        "verify_exit": 0
+      },
+      "Cohort-M1.1-main.bundle": {
+        "sha256": "db9348edd795f7e669a722b4bdba7376577b3554a50c88c1ec19c0ac213880dd",
+        "bytes": 8558001,
+        "matches_retained_m23_hash": true,
+        "verify_exit": 0
+      },
+      "Cohort-M1.1-movement-review-2026-10-30.bundle": {
+        "sha256": "ccf622cddf1a18013d2a9cec487ec249b136cd0a0adf07d9ea1db28a131caacf",
+        "bytes": 8676845,
+        "matches_retained_m23_hash": true,
+        "verify_exit": 0
+      },
+      "Cohort-M1.1-reconciled-2026-10-30.bundle": {
+        "sha256": "6b21cb6d9fb61420d124812b5650e0ce7f3bae2eb0fc11ece568d12d65bea206",
+        "bytes": 8625627,
+        "matches_retained_m23_hash": true,
+        "verify_exit": 0
+      },
+      "Cohort-M1.1-selected-strength-2026-10-30.bundle": {
+        "sha256": "5dd23b6491ff92b45e55918dfb719d9952df2e8019e3f91f831d1f6dab78ddfc",
+        "bytes": 8754243,
+        "matches_retained_m23_hash": true,
+        "verify_exit": 0
+      },
+      "Cohort-M1.1-trusted-catalogue-2026-10-30.bundle": {
+        "sha256": "757217d27d497edd56243ec0492dd5ba3b7efb4883eb778dbc2c44b3e8de0d72",
+        "bytes": 8814670,
+        "matches_retained_m23_hash": true,
+        "verify_exit": 0
+      }
+    },
+    "bundle_reference": "retained M2.3 bundle hashes; all eight currently identical and git-bundle verified"
+  },
+  "git": {
+    "initial_live_main": "639d6cd8f8535986cd14fa8230ed51effd14a8c2",
+    "precommit_live_main": "639d6cd8f8535986cd14fa8230ed51effd14a8c2",
+    "transport": "ordinary authorised Git HTTPS; no alternate route or force",
+    "original_developer_head": "a331f52967e1887c4435cccc8f1ecfa192028cd6",
+    "m23_copy_head": "639d6cd8f8535986cd14fa8230ed51effd14a8c2",
+    "publication": "final commit/push equality receipt is reported separately"
+  },
+  "unchanged_boundaries": {
+    "production_dart": true,
+    "sql_migrations": true,
+    "auth_access_guards": true,
+    "onboarding_persistence": true,
+    "content_eligibility_assignments": true,
+    "hosted_mutations": 0,
+    "credentials_changed": false,
+    "browser_desktop_control_used": false
+  },
+  "remaining_risks": [
+    "M1.2 setup/acquisition schema is recorded undeployed; current hosted state not refreshed",
+    "Configured candidate and real email/installed-device alpha journey unverified",
+    "Other M0-M10 release dependencies remain; neither M4.5 nor Gate A is closed"
+  ],
+  "next_single_point": "bounded M1.1 founder-authoring allocation using existing Programme Studio; no implementation here; legitimate catalogue write/retention path still required for three missing setups"
+}
