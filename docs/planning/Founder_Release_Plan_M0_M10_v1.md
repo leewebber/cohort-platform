@@ -6,7 +6,30 @@ This plan controls delivery priorities. It preserves technical authority contrac
 it does not grant implementation, content, hosted, account or release authority.
 [M0 findings and critical path](../checkpoints/m0_alpha_baseline/HANDOFF.md).
 
-## Current single point — M4.5 bootstrap diagnosis (2026-11-01)
+## Current single point — M1.1 founder authoring (2026-11-01)
+
+**Bounded allocation is ready; implementation has not started.**
+[Handoff](../checkpoints/m11_founder_authoring/HANDOFF.md),
+[exact allocation](../checkpoints/m11_founder_authoring/ALLOCATION.md) and
+[catalogue operation](../checkpoints/m11_founder_authoring/CATALOGUE_CAPABILITY.md)
+reuse existing Studio composition/revisions/editable files, canonical v2/native
+protocol graphs and Programme Athlete review. First founder acceptance is genuine
+W1 Monday strength plus W4 Tuesday personalised running, programme placement,
+editable save/reopen and exact prescription review without raw-source/ID entry.
+The whole selected ten-week source remains the coverage bound; a pair is not full
+programme support. Three catalogue records still require genuine producer results;
+authenticated operator connection provisioning/apply is separately scoped. No new
+coach-management product or replacement roadmap.
+
+**Next single point: M1.1 — implement the bounded existing-Studio workflow and offline
+three-record operator package**, under the
+[ready-to-run prompt](../checkpoints/m11_founder_authoring/IMPLEMENTATION_PROMPT.md).
+No implementation/hosted provisioning begins in this allocation. D8, genuine complete
+graph admission, separate publication/access and all remaining M1–M4 outcomes stay
+open. AuthGate fixture repair and local final-10K support are retained below.
+**Gate A OPEN.**
+
+## Retained M4.5 bootstrap diagnosis (2026-11-01)
 
 **The inherited AuthGate failure is a reproduced fixture defect; locally resolved.**
 [Diagnosis and verification](../checkpoints/m45_auth_bootstrap/HANDOFF.md) retain the

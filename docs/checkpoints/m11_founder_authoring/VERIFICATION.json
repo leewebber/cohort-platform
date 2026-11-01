@@ -1,0 +1,58 @@
+{
+  "base": "2c716b45ba63432e733ed2fe742472e526954358",
+  "task_type": "DOCUMENTATION_ONLY_IMPLEMENTATION_ALLOCATION",
+  "local_links_checked": 15,
+  "broken_links": [],
+  "source_counts": {
+    "strength": 20,
+    "running": 40,
+    "rest": 10
+  },
+  "exercise_occurrences": 105,
+  "acceptance_run": {
+    "source_session_id": "LW10K-W04-D02",
+    "milliseconds": 2550000,
+    "display": "42:30",
+    "quality_work_steps": 4
+  },
+  "source_sha256": {
+    "AGENTS.md": "75f5b1a60341cee4d81a1774d41f930eaddd57e92a13214f773f2f4b5745dacc",
+    "docs/planning/Founder_Release_Plan_M0_M10_v1.md": "409c99de83e1493a077ccebd778bc98a63520bcb5b48f7f90ef886b89d58d9ff",
+    "docs/checkpoints/m45_auth_bootstrap/HANDOFF.md": "405fd5504c92d8936df4cd5b0aa52cbe12e0a0e96056da682379c0faf021f9a2",
+    "docs/checkpoints/m11_catalogue_setup_creation/WRITE_SET.json": "7ebba83be9d35c26c73ad2202fd149f5909fa71619d3b1266e465b18b847a746",
+    "docs/checkpoints/m11_catalogue_setup_creation/WRITE_BOUNDARY.json": "848043bf22edf95a34fb23ad6c880cd5dfda33e6be46c32a4508797e687c6810",
+    "docs/checkpoints/programme_studio_editable_workspace/HANDOFF.md": "bc56d750af1728db7ea9c63a2dd3a9aa6c04b363cd0391777fd243751d57f8a8",
+    "docs/checkpoints/programme_studio_canonical_intake/FORMAT.md": "d2e431adf01e8ce2c472406b671085499a6451386c97397432172eb41514fb3f",
+    "docs/checkpoints/programme_studio_source_coverage/COVERAGE.md": "ffbdcc04589bd1a714dd3c6181967a417edff1596809f25bf8541f26bd01588e",
+    "tool/programmes/bin/publish_private_exact_version.dart": "63163451b2e007ea4d3f9ba047753717a289c53820b3895d14d2e46e4c9ade6f",
+    "lib/features/private_programme/reviewed_protocol_graph_artifact.dart": "a610aa4c25c97f9271ca7bf9233014dca5784c844c8b48a416bb8a16a3564a07",
+    "lib/features/programme_studio/protocol_authoring/synthetic_strength_session_compiler.dart": "c0b75909889b86d361b5fcf502d2c9a07c8fca3a197fb0d538ae54bfc701d12e",
+    "tool/importer/lib/features/founder_programme_import/founder_programme_prescription_mapper.dart": "a501e59639911e6f9bd9cdbbbf81b94031374132c28147e12667dfd43c26c653",
+    "docs/programmes/hybrid_10k/founder_selected_2026_10_30/SOURCE.json": "f12b5df97f0a9dc813c9610021ee82233414d2e2b1e6187dd0ae09745e3ecdf5",
+    "docs/programmes/hybrid_10k/founder_selected_2026_10_30/RUNNING_BODIES.json": "5d36176a57d8b610799cd72bf8be452bbf9a68fa7396ce4bf41877f83959491b"
+  },
+  "documentation_allowlist": [
+    "docs/checkpoints/CURRENT_CHECKPOINT.md",
+    "docs/planning/Founder_Release_Plan_M0_M10_v1.md",
+    "docs/checkpoints/m11_founder_authoring/ALLOCATION.md",
+    "docs/checkpoints/m11_founder_authoring/CATALOGUE_CAPABILITY.md",
+    "docs/checkpoints/m11_founder_authoring/HANDOFF.md",
+    "docs/checkpoints/m11_founder_authoring/IMPLEMENTATION_PROMPT.md",
+    "docs/checkpoints/m11_founder_authoring/VERIFICATION.json"
+  ],
+  "not_run": [
+    "AuthGate diagnosis",
+    "Flutter tests/analyze/build",
+    "DB tests/replay",
+    "source regeneration",
+    "hosted status/SELECT/write",
+    "credential search/provisioning",
+    "UI automation"
+  ],
+  "publication": {
+    "initial_live_main": "2c716b45ba63432e733ed2fe742472e526954358",
+    "method": "normal HTTPS main-only non-force push from task-owned bare repository; fresh equality/ancestry check required immediately before push",
+    "final_receipt": "external task result; not claimed before postflight"
+  },
+  "preservation": "Before/after external hashed inventory; existing checkouts and refs must compare exactly. No bundle found in /private/tmp; historical hashes not treated as freshly verified."
+}

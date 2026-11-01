@@ -1,5 +1,27 @@
 # Current repository checkpoint
 
+> **M1.1 founder-authoring allocation — ready, 2026-11-01:**
+> [Handoff](./m11_founder_authoring/HANDOFF.md) and
+> [allocation](./m11_founder_authoring/ALLOCATION.md) bound genuine authoring in the
+> EXISTING Studio: exact exercise/setup, full Hybrid strength fields, personalised
+> timed running, ten-week arrangement/copies/notes, editable file save/open, actual
+> prescription review and canonical v2/native-graph preparation. Existing synthetic
+> fixed-profile limits are explicit; no new editor/runtime/parallel format.
+> [Catalogue operation](./m11_founder_authoring/CATALOGUE_CAPABILITY.md) specifies
+> a bounded prepare/apply/retain adapter over the historical data-only seed route,
+> actual operator authentication/role, exact dedup/allocation/history/audit and
+> later separate connection provisioning/apply. No available legacy write capability
+> is inferred; three exact records still block full strength admission. First founder
+> pair is W1 Monday strength + W4 Tuesday running; all 20 strength/40 running/10 rest
+> days and 105 work prescriptions remain the full coverage test. D8 stays pending.
+> Allocation/docs only; no broad tests, hosted contact or UI automation. Repaired
+> AuthGate diagnosis is not reopened; final-10K support is locally verified in the
+> later M2.3 checkpoint. Existing checkouts/HEADs/indices/dirty files/.temp/backups
+> preserved. **Next single point: M1.1 bounded local Studio implementation plus
+> offline catalogue operation package**, using the
+> [ready-to-run prompt](./m11_founder_authoring/IMPLEMENTATION_PROMPT.md).
+> No implementation/provisioning/publication starts here. **Gate A OPEN.**
+
 > **M4.5 inherited bootstrap diagnosis — locally resolved, 2026-11-01:**
 > [Handoff](./m45_auth_bootstrap/HANDOFF.md) reproduces the exact original line-124
 > shell absence at base `639d6cd`: the older capability fixture omitted M1.2's
