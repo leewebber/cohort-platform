@@ -22,6 +22,7 @@ import '../models/training_session_record_status.dart';
 import '../models/interval_work_result.dart';
 import '../models/performance_result_data.dart';
 import '../models/performance_snapshot.dart';
+import '../models/training_block_result_status.dart';
 import '../services/interval_pace_format.dart';
 import '../services/performance_record_save_coordinator.dart';
 import '../services/running_pace_plausibility.dart';
@@ -312,6 +313,21 @@ class _SessionFinishReviewScreenState extends State<SessionFinishReviewScreen> {
                         : const IntervalResultData(),
                   ),
               const SizedBox(height: CohortSpacing.lg),
+              for (final block in draft.blockDrafts)
+                if (block.blockSnapshot.hasDistanceStep) ...[
+                  const Text(
+                    'Prescribed distance: 10,000 m · preparation/cooldown separate',
+                  ),
+                  Text(
+                    'Distance-step actuals · ${block.status.displayLabel} · manual/external: '
+                    '${block.resultData is EnduranceResultData ? (block.resultData as EnduranceResultData).distance ?? 'unavailable' : 'unavailable'} '
+                    '${block.resultData is EnduranceResultData ? (block.resultData as EnduranceResultData).distanceUnit : ''}; '
+                    '${block.resultData is EnduranceResultData ? (block.resultData as EnduranceResultData).durationSeconds ?? 'unavailable' : 'unavailable'} s elapsed',
+                  ),
+                  const Text(
+                    'Cohort has not measured the distance. No benchmark is created or sent to personalised targets.',
+                  ),
+                ],
               SessionRpeSelector(
                 value: draft.overallRpe,
                 onChanged: (value) {

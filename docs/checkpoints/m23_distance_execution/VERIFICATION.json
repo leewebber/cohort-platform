@@ -1,0 +1,174 @@
+{
+  "date": "2026-11-01",
+  "timezone": "Asia/Makassar",
+  "status": "BOUNDED_LOCAL_EXECUTION_VERIFIED_GATE_A_OPEN",
+  "base": "f4396d20ce41ac824aaaff0aa267b89fa3bb4cef",
+  "git": {
+    "fresh_ordinary_ls_remote_and_fetch_main": "f4396d20ce41ac824aaaff0aa267b89fa3bb4cef",
+    "pre_commit_ancestry_exit": 0,
+    "pre_commit_ahead_count": 0,
+    "target": "origin main:main",
+    "force": false,
+    "publication_receipt": "Final chat report records the resulting commit and verified remote equality."
+  },
+  "verification": {
+    "refusal": {
+      "command": "flutter test tool/programmes/hybrid_10k/general_admission_probe_test.dart --reporter expanded",
+      "passed": 5,
+      "expected_prior_final_10k_refusal": "unsupported_timed_running_body",
+      "historical_admission_receipt_unchanged": true
+    },
+    "focused": {
+      "command": "flutter test --no-pub test/session/authored_distance_running_test.dart test/session/authored_timed_running_test.dart test/session/structured_running_controller_test.dart --reporter expanded",
+      "passed": 62,
+      "new_distance_cases": 23,
+      "overlaps_broader_run": true
+    },
+    "compatibility": {
+      "command": "flutter test --no-pub test/persistence/ test/running_workout/ test/programmes/ test/authored_plan_package/ --reporter expanded",
+      "passed": 208
+    },
+    "broader": {
+      "command": "flutter test test/session/ test/performance/ test/programme/ test/core/persistence/ test/domain/running_workout/ test/features/performance_tracking/ test/private_programme/ --reporter expanded",
+      "passed": 774,
+      "skipped": 2,
+      "inherited_test_failure": "test/programme/athlete_runtime_capability_bootstrap_test.dart:124; AthleteAppShell absent; recorded at immutable M2.4 checkpoint",
+      "incorrect_directory_load_failures": [
+        "test/core/persistence/",
+        "test/domain/running_workout/",
+        "test/private_programme/"
+      ],
+      "correction": "The separate 208-test compatibility run uses the actual existing paths. No test or failure was suppressed."
+    },
+    "safety": {
+      "command": "./tool/testing/run_phase2_consolidation_safety_gate.sh",
+      "groups_passed": 6,
+      "groups_failed": 0
+    },
+    "analysis": {
+      "command": "flutter analyze --no-pub",
+      "base_issues": 362,
+      "final_issues": 362,
+      "identical_diagnostic_identities": true,
+      "errors": 0,
+      "changed_file_diagnostics": 0,
+      "exit": 1,
+      "nested_dependencies_resolved": true
+    },
+    "interim_failures": "Initial nested dependencies unresolved; compile/test-style fixes corrected; concurrent Flutter generated iOS cleanup race corrected by sequential --no-pub run. No permission bypass.",
+    "not_run": [
+      "full default Flutter suite",
+      "local SQL replay",
+      "hosted operations",
+      "installed-device acceptance"
+    ]
+  },
+  "logs": {
+    "refusal": {
+      "path": "/private/tmp/cohort_m23_distance_refusal.log",
+      "sha256": "42d49b02f6e2e17a000b198ee628e455c4b3f09eddf0001cc7da718c9df49fa1"
+    },
+    "focused": {
+      "path": "/private/tmp/cohort_m23_distance_focused_final.log",
+      "sha256": "1b928ccf9605a75115581635099ac765a08744776097b58f2ced41fd8b3cb831"
+    },
+    "compatibility": {
+      "path": "/private/tmp/cohort_m23_distance_compatibility.log",
+      "sha256": "f9898600e1faa1885967007694dc8cf703bfc0a0e5334a3107b477c4b017c154"
+    },
+    "broader": {
+      "path": "/private/tmp/cohort_m23_distance_regressions.log",
+      "sha256": "1aaab0224a990bf775c31e4f6e0c199d5aaa81e207d1d564537f9180dd30f659"
+    },
+    "safety": {
+      "path": "/private/tmp/cohort_m23_distance_safety_final.log",
+      "sha256": "1415ea07109d5f1da36b135b0a81e3d6015c43996e63ab9b50b4d759c79be7e6"
+    },
+    "analysis_base": {
+      "path": "/private/tmp/cohort_m23_distance_analysis_base.log",
+      "sha256": "f1d555f2371ab082f2bf4740cf4b1d51d349edb9bf09ad8155dec99be18997a3"
+    },
+    "analysis_final": {
+      "path": "/private/tmp/cohort_m23_distance_analysis_final.log",
+      "sha256": "ffd3dd81c281a229099bf9898da4111d822b0d68de40a54acda3a79fad061afe"
+    }
+  },
+  "preservation": {
+    "retained_existing_paths": 31,
+    "registered_absent": 28,
+    "preexisting_git_unavailable_paths": [
+      "/private/tmp/cohort_m11_sources",
+      "/private/tmp/cohort_m12_acquisition"
+    ],
+    "before_sha256": "48dbfd6ede6cbe812660161d1459a37eded6cea4e82449dbb0ec6fd32d523c91",
+    "after_sha256": "48dbfd6ede6cbe812660161d1459a37eded6cea4e82449dbb0ec6fd32d523c91",
+    "byte_identical": true,
+    "bundles": {
+      "Cohort-M1.1-approved-setups-2026-10-30.bundle": {
+        "sha256": "bce58b3b9b61103c9092e2a0f68aa14038d1b17e533d3ded89fa2cca4d024057",
+        "bytes": 8831798,
+        "verify_exit": 0,
+        "retained_hash_matches": null
+      },
+      "Cohort-M1.1-approved-setups-final-2026-10-30.bundle": {
+        "sha256": "89ab5256b7ffc16a1ea209cc3b66c55174539fa073163ab8e28cb4b55fc9bcc6",
+        "bytes": 8887155,
+        "verify_exit": 0,
+        "retained_hash_matches": null
+      },
+      "Cohort-M1.1-dose-reconciled-2026-10-30.bundle": {
+        "sha256": "418203d393a767051eb86a572e7e737390b87882ce63632b484371e7d519b10a",
+        "bytes": 8788054,
+        "verify_exit": 0,
+        "retained_hash_matches": true
+      },
+      "Cohort-M1.1-main.bundle": {
+        "sha256": "db9348edd795f7e669a722b4bdba7376577b3554a50c88c1ec19c0ac213880dd",
+        "bytes": 8558001,
+        "verify_exit": 0,
+        "retained_hash_matches": true
+      },
+      "Cohort-M1.1-movement-review-2026-10-30.bundle": {
+        "sha256": "ccf622cddf1a18013d2a9cec487ec249b136cd0a0adf07d9ea1db28a131caacf",
+        "bytes": 8676845,
+        "verify_exit": 0,
+        "retained_hash_matches": true
+      },
+      "Cohort-M1.1-reconciled-2026-10-30.bundle": {
+        "sha256": "6b21cb6d9fb61420d124812b5650e0ce7f3bae2eb0fc11ece568d12d65bea206",
+        "bytes": 8625627,
+        "verify_exit": 0,
+        "retained_hash_matches": true
+      },
+      "Cohort-M1.1-selected-strength-2026-10-30.bundle": {
+        "sha256": "5dd23b6491ff92b45e55918dfb719d9952df2e8019e3f91f831d1f6dab78ddfc",
+        "bytes": 8754243,
+        "verify_exit": 0,
+        "retained_hash_matches": true
+      },
+      "Cohort-M1.1-trusted-catalogue-2026-10-30.bundle": {
+        "sha256": "757217d27d497edd56243ec0492dd5ba3b7efb4883eb778dbc2c44b3e8de0d72",
+        "bytes": 8814670,
+        "verify_exit": 0,
+        "retained_hash_matches": true
+      }
+    },
+    "new_working_clone": "/private/tmp/cohort_m23_distance",
+    "new_worktrees": 0
+  },
+  "fixture": {
+    "path": "test/session/fixtures/authored_distance_run.json",
+    "sha256": "924bc5aab7b74df07177f1f13fff2180dab3644a2394ac409c1182f8c549ce5a",
+    "steps_identical_to_retained_final_test": true,
+    "prescribed_distance_millimetres": 10000000,
+    "timed_preparation_cooldown_seconds": 1980,
+    "programme_admission": false,
+    "D8_approval": false
+  },
+  "migration_added": false,
+  "hosted_mutations": 0,
+  "catalogue_lookups_repeated": false,
+  "strength_graph_rebuild_repeated": false,
+  "browser_desktop_control_used": false,
+  "next_recommended_single_point": "M4.5 bounded diagnosis of inherited AuthGate bootstrap test failure; not automatic next-slice authority"
+}

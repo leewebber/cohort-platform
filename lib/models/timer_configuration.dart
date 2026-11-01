@@ -52,6 +52,14 @@ class TimerConfiguration {
   /// Exact authored body, distinct from the optional B2 advisory policy.
   final RunningWorkout? runningWorkout;
 
+  bool get hasDistanceStep =>
+      runningWorkout?.steps.any(
+        (node) =>
+            node is RunningAtomicStep &&
+            node.duration.kind == RunningDurationKind.distance,
+      ) ??
+      false;
+
   int? get emomTotalSeconds =>
       totalDurationSeconds ??
       (durationSeconds != null && durationSeconds! > 0
@@ -288,7 +296,18 @@ class TimerConfiguration {
       );
       var total = 0;
       var frames = 0;
-      void step(RunningAtomicStep step, int count) {
+      var distanceSteps = 0;
+      void step(RunningAtomicStep step, int count, {bool repeated = false}) {
+        if (step.duration.kind == RunningDurationKind.distance) {
+          distanceSteps++;
+          frames++;
+          if (repeated ||
+              step.role != RunningStepRole.work ||
+              step.duration.millimetres != 10000000) {
+            messages.add('Only one atomic 10,000 m work step is supported.');
+          }
+          return;
+        }
         final ms = step.duration.milliseconds;
         if (step.duration.kind != RunningDurationKind.time ||
             ms == null ||
@@ -309,7 +328,7 @@ class TimerConfiguration {
             step(node, 1);
           case RunningRepeatGroup():
             for (final child in node.steps) {
-              step(child, node.count);
+              step(child, node.count, repeated: true);
             }
         }
       }
@@ -317,6 +336,7 @@ class TimerConfiguration {
           durationSeconds == null ||
           durationSeconds! * 1000 != total ||
           frames > 512 ||
+          distanceSteps > 1 ||
           durationSecondsRange != null ||
           omitFinalRecovery ||
           workSeconds != null ||
@@ -394,7 +414,9 @@ class TimerConfiguration {
 
   String summaryForFormat(WorkoutFormat format) {
     if (runningWorkout != null) {
-      return 'Structured timed run · ${durationSeconds ?? 0}s total';
+      return hasDistanceStep
+          ? 'Structured run · 10,000 m + ${durationSeconds ?? 0}s timed preparation/cooldown'
+          : 'Structured timed run · ${durationSeconds ?? 0}s total';
     }
     return switch (format) {
       WorkoutFormat.none => 'No timer',

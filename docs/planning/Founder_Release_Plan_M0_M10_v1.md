@@ -6,7 +6,26 @@ This plan controls delivery priorities. It preserves technical authority contrac
 it does not grant implementation, content, hosted, account or release authority.
 [M0 findings and critical path](../checkpoints/m0_alpha_baseline/HANDOFF.md).
 
-## Current single point — M1.1 (2026-10-30)
+## Current single build — M2.3 distance execution (2026-11-01)
+
+**Bounded athlete-confirmed final 10K execution is locally verified.**
+[Handoff](../checkpoints/m23_distance_execution/HANDOFF.md) and verification retain
+exact authored distance/units and all 33 timed preparation/cooldown minutes through
+the existing Programme Athlete authority. No trusted live distance source exists
+in this runner: the athlete confirms external distance; phone active time excludes
+closed-app time. Confirmation is UI progress, separate from manually entered
+actuals, explicit canonical completion, benchmark evidence and target rules.
+A representative software fixture is used; no D8 or publication readiness is claimed.
+No migration, hosted operation, catalogue lookup or unchanged graph rebuild.
+
+M1.1's three approved setup creations remain blocked by unavailable legitimate
+write capability; no further movement approval is required. D8 is pending.
+M2.5 access/contracts and genuine programme/device/release dependencies remain.
+**Next recommended single build: M4.5 bounded AuthGate bootstrap test-failure diagnosis**, before authenticated acceptance. This recommendation does not authorise
+a new slice. All existing histories/checkouts/indices/HEADs/.temp/bundles are retained;
+normal main-only publication follows fresh remote ancestry verification.
+
+## Retained M1.1 capability checkpoint (2026-10-30)
 
 **Three setup operations authorised; legitimate legacy write capability blocked.**
 [Current handoff](../checkpoints/m11_catalogue_setup_creation/HANDOFF.md) records

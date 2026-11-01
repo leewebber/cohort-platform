@@ -33,6 +33,7 @@ class _StructuredRunningTimerScreenState
   late final StructuredRunningController _controller;
   bool _isExiting = false;
   bool _saveFailed = false;
+  bool _confirmingDistance = false;
 
   @override
   void initState() {
@@ -102,6 +103,36 @@ class _StructuredRunningTimerScreenState
     if (mounted) setState(() => _saveFailed = !saved);
   }
 
+  Future<void> _confirmDistance() async {
+    if (_confirmingDistance || _saveFailed || _isExiting) return;
+    setState(() => _confirmingDistance = true);
+    _controller.pause();
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Confirm 10,000 m completed?'),
+        content: const Text(
+          'Confirm only after completing the prescribed distance using an external measured route, watch or treadmill. Cohort has not measured your distance. This advances the timer only; record actual results separately.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Keep paused'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('I completed 10,000 m'),
+          ),
+        ],
+      ),
+    );
+    if (!mounted) return;
+    if (confirmed == true && !_saveFailed && !_isExiting) {
+      _controller.confirmDistanceStep();
+    }
+    setState(() => _confirmingDistance = false);
+  }
+
   Future<void> _exit() async {
     if (_isExiting) return;
     setState(() => _isExiting = true);
@@ -130,7 +161,9 @@ class _StructuredRunningTimerScreenState
     final cursor = _controller.cursor;
     final step = widget.execution.stepForCursor(cursor);
     final target = widget.execution.targetsByStepId[step.stepId];
+    final distanceStep = _controller.isDistanceStep;
     final seconds = (cursor.remainingMilliseconds / 1000).ceil();
+    final elapsedSeconds = cursor.distanceElapsedMilliseconds ~/ 1000;
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, _) {
@@ -194,16 +227,45 @@ class _StructuredRunningTimerScreenState
                         ],
                         const SizedBox(height: 12),
                         ..._targetWidgets(step: step, target: target),
+                        if (distanceStep) ...[
+                          const SizedBox(height: 12),
+                          const Text(
+                            'Prescribed distance: 10,000 m',
+                            key: ValueKey('running-prescribed-distance'),
+                          ),
+                          const Text(
+                            'Athlete-confirmed distance · Cohort does not measure distance.',
+                            textAlign: TextAlign.center,
+                          ),
+                          const Text(
+                            'Phone active time excludes pauses and time away. A manually recorded external elapsed result may differ.',
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                        if (cursor.distanceConfirmed) ...[
+                          const SizedBox(height: 12),
+                          Text(
+                            'Distance step confirmed by you · phone active time ${_elapsed(cursor.distanceElapsedMilliseconds ~/ 1000)}. Actual results are recorded separately.',
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
                         const SizedBox(height: 24),
                         Text(
-                          cursor.isFinished ? 'Timer finished' : '$seconds s',
+                          cursor.isFinished
+                              ? 'Timer finished'
+                              : distanceStep
+                              ? 'Active time ${_elapsed(elapsedSeconds)}'
+                              : '$seconds s',
                           key: const ValueKey('structured-running-clock'),
                           style: Theme.of(context).textTheme.displayMedium,
                         ),
                         const SizedBox(height: 24),
                         FilledButton(
                           onPressed:
-                              cursor.isFinished || _saveFailed || _isExiting
+                              cursor.isFinished ||
+                                  _saveFailed ||
+                                  _isExiting ||
+                                  _confirmingDistance
                               ? null
                               : cursor.isPaused
                               ? _controller.start
@@ -216,6 +278,24 @@ class _StructuredRunningTimerScreenState
                                 : 'Pause',
                           ),
                         ),
+                        if (distanceStep) ...[
+                          const SizedBox(height: 12),
+                          FilledButton(
+                            key: const ValueKey('confirm-running-distance'),
+                            onPressed:
+                                _saveFailed ||
+                                    _isExiting ||
+                                    _confirmingDistance ||
+                                    cursor.distanceElapsedMilliseconds <= 0
+                                ? null
+                                : _confirmDistance,
+                            child: const Text('Confirm distance step finished'),
+                          ),
+                          const Text(
+                            'Not finished? Pause and exit. Keep the test incomplete or skip it when reviewing results.',
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
                         if (widget.execution.pauseOnInterruption &&
                             cursor.isPaused &&
                             !cursor.isFinished) ...[
@@ -334,6 +414,9 @@ class _StructuredRunningTimerScreenState
     RunningTargetKind.rpeRange =>
       'RPE ${target.rpeCr10Low}–${target.rpeCr10High}/10',
   };
+
+  static String _elapsed(int seconds) =>
+      '${seconds ~/ 3600}:${((seconds ~/ 60) % 60).toString().padLeft(2, '0')}:${(seconds % 60).toString().padLeft(2, '0')}';
 
   static String _exactPace(int ms) {
     final minutes = ms ~/ 60000;

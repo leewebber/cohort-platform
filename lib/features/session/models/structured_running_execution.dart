@@ -299,9 +299,11 @@ class StructuredRunningCursor {
     required this.manualEvidenceState,
     required this.isFinished,
     this.lastReconciledAtUtc,
+    this.distanceElapsedMilliseconds = 0,
+    this.distanceConfirmed = false,
   });
 
-  static const currentSchemaVersion = 2;
+  static const currentSchemaVersion = 3;
 
   final int schemaVersion;
   final String workoutId;
@@ -315,6 +317,8 @@ class StructuredRunningCursor {
   final StructuredRunningManualEvidenceState manualEvidenceState;
   final bool isFinished;
   final DateTime? lastReconciledAtUtc;
+  final int distanceElapsedMilliseconds;
+  final bool distanceConfirmed;
 
   Map<String, dynamic> toJson() => {
     'schema_version': schemaVersion,
@@ -328,6 +332,10 @@ class StructuredRunningCursor {
     'is_paused': isPaused,
     'manual_evidence_state': manualEvidenceState.name,
     'is_finished': isFinished,
+    if (schemaVersion >= 3) ...{
+      'distance_elapsed_milliseconds': distanceElapsedMilliseconds,
+      'distance_confirmed': distanceConfirmed,
+    },
     if (schemaVersion >= 2)
       'last_reconciled_at_utc': lastReconciledAtUtc?.toIso8601String(),
   };
@@ -347,12 +355,18 @@ class StructuredRunningCursor {
       'is_finished',
     };
     final schemaVersion = json['schema_version'];
-    if (schemaVersion != 1 && schemaVersion != currentSchemaVersion) {
+    if (schemaVersion != 1 &&
+        schemaVersion != 2 &&
+        schemaVersion != currentSchemaVersion) {
       throw const FormatException('unsupported structured running cursor');
     }
     final allowedKeys = {
       ...commonKeys,
-      if (schemaVersion == currentSchemaVersion) 'last_reconciled_at_utc',
+      if (schemaVersion is int && schemaVersion >= 2) 'last_reconciled_at_utc',
+      if (schemaVersion == 3) ...{
+        'distance_elapsed_milliseconds',
+        'distance_confirmed',
+      },
     };
     if (json.keys.toSet().difference(allowedKeys).isNotEmpty ||
         !json.keys.toSet().containsAll(allowedKeys)) {
@@ -369,7 +383,7 @@ class StructuredRunningCursor {
     final savedPaused = json['is_paused'];
     final savedFinished = json['is_finished'];
     DateTime? lastReconciledAtUtc;
-    if (schemaVersion == currentSchemaVersion) {
+    if (schemaVersion is int && schemaVersion >= 2) {
       final anchor = json['last_reconciled_at_utc'];
       if (anchor != null) {
         if (anchor is! String ||
@@ -384,6 +398,17 @@ class StructuredRunningCursor {
         }
       }
     }
+    final distanceElapsed = schemaVersion == 3
+        ? json['distance_elapsed_milliseconds']
+        : 0;
+    final distanceConfirmed = schemaVersion == 3
+        ? json['distance_confirmed']
+        : false;
+    if (distanceElapsed is! int ||
+        distanceElapsed < 0 ||
+        distanceConfirmed is! bool) {
+      throw const FormatException('invalid distance running cursor');
+    }
     if (phase == null ||
         evidence == null ||
         remaining is! int ||
@@ -394,7 +419,8 @@ class StructuredRunningCursor {
         savedFinished is! bool) {
       throw const FormatException('invalid structured running cursor');
     }
-    if (schemaVersion == currentSchemaVersion &&
+    if (schemaVersion is int &&
+        schemaVersion >= 2 &&
         ((!savedPaused && !savedFinished && lastReconciledAtUtc == null) ||
             ((savedPaused || savedFinished) && lastReconciledAtUtc != null))) {
       throw const FormatException('invalid structured running timestamp state');
@@ -422,6 +448,8 @@ class StructuredRunningCursor {
       manualEvidenceState: evidence,
       isFinished: savedFinished,
       lastReconciledAtUtc: lastReconciledAtUtc,
+      distanceElapsedMilliseconds: distanceElapsed,
+      distanceConfirmed: distanceConfirmed,
     );
   }
 }

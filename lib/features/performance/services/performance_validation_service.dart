@@ -74,6 +74,25 @@ class PerformanceValidationService {
     }
 
     final resultData = block.resultData;
+    if (block.blockSnapshot.hasDistanceStep &&
+        block.status == TrainingBlockResultStatus.completed) {
+      final actual = resultData is EnduranceResultData ? resultData : null;
+      final distance = actual?.distance;
+      final metres = switch (actual?.distanceUnit) {
+        'm' => distance,
+        'km' => distance == null ? null : distance * 1000,
+        'mi' => distance == null ? null : distance * 1609.344,
+        _ => null,
+      };
+      if (metres == null ||
+          !metres.isFinite ||
+          metres < 10000 ||
+          (actual?.durationSeconds ?? 0) <= 0) {
+        errors['$prefix.distanceStep'] =
+            'Record the completed test distance (at least 10,000 m) and external elapsed time, or leave this block incomplete / skipped. Preparation and cooldown are separate.';
+      }
+    }
+
     if (resultData is AmrapResultData) {
       if (resultData.rounds < 0) {
         errors['$prefix.rounds'] = 'Rounds cannot be negative.';

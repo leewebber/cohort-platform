@@ -350,6 +350,7 @@ class _ResultEditorBody extends StatelessWidget {
           onChanged: onResultChanged,
           blockTitle: blockDraft.blockSnapshot.title,
           workoutFormat: blockDraft.blockSnapshot.workoutFormat.name,
+          distanceStep: blockDraft.blockSnapshot.hasDistanceStep,
         );
       case BlockCaptureMode.circuit:
         final circuit =
@@ -846,8 +847,10 @@ class _EnduranceEditor extends StatefulWidget {
     required this.onChanged,
     this.blockTitle,
     this.workoutFormat,
+    this.distanceStep = false,
   });
 
+  final bool distanceStep;
   final EnduranceResultData result;
   final ValueChanged<PerformanceResultData> onChanged;
   final String? blockTitle;
@@ -902,6 +905,10 @@ class _EnduranceEditorState extends State<_EnduranceEditor> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        if (widget.distanceStep)
+          const Text(
+            'Distance-step actuals (manual/external). Enter only the test segment, excluding preparation and cooldown. Nothing is copied from the prescription or phone timer. Leave incomplete or skip if not finished; no benchmark is created.',
+          ),
         PerformanceNumericField(
           label: 'Distance',
           value: result.distance?.toString() ?? '',

@@ -1,0 +1,175 @@
+{
+  "schema_version": 1,
+  "workout_id": "TEST-ONLY-M23-DISTANCE",
+  "title": "[SOFTWARE FIXTURE ONLY] Final 10K execution",
+  "notes": "Representative execution fixture, not an admitted programme or D8 approval. General draft; primary EASY work uses confirmed Zone 2. Quality requires explicit M2.3 selection/review/acceptance. No automatic fallback. Flat measured course or track preferred. Record elapsed time, exact distance, route/surface, weather, splits, RPE and environment. Disable auto-pause. First 2 km controlled; km 3\u20137 even sustainable effort; assess at 7 km and increase only if able; commit in final kilometre. Use training evidence to select pace. If unwell/in pain, do not force the assessment; retain an unavailable result and review timing.",
+  "steps": [
+    {
+      "kind": "atomic",
+      "step_id": "LW10K-W10-D07-P01",
+      "role": "warm_up",
+      "duration": {
+        "kind": "time",
+        "milliseconds": 900000
+      },
+      "target": {
+        "kind": "rpe_range",
+        "scale": "rpe_cr10",
+        "low": 3,
+        "high": 4
+      },
+      "label": "Easy warm-up jog",
+      "notes": "Authored effort: EASY. RPE 3\u20134/10; full sentences, relaxed gait, slow down as needed; not fixed pace."
+    },
+    {
+      "kind": "atomic",
+      "step_id": "LW10K-W10-D07-P02",
+      "role": "warm_up",
+      "duration": {
+        "kind": "time",
+        "milliseconds": 20000
+      },
+      "target": {
+        "kind": "rpe_range",
+        "scale": "rpe_cr10",
+        "low": 7,
+        "high": 8
+      },
+      "label": "Warm-up strides",
+      "notes": "Authored effort: STRIDE. RPE about 7\u20138, relaxed; smooth acceleration, quick running, never all-out sprint."
+    },
+    {
+      "kind": "atomic",
+      "step_id": "LW10K-W10-D07-P03",
+      "role": "recovery",
+      "duration": {
+        "kind": "time",
+        "milliseconds": 100000
+      },
+      "target": {
+        "kind": "rpe_range",
+        "scale": "rpe_cr10",
+        "low": 2,
+        "high": 3
+      },
+      "label": "Recovery",
+      "notes": "Authored effort: RECOVERY. RPE 2\u20133/10; very easy jog, walking allowed if needed."
+    },
+    {
+      "kind": "atomic",
+      "step_id": "LW10K-W10-D07-P04",
+      "role": "warm_up",
+      "duration": {
+        "kind": "time",
+        "milliseconds": 20000
+      },
+      "target": {
+        "kind": "rpe_range",
+        "scale": "rpe_cr10",
+        "low": 7,
+        "high": 8
+      },
+      "label": "Warm-up strides",
+      "notes": "Authored effort: STRIDE. RPE about 7\u20138, relaxed; smooth acceleration, quick running, never all-out sprint."
+    },
+    {
+      "kind": "atomic",
+      "step_id": "LW10K-W10-D07-P05",
+      "role": "recovery",
+      "duration": {
+        "kind": "time",
+        "milliseconds": 100000
+      },
+      "target": {
+        "kind": "rpe_range",
+        "scale": "rpe_cr10",
+        "low": 2,
+        "high": 3
+      },
+      "label": "Recovery",
+      "notes": "Authored effort: RECOVERY. RPE 2\u20133/10; very easy jog, walking allowed if needed."
+    },
+    {
+      "kind": "atomic",
+      "step_id": "LW10K-W10-D07-P06",
+      "role": "warm_up",
+      "duration": {
+        "kind": "time",
+        "milliseconds": 20000
+      },
+      "target": {
+        "kind": "rpe_range",
+        "scale": "rpe_cr10",
+        "low": 7,
+        "high": 8
+      },
+      "label": "Warm-up strides",
+      "notes": "Authored effort: STRIDE. RPE about 7\u20138, relaxed; smooth acceleration, quick running, never all-out sprint."
+    },
+    {
+      "kind": "atomic",
+      "step_id": "LW10K-W10-D07-P07",
+      "role": "recovery",
+      "duration": {
+        "kind": "time",
+        "milliseconds": 100000
+      },
+      "target": {
+        "kind": "rpe_range",
+        "scale": "rpe_cr10",
+        "low": 2,
+        "high": 3
+      },
+      "label": "Recovery",
+      "notes": "Authored effort: RECOVERY. RPE 2\u20133/10; very easy jog, walking allowed if needed."
+    },
+    {
+      "kind": "atomic",
+      "step_id": "LW10K-W10-D07-P08",
+      "role": "recovery",
+      "duration": {
+        "kind": "time",
+        "milliseconds": 120000
+      },
+      "target": {
+        "kind": "rpe_range",
+        "scale": "rpe_cr10",
+        "low": 2,
+        "high": 3
+      },
+      "label": "Very easy settle jog",
+      "notes": "Authored effort: RECOVERY. RPE 2\u20133/10; very easy jog, walking allowed if needed."
+    },
+    {
+      "kind": "atomic",
+      "step_id": "LW10K-W10-D07-P09",
+      "role": "work",
+      "duration": {
+        "kind": "distance",
+        "millimetres": 10000000
+      },
+      "target": {
+        "kind": "none"
+      },
+      "label": "Measured time trial",
+      "notes": "Authored effort: Best sustainable evenly paced effort; no early sprint. "
+    },
+    {
+      "kind": "atomic",
+      "step_id": "LW10K-W10-D07-P10",
+      "role": "cool_down",
+      "duration": {
+        "kind": "time",
+        "milliseconds": 600000
+      },
+      "target": {
+        "kind": "rpe_range",
+        "scale": "rpe_cr10",
+        "low": 3,
+        "high": 4
+      },
+      "label": "Easy cooldown jog",
+      "notes": "Authored effort: EASY. RPE 3\u20134/10; full sentences, relaxed gait, slow down as needed; not fixed pace."
+    }
+  ]
+}

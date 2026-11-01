@@ -1,5 +1,19 @@
 # Current repository checkpoint
 
+> **M2.3 final 10K execution — locally verified, 2026-11-01:**
+> [Handoff](./m23_distance_execution/HANDOFF.md) records the bounded one-step
+> athlete-confirmed 10,000 m path with exact timed preparation/cooldown, active
+> phone time, explicit confirmation, separate manual actuals and unchanged
+> completion/target authority. No trusted distance sensor is claimed. Restart
+> pauses without closed-time catch-up; failed saves require Retry. Representative
+> fixture only; D8 and programme/device acceptance remain pending. 62 focused and
+> 208 additional compatibility tests pass, six safety groups pass; analysis has
+> the same 362 inherited findings and zero errors/new findings. Broader checks
+> retain the documented AuthGate bootstrap failure. No migration or hosted action.
+> M1.1 catalogue creation remains capability-blocked; no lookup/graph rebuild or
+> further movement approval. **Next recommended single build: M4.5 bootstrap
+> test-failure diagnosis**, separately scoped. Gate A OPEN.
+
 > **M1.1 three approved setups — capability blocked, 2026-10-30:**
 > [Current handoff](./m11_catalogue_setup_creation/HANDOFF.md) records the founder's
 > authority for three exact setup operations; no further movement/dose approval

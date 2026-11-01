@@ -234,6 +234,21 @@ class BlockPerformanceSnapshot {
   final StructuredRunningPerformanceSnapshot? structuredRunning;
   final Map<String, dynamic>? timedRunningWorkout;
 
+  /// Only the bounded final-10K body opts into distance-step result capture.
+  bool get hasDistanceStep {
+    final steps = timedRunningWorkout?['steps'];
+    if (steps is! List) return false;
+    return steps.any(
+      (node) =>
+          node is Map &&
+          node['kind'] == 'atomic' &&
+          node['role'] == 'work' &&
+          node['duration'] is Map &&
+          node['duration']['kind'] == 'distance' &&
+          node['duration']['millimetres'] == 10000000,
+    );
+  }
+
   Map<String, dynamic> toJson() => {
     'schemaVersion': 1,
     'sourceBlockId': sourceBlockId,

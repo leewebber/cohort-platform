@@ -43,7 +43,8 @@ Map<String, dynamic> graph(Map row) => {
       'performance_capture_mode': 'endurance',
       'timer_config': {
         // For distance sources this is only the known timed subtotal. Validation
-        // must refuse; it is never a duration substitute for distance work.
+        // is never a duration substitute for distance work. Only the bounded
+        // atomic 10K ending is executable, with athlete confirmation.
         'durationSeconds': row['fixed_seconds'],
         'running_workout': row['workout'],
       },
@@ -189,12 +190,21 @@ void main() {
         }
         final distance = row['distance_metres'] as int;
         if (distance > 0) {
-          expect(codes, everyElement('unsupported_timed_running_body'));
+          expect(
+            codes,
+            everyElement(
+              distance == 10000
+                  ? 'accepted_local_graph'
+                  : 'unsupported_timed_running_body',
+            ),
+          );
           results.add({
             'source_session_id': id,
             'v1_v2': codes,
             'distance_metres': distance,
-            'restore': 'not_executable_distance_ending_preserved',
+            'restore': distance == 10000
+                ? 'bounded_10k_confirmation_supported_no_programme_admission'
+                : 'not_executable_distance_ending_preserved',
           });
           continue;
         }

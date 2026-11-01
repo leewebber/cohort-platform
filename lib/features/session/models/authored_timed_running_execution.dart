@@ -9,7 +9,7 @@ import 'structured_running_execution.dart';
 
 /// Derives execution from an exact physical block body, not a benchmark policy.
 /// The digest occupies the shared cursor's legacy mapping-hash field only in the
-/// separate authored-timed-run container; it never claims B2 mapping authority.
+/// separate authored-run container; it never claims B2 mapping authority.
 class AuthoredTimedRunningExecution extends TimedRunningExecution {
   const AuthoredTimedRunningExecution._({
     required this.sessionBlockId,
@@ -41,7 +41,7 @@ class AuthoredTimedRunningExecution extends TimedRunningExecution {
                 BlockPerformanceCaptureMode.automatic &&
             block.performanceCaptureMode !=
                 BlockPerformanceCaptureMode.endurance)) {
-      throw const FormatException('This authored timed run is not executable.');
+      throw const FormatException('This authored run is not executable.');
     }
     const codec = RunningWorkoutCodec();
     final decoded = resolveAdmittedRunningTargets(

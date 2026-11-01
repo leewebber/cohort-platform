@@ -239,10 +239,11 @@ void main() {
       final current = StructuredRunningController.fresh(
         execution: _execution(),
       ).cursor;
-      final legacyJson = <String, dynamic>{
-        ...current.toJson(),
-        'schema_version': 1,
-      }..remove('last_reconciled_at_utc');
+      final legacyJson =
+          <String, dynamic>{...current.toJson(), 'schema_version': 1}
+            ..remove('last_reconciled_at_utc')
+            ..remove('distance_elapsed_milliseconds')
+            ..remove('distance_confirmed');
       legacyJson['is_paused'] = false;
 
       final migrated = StructuredRunningCursor.fromJson(legacyJson);

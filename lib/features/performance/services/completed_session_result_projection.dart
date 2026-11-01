@@ -201,9 +201,15 @@ class CompletedBlockResultProjection {
       title: block.blockSnapshot.title,
       statusLabel: block.status.displayLabel,
       isSimpleCompletion: isSimple && interval == null && circuit == null,
-      summary: summary,
+      summary: block.blockSnapshot.hasDistanceStep
+          ? 'Distance-step actuals (manual/external): $summary'
+          : summary,
       exercises: exercises,
-      prescriptionContext: prescription.isEmpty ? null : prescription,
+      prescriptionContext: block.blockSnapshot.hasDistanceStep
+          ? 'Prescribed 10,000 m; timed preparation/cooldown separate. Cohort did not measure distance. No benchmark ingestion.\n$prescription'
+          : prescription.isEmpty
+          ? null
+          : prescription,
       interval: interval,
       circuit: circuit,
     );

@@ -87,7 +87,7 @@ void main() {
   );
 
   test(
-    '39 actual timed bodies admit structurally; final distance 10K refuses; target freeze remains required',
+    '39 timed bodies and bounded final 10K admit structurally; target freeze remains required',
     () {
       final package = read('SCHEDULE_CANDIDATE.json') as Map;
       final results = <Map>[];
@@ -114,7 +114,8 @@ void main() {
         if (row['distance_metres'] != 0) {
           expect(id, 'LW10K-W10-D07');
           expect(row['distance_metres'], 10000);
-          expect(codes, everyElement('unsupported_timed_running_body'));
+          expect(codes, everyElement('accepted_local_graph'));
+          // Structural support is not programme admission, D8 or benchmark ingestion.
         } else {
           expect(codes, everyElement('accepted_local_graph'));
           final block = retained.blockFor(row as Map);
@@ -155,7 +156,7 @@ void main() {
         results.where(
           (r) => (r['v1_v2'] as List).first == 'accepted_local_graph',
         ),
-        hasLength(39),
+        hasLength(40),
       );
       report['running_bodies'] = results;
     },
