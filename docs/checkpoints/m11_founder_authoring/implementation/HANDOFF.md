@@ -1,5 +1,11 @@
 # Bounded founder authoring — implementation handoff
 
+> **Coach-facing redesign, 2026-11-02:** Lee withheld usability acceptance of this
+> initial implementation. The [redesign handoff](../coach_redesign/HANDOFF.md) and
+> [updated manual walkthrough](FOUNDER_WALKTHROUGH.md) now describe the current UI.
+> The implementation/evidence boundaries below remain retained history. Founder
+> acceptance and D8 are pending; Gate A remains open.
+
 2026-11-02, Asia/Makassar. **IMPLEMENTED_LOCALLY; MANUAL_FOUNDER_ACCEPTANCE_PENDING;
 GENUINE_CATALOGUE_RETENTION_PENDING; D8_PENDING; GATE_A_OPEN.**
 

@@ -1,0 +1,80 @@
+{
+  "date": "2026-11-02",
+  "base": "2a648c3421f60a8de7279f2a1f471d04e2b6cbda",
+  "status": "LOCAL_COACH_REDESIGN_VERIFIED_MANUAL_ACCEPTANCE_PENDING",
+  "tests": {
+    "focused_coach_workflow": 15,
+    "affected_studio_graph_strength_running": 655,
+    "safety_groups_passed": 6,
+    "safety_groups_failed": 0,
+    "inherited_logged_diagnostic": "Synthetic strength-lineage reset emits a caught RangeError while its test passes; also present in pre-redesign retained log"
+  },
+  "analysis": {
+    "before": 362,
+    "after": 362,
+    "errors": 0,
+    "exact_sorted_rows_equal": true,
+    "new_diagnostics": 0,
+    "changed_file_diagnostics": 0
+  },
+  "artifact_verification": {
+    "actual_disk_readback": true,
+    "original_pending_sets": 4,
+    "independent_copy_pending_sets": 5,
+    "original_saved_sets": 3,
+    "unresolved_chest_row_ids_remain_null": true,
+    "running_timed_seconds": 2550,
+    "threshold_repetitions": 4,
+    "between_recoveries": 3,
+    "all_forty_runs_and_final_test_unchanged_regressions_pass": true,
+    "files": {
+      "m11_coach_strength_backup.json": {
+        "bytes": 653104,
+        "sha256": "ae97904ec5dd0d6bea4e9a55bff4186731ad62ada422243f658642735cd1a9e8"
+      },
+      "m11_coach_verified_running.tar": {
+        "bytes": 260096,
+        "sha256": "690dac5ac9d11bb0c49c45a58ada51a91c61bb2885ad7856a3667ca8b18709c4"
+      }
+    }
+  },
+  "preview": {
+    "url": "http://127.0.0.1:8312/",
+    "http": 200,
+    "founder_entry": true,
+    "builder_modules": [
+      "packages/cohort_platform/features/programme_studio/genuine_authoring/genuine_workspace_screen.dart.lib.js"
+    ],
+    "five_source_assets_byte_equal": true
+  },
+  "preservation": {
+    "precommit_exact_equal": true,
+    "older_existing_checkouts": 21,
+    "older_registrations": 25,
+    "tracked_untracked_files": 57211,
+    "explicit_env_temp_files": 22,
+    "older_indices_HEADs_refs_FETCH_HEAD_checked": true,
+    "bounded_bundles": {
+      "count": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "new_worktrees": 0
+  },
+  "authority": {
+    "browser_desktop_automation": false,
+    "hosted_provisioning_catalogue_migration_apply": false,
+    "programme_publication_assignments_athlete_mutation": false,
+    "coaching_prescriptions_changed": false,
+    "founder_usability_acceptance": false,
+    "D8": "PENDING",
+    "Gate_A": "OPEN"
+  },
+  "known_limits": [
+    "No autosave/local recovery/cloud persistence; check browser download delivery",
+    "Generic browser unload warning may be suppressed",
+    "Missing three genuine library records block all 20 strength sessions",
+    "Prepared export is not programme publication",
+    "Private cancelled reservations/unselected sources remain in backup; bounded existing limits apply"
+  ],
+  "next_single_point": "Lee manual coach-workflow acceptance or concrete remaining usability feedback"
+}

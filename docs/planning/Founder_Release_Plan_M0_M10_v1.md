@@ -6,28 +6,29 @@ This plan controls delivery priorities. It preserves technical authority contrac
 it does not grant implementation, content, hosted, account or release authority.
 [M0 findings and critical path](../checkpoints/m0_alpha_baseline/HANDOFF.md).
 
-## Current single point — M1.1 founder authoring (2026-11-01)
+## Current single point — M1.1 coach-facing founder authoring (2026-11-02)
 
-**Bounded allocation is ready; implementation has not started.**
-[Handoff](../checkpoints/m11_founder_authoring/HANDOFF.md),
-[exact allocation](../checkpoints/m11_founder_authoring/ALLOCATION.md) and
-[catalogue operation](../checkpoints/m11_founder_authoring/CATALOGUE_CAPABILITY.md)
-reuse existing Studio composition/revisions/editable files, canonical v2/native
-protocol graphs and Programme Athlete review. First founder acceptance is genuine
-W1 Monday strength plus W4 Tuesday personalised running, programme placement,
-editable save/reopen and exact prescription review without raw-source/ID entry.
-The whole selected ten-week source remains the coverage bound; a pair is not full
-programme support. Three catalogue records still require genuine producer results;
-authenticated operator connection provisioning/apply is separately scoped. No new
-coach-management product or replacement roadmap.
+The bounded native founder workspace and offline three-record operation package are
+implemented. Lee withheld usability acceptance of the initial developer-facing UI.
+The [coach-facing redesign](../checkpoints/m11_founder_authoring/coach_redesign/HANDOFF.md)
+now leads with the programme schedule, compact strength/running editing, independent
+copies, direct athlete preview and explicit backup/open actions. It reuses existing
+Studio controllers, immutable source/version protections, native v4 editable files
+and canonical export components. No coaching prescription or athlete authority changed.
 
-**Next single point: M1.1 — implement the bounded existing-Studio workflow and offline
-three-record operator package**, under the
-[ready-to-run prompt](../checkpoints/m11_founder_authoring/IMPLEMENTATION_PROMPT.md).
-No implementation/hosted provisioning begins in this allocation. D8, genuine complete
-graph admission, separate publication/access and all remaining M1–M4 outcomes stay
-open. AuthGate fixture repair and local final-10K support are retained below.
-**Gate A OPEN.**
+**Next single point: Lee manually exercises this workflow and records acceptance or
+specific remaining friction**, using the
+[walkthrough](../checkpoints/m11_founder_authoring/implementation/FOUNDER_WALKTHROUGH.md).
+Automated checks do not grant founder usability acceptance.
+
+All 70 days/60 workouts remain the source coverage bound. Genuine retention of the
+three approved missing exercise setups is still a separate operational dependency:
+28 occurrences/all twenty strength sessions cannot yet become complete admitted
+executable graphs. Editable intent may be kept without inventing a published identity.
+The [original allocation](../checkpoints/m11_founder_authoring/ALLOCATION.md) and
+[catalogue-operation boundary](../checkpoints/m11_founder_authoring/CATALOGUE_CAPABILITY.md)
+remain binding. D8/content approval, complete admission, publication/access and the
+remaining M1–M4 outcomes stay separate. **Gate A OPEN.** No hosted authority follows.
 
 ## Retained M4.5 bootstrap diagnosis (2026-11-01)
 

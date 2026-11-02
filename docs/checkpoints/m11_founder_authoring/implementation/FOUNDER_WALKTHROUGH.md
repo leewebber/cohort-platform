@@ -1,64 +1,80 @@
-# Manual founder walkthrough
+# Manual coach-builder walkthrough
 
-Local web Programme Studio. Builds/widget tests do not establish Lee's usability
-acceptance, browser file-picker success or device proof.
+Updated 2026-11-02 after Lee withheld usability acceptance of the initial workspace.
+[Redesign handoff](../coach_redesign/HANDOFF.md). **Manual acceptance remains pending.**
+
+Start from the repository root:
 
 ```sh
-flutter run -d web-server --web-hostname 127.0.0.1 --web-port 8311 --target lib/main_programme_studio_founder_preview.dart
+flutter run -d web-server --web-hostname 127.0.0.1 --web-port 8312 --target lib/main_programme_studio_founder_preview.dart --no-pub
 ```
 
-Open the printed local URL manually. Stop with Ctrl-C. The entry loads the genuine
-selected source. Browser reload has no autosave/recovery promise. Keep the editable file.
+Open the printed URL manually. No browser/desktop automation is required or authorised.
+The entry starts with the selected ten-week programme, not an empty workspace.
+Use Ctrl-C in the launching terminal to stop it.
 
-1. In **Programme**, inspect all ten weeks, notes, Saturday rest and six workouts
-   per week. Choose one to ten weeks, place exact saved versions, mark a day Rest
-   after confirmation, or copy a week after reviewing its replacement target.
-2. In **Sessions**, choose the selected Monday strength session. **Duplicate as
-   independent session** starts from exact W1 source, including preparation/finish.
-   Alternatively **Create strength session**, then add its five exercises with
-   **Find exercise / setup**. Search ordinary names and equipment/setup; no IDs are
-   entered. Missing catalogue setups remain labelled unresolved, with full intent.
-3. Verify incline press 3×6–10, bodyweight pull-up 3×5–8, bilateral chest-supported
-   DB row 3×8–12, lateral raise 3×12–20 and Pallof 2×10 each side. Inspect the retained
-   rest/RIR/load/tempo/setup notes and separate preparation/walking finish. Thursday
-   also exposes timed side holds, ranges and rest after both sides; W10 Thursday
-   retains **at least 3 RIR** without inventing an upper bound.
-4. **Validate and save local revision** refuses unresolved/invalid fields. **Save
-   editable draft** keeps complete pending intent. Genuine complete strength
-   acceptance waits for actual catalogue retention. No partial known-ID session
-   or synthetic row is presented as a complete admitted strength session.
-5. Choose W4 Tuesday **Consolidation threshold**. Duplicate it, or create a run
-   with the phase controls: 10 min easy; three 20 s relaxed accelerations, each
-   followed by 40 s very easy; four 5 min threshold repetitions with only three
-   90 s recoveries; 5 min very easy run/walk. Expanded total is **42:30**. Repeat
-   convenience explicitly controls recovery after the last repetition. Keep the
-   approved M2.3 threshold dependency, no fixed acceleration/recovery pace/HR, and
-   no extra mandatory walk. Normal stride cycles include their final recovery.
-6. Target review is symbolic. Zone 2/quality inputs require actual athlete source
-   selection/review/acceptance; Studio neither enters nor confirms/freezes them.
-   The selected final run retains 10,000 m plus 33 timed minutes and external
-   distance confirmation, not a live distance sensor.
-7. Arrange exact saved source versions. A later edit creates another local version.
-   **Use in selected occurrences** lists the exact affected workouts and asks for
-   confirmation. Other uses keep their selected version. Copies do not calculate
-   progression or modify athletes.
-8. Save the editable JSON. Open it, cancel replacement once, then reopen and
-   explicitly replace. Recheck all strength fields and the run's order/42:30.
-   Review is recomputed; no approval/publication is restored. Optional source and
-   identity inspection is available without being the authoring interface.
-9. **Review exact prescriptions** follows each occurrence's selected version.
-   **Prepare canonical v2 / native graph export** requires complete local validation
-   and no pending drafts/unresolved setups. All 20 selected strength sessions remain
-   blocked by 28 occurrences across three setups. A deliberately reduced running-only
-   programme can exercise the export/import tool, but is visibly a different inventory,
-   not full Hybrid admission. **Exclude unused sources from programme export** keeps
-   private history in the editable file.
+1. Select **Week 1**, Monday's **Open session**, then **Edit session**. Change the
+   first exercise's **Sets** from 3 to 4 as a disposable usability exercise, then
+   **Save changes**. Expect the five complete exercise prescriptions, warm-up,
+   notes and finish to remain. The message says the changes are kept in this
+   workspace; the chest-supported row is still **Awaiting library approval**.
+   Save retains editable intent without fabricating a publishable strength version.
+2. Choose **Copy to day**, select **Saturday** under **Week 1**, then **Confirm**.
+   **Back to programme** → Saturday's **Open session** → **Edit session**. Change
+   the first exercise's Sets to 5 and **Save changes**. Expect Saturday to show 5
+   while Monday remains 4. These are independent copies. **Move** relocates a
+   session while keeping other sessions on its destination day. **Duplicate week**
+   replaces a named target week only after confirmation and creates independent
+   session copies. None of these actions calculates progression.
+3. **Back to programme** → **Week 4** → Tuesday's **Open session** → **Edit session**.
+   Expect **4 × 5 min — threshold pace, 90 sec easy between** and **42:30** total:
+   10 min easy + three 20 s accelerations/40 s recoveries; four 5 min work periods
+   and only three 90 s recoveries; 5 min very easy run/walk cooldown. Expand a work
+   step to see **Training target: Personalised threshold pace**. This references
+   the existing approved target rule; athlete inputs are selected/confirmed separately.
+   Use **Cancel** to leave the prescription unchanged, or save an intentional edit.
+4. Use **Preview as athlete** directly from a session. Expect the exact selected
+   saved prescription, or explicitly labelled **Unpublished changes** when pending
+   intent is being previewed. Then **Download backup**, check that the JSON file is
+   present, and **Open backup** → select it → confirm **Open backup**. Expect the
+   Monday/Saturday differences, notes, full running steps and unresolved status to
+   survive. Read-only preview is not editable reopening; the backup is the editable file.
 
-Older synthetic editable v1/v2/v3 files use the original
-`lib/main_programme_studio_composition_preview.dart` entry. Native v4 files use this
-founder entry. Review exports and canonical sources are separate from editable files.
-There is no hosted/authenticated Studio entry, cloud storage, programme approval,
-publication, assignment or athlete mutation in this preview.
+**Save changes** keeps work in the current in-memory workspace. **Download backup**
+requests a local editable JSON file and marks that snapshot as the backup baseline;
+the browser owns actual delivery, so check Downloads. There is no autosave, local
+recovery or cloud storage. Reload returns to the initial selected programme and loses
+work since the last backup. Open the downloaded backup manually to recover that
+snapshot. Where the browser permits it after user interaction, leaving/reloading with
+changes requests its generic warning; browsers can suppress it.
 
-Record Lee's actual manual result later. D8 and programme publication remain
-separate decisions. Gate A remains open.
+**Cancel** restores the last kept session intent. A cancelled newly added session is
+removed from its day; private identity/reservation history may remain. New valid
+saves select a fresh immutable saved version for the edited occurrence. Other uses
+stay unchanged. **Advanced session tools → Update multiple sessions…** is the separate
+operation for replacing explicitly selected days, with an affected-day confirmation.
+
+The three missing library setups still block 28 exercise occurrences and all twenty
+complete strength sessions. The full selected programme cannot yet be prepared for
+athlete delivery. Corrections to invalid doses remain required; a backup can retain
+invalid text for later repair. No library substitution or invented published identity
+is used to bypass this boundary.
+
+**Advanced tools → Advanced inspection & export** retains the existing source,
+validation and prepared canonical export path. A prepared file is not programme
+publication. Complete export still requires validated selected sources, no pending
+session drafts and genuine library evidence. Importing canonical sources creates
+editable snapshots with unknown historical authority, not restored private editing
+history or approval. Older synthetic v1/v2/v3 backups continue to use the original
+`lib/main_programme_studio_composition_preview.dart` entry; this founder entry uses
+native v4 backups.
+
+The final Sunday test is unchanged: 15 min easy, three cycles of 20 s stride plus
+100 s recovery (including after the third), 2 min easy settling, 10,000 m, 10 min
+cooldown. That is 23 min before + actual 10K time + 10 min after. The general source
+also retains 3–5 min walking and untimed mobility before, plus 3–5 min walking after,
+outside the native 33-minute body. This is a retained proposal, not blanket coaching
+approval. The native body is not the entire preparation/finish allowance.
+
+Record Lee's actual result separately. Automated checks do not establish usability,
+browser picker/download acceptance, coaching approval or D8. Gate A remains OPEN.

@@ -10,6 +10,7 @@ import 'genuine_workspace.dart';
 import 'native_form_fields.dart';
 import 'native_session_source.dart';
 import 'native_source_bundle.dart';
+import 'reload_warning.dart';
 
 /// Native source-policy presentation inside the existing programme-first entry.
 /// Controls write existing package/graph fields, never a second programme tree.
@@ -32,8 +33,152 @@ class GenuineWorkspaceScreen extends StatefulWidget {
 class _GenuineWorkspaceScreenState extends State<GenuineWorkspaceScreen> {
   GenuineWorkspace get c => widget.controller;
   int page = 0, week = 0;
+  String? activeSlot, newSessionSlot;
+  NativeRevision? viewed, editOriginal;
+  Map<String, dynamic>? beforeEdit;
+  String? beforeTitle;
+  bool editing = false;
+  static const days = [
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+    'Sunday',
+  ];
+  NativeRevision get selectedSession => viewed ?? active.latest;
+  String displayTitle(NativeRevision r) {
+    final owner = c.ownerOf(r);
+    return owner.parent == r.identity.revisionNumber && owner.draft != null
+        ? owner.draftTitle!
+        : r.title;
+  }
+
+  String coachError(Object error) => error
+      .toString()
+      .replaceFirst(RegExp(r'^(Bad state: |FormatException: )'), '')
+      .replaceAll('Sources changed', 'The programme changed')
+      .replaceAll(
+        'Unresolved exercise setup — cannot prepare for publication.',
+        'Library approval is needed before this exercise can be published.',
+      )
+      .replaceAll('local revision', 'saved session');
+
+  void openSession(NativeRevision r, String? slot) {
+    setState(() {
+      activeLineage = r.identity.sessionLineageId;
+      viewed = r;
+      activeSlot = slot;
+      editing = false;
+      newSessionSlot = null;
+      page = 1;
+      message = null;
+    });
+  }
+
+  void editSession() => attempt(() {
+    var r = selectedSession;
+    editOriginal = null;
+    // A shared selection is split before editing, so pending intent cannot
+    // leak into another day. Cancel restores the original selection.
+    if (activeSlot != null &&
+        (c.occurrences.where((s) => s['session_key'] == r.key).length > 1 ||
+            c.ownerOf(r).draft != null &&
+                c.ownerOf(r).parent != r.identity.revisionNumber)) {
+      editOriginal = r;
+      r = c.copyForCoach(r);
+      c.useRevision(r, [activeSlot!], c.generation);
+      activeLineage = r.identity.sessionLineageId;
+      viewed = r;
+    }
+    final owner = c.ownerOf(r);
+    beforeEdit = owner.draft == null ? null : nativeCopy(owner.draft!);
+    beforeTitle = owner.draftTitle;
+    if (owner.draft == null) c.begin(r);
+    editing = true;
+  });
+
+  void cancelEdit() => attempt(() {
+    final owner = active;
+    if (beforeEdit == null || editOriginal != null) {
+      c.cancel(owner);
+    } else {
+      owner.draftTitle = beforeTitle;
+      c.edit(
+        owner,
+        (g) => g
+          ..clear()
+          ..addAll(nativeCopy(beforeEdit!)),
+      );
+    }
+    if (editOriginal != null && activeSlot != null) {
+      c.useRevision(editOriginal!, [activeSlot!], c.generation);
+      viewed = editOriginal;
+      activeLineage = editOriginal!.identity.sessionLineageId;
+    }
+    if (newSessionSlot != null) {
+      c.removeOccurrence(newSessionSlot!);
+      activeSlot = null;
+      newSessionSlot = null;
+      page = 0;
+    }
+    editing = false;
+    message = 'Editing cancelled.';
+  });
+
+  void saveChanges() => attempt(() {
+    final owner = active;
+    final receipt = c.inspect(owner);
+    final corrections = receipt.issues
+        .where((e) => !e.contains('Unresolved exercise setup'))
+        .toList();
+    if (corrections.isNotEmpty) {
+      message = 'Please correct: ${corrections.map(coachError).join('\n')}';
+      return;
+    }
+    if (!receipt.admitted) {
+      // Keep the exact pending source; never freeze an unresolved identity.
+      c.save();
+      newSessionSlot = null;
+      editing = false;
+      message =
+          'Changes kept in this workspace. Library approval is still needed. Download a backup to keep them after reload.';
+      return;
+    }
+    if (!c.freeze(owner)) {
+      if (c.errors.any((e) => e.startsWith('No prescription change.'))) {
+        cancelEdit();
+        message = 'Session unchanged.';
+      } else {
+        message = c.errors.map(coachError).join('\n');
+      }
+      return;
+    }
+    viewed = owner.latest;
+    if (activeSlot != null) {
+      c.useRevision(owner.latest, [activeSlot!], c.generation);
+    }
+    newSessionSlot = null;
+    editing = false;
+    message =
+        'Changes saved in this workspace. Download a backup to keep them after reload.';
+  });
   String? activeLineage, message;
   bool transferring = false;
+  late final void Function() stopReloadWarning;
+  @override
+  void initState() {
+    super.initState();
+    stopReloadWarning = watchUnsavedReload(() => c.unsaved);
+  }
+
+  @override
+  void dispose() {
+    stopReloadWarning();
+    super.dispose();
+  }
+
   NativeSessionOwner get active =>
       activeLineage == null ? c.owners.values.first : c.owners[activeLineage!];
   List<Map<String, dynamic>> get palette {
@@ -53,97 +198,329 @@ class _GenuineWorkspaceScreenState extends State<GenuineWorkspaceScreen> {
     return variants.values.toList();
   }
 
+  void downloadBackup() => attempt(() {
+    final text = c.save();
+    widget.downloadWorkspace(text);
+    c.markSaved(text);
+    message =
+        'Backup download requested. Check your Downloads folder and keep the file.';
+  });
+
   void attempt(VoidCallback action) {
     try {
+      message = null;
       action();
-      if (mounted) setState(() => message = null);
+      if (mounted) setState(() {});
     } catch (e) {
-      if (mounted) setState(() => message = '$e');
+      if (mounted) setState(() => message = coachError(e));
     }
   }
 
   @override
   Widget build(BuildContext context) => AnimatedBuilder(
     animation: c,
-    builder: (context, _) => Scaffold(
-      appBar: AppBar(title: const Text('Programme Studio · founder workspace')),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'Local genuine draft · D8 content review pending. No autosave or cloud recovery. Keep your editable file.',
+    builder: (context, _) => LayoutBuilder(
+      builder: (context, viewport) => Scaffold(
+        backgroundColor: const Color(0xfff4f6f8),
+        appBar: AppBar(
+          title: const Text('Programme builder'),
+          actions: [
+            if (viewport.maxWidth < 650) ...[
+              IconButton(
+                tooltip: 'Download backup',
+                onPressed: transferring ? null : downloadBackup,
+                icon: const Icon(Icons.download_outlined),
+              ),
+              IconButton(
+                tooltip: 'Open backup',
+                onPressed: transferring ? null : open,
+                icon: const Icon(Icons.folder_open_outlined),
+              ),
+            ] else ...[
+              TextButton.icon(
+                onPressed: transferring ? null : downloadBackup,
+                icon: const Icon(Icons.download_outlined),
+                label: const Text('Download backup'),
+              ),
+              TextButton(
+                onPressed: transferring ? null : open,
+                child: const Text('Open backup'),
+              ),
+            ],
+            PopupMenuButton<String>(
+              tooltip: 'Advanced tools',
+              onSelected: (v) {
+                if (v == 'sources') {
+                  openSources();
+                }
+                if (v == 'advanced') {
+                  setState(() => page = 2);
+                }
+              },
+              itemBuilder: (_) => const [
+                PopupMenuItem(
+                  value: 'advanced',
+                  child: Text('Advanced inspection & export'),
                 ),
-                Text(
-                  '${c.status} · ${c.unsaved ? 'Unsaved edits' : 'Editable file saved'}',
-                ),
-                Wrap(
-                  spacing: 10,
-                  children: [
-                    TextButton(
-                      onPressed: transferring
-                          ? null
-                          : () => attempt(() {
-                              final text = c.save();
-                              widget.downloadWorkspace(text);
-                              c.markSaved(text);
-                            }),
-                      child: const Text('Save editable draft'),
-                    ),
-                    TextButton(
-                      onPressed: transferring ? null : open,
-                      child: const Text('Open editable draft'),
-                    ),
-                    TextButton(
-                      onPressed: transferring ? null : openSources,
-                      child: const Text('Open native canonical sources'),
-                    ),
-                    TextButton(
-                      onPressed: () async {
-                        await c.refreshReview();
-                        if (mounted) setState(() => page = 2);
-                      },
-                      child: const Text('Review exact prescriptions'),
-                    ),
-                    for (var i = 0; i < 3; i++)
-                      TextButton(
-                        onPressed: () => setState(() => page = i),
-                        child: Text(['Programme', 'Sessions', 'Review'][i]),
-                      ),
-                  ],
-                ),
-                if (message != null)
-                  Text(message!, style: const TextStyle(color: Colors.red)),
-                if (c.programme.issues.isNotEmpty)
-                  Text(c.programme.issues.map((i) => i.message).join('\n')),
-                Text(
-                  'Programme export inventory: ${c.policy.available.length} exact versions · ${c.occurrences.length} scheduled workouts. Private saved history remains in the editable file.',
+                PopupMenuItem(
+                  value: 'sources',
+                  child: Text('Import canonical sources'),
                 ),
               ],
             ),
-          ),
-          Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(20),
-              child: Center(
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 1000),
-                  child: page == 0
-                      ? arrangement()
-                      : page == 1
-                      ? sessions()
-                      : review(),
+          ],
+        ),
+        bottomNavigationBar: page == 1 && editing
+            ? SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Wrap(
+                    spacing: 12,
+                    children: [
+                      FilledButton(
+                        onPressed: saveChanges,
+                        child: const Text('Save changes'),
+                      ),
+                      OutlinedButton(
+                        onPressed: cancelEdit,
+                        child: const Text('Cancel'),
+                      ),
+                      OutlinedButton(
+                        onPressed: previewSession,
+                        child: const Text('Preview as athlete'),
+                      ),
+                    ],
+                  ),
+                ),
+              )
+            : null,
+        body: Column(
+          children: [
+            Container(
+              width: double.infinity,
+              color: Colors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    c.unsaved
+                        ? 'Workspace changed · Download backup to keep your work'
+                        : 'Backup matches workspace · keep the downloaded file',
+                  ),
+                  const Text(
+                    'No autosave. Reloading loses changes since your last backup. Saving does not publish.',
+                  ),
+                  if (message != null)
+                    Text(
+                      message!,
+                      key: const ValueKey('coach-message'),
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                    ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: SingleChildScrollView(
+                key: ValueKey('coach-page-$page'),
+                padding: const EdgeInsets.all(24),
+                child: Center(
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 1200),
+                    child: page == 0
+                        ? arrangement()
+                        : page == 1
+                        ? sessions()
+                        : review(),
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     ),
   );
+
+  Widget compact(List<Widget> fields) => LayoutBuilder(
+    builder: (_, size) {
+      final width = size.maxWidth < 420
+          ? size.maxWidth
+          : size.maxWidth < 760
+          ? (size.maxWidth - 12) / 2
+          : (size.maxWidth - 36) / 4;
+      return Wrap(
+        spacing: 12,
+        runSpacing: 0,
+        children: [for (final f in fields) SizedBox(width: width, child: f)],
+      );
+    },
+  );
+
+  String prescriptionSummary(Map p) {
+    final reps = p['reps'] as Map;
+    final dose = reps['type'] == 'range'
+        ? '${reps['min_reps']}–${reps['max_reps']}'
+        : reps['type'] == 'exact'
+        ? '${reps['exact_reps']}'
+        : '${reps['text']}';
+    final rest =
+        p['rest_seconds'] ??
+        (p['rest_seconds_range'] as List?)?.join('–') ??
+        'as coached';
+    final rir = p['authored_details']?['source_rir'];
+    return '${p['sets']} × $dose${p['per_side'] == true ? ' each side' : ''} · rest $rest sec${rir == null || rir == 'N/A' ? '' : ' · $rir RIR'}';
+  }
+
+  String targetChoice(Map target) => switch (target['kind']) {
+    'alpha_quality_pace_v1' =>
+      target['category'] == 'threshold'
+          ? 'Personalised threshold pace'
+          : 'Personalised current 10K pace',
+    'heart_rate_zone_ref' => 'Personalised Zone 2 heart rate',
+    'rpe_range' => 'Authored effort range',
+    _ => 'Follow the coached effort',
+  };
+
+  String runningSummary(Map workout) {
+    final steps = workout['steps'] as List;
+    final work = steps
+        .where((s) => s['target']['kind'] == 'alpha_quality_pace_v1')
+        .toList();
+    final recoveries = steps
+        .where(
+          (s) =>
+              s['role'] == 'recovery' && s['duration']['milliseconds'] == 90000,
+        )
+        .toList();
+    if (work.length == 4 &&
+        work.every((s) => s['target']['category'] == 'threshold') &&
+        work.every((s) => s['duration']['milliseconds'] == 300000) &&
+        recoveries.length == 3) {
+      return '4 × 5 min — threshold pace, 90 sec easy between.';
+    }
+    try {
+      final t = runningTotals(workout);
+      return '${formatRunSeconds(t.seconds)} timed${t.metres == 0 ? '' : ' + ${t.metres} m'} · ${steps.length} ordered steps';
+    } catch (_) {
+      return 'Check the workout durations';
+    }
+  }
+
+  Widget readiness(NativeRevision revision) {
+    final owner = c.ownerOf(revision);
+    final graph =
+        owner.parent == revision.identity.revisionNumber && owner.draft != null
+        ? owner.draft!
+        : readWorkspaceJsonForUi(revision.source);
+    final pending = [
+      for (final b in graph['blocks'])
+        for (final e in b['exercises'])
+          if (e['exercise_id'] == null) e,
+    ];
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Text(
+        pending.isEmpty
+            ? 'Draft programme · content approval and publication are separate.'
+            : '${pending.length} exercise setup${pending.length == 1 ? '' : 's'} awaiting library approval. You can edit and keep a backup; athlete delivery is blocked.',
+        style: TextStyle(
+          color: pending.isEmpty ? Colors.blueGrey : Colors.brown,
+        ),
+      ),
+    );
+  }
+
+  Widget sessionPreview(NativeRevision revision) {
+    final owner = c.ownerOf(revision);
+    final pending =
+        owner.draft != null && owner.parent == revision.identity.revisionNumber;
+    final receipt = pending ? c.inspect(owner) : c.inspectRevision(revision);
+    // The compiler is the loss-aware projection of the exact selected source.
+    // Only presentation wording changes; every prescription/cue remains visible.
+    var readable = receipt.readable
+        .replaceAll(
+          'Unresolved exercise setup — cannot prepare for publication.',
+          'Awaiting library approval',
+        )
+        .replaceAll('Retained equipment:', 'Equipment:')
+        .replaceAll(
+          'threshold · approved M2.3 personalisation rule; explicit athlete source/review/acceptance required; no fallback',
+          'Personalised threshold pace · athlete confirms eligible training inputs before starting; no automatic fallback',
+        )
+        .replaceAll(
+          'current_10k · approved M2.3 personalisation rule; explicit athlete source/review/acceptance required; no fallback',
+          'Personalised current 10K pace · athlete confirms eligible training inputs before starting; no automatic fallback',
+        )
+        .replaceAll(
+          'Athlete-confirmed Zone 2 — athlete input and review required',
+          'Personalised Zone 2 heart rate · athlete confirmation required',
+        );
+    readable = readable.replaceAll('M2.3', 'personalised training target');
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Athlete preview',
+              style: Theme.of(context).textTheme.headlineSmall,
+            ),
+            Text(
+              pending
+                  ? 'Unpublished changes · not yet ready for athlete delivery'
+                  : 'Exact session selected for this day · unpublished',
+            ),
+            readiness(revision),
+            SelectableText(
+              readable,
+              key: const ValueKey('athlete-prescription'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> previewSession() async {
+    final token = c.generation;
+    final r = selectedSession;
+    await showDialog<void>(
+      context: context,
+      builder: (ctx) => Dialog(
+        child: SizedBox(
+          width: 820,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Flexible(
+                child: SingleChildScrollView(
+                  child: AnimatedBuilder(
+                    animation: c,
+                    builder: (_, _) => token == c.generation
+                        ? sessionPreview(r)
+                        : const Padding(
+                            padding: EdgeInsets.all(24),
+                            child: Text(
+                              'The session changed. Close and reopen the preview.',
+                            ),
+                          ),
+                  ),
+                ),
+              ),
+              TextButton(
+                onPressed: () => Navigator.pop(ctx),
+                child: const Text('Close preview'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 
   Widget field(
     String label,
@@ -154,7 +531,9 @@ class _GenuineWorkspaceScreenState extends State<GenuineWorkspaceScreen> {
   }) => Padding(
     padding: const EdgeInsets.symmetric(vertical: 7),
     child: TextFormField(
-      key: ValueKey('${activeLineage ?? 'programme'}:${identity ?? label}'),
+      key: ValueKey(
+        '${activeLineage ?? 'programme'}:${identity ?? label}:${active.reserved ?? 0}',
+      ),
       initialValue: value?.toString() ?? '',
       decoration: InputDecoration(
         labelText: label,
@@ -202,257 +581,428 @@ class _GenuineWorkspaceScreenState extends State<GenuineWorkspaceScreen> {
           tree['programme']['name'],
           (v) => c.programme.editProgramme('name', v),
         ),
-        field(
-          'Programme description',
-          tree['programme']['description'],
-          (v) => c.programme.editProgramme('description', v),
-          lines: 3,
+        Wrap(
+          spacing: 8,
+          children: [
+            for (var w = 0; w < weeks.length; w++)
+              ChoiceChip(
+                label: Text('Week ${w + 1}'),
+                selected: week == w,
+                onSelected: (_) => setState(() => week = w),
+              ),
+          ],
         ),
-        field(
-          'Sessions per week (authored)',
-          tree['programme']['sessions_per_week'],
-          (v) => c.programme.editProgramme('sessions_per_week', v),
-        ),
-        choice('Number of weeks', weeks.length, [
-          for (var i = 1; i <= 10; i++) (i, '$i'),
-        ], (v) => attempt(() => c.setWeeks(v))),
-        choice('Week', week, [
-          for (var i = 0; i < weeks.length; i++) (i, 'Week ${i + 1}'),
-        ], (v) => setState(() => week = v)),
-        field(
-          'Week notes',
-          weeks[week]['coach_note'] ?? weeks[week]['title'],
-          (v) => c.programme.editWeek(week, 'coach_note', v),
-          identity: 'week-$week',
-          lines: 3,
-        ),
-        if (weeks.length > 1)
-          TextButton(
-            onPressed: () => duplicateWeek(),
-            child: const Text('Copy this week to another week…'),
-          ),
-        TextButton(
-          onPressed: () => confirm(
-            'Exclude unused saved sources from this programme export? Keep all private source/history in the editable file.',
-            c.excludeUnusedSources,
-          ),
-          child: const Text('Exclude unused sources from programme export…'),
-        ),
-        for (var d = 0; d < 7; d++)
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(14),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    [
-                      'Monday',
-                      'Tuesday',
-                      'Wednesday',
-                      'Thursday',
-                      'Friday',
-                      'Saturday',
-                      'Sunday',
-                    ][d],
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                  field(
-                    'Day notes',
-                    weeks[week]['days'][d]['coach_note'],
-                    (v) => c.programme.editDay(week, d, 'coach_note', v),
-                    identity: 'day-$week-$d',
-                  ),
-                  if (weeks[week]['days'][d]['day_type'] == 'rest')
-                    const Text('Rest'),
-                  for (final slot in weeks[week]['days'][d]['slots']) ...[
-                    Builder(
-                      builder: (_) {
-                        final r = c.selected(slot['slot_key'] as String);
-                        return ListTile(
-                          title: Text(r.title),
-                          subtitle: Text(
-                            'Local version ${r.identity.revisionNumber}${c.ownerOf(r).draft != null ? ' · pending session draft, placement still references saved source' : ''}',
-                          ),
-                          trailing: TextButton(
-                            onPressed: () {
-                              setState(() {
-                                activeLineage = r.identity.sessionLineageId;
-                                page = 1;
-                              });
-                            },
-                            child: const Text('Open session'),
-                          ),
-                        );
-                      },
-                    ),
-                  ],
-                  Wrap(
-                    children: [
-                      TextButton(
-                        onPressed: () => place(d),
-                        child: const Text('Place saved session…'),
-                      ),
-                      TextButton(
-                        onPressed: () => confirm(
-                          'Remove every workout on this day and mark it Rest?',
-                          () => c.rest(week, d),
-                        ),
-                        child: const Text('Mark as rest…'),
-                      ),
-                    ],
-                  ),
-                ],
+        Row(
+          children: [
+            Expanded(
+              child: Text(
+                'Week ${week + 1}',
+                style: Theme.of(context).textTheme.headlineSmall,
               ),
             ),
+            TextButton.icon(
+              onPressed: duplicateWeek,
+              icon: const Icon(Icons.copy_outlined),
+              label: const Text('Duplicate week'),
+            ),
+          ],
+        ),
+        if (weeks[week]['coach_note'] != null)
+          Text('${weeks[week]['coach_note']}'),
+        const SizedBox(height: 16),
+        LayoutBuilder(
+          builder: (_, box) => Wrap(
+            spacing: 12,
+            runSpacing: 12,
+            children: [
+              for (var d = 0; d < 7; d++)
+                SizedBox(
+                  width: box.maxWidth < 650
+                      ? box.maxWidth
+                      : (box.maxWidth - 24) / 3,
+                  child: Card(
+                    margin: EdgeInsets.zero,
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            days[d],
+                            style: Theme.of(context).textTheme.titleLarge,
+                          ),
+                          if ((weeks[week]['days'][d]['slots'] as List).isEmpty)
+                            const Padding(
+                              padding: EdgeInsets.symmetric(vertical: 18),
+                              child: Text('Rest day'),
+                            ),
+                          for (final slot in weeks[week]['days'][d]['slots'])
+                            Builder(
+                              builder: (_) {
+                                final r = c.selected(
+                                  slot['slot_key'] as String,
+                                );
+                                final graph = readWorkspaceJsonForUi(r.source);
+                                final running = (graph['blocks'] as List).where(
+                                  (b) => b['timer_config'] != null,
+                                );
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 12,
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      InkWell(
+                                        onTap: () => openSession(
+                                          r,
+                                          slot['slot_key'] as String,
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                            vertical: 8,
+                                          ),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                displayTitle(r),
+                                                style: Theme.of(
+                                                  context,
+                                                ).textTheme.titleMedium,
+                                              ),
+                                              Text(
+                                                running.isNotEmpty
+                                                    ? runningSummary(
+                                                        running.first['timer_config']['running_workout']
+                                                            as Map,
+                                                      )
+                                                    : '${(graph['blocks'] as List).expand((b) => b['exercises'] as List).length} exercises',
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      Wrap(
+                                        children: [
+                                          TextButton(
+                                            onPressed: () => openSession(
+                                              r,
+                                              slot['slot_key'] as String,
+                                            ),
+                                            child: const Text('Open session'),
+                                          ),
+                                          TextButton(
+                                            onPressed: () => transferSession(
+                                              r,
+                                              slot['slot_key'] as String,
+                                              move: false,
+                                            ),
+                                            child: const Text('Copy to day'),
+                                          ),
+                                          TextButton(
+                                            onPressed: () => transferSession(
+                                              r,
+                                              slot['slot_key'] as String,
+                                              move: true,
+                                            ),
+                                            child: const Text('Move'),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            ),
+                          if (weeks[week]['days'][d]['coach_note'] != null)
+                            Text('${weeks[week]['days'][d]['coach_note']}'),
+                          TextButton.icon(
+                            onPressed: () => addSession(d),
+                            icon: const Icon(Icons.add),
+                            label: const Text('Add session'),
+                          ),
+                          if ((weeks[week]['days'][d]['slots'] as List)
+                              .isNotEmpty)
+                            TextButton(
+                              onPressed: () => confirm(
+                                'Remove all sessions from Week ${week + 1} ${days[d]} and make it a rest day?',
+                                () => c.rest(week, d),
+                              ),
+                              child: const Text('Make rest day'),
+                            ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+            ],
           ),
+        ),
+        ExpansionTile(
+          title: const Text('Programme details'),
+          children: [
+            field(
+              'Programme description',
+              tree['programme']['description'],
+              (v) => c.programme.editProgramme('description', v),
+              lines: 3,
+            ),
+            field(
+              'Sessions per week',
+              tree['programme']['sessions_per_week'],
+              (v) => c.programme.editProgramme('sessions_per_week', v),
+            ),
+            choice(
+              'Number of weeks',
+              weeks.length,
+              [for (var i = 1; i <= 10; i++) (i, '$i')],
+              (v) => confirm(
+                'Change to $v weeks? Removed weeks will be lost from this workspace. Keep a backup first.',
+                () => c.setWeeks(v),
+              ),
+            ),
+            field(
+              'Week notes',
+              weeks[week]['coach_note'] ?? weeks[week]['title'],
+              (v) => c.programme.editWeek(week, 'coach_note', v),
+              identity: 'week-$week',
+              lines: 3,
+            ),
+            for (var d = 0; d < 7; d++)
+              field(
+                '${days[d]} notes',
+                weeks[week]['days'][d]['coach_note'],
+                (v) => c.programme.editDay(week, d, 'coach_note', v),
+                identity: 'day-$week-$d',
+                lines: 2,
+              ),
+          ],
+        ),
       ],
     );
   }
 
   Widget sessions() {
     final owner = active;
-    final draft = owner.draft;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        choice('Session', owner.lineage, [
-          for (final o in c.owners.values)
-            (o.lineage, c.sessionLabel(o.latest)),
-        ], (v) => setState(() => activeLineage = v)),
+        TextButton.icon(
+          onPressed: editing ? null : () => setState(() => page = 0),
+          icon: const Icon(Icons.arrow_back),
+          label: const Text('Back to programme'),
+        ),
+        Text(
+          displayTitle(selectedSession),
+          style: Theme.of(context).textTheme.headlineMedium,
+        ),
+        if (activeSlot != null)
+          Text(
+            c.occurrences
+                .where((s) => s['slot_key'] == activeSlot)
+                .map(
+                  (s) => 'Week ${s['week']} · ${days[(s['day'] as int) - 1]}',
+                )
+                .join(),
+          ),
+        readiness(selectedSession),
         Wrap(
+          spacing: 12,
           children: [
-            for (final running in [false, true])
-              TextButton(
-                onPressed: () => attempt(() {
-                  final r = c.createSession(running: running);
-                  c.begin(r);
-                  activeLineage = r.identity.sessionLineageId;
-                }),
-                child: Text(
-                  running
-                      ? 'Create structured-running session'
-                      : 'Create strength session',
-                ),
+            if (!editing)
+              FilledButton(
+                onPressed: editSession,
+                child: const Text('Edit session'),
               ),
-            TextButton(
-              onPressed: () => attempt(() {
-                final copy = c.duplicateSession(owner.latest);
-                c.begin(copy);
-                activeLineage = copy.identity.sessionLineageId;
-              }),
-              child: const Text('Duplicate as independent session'),
-            ),
-            if (draft == null)
+            if (!editing)
+              OutlinedButton.icon(
+                onPressed: previewSession,
+                icon: const Icon(Icons.visibility_outlined),
+                label: const Text('Preview as athlete'),
+              ),
+            if (!editing && activeSlot != null)
               TextButton(
-                onPressed: () => attempt(() => c.begin(owner.latest)),
-                child: const Text('Create later draft'),
+                onPressed: () =>
+                    transferSession(selectedSession, activeSlot!, move: false),
+                child: const Text('Copy to day'),
               ),
           ],
         ),
-        if (draft == null) ...[
-          const Text(
-            'Saved source snapshot. Imported source history/publication is not proved. Editing reserves a fresh local revision.',
-          ),
-          for (final r in owner.revisions)
-            ListTile(
-              title: Text('${r.title} · version ${r.identity.revisionNumber}'),
-              subtitle: Text(
-                'Used in ${c.occurrences.where((s) => s['session_key'] == r.key).map((s) => 'W${s['week']} day ${s['day']}').join(', ')}',
-              ),
-              trailing: Wrap(
-                children: [
-                  if (!c.policy.available.contains(r.key))
-                    TextButton(
-                      onPressed: () => c.addSource(r),
-                      child: const Text('Add to programme inventory'),
-                    ),
-                  TextButton(
-                    onPressed: () => chooseUses(r),
-                    child: const Text('Use in selected occurrences…'),
-                  ),
-                ],
-              ),
-            ),
-          SelectableText(c.inspect(owner).readable),
-        ] else ...[
+        const SizedBox(height: 16),
+        if (!editing)
+          sessionPreview(selectedSession)
+        else ...[
           field('Session title', owner.draftTitle, (v) {
             owner.draftTitle = v;
             c.edit(owner, (_) {});
           }),
-          const Text(
-            'Working draft. Invalid fields and unresolved setups can be saved in the editable file; they cannot become a validated revision.',
-          ),
-          for (var b = 0; b < (draft['blocks'] as List).length; b++)
+          for (var b = 0; b < (owner.draft!['blocks'] as List).length; b++)
             blockEditor(owner, b),
-          Wrap(
-            children: [
-              TextButton(
-                onPressed: () => c.edit(
-                  owner,
-                  (g) => (g['blocks'] as List).add({
-                    'position': (g['blocks'] as List).length + 1,
-                    'block_id': DatabaseUuid.newV4(),
-                    'block_type': 'strength',
-                    'title': '',
-                    'content': '',
-                    'workout_format': 'none',
-                    'exercises': [],
-                  }),
-                ),
-                child: const Text('Add strength block'),
-              ),
-              TextButton(
-                onPressed: () => attempt(() {
-                  c.freeze(owner);
-                }),
-                child: const Text('Validate and save local revision'),
-              ),
-              TextButton(
-                onPressed: () => confirm(
-                  'Cancel these session edits? The reserved number will remain unavailable.',
-                  () => c.cancel(owner),
-                ),
-                child: const Text('Cancel session edits…'),
-              ),
-            ],
-          ),
-          ExpansionTile(
-            title: const Text('Draft prescription review'),
-            children: [SelectableText(c.inspect(owner).readable)],
+          TextButton(
+            onPressed: () => c.edit(
+              owner,
+              (_) => (owner.draft!['blocks'] as List).add({
+                'position': (owner.draft!['blocks'] as List).length + 1,
+                'block_id': DatabaseUuid.newV4(),
+                'block_type': 'strength',
+                'title': 'Strength',
+                'content': '',
+                'workout_format': 'none',
+                'exercises': [],
+              }),
+            ),
+            child: const Text('Add exercise group'),
           ),
         ],
-        if (c.errors.isNotEmpty) Text(c.errors.join('\n')),
         ExpansionTile(
-          title: const Text('Optional source and identity inspection'),
+          title: const Text('Advanced session tools'),
           children: [
-            SelectableText(
-              const JsonEncoder.withIndent('  ').convert(owner.latest.origin),
-            ),
-            for (final variant in {
-              for (final b
-                  in (draft ??
-                      readWorkspaceJsonForUi(owner.latest.source))['blocks'])
-                for (final e in b['exercises']) e['variant_key'] as String,
-            })
-              SelectableText(
-                const JsonEncoder.withIndent('  ').convert(
-                  c.catalogue.rowFor(variant) ??
-                      {
-                        'status':
-                            'No retained catalogue record for this intended setup',
-                      },
+            for (final r in owner.revisions)
+              ListTile(
+                title: Text(
+                  '${r.title} · saved version ${r.identity.revisionNumber}',
+                ),
+                trailing: TextButton(
+                  onPressed: editing ? null : () => chooseUses(r),
+                  child: const Text('Update multiple sessions…'),
                 ),
               ),
-            SelectableText(
-              owner.draft == null
-                  ? owner.latest.source
-                  : const JsonEncoder.withIndent('  ').convert(owner.draft),
+            ExpansionTile(
+              title: const Text('Source & library evidence'),
+              children: [
+                SelectableText(
+                  const JsonEncoder.withIndent(
+                    '  ',
+                  ).convert(owner.latest.origin),
+                ),
+                for (final b
+                    in (owner.draft ??
+                        readWorkspaceJsonForUi(owner.latest.source))['blocks'])
+                  for (final e in b['exercises'])
+                    SelectableText(
+                      const JsonEncoder.withIndent('  ').convert(
+                        c.catalogue.rowFor(e['variant_key'] as String) ??
+                            {'status': 'Awaiting library approval'},
+                      ),
+                    ),
+                SelectableText(
+                  owner.draft == null
+                      ? selectedSession.source
+                      : const JsonEncoder.withIndent('  ').convert(owner.draft),
+                ),
+              ],
             ),
           ],
         ),
       ],
     );
+  }
+
+  Future<(int, int)?> pickDay(String title) => showDialog<(int, int)>(
+    context: context,
+    builder: (ctx) => SimpleDialog(
+      title: Text(title),
+      children: [
+        SizedBox(
+          width: 500,
+          height: 420,
+          child: ListView(
+            children: [
+              for (
+                var w = 0;
+                w < (c.programme.tree!['weeks'] as List).length;
+                w++
+              )
+                ExpansionTile(
+                  title: Text('Week ${w + 1}'),
+                  initiallyExpanded: w == week,
+                  children: [
+                    for (var d = 0; d < 7; d++)
+                      SimpleDialogOption(
+                        onPressed: () => Navigator.pop(ctx, (w, d)),
+                        child: Text(days[d]),
+                      ),
+                  ],
+                ),
+            ],
+          ),
+        ),
+      ],
+    ),
+  );
+
+  Future<void> transferSession(
+    NativeRevision r,
+    String slot, {
+    required bool move,
+  }) async {
+    final token = c.generation;
+    final target = await pickDay(
+      move ? 'Move session to…' : 'Copy session to…',
+    );
+    if (target == null || !mounted || token != c.generation) return;
+    await confirm(
+      '${move ? 'Move' : 'Copy independently'} ${displayTitle(r)} to Week ${target.$1 + 1} ${days[target.$2]}? Existing sessions there will be kept.',
+      () {
+        if (token != c.generation) {
+          throw StateError('The programme changed. Choose the day again.');
+        }
+        if (move) {
+          c.moveOccurrence(slot, target.$1, target.$2);
+        } else {
+          c.copyToDay(r, target.$1, target.$2);
+        }
+        message = move
+            ? 'Session moved.'
+            : 'Independent copy added. Editing it will not change the original.';
+      },
+    );
+  }
+
+  Future<void> addSession(int day) async {
+    final token = c.generation;
+    final kind = await showDialog<String>(
+      context: context,
+      builder: (ctx) => SimpleDialog(
+        title: Text('Add session · ${days[day]}'),
+        children: [
+          for (final item in [
+            ('strength', 'Strength session'),
+            ('run', 'Running session'),
+            ('copy', 'Copy an existing session'),
+          ])
+            SimpleDialogOption(
+              onPressed: () => Navigator.pop(ctx, item.$1),
+              child: Text(item.$2),
+            ),
+        ],
+      ),
+    );
+    if (kind == null || !mounted || token != c.generation) return;
+    if (kind == 'copy') {
+      final r = await pickRevision();
+      if (r != null && mounted && token == c.generation) {
+        attempt(() {
+          c.copyToDay(r, week, day);
+        });
+      }
+    } else {
+      attempt(() {
+        final r = c.createSession(running: kind == 'run');
+        c.place(week, day, r);
+        final slot =
+            c.occurrences.lastWhere(
+                  (s) => s['session_key'] == r.key,
+                )['slot_key']
+                as String;
+        openSession(r, slot);
+        editSession();
+        newSessionSlot = slot;
+      });
+    }
   }
 
   Widget blockEditor(NativeSessionOwner owner, int bi) {
@@ -466,14 +1016,14 @@ class _GenuineWorkspaceScreenState extends State<GenuineWorkspaceScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             field(
-              'Block title',
+              'Group title',
               b['title'],
               (v) => change(() => b['title'] = v),
               identity: '$key-title',
             ),
             if (b['timer_config'] == null)
               choice(
-                'Block role',
+                'Training section',
                 b['block_type'] as String,
                 [
                   ('warm_up', 'Preparation'),
@@ -483,53 +1033,71 @@ class _GenuineWorkspaceScreenState extends State<GenuineWorkspaceScreen> {
                 (v) => change(() => b['block_type'] = v),
               ),
             field(
-              'Preparation / finish / block guidance',
+              b['block_type'] == 'warm_up'
+                  ? 'Warm-up instructions'
+                  : b['block_type'] == 'cool_down'
+                  ? 'Finish instructions'
+                  : 'Coaching notes',
               b['content'],
               (v) => change(() => b['content'] = v),
               identity: '$key-content',
               lines: 4,
             ),
-            Wrap(
+            if (b['coach_notes'] != null)
+              field(
+                'Additional coaching notes',
+                b['coach_notes'],
+                (v) => change(() => b['coach_notes'] = v),
+                identity: '$key-coach-notes',
+                lines: 3,
+              ),
+            ExpansionTile(
+              title: const Text('Arrange training sections'),
               children: [
-                TextButton(
-                  onPressed: bi == 0
-                      ? null
-                      : () => change(
-                          () => moveNativeRow(
-                            owner.draft!['blocks'] as List,
-                            bi,
-                            bi - 1,
-                          ),
-                        ),
-                  child: const Text('Move block up'),
-                ),
-                TextButton(
-                  onPressed: bi + 1 == (owner.draft!['blocks'] as List).length
-                      ? null
-                      : () => change(
-                          () => moveNativeRow(
-                            owner.draft!['blocks'] as List,
-                            bi,
-                            bi + 1,
-                          ),
-                        ),
-                  child: const Text('Move block down'),
-                ),
-                TextButton(
-                  onPressed: () => confirm(
-                    'Remove this block and all of its rows?',
-                    () => change(() {
-                      (owner.draft!['blocks'] as List).removeAt(bi);
-                      for (
-                        var i = 0;
-                        i < (owner.draft!['blocks'] as List).length;
-                        i++
-                      ) {
-                        owner.draft!['blocks'][i]['position'] = i + 1;
-                      }
-                    }),
-                  ),
-                  child: const Text('Remove block…'),
+                Wrap(
+                  children: [
+                    TextButton(
+                      onPressed: bi == 0
+                          ? null
+                          : () => change(
+                              () => moveNativeRow(
+                                owner.draft!['blocks'] as List,
+                                bi,
+                                bi - 1,
+                              ),
+                            ),
+                      child: const Text('Move section up'),
+                    ),
+                    TextButton(
+                      onPressed:
+                          bi + 1 == (owner.draft!['blocks'] as List).length
+                          ? null
+                          : () => change(
+                              () => moveNativeRow(
+                                owner.draft!['blocks'] as List,
+                                bi,
+                                bi + 1,
+                              ),
+                            ),
+                      child: const Text('Move section down'),
+                    ),
+                    TextButton(
+                      onPressed: () => confirm(
+                        'Remove this block and all of its rows?',
+                        () => change(() {
+                          (owner.draft!['blocks'] as List).removeAt(bi);
+                          for (
+                            var i = 0;
+                            i < (owner.draft!['blocks'] as List).length;
+                            i++
+                          ) {
+                            owner.draft!['blocks'][i]['position'] = i + 1;
+                          }
+                        }),
+                      ),
+                      child: const Text('Remove section…'),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -541,7 +1109,7 @@ class _GenuineWorkspaceScreenState extends State<GenuineWorkspaceScreen> {
               if (b['block_type'] == 'strength')
                 TextButton(
                   onPressed: () => selectExercise(owner, b),
-                  child: const Text('Find exercise / setup…'),
+                  child: const Text('Add exercise'),
                 ),
             ],
           ],
@@ -581,201 +1149,227 @@ class _GenuineWorkspaceScreenState extends State<GenuineWorkspaceScreen> {
     final capture = p['performance_capture'] as Map?;
     void change(VoidCallback f) => c.edit(owner, (_) => f());
     final k = '$bk-${e['source_occurrence_id'] ?? index}';
-    return ExpansionTile(
+    return Card(
       key: ValueKey(k),
-      initiallyExpanded: false,
-      title: Text(e['display_label_override'] as String),
-      subtitle: Text(
-        e['exercise_id'] == null
-            ? 'Unresolved exercise setup — cannot prepare for publication'
-            : 'Exact retained legacy row; source coaching remains separate',
-      ),
-      children: [
-        if (e['exercise_id'] == null &&
-            c.catalogue.idFor(e['variant_key'] as String) != null)
-          TextButton(
-            onPressed: () => change(
-              () => e['exercise_id'] = c.catalogue.idFor(
-                e['variant_key'] as String,
-              ),
-            ),
-            child: const Text(
-              'Bind this exact retained setup (keep the prescription)',
-            ),
-          ),
-        field(
-          'Sets',
-          p['sets'],
-          (v) => change(() => p['sets'] = integerInput(v)),
-          identity: '$k-sets',
-        ),
-        choice(
-          'Repetitions or timed hold',
-          reps['type'] as String,
-          [
-            ('exact', 'Exact reps'),
-            ('range', 'Rep range'),
-            ('duration', 'Timed hold range'),
-          ],
-          (v) => change(
-            () => p['reps'] = v == 'exact'
-                ? {'type': v, 'exact_reps': 1}
-                : v == 'range'
-                ? {'type': v, 'min_reps': 1, 'max_reps': 1}
-                : {'type': v, 'text': ''},
-          ),
-        ),
-        if (reps['type'] == 'exact')
-          field(
-            'Repetitions',
-            reps['exact_reps'],
-            (v) => change(() => reps['exact_reps'] = integerInput(v)),
-            identity: '$k-reps',
-          ),
-        if (reps['type'] == 'range') ...[
-          field(
-            'Minimum repetitions',
-            reps['min_reps'],
-            (v) => change(() => reps['min_reps'] = integerInput(v)),
-            identity: '$k-reps-min',
-          ),
-          field(
-            'Maximum repetitions',
-            reps['max_reps'],
-            (v) => change(() => reps['max_reps'] = integerInput(v)),
-            identity: '$k-reps-max',
-          ),
-        ],
-        if (reps['type'] == 'duration')
-          field(
-            'Hold duration (for example 30–45 sec/side)',
-            reps['text'],
-            (v) => change(() => reps['text'] = v),
-            identity: '$k-hold',
-          ),
-        SwitchListTile(
-          title: const Text('Each side; both sides form one set'),
-          value: p['per_side'] == true,
-          onChanged: (v) => change(() => p['per_side'] = v),
-        ),
-        choice('RIR meaning', rirMode, [
-          ('absent', 'No RIR requirement'),
-          ('exact', 'Exact RIR'),
-          ('range', 'RIR range'),
-          ('at_least', 'At least (no upper bound)'),
-        ], (v) => change(() => setRir(p, v, rirLow, rirHigh))),
-        if (rirMode != 'absent')
-          field(
-            'RIR minimum / exact value',
-            rirLow,
-            (v) => change(
-              () => setRir(p, rirMode, v, rirMode == 'exact' ? v : rirHigh),
-            ),
-            identity: '$k-rir-min',
-          ),
-        if (rirMode == 'range')
-          field(
-            'RIR maximum',
-            rirHigh,
-            (v) => change(() => setRir(p, rirMode, rirLow, v)),
-            identity: '$k-rir-max',
-          ),
-        field(
-          'Rest minimum / exact seconds',
-          restLow,
-          (v) => change(() => setRest(p, v, restHigh, both)),
-          identity: '$k-rest-min',
-        ),
-        field(
-          'Rest maximum seconds (same for exact rest)',
-          restHigh,
-          (v) => change(() => setRest(p, restLow, v, both)),
-          identity: '$k-rest-max',
-        ),
-        SwitchListTile(
-          title: const Text('Rest after both sides; no intra-side rest'),
-          value: both,
-          onChanged: (v) => change(() => setRest(p, restLow, restHigh, v)),
-        ),
-        field(
-          'Tempo',
-          p['tempo'],
-          (v) => change(() => p['tempo'] = v),
-          identity: '$k-tempo',
-          lines: 2,
-        ),
-        field(
-          'Coaching and setup notes',
-          p['coach_cue'],
-          (v) => change(() => p['coach_cue'] = v),
-          identity: '$k-notes',
-          lines: 4,
-        ),
-        if (capture != null) ...[
-          field(
-            'Load logging convention',
-            capture['load_label'],
-            (v) => change(() => capture['load_label'] = v),
-            identity: '$k-load-label',
-          ),
-          choice(
-            'External load unit',
-            capture['load_unit'] as String? ?? '',
-            [
-              ('', 'Record actual displayed unit/setup'),
-              ('kg', 'kg'),
-              ('lb', 'lb'),
-            ],
-            (v) => change(() {
-              if (v.isEmpty) {
-                capture.remove('load_unit');
-              } else {
-                capture['load_unit'] = v;
-              }
-            }),
-          ),
-        ],
-        const Text(
-          'Load remains athlete-selected or absent as authored; no athlete actuals are entered here. RPE and RIR are separate.',
-        ),
-        Wrap(
+      margin: const EdgeInsets.symmetric(vertical: 10),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            TextButton(
-              onPressed: index == 0
-                  ? null
-                  : () => change(
-                      () => moveNativeRow(
-                        block['exercises'] as List,
-                        index,
-                        index - 1,
-                      ),
-                    ),
-              child: const Text('Move exercise up'),
+            Text(
+              '${index + 1}. ${e['display_label_override']}',
+              style: Theme.of(context).textTheme.titleMedium,
             ),
-            TextButton(
-              onPressed: index + 1 == (block['exercises'] as List).length
-                  ? null
-                  : () => change(
-                      () => moveNativeRow(
-                        block['exercises'] as List,
-                        index,
-                        index + 1,
-                      ),
-                    ),
-              child: const Text('Move exercise down'),
+            Text(prescriptionSummary(p)),
+            if (c.catalogue.rowFor(e['variant_key'] as String)?['catalogue_row']
+                case final Map row)
+              Text('${row['equipment'] ?? ''} · ${row['setup'] ?? ''}'),
+            if (e['exercise_id'] == null)
+              const Text(
+                'Awaiting library approval',
+                style: TextStyle(color: Colors.brown),
+              ),
+            if (e['exercise_id'] == null &&
+                c.catalogue.idFor(e['variant_key'] as String) != null)
+              TextButton(
+                onPressed: () => change(
+                  () => e['exercise_id'] = c.catalogue.idFor(
+                    e['variant_key'] as String,
+                  ),
+                ),
+                child: const Text('Use approved library setup'),
+              ),
+            const SizedBox(height: 8),
+            compact([
+              field(
+                'Sets',
+                p['sets'],
+                (v) => change(() => p['sets'] = integerInput(v)),
+                identity: '$k-sets',
+              ),
+              if (reps['type'] == 'exact')
+                field(
+                  'Reps',
+                  reps['exact_reps'],
+                  (v) => change(() => reps['exact_reps'] = integerInput(v)),
+                  identity: '$k-reps',
+                ),
+              if (reps['type'] == 'range') ...[
+                field(
+                  'Reps from',
+                  reps['min_reps'],
+                  (v) => change(() => reps['min_reps'] = integerInput(v)),
+                  identity: '$k-reps-min',
+                ),
+                field(
+                  'Reps to',
+                  reps['max_reps'],
+                  (v) => change(() => reps['max_reps'] = integerInput(v)),
+                  identity: '$k-reps-max',
+                ),
+              ],
+              if (reps['type'] == 'duration')
+                field(
+                  'Hold duration',
+                  reps['text'],
+                  (v) => change(() => reps['text'] = v),
+                  identity: '$k-hold',
+                ),
+              field(
+                'Rest from (sec)',
+                restLow,
+                (v) => change(() => setRest(p, v, restHigh, both)),
+                identity: '$k-rest-min',
+              ),
+              field(
+                'Rest to (sec)',
+                restHigh,
+                (v) => change(() => setRest(p, restLow, v, both)),
+                identity: '$k-rest-max',
+              ),
+              choice(
+                'Reps / timed hold',
+                reps['type'] as String,
+                [
+                  ('exact', 'Reps'),
+                  ('range', 'Rep range'),
+                  ('duration', 'Timed hold'),
+                ],
+                (v) => change(
+                  () => p['reps'] = v == 'exact'
+                      ? {'type': v, 'exact_reps': 1}
+                      : v == 'range'
+                      ? {'type': v, 'min_reps': 1, 'max_reps': 1}
+                      : {'type': v, 'text': ''},
+                ),
+              ),
+              choice(
+                'Reps in reserve (RIR)',
+                rirMode,
+                [
+                  ('absent', 'No requirement'),
+                  ('exact', 'Exact'),
+                  ('range', 'Range'),
+                  ('at_least', 'At least'),
+                ],
+                (v) => change(() => setRir(p, v, rirLow, rirHigh)),
+              ),
+              if (rirMode != 'absent')
+                field(
+                  'RIR from / exact',
+                  rirLow,
+                  (v) => change(
+                    () =>
+                        setRir(p, rirMode, v, rirMode == 'exact' ? v : rirHigh),
+                  ),
+                  identity: '$k-rir-min',
+                ),
+              if (rirMode == 'range')
+                field(
+                  'RIR to',
+                  rirHigh,
+                  (v) => change(() => setRir(p, rirMode, rirLow, v)),
+                  identity: '$k-rir-max',
+                ),
+            ]),
+            if (capture != null)
+              field(
+                'Load guidance / logging',
+                capture['load_label'],
+                (v) => change(() => capture['load_label'] = v),
+                identity: '$k-load-label',
+              ),
+            ExpansionTile(
+              title: const Text('Setup, coaching notes & tempo'),
+              children: [
+                field(
+                  'Coaching and setup notes',
+                  p['coach_cue'],
+                  (v) => change(() => p['coach_cue'] = v),
+                  identity: '$k-notes',
+                  lines: 4,
+                ),
+                field(
+                  'Tempo',
+                  p['tempo'],
+                  (v) => change(() => p['tempo'] = v),
+                  identity: '$k-tempo',
+                  lines: 2,
+                ),
+                SwitchListTile(
+                  title: const Text('Each side; both sides form one set'),
+                  value: p['per_side'] == true,
+                  onChanged: (v) => change(() => p['per_side'] = v),
+                ),
+                SwitchListTile(
+                  title: const Text('Rest after both sides'),
+                  value: both,
+                  onChanged: (v) =>
+                      change(() => setRest(p, restLow, restHigh, v)),
+                ),
+                if (capture != null)
+                  choice(
+                    'Load unit',
+                    capture['load_unit'] as String? ?? '',
+                    [('', 'As displayed'), ('kg', 'kg'), ('lb', 'lb')],
+                    (v) => change(() {
+                      if (v.isEmpty) {
+                        capture.remove('load_unit');
+                      } else {
+                        capture['load_unit'] = v;
+                      }
+                    }),
+                  ),
+              ],
             ),
-            TextButton(
-              onPressed: () => change(() {
-                (block['exercises'] as List).removeAt(index);
-                for (var i = 0; i < (block['exercises'] as List).length; i++) {
-                  block['exercises'][i]['position'] = i + 1;
-                }
-              }),
-              child: const Text('Remove exercise'),
+            Wrap(
+              children: [
+                TextButton(
+                  onPressed: index == 0
+                      ? null
+                      : () => change(
+                          () => moveNativeRow(
+                            block['exercises'] as List,
+                            index,
+                            index - 1,
+                          ),
+                        ),
+                  child: const Text('Move up'),
+                ),
+                TextButton(
+                  onPressed: index + 1 == (block['exercises'] as List).length
+                      ? null
+                      : () => change(
+                          () => moveNativeRow(
+                            block['exercises'] as List,
+                            index,
+                            index + 1,
+                          ),
+                        ),
+                  child: const Text('Move down'),
+                ),
+                TextButton(
+                  onPressed: () => confirm(
+                    'Remove ${e['display_label_override']} from this session?',
+                    () => change(() {
+                      (block['exercises'] as List).removeAt(index);
+                      for (
+                        var i = 0;
+                        i < (block['exercises'] as List).length;
+                        i++
+                      ) {
+                        block['exercises'][i]['position'] = i + 1;
+                      }
+                    }),
+                  ),
+                  child: const Text('Remove exercise'),
+                ),
+              ],
             ),
           ],
         ),
-      ],
+      ),
     );
   }
 
@@ -801,9 +1395,9 @@ class _GenuineWorkspaceScreenState extends State<GenuineWorkspaceScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Expanded order · total $total'),
-        const Text(
-          'Targets are symbolic dependencies. Zone 2 and quality work require athlete input, source selection, review and acceptance. M2.3: representative 5K aged 0–56 local days; approved rounding/formulas; manual threshold ±2% only when eligible; started targets immutable. No athlete confirmation occurs in Studio.',
+        Text('Workout duration · $total'),
+        Text(
+          '${runningSummary(workout)}\nPersonalised pace and heart rate use the athlete’s separately confirmed training inputs. No athlete data is entered here.',
         ),
         field(
           'Workout notes',
@@ -827,7 +1421,7 @@ class _GenuineWorkspaceScreenState extends State<GenuineWorkspaceScreen> {
                       ? formatRunSeconds((d['milliseconds'] as int) ~/ 1000)
                       : d['kind'] == 'distance'
                       ? '10,000 m'
-                      : 'Invalid time'} · ${targetLabel(target)}',
+                      : 'Invalid time'} · ${targetChoice(target)}',
                 ),
                 children: [
                   field(
@@ -864,15 +1458,15 @@ class _GenuineWorkspaceScreenState extends State<GenuineWorkspaceScreen> {
                       'Selected final 10,000 m body. Athlete confirms external distance; no live distance measurement.',
                     ),
                   choice(
-                    'Target dependency',
+                    'Training target',
                     target['kind'] == 'alpha_quality_pace_v1'
                         ? target['category'] as String
                         : target['kind'] as String,
                     [
                       ('none', 'Authored effort; no fixed pace/HR'),
-                      ('heart_rate_zone_ref', 'Athlete-confirmed Zone 2'),
-                      ('threshold', 'Threshold — approved M2.3 rule'),
-                      ('current_10k', 'Current 10K — approved M2.3 rule'),
+                      ('heart_rate_zone_ref', 'Personalised Zone 2 heart rate'),
+                      ('threshold', 'Personalised threshold pace'),
+                      ('current_10k', 'Personalised current 10K pace'),
                       if (target['kind'] == 'rpe_range')
                         ('rpe_range', 'Retained authored RPE range'),
                     ],
@@ -939,7 +1533,7 @@ class _GenuineWorkspaceScreenState extends State<GenuineWorkspaceScreen> {
             ),
             TextButton(
               onPressed: () => repeat(owner, block),
-              child: const Text('Add work / recovery repeats…'),
+              child: const Text('Add intervals'),
             ),
           ],
         ),
@@ -950,8 +1544,23 @@ class _GenuineWorkspaceScreenState extends State<GenuineWorkspaceScreen> {
   Widget review() => Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
+      TextButton(
+        onPressed: () => setState(() => page = 0),
+        child: const Text('Back to programme'),
+      ),
+      TextButton(
+        onPressed: () => c.refreshReview(),
+        child: const Text('Check export readiness'),
+      ),
+      TextButton(
+        onPressed: () => confirm(
+          'Keep unused sessions in the backup but remove them from the export inventory?',
+          c.excludeUnusedSources,
+        ),
+        child: const Text('Exclude unused sources from programme export…'),
+      ),
       const Text(
-        'Exact authored prescriptions · local review only. D8 pending; no approval or hosted publication.',
+        'Advanced inspection & prepared export · content approval and publication remain separate.',
       ),
       if (c.errors.isNotEmpty) Text(c.errors.join('\n')),
       if (!c.reviewCurrent)
@@ -1031,9 +1640,9 @@ class _GenuineWorkspaceScreenState extends State<GenuineWorkspaceScreen> {
       final yes = await showDialog<bool>(
         context: context,
         builder: (ctx) => AlertDialog(
-          title: const Text('Replace this local workspace?'),
+          title: const Text('Open this backup and replace the workspace?'),
           content: const Text(
-            'Keep a saved editable file for current edits. The opened draft will be revalidated; no review or approval is restored.',
+            'Download a backup of your current work first. Opening this file replaces the workspace. Saving or opening does not approve or publish a programme.',
           ),
           actions: [
             TextButton(
@@ -1042,7 +1651,7 @@ class _GenuineWorkspaceScreenState extends State<GenuineWorkspaceScreen> {
             ),
             FilledButton(
               onPressed: () => Navigator.pop(ctx, true),
-              child: const Text('Replace workspace'),
+              child: const Text('Open backup'),
             ),
           ],
         ),
@@ -1053,7 +1662,7 @@ class _GenuineWorkspaceScreenState extends State<GenuineWorkspaceScreen> {
         widget.replace(candidate);
       }
     } catch (e) {
-      if (mounted) setState(() => message = '$e');
+      if (mounted) setState(() => message = coachError(e));
     } finally {
       prepared?.candidate.dispose();
       if (mounted) setState(() => transferring = false);
@@ -1095,7 +1704,7 @@ class _GenuineWorkspaceScreenState extends State<GenuineWorkspaceScreen> {
             ),
             FilledButton(
               onPressed: () => Navigator.pop(ctx, true),
-              child: const Text('Replace workspace'),
+              child: const Text('Open backup'),
             ),
           ],
         ),
@@ -1106,7 +1715,7 @@ class _GenuineWorkspaceScreenState extends State<GenuineWorkspaceScreen> {
         widget.replace(next);
       }
     } catch (e) {
-      if (mounted) setState(() => message = '$e');
+      if (mounted) setState(() => message = coachError(e));
     } finally {
       candidate?.dispose();
       if (mounted) setState(() => transferring = false);
@@ -1116,22 +1725,26 @@ class _GenuineWorkspaceScreenState extends State<GenuineWorkspaceScreen> {
   Future<NativeRevision?> pickRevision() => showDialog<NativeRevision>(
     context: context,
     builder: (ctx) => SimpleDialog(
-      title: const Text('Choose exact saved session version'),
+      title: const Text('Copy an existing session'),
       children: [
         for (final o in c.owners.values)
-          for (final r in o.revisions)
+          for (final r in [o.latest])
             SimpleDialogOption(
               onPressed: () => Navigator.pop(ctx, r),
-              child: Text(c.sessionLabel(r)),
+              child: Text(
+                c.sessionLabel(r).replaceAll(RegExp(r' · version \d+$'), ''),
+              ),
             ),
       ],
     ),
   );
   Future<void> duplicateWeek() async {
+    final token = c.generation;
+    final from = week;
     final target = await showDialog<int>(
       context: context,
       builder: (ctx) => SimpleDialog(
-        title: const Text('Replace which week with this explicit copy?'),
+        title: const Text('Duplicate into which week?'),
         children: [
           for (var w = 0; w < (c.programme.tree!['weeks'] as List).length; w++)
             if (w != week)
@@ -1144,8 +1757,13 @@ class _GenuineWorkspaceScreenState extends State<GenuineWorkspaceScreen> {
     );
     if (target != null && mounted) {
       await confirm(
-        'Replace week ${target + 1} with a copy of week ${week + 1}? Existing revision choices remain explicit.',
-        () => c.duplicateWeek(week, target),
+        'Replace all seven days in Week ${target + 1} with independent copies of Week ${from + 1}? Existing sessions in the target week will be replaced.',
+        () {
+          if (token != c.generation) {
+            throw StateError('The programme changed. Choose the week again.');
+          }
+          c.copyWeekForCoach(from, target);
+        },
       );
     }
   }
@@ -1158,7 +1776,7 @@ class _GenuineWorkspaceScreenState extends State<GenuineWorkspaceScreen> {
       context: context,
       builder: (ctx) => StatefulBuilder(
         builder: (ctx, update) => AlertDialog(
-          title: const Text('Choose exact affected occurrences'),
+          title: const Text('Update multiple sessions'),
           content: SizedBox(
             width: 600,
             child: SingleChildScrollView(
@@ -1167,7 +1785,7 @@ class _GenuineWorkspaceScreenState extends State<GenuineWorkspaceScreen> {
                   for (final s in occurrences)
                     CheckboxListTile(
                       title: Text(
-                        'Week ${s['week']} · day ${s['day']} · ${c.selected(s['slot_key'] as String).title}',
+                        'Week ${s['week']} · ${days[(s['day'] as int) - 1]} · ${c.selected(s['slot_key'] as String).title}',
                       ),
                       value: chosen.contains(s['slot_key']),
                       onChanged: (v) => update(() {
@@ -1189,7 +1807,7 @@ class _GenuineWorkspaceScreenState extends State<GenuineWorkspaceScreen> {
             ),
             FilledButton(
               onPressed: chosen.isEmpty ? null : () => Navigator.pop(ctx, true),
-              child: Text('Use in ${chosen.length} selected occurrences'),
+              child: Text('Update ${chosen.length} selected sessions'),
             ),
           ],
         ),
@@ -1197,9 +1815,9 @@ class _GenuineWorkspaceScreenState extends State<GenuineWorkspaceScreen> {
     );
     if (yes == true && mounted) {
       await confirm(
-        'Use ${revision.title} version ${revision.identity.revisionNumber} in exactly ${chosen.map((k) {
+        'Replace the selected sessions with ${revision.title}: ${chosen.map((k) {
           final s = occurrences.singleWhere((s) => s['slot_key'] == k);
-          return 'week ${s['week']} day ${s['day']}';
+          return 'Week ${s['week']} ${days[(s['day'] as int) - 1]}';
         }).join(', ')}?',
         () => c.useRevision(revision, chosen.toList(), token),
       );
@@ -1216,7 +1834,7 @@ class _GenuineWorkspaceScreenState extends State<GenuineWorkspaceScreen> {
       context: context,
       builder: (ctx) => StatefulBuilder(
         builder: (ctx, update) => AlertDialog(
-          title: const Text('Find exact exercise and setup'),
+          title: const Text('Find exercise'),
           content: SizedBox(
             width: 650,
             height: 550,
@@ -1233,9 +1851,7 @@ class _GenuineWorkspaceScreenState extends State<GenuineWorkspaceScreen> {
                   onChanged: (v) => update(() => equipment = v.toLowerCase()),
                 ),
                 TextField(
-                  decoration: const InputDecoration(
-                    labelText: 'Movement filter (retained catalogue data)',
-                  ),
+                  decoration: const InputDecoration(labelText: 'Movement'),
                   onChanged: (v) => update(() => movement = v.toLowerCase()),
                 ),
                 Expanded(
@@ -1257,7 +1873,7 @@ class _GenuineWorkspaceScreenState extends State<GenuineWorkspaceScreen> {
                                 e['display_label_override'] as String,
                               ),
                               subtitle: Text(
-                                'Source coaching: ${e['prescription']['coach_cue']}\nRetained equipment: ${c.catalogue.rowFor(e['variant_key'] as String)?['catalogue_row']['equipment'] ?? 'unknown'}; setup: ${c.catalogue.rowFor(e['variant_key'] as String)?['catalogue_row']['setup'] ?? 'unknown'}; execution: ${c.catalogue.rowFor(e['variant_key'] as String)?['catalogue_row']['execution'] ?? 'unknown'}\n${c.catalogue.idFor(e['variant_key'] as String) == null ? 'Unresolved setup — awaiting genuine catalogue retention' : 'Exact retained legacy row; source coaching remains separate'}',
+                                '${e['prescription']['coach_cue']}\nEquipment: ${c.catalogue.rowFor(e['variant_key'] as String)?['catalogue_row']['equipment'] ?? 'unknown'}; setup: ${c.catalogue.rowFor(e['variant_key'] as String)?['catalogue_row']['setup'] ?? 'unknown'}; execution: ${c.catalogue.rowFor(e['variant_key'] as String)?['catalogue_row']['execution'] ?? 'unknown'}\n${c.catalogue.idFor(e['variant_key'] as String) == null ? 'Awaiting library approval' : 'Library setup available'}',
                               ),
                               onTap: () => Navigator.pop(ctx, e),
                             ),
@@ -1300,7 +1916,7 @@ class _GenuineWorkspaceScreenState extends State<GenuineWorkspaceScreen> {
       context: context,
       builder: (ctx) => StatefulBuilder(
         builder: (ctx, update) => AlertDialog(
-          title: const Text('Add threshold work / very easy recovery'),
+          title: const Text('Add running intervals'),
           content: SingleChildScrollView(
             child: Column(
               children: [
@@ -1329,7 +1945,7 @@ class _GenuineWorkspaceScreenState extends State<GenuineWorkspaceScreen> {
                   onChanged: (v) => update(() => last = v),
                 ),
                 const Text(
-                  'Creates ordinary ordered phases. Edit titles/targets/cues afterwards. Between-only recoveries and stride cycles have different endings.',
+                  'Adds work and easy recovery in order. Choose whether recovery follows the final repetition, then adjust each step if needed.',
                 ),
               ],
             ),
@@ -1341,7 +1957,7 @@ class _GenuineWorkspaceScreenState extends State<GenuineWorkspaceScreen> {
             ),
             FilledButton(
               onPressed: () => Navigator.pop(ctx, true),
-              child: const Text('Add expanded phases'),
+              child: const Text('Add intervals'),
             ),
           ],
         ),

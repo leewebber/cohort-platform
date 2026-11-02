@@ -90,7 +90,7 @@ class NativeSessionOwner {
     parent = number;
     reserved = numbers.reserve(number);
     draft = readWorkspaceJson(base.source)
-      ..['protocol_id'] = DatabaseUuid.newV4()
+      ..['protocol_id'] = 'protocol-${DatabaseUuid.newV4()}'
       ..['revision_number'] = reserved;
     draftTitle = base.title;
   }
@@ -638,6 +638,7 @@ class GenuineWorkspace extends ChangeNotifier {
         throw const FormatException('An affected workout no longer exists.');
       }
     });
+    _excludeUnusedEmptyRoots();
   }
 
   void place(int week, int day, NativeRevision revision) =>
@@ -650,7 +651,7 @@ class GenuineWorkspace extends ChangeNotifier {
         final d = tree['weeks'][week]['days'][day];
         d['day_type'] = 'training';
         (d['slots'] as List).add({
-          'slot_key': DatabaseUuid.newV4(),
+          'slot_key': 'slot-${DatabaseUuid.newV4()}',
           'session_key': revision.key,
           'session_order': (d['slots'] as List).length + 1,
           'time_of_day': 'any',
@@ -662,6 +663,40 @@ class GenuineWorkspace extends ChangeNotifier {
           },
         });
       });
+  void _excludeUnusedEmptyRoots() {
+    final used = occurrences.map((s) => s['session_key']).toSet();
+    final empty = {
+      for (final owner in owners.values)
+        if (owner.draft == null &&
+            owner.revisions.first.origin['kind'] ==
+                'new_local_draft_root_no_validation' &&
+            !used.contains(owner.revisions.first.key))
+          owner.revisions.first.key,
+    };
+    final count = policy.available.length;
+    policy.available.removeAll(empty);
+    if (count != policy.available.length) programme.refreshSourceCatalogue();
+  }
+
+  void removeOccurrence(String slotKey) {
+    if (!occurrences.any((s) => s['slot_key'] == slotKey)) {
+      throw const FormatException('Choose a session again.');
+    }
+    programme.editNativeArrangement((tree) {
+      for (final week in tree['weeks']) {
+        for (final day in week['days']) {
+          final slots = day['slots'] as List;
+          slots.removeWhere((s) => s['slot_key'] == slotKey);
+          for (var i = 0; i < slots.length; i++) {
+            slots[i]['session_order'] = i + 1;
+          }
+          if (slots.isEmpty) day['day_type'] = 'rest';
+        }
+      }
+    });
+    _excludeUnusedEmptyRoots();
+  }
+
   void rest(int week, int day) => programme.editNativeArrangement((tree) {
     final d = tree['weeks'][week]['days'][day];
     d['slots'] = [];
@@ -700,20 +735,137 @@ class GenuineWorkspace extends ChangeNotifier {
           ..['week_number'] = target + 1;
         for (final d in copy['days']) {
           for (final s in d['slots']) {
-            s['slot_key'] = DatabaseUuid.newV4();
+            s['slot_key'] = 'slot-${DatabaseUuid.newV4()}';
           }
         }
         weeks[target] = copy;
       });
-  NativeRevision duplicateSession(NativeRevision original) {
-    if (owners.values.length >= 128) {
+
+  /// Coach copies are independent owners. Pending intent remains a draft and
+  /// never gains catalogue/publication authority by being copied.
+  NativeRevision copyForCoach(NativeRevision original) {
+    final sourceOwner = ownerOf(original);
+    final copy = duplicateSession(original);
+    if (sourceOwner.draft != null &&
+        sourceOwner.parent == original.identity.revisionNumber) {
+      begin(copy);
+      final owner = ownerOf(copy);
+      final intent = nativeCopy(sourceOwner.draft!);
+      intent['protocol_id'] = owner.draft!['protocol_id'];
+      intent['revision_number'] = owner.reserved;
+      for (final block in intent['blocks']) {
+        block['block_id'] = DatabaseUuid.newV4();
+        final workout = block['timer_config']?['running_workout'];
+        if (workout != null) {
+          workout['workout_id'] = DatabaseUuid.newV4();
+          for (final step in workout['steps']) {
+            step['step_id'] = DatabaseUuid.newV4();
+          }
+        }
+        for (final exercise in block['exercises']) {
+          exercise['source_occurrence_id'] = DatabaseUuid.newV4();
+        }
+      }
+      owner.draftTitle = '${sourceOwner.draftTitle} copy';
+      owner.draft = intent;
+      _changed();
+    }
+    return copy;
+  }
+
+  NativeRevision copyToDay(NativeRevision original, int week, int day) {
+    _checkDay(week, day);
+    final copy = copyForCoach(original);
+    place(week, day, copy);
+    return copy;
+  }
+
+  void moveOccurrence(String slotKey, int week, int day) {
+    _checkDay(week, day);
+    if (!occurrences.any((s) => s['slot_key'] == slotKey)) {
+      throw const FormatException('Choose a session again.');
+    }
+    programme.editNativeArrangement((tree) {
+      Map<String, dynamic>? moved;
+      for (final w in tree['weeks']) {
+        for (final d in w['days']) {
+          final slots = d['slots'] as List;
+          for (var i = 0; i < slots.length; i++) {
+            if (slots[i]['slot_key'] == slotKey) {
+              moved = Map<String, dynamic>.from(slots.removeAt(i) as Map);
+              for (var j = 0; j < slots.length; j++) {
+                slots[j]['session_order'] = j + 1;
+              }
+              if (slots.isEmpty) d['day_type'] = 'rest';
+              break;
+            }
+          }
+        }
+      }
+      if (moved == null) {
+        throw const FormatException('Choose a session again.');
+      }
+      final target = tree['weeks'][week]['days'][day];
+      target['day_type'] = 'training';
+      moved['session_order'] = (target['slots'] as List).length + 1;
+      (target['slots'] as List).add(moved);
+    });
+  }
+
+  void _checkDay(int week, int day) {
+    if (week < 0 ||
+        week >= (programme.tree!['weeks'] as List).length ||
+        day < 0 ||
+        day > 6) {
+      throw const FormatException('Choose a day in this programme.');
+    }
+  }
+
+  void copyWeekForCoach(int index, int target) {
+    final weeks = programme.tree!['weeks'] as List;
+    if (index == target ||
+        index < 0 ||
+        target < 0 ||
+        index >= weeks.length ||
+        target >= weeks.length) {
+      throw const FormatException('Choose a different existing week.');
+    }
+    final sources = <String, NativeRevision>{
+      for (final day in weeks[index]['days'])
+        for (final slot in day['slots'])
+          slot['slot_key'] as String: selected(slot['slot_key'] as String),
+    };
+    if (owners.values.length + sources.length > 128 ||
+        policy.available.length + sources.length > 128) {
       throw const FormatException(
-        'This workspace already has 128 session owners. Keep its complete editable history in a separate file.',
+        'This workspace is full. Download a backup before making more copies.',
       );
     }
-    final lineage = DatabaseUuid.newV4();
+    final copies = {
+      for (final entry in sources.entries) entry.key: copyForCoach(entry.value),
+    };
+    programme.editNativeArrangement((tree) {
+      final copy = nativeCopy(tree['weeks'][index] as Map)
+        ..['week_number'] = target + 1;
+      for (final day in copy['days']) {
+        for (final slot in day['slots']) {
+          slot['session_key'] = copies[slot['slot_key']]!.key;
+          slot['slot_key'] = 'slot-${DatabaseUuid.newV4()}';
+        }
+      }
+      tree['weeks'][target] = copy;
+    });
+  }
+
+  NativeRevision duplicateSession(NativeRevision original) {
+    if (owners.values.length >= 128 || policy.available.length >= 128) {
+      throw const FormatException(
+        'This workspace is full. Download a backup before making more copies.',
+      );
+    }
+    final lineage = 'session-${DatabaseUuid.newV4()}';
     final graph = readWorkspaceJson(original.source)
-      ..['protocol_id'] = DatabaseUuid.newV4()
+      ..['protocol_id'] = 'protocol-${DatabaseUuid.newV4()}'
       ..['revision_number'] = 1;
     for (final b in graph['blocks']) {
       b['block_id'] = DatabaseUuid.newV4();
@@ -770,7 +922,8 @@ class GenuineWorkspace extends ChangeNotifier {
         'This workspace already has 128 session owners. Keep its complete editable history in a separate file.',
       );
     }
-    final lineage = DatabaseUuid.newV4(), protocol = DatabaseUuid.newV4();
+    final lineage = 'session-${DatabaseUuid.newV4()}',
+        protocol = 'protocol-${DatabaseUuid.newV4()}';
     final title = running ? 'New structured run' : 'New strength session';
     final graph = {
       'protocol_id': protocol,
