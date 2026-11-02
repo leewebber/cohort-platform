@@ -1,12 +1,12 @@
 # Manual coach-builder walkthrough
 
 Updated 2026-11-02 after Lee withheld usability acceptance of the initial workspace.
-[Redesign handoff](../coach_redesign/HANDOFF.md). **Manual acceptance remains pending.**
+[Redesign handoff](../coach_redesign/HANDOFF.md) · [Readability/structured preview follow-up](../readability/HANDOFF.md). **Manual acceptance remains pending.**
 
 Start from the repository root:
 
 ```sh
-flutter run -d web-server --web-hostname 127.0.0.1 --web-port 8312 --target lib/main_programme_studio_founder_preview.dart --no-pub
+flutter run -d web-server --web-hostname 127.0.0.1 --web-port 8313 --target lib/main_programme_studio_founder_preview.dart --no-pub
 ```
 
 Open the printed URL manually. No browser/desktop automation is required or authorised.
@@ -33,7 +33,7 @@ Use Ctrl-C in the launching terminal to stop it.
    step to see **Training target: Personalised threshold pace**. This references
    the existing approved target rule; athlete inputs are selected/confirmed separately.
    Use **Cancel** to leave the prescription unchanged, or save an intentional edit.
-4. Use **Preview as athlete** directly from a session. Expect the exact selected
+4. Use **Preview as athlete** directly from a session. Expect ordered warm-up items, separate movement cards or grouped running intervals, labelled dose/load/rest/RIR and expandable coaching notes. Inline and modal use the same renderer. The amber **Coach readiness** panel is separate from athlete instructions. Expect the exact selected
    saved prescription, or explicitly labelled **Unpublished changes** when pending
    intent is being previewed. Then **Download backup**, check that the JSON file is
    present, and **Open backup** → select it → confirm **Open backup**. Expect the
@@ -53,6 +53,8 @@ removed from its day; private identity/reservation history may remain. New valid
 saves select a fresh immutable saved version for the edited occurrence. Other uses
 stay unchanged. **Advanced session tools → Update multiple sessions…** is the separate
 operation for replacing explicitly selected days, with an affected-day confirmation.
+
+Exact rest is one field; **Prescription options → Show rest range bounds** reveals separate bounds without changing the dose. Rep/RIR modes and detailed source guidance are disclosed only when needed.
 
 The three missing library setups still block 28 exercise occurrences and all twenty
 complete strength sessions. The full selected programme cannot yet be prepared for

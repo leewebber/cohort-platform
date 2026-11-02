@@ -1,5 +1,9 @@
 # M1.1 coach-facing builder redesign
 
+> The [focused readability/structured-preview follow-up](../readability/HANDOFF.md)
+> addresses Lee's subsequent contrast and text-dump feedback. Usability acceptance
+> remains pending; this redesign handoff is retained as implementation history.
+
 2026-11-02, Asia/Makassar. Base and freshly observed published main:
 `2a648c3421f60a8de7279f2a1f471d04e2b6cbda`.
 **IMPLEMENTED; FOUNDER_USABILITY_ACCEPTANCE_PENDING; D8_PENDING; GATE_A_OPEN.**

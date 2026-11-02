@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'app/theme.dart';
+import 'features/programme_studio/genuine_authoring/builder_theme.dart';
 import 'features/programme_studio/composition/programme_first_screen.dart';
 import 'features/programme_studio/genuine_authoring/genuine_workspace.dart';
 import 'features/programme_studio/genuine_authoring/genuine_workspace_screen.dart';
@@ -8,7 +8,7 @@ import 'features/programme_studio/genuine_authoring/genuine_workspace_screen.dar
 /// Dedicated local web Studio entry. No Supabase/auth/athlete composition.
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(MaterialApp(theme: cohortTheme, home: const _FounderStudio()));
+  runApp(MaterialApp(theme: founderBuilderTheme, home: const _FounderStudio()));
 }
 
 class _FounderStudio extends StatefulWidget {

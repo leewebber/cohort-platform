@@ -11,6 +11,10 @@ import 'native_form_fields.dart';
 import 'native_session_source.dart';
 import 'native_source_bundle.dart';
 import 'reload_warning.dart';
+import 'builder_theme.dart';
+import 'structured_prescription_preview.dart';
+import '../../../domain/running_workout/running_workout_codec.dart';
+import 'prescription_presentation.dart';
 
 /// Native source-policy presentation inside the existing programme-first entry.
 /// Controls write existing package/graph fields, never a second programme tree.
@@ -38,6 +42,7 @@ class _GenuineWorkspaceScreenState extends State<GenuineWorkspaceScreen> {
   Map<String, dynamic>? beforeEdit;
   String? beforeTitle;
   bool editing = false;
+  final restRangeFields = <String>{};
   static const days = [
     'Monday',
     'Tuesday',
@@ -221,18 +226,20 @@ class _GenuineWorkspaceScreenState extends State<GenuineWorkspaceScreen> {
     animation: c,
     builder: (context, _) => LayoutBuilder(
       builder: (context, viewport) => Scaffold(
-        backgroundColor: const Color(0xfff4f6f8),
+        backgroundColor: Theme.of(context).colorScheme.surfaceContainerLow,
         appBar: AppBar(
           title: const Text('Programme builder'),
           actions: [
             if (viewport.maxWidth < 650) ...[
               IconButton(
                 tooltip: 'Download backup',
+                disabledColor: const Color(0xff939c94),
                 onPressed: transferring ? null : downloadBackup,
                 icon: const Icon(Icons.download_outlined),
               ),
               IconButton(
                 tooltip: 'Open backup',
+                disabledColor: const Color(0xff939c94),
                 onPressed: transferring ? null : open,
                 icon: const Icon(Icons.folder_open_outlined),
               ),
@@ -240,10 +247,22 @@ class _GenuineWorkspaceScreenState extends State<GenuineWorkspaceScreen> {
               TextButton.icon(
                 onPressed: transferring ? null : downloadBackup,
                 icon: const Icon(Icons.download_outlined),
+                style: TextButton.styleFrom(
+                  foregroundColor: Theme.of(
+                    context,
+                  ).appBarTheme.foregroundColor,
+                  disabledForegroundColor: const Color(0xff939c94),
+                ),
                 label: const Text('Download backup'),
               ),
               TextButton(
                 onPressed: transferring ? null : open,
+                style: TextButton.styleFrom(
+                  foregroundColor: Theme.of(
+                    context,
+                  ).appBarTheme.foregroundColor,
+                  disabledForegroundColor: const Color(0xff939c94),
+                ),
                 child: const Text('Open backup'),
               ),
             ],
@@ -298,7 +317,7 @@ class _GenuineWorkspaceScreenState extends State<GenuineWorkspaceScreen> {
           children: [
             Container(
               width: double.infinity,
-              color: Colors.white,
+              color: Theme.of(context).colorScheme.surface,
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -385,25 +404,13 @@ class _GenuineWorkspaceScreenState extends State<GenuineWorkspaceScreen> {
   };
 
   String runningSummary(Map workout) {
-    final steps = workout['steps'] as List;
-    final work = steps
-        .where((s) => s['target']['kind'] == 'alpha_quality_pace_v1')
-        .toList();
-    final recoveries = steps
-        .where(
-          (s) =>
-              s['role'] == 'recovery' && s['duration']['milliseconds'] == 90000,
-        )
-        .toList();
-    if (work.length == 4 &&
-        work.every((s) => s['target']['category'] == 'threshold') &&
-        work.every((s) => s['duration']['milliseconds'] == 300000) &&
-        recoveries.length == 3) {
-      return '4 × 5 min — threshold pace, 90 sec easy between.';
-    }
     try {
-      final t = runningTotals(workout);
-      return '${formatRunSeconds(t.seconds)} timed${t.metres == 0 ? '' : ' + ${t.metres} m'} · ${steps.length} ordered steps';
+      final typed = const RunningWorkoutCodec().decodeMap(
+        Map<String, dynamic>.from(workout),
+      );
+      final groups = groupRunningSteps(typed.steps);
+      final total = runningTotals(workout);
+      return '${formatRunSeconds(total.seconds)}${total.metres == 0 ? '' : ' + ${total.metres} m'} · ${groups.length} training section${groups.length == 1 ? '' : 's'}';
     } catch (_) {
       return 'Check the workout durations';
     }
@@ -418,7 +425,9 @@ class _GenuineWorkspaceScreenState extends State<GenuineWorkspaceScreen> {
     final pending = [
       for (final b in graph['blocks'])
         for (final e in b['exercises'])
-          if (e['exercise_id'] == null) e,
+          if (c.catalogue.idFor(e['variant_key'] as String) == null ||
+              e['exercise_id'] != c.catalogue.idFor(e['variant_key'] as String))
+            e,
     ];
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
@@ -427,58 +436,73 @@ class _GenuineWorkspaceScreenState extends State<GenuineWorkspaceScreen> {
             ? 'Draft programme · content approval and publication are separate.'
             : '${pending.length} exercise setup${pending.length == 1 ? '' : 's'} awaiting library approval. You can edit and keep a backup; athlete delivery is blocked.',
         style: TextStyle(
-          color: pending.isEmpty ? Colors.blueGrey : Colors.brown,
+          color: pending.isEmpty ? builderMuted : builderWarning,
         ),
       ),
     );
   }
 
-  Widget sessionPreview(NativeRevision revision) {
+  Widget sessionPreview(NativeRevision revision, {bool modal = false}) {
     final owner = c.ownerOf(revision);
     final pending =
         owner.draft != null && owner.parent == revision.identity.revisionNumber;
+    final graph = pending
+        ? owner.draft!
+        : readWorkspaceJsonForUi(revision.source);
     final receipt = pending ? c.inspect(owner) : c.inspectRevision(revision);
-    // The compiler is the loss-aware projection of the exact selected source.
-    // Only presentation wording changes; every prescription/cue remains visible.
-    var readable = receipt.readable
-        .replaceAll(
-          'Unresolved exercise setup — cannot prepare for publication.',
-          'Awaiting library approval',
-        )
-        .replaceAll('Retained equipment:', 'Equipment:')
-        .replaceAll(
-          'threshold · approved M2.3 personalisation rule; explicit athlete source/review/acceptance required; no fallback',
-          'Personalised threshold pace · athlete confirms eligible training inputs before starting; no automatic fallback',
-        )
-        .replaceAll(
-          'current_10k · approved M2.3 personalisation rule; explicit athlete source/review/acceptance required; no fallback',
-          'Personalised current 10K pace · athlete confirms eligible training inputs before starting; no automatic fallback',
-        )
-        .replaceAll(
-          'Athlete-confirmed Zone 2 — athlete input and review required',
-          'Personalised Zone 2 heart rate · athlete confirmation required',
-        );
-    readable = readable.replaceAll('M2.3', 'personalised training target');
+    final corrections = receipt.issues
+        .where((e) => !e.contains('Unresolved exercise setup'))
+        .toList();
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(24),
+        padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Athlete preview',
-              style: Theme.of(context).textTheme.headlineSmall,
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: builderWarningSurface,
+                border: Border.all(color: builderWarning),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: DefaultTextStyle.merge(
+                style: const TextStyle(color: builderWarning),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text('Coach readiness · not athlete instructions'),
+                    Text(
+                      pending
+                          ? 'Unpublished changes · not yet ready for athlete delivery'
+                          : 'Selected session · unpublished',
+                    ),
+                    readiness(revision),
+                    if ((graph['blocks'] as List).any(
+                      (b) => b['timer_config'] != null,
+                    ))
+                      const Text(
+                        'Personalised targets require separately confirmed athlete inputs and review. No automatic fallback.',
+                      ),
+                    const Text(
+                      'Full source commentary and library evidence: Advanced session tools.',
+                    ),
+                  ],
+                ),
+              ),
             ),
-            Text(
-              pending
-                  ? 'Unpublished changes · not yet ready for athlete delivery'
-                  : 'Exact session selected for this day · unpublished',
-            ),
-            readiness(revision),
-            SelectableText(
-              readable,
-              key: const ValueKey('athlete-prescription'),
-            ),
+            const SizedBox(height: 16),
+            if (corrections.isNotEmpty)
+              Text(
+                'Correct the prescription before previewing: ${corrections.map(coachError).join('\n')}',
+              )
+            else
+              StructuredPrescriptionPreview(
+                source: graph,
+                title: pending ? owner.draftTitle! : revision.title,
+                showTitle: modal,
+              ),
           ],
         ),
       ),
@@ -501,7 +525,7 @@ class _GenuineWorkspaceScreenState extends State<GenuineWorkspaceScreen> {
                   child: AnimatedBuilder(
                     animation: c,
                     builder: (_, _) => token == c.generation
-                        ? sessionPreview(r)
+                        ? sessionPreview(r, modal: true)
                         : const Padding(
                             padding: EdgeInsets.all(24),
                             child: Text(
@@ -808,7 +832,7 @@ class _GenuineWorkspaceScreenState extends State<GenuineWorkspaceScreen> {
                 )
                 .join(),
           ),
-        readiness(selectedSession),
+        if (editing) readiness(selectedSession),
         Wrap(
           spacing: 12,
           children: [
@@ -1032,25 +1056,38 @@ class _GenuineWorkspaceScreenState extends State<GenuineWorkspaceScreen> {
                 ],
                 (v) => change(() => b['block_type'] = v),
               ),
-            field(
-              b['block_type'] == 'warm_up'
-                  ? 'Warm-up instructions'
-                  : b['block_type'] == 'cool_down'
-                  ? 'Finish instructions'
-                  : 'Coaching notes',
-              b['content'],
-              (v) => change(() => b['content'] = v),
-              identity: '$key-content',
-              lines: 4,
-            ),
-            if (b['coach_notes'] != null)
+            if (b['block_type'] == 'warm_up' || b['block_type'] == 'cool_down')
               field(
-                'Additional coaching notes',
-                b['coach_notes'],
-                (v) => change(() => b['coach_notes'] = v),
-                identity: '$key-coach-notes',
+                b['block_type'] == 'warm_up'
+                    ? 'Warm-up instructions'
+                    : 'Finish instructions',
+                b['content'],
+                (v) => change(() => b['content'] = v),
+                identity: '$key-content',
                 lines: 3,
               ),
+            ExpansionTile(
+              title: const Text('Additional session guidance & source notes'),
+              children: [
+                if (b['block_type'] != 'warm_up' &&
+                    b['block_type'] != 'cool_down')
+                  field(
+                    'Section guidance',
+                    b['content'],
+                    (v) => change(() => b['content'] = v),
+                    identity: '$key-content',
+                    lines: 3,
+                  ),
+                if (b['coach_notes'] != null)
+                  field(
+                    'Additional coaching notes',
+                    b['coach_notes'],
+                    (v) => change(() => b['coach_notes'] = v),
+                    identity: '$key-coach-notes',
+                    lines: 3,
+                  ),
+              ],
+            ),
             ExpansionTile(
               title: const Text('Arrange training sections'),
               children: [
@@ -1161,14 +1198,11 @@ class _GenuineWorkspaceScreenState extends State<GenuineWorkspaceScreen> {
               '${index + 1}. ${e['display_label_override']}',
               style: Theme.of(context).textTheme.titleMedium,
             ),
-            Text(prescriptionSummary(p)),
-            if (c.catalogue.rowFor(e['variant_key'] as String)?['catalogue_row']
-                case final Map row)
-              Text('${row['equipment'] ?? ''} · ${row['setup'] ?? ''}'),
+
             if (e['exercise_id'] == null)
               const Text(
                 'Awaiting library approval',
-                style: TextStyle(color: Colors.brown),
+                style: TextStyle(color: builderWarning),
               ),
             if (e['exercise_id'] == null &&
                 c.catalogue.idFor(e['variant_key'] as String) != null)
@@ -1216,48 +1250,34 @@ class _GenuineWorkspaceScreenState extends State<GenuineWorkspaceScreen> {
                   (v) => change(() => reps['text'] = v),
                   identity: '$k-hold',
                 ),
-              field(
-                'Rest from (sec)',
-                restLow,
-                (v) => change(() => setRest(p, v, restHigh, both)),
-                identity: '$k-rest-min',
-              ),
-              field(
-                'Rest to (sec)',
-                restHigh,
-                (v) => change(() => setRest(p, restLow, v, both)),
-                identity: '$k-rest-max',
-              ),
-              choice(
-                'Reps / timed hold',
-                reps['type'] as String,
-                [
-                  ('exact', 'Reps'),
-                  ('range', 'Rep range'),
-                  ('duration', 'Timed hold'),
-                ],
-                (v) => change(
-                  () => p['reps'] = v == 'exact'
-                      ? {'type': v, 'exact_reps': 1}
-                      : v == 'range'
-                      ? {'type': v, 'min_reps': 1, 'max_reps': 1}
-                      : {'type': v, 'text': ''},
+              if (restLow == restHigh && !restRangeFields.contains(k))
+                field(
+                  'Rest (sec)',
+                  restLow,
+                  (v) => change(() => setRest(p, v, v, both)),
+                  identity: '$k-rest-exact',
+                )
+              else ...[
+                field(
+                  'Rest from (sec)',
+                  restLow,
+                  (v) => change(() => setRest(p, v, restHigh, both)),
+                  identity: '$k-rest-min',
                 ),
-              ),
-              choice(
-                'Reps in reserve (RIR)',
-                rirMode,
-                [
-                  ('absent', 'No requirement'),
-                  ('exact', 'Exact'),
-                  ('range', 'Range'),
-                  ('at_least', 'At least'),
-                ],
-                (v) => change(() => setRir(p, v, rirLow, rirHigh)),
-              ),
+                field(
+                  'Rest to (sec)',
+                  restHigh,
+                  (v) => change(() => setRest(p, restLow, v, both)),
+                  identity: '$k-rest-max',
+                ),
+              ],
               if (rirMode != 'absent')
                 field(
-                  'RIR from / exact',
+                  rirMode == 'exact'
+                      ? 'RIR'
+                      : rirMode == 'at_least'
+                      ? 'RIR at least'
+                      : 'RIR from',
                   rirLow,
                   (v) => change(
                     () =>
@@ -1280,6 +1300,42 @@ class _GenuineWorkspaceScreenState extends State<GenuineWorkspaceScreen> {
                 (v) => change(() => capture['load_label'] = v),
                 identity: '$k-load-label',
               ),
+            ExpansionTile(
+              title: const Text('Prescription options'),
+              children: [
+                choice(
+                  'Reps / timed hold',
+                  reps['type'] as String,
+                  [
+                    ('exact', 'Reps'),
+                    ('range', 'Rep range'),
+                    ('duration', 'Timed hold'),
+                  ],
+                  (v) => change(
+                    () => p['reps'] = v == 'exact'
+                        ? {'type': v, 'exact_reps': 1}
+                        : v == 'range'
+                        ? {'type': v, 'min_reps': 1, 'max_reps': 1}
+                        : {'type': v, 'text': ''},
+                  ),
+                ),
+                choice(
+                  'Reps in reserve (RIR)',
+                  rirMode,
+                  [
+                    ('absent', 'No requirement'),
+                    ('exact', 'Exact'),
+                    ('range', 'Range'),
+                    ('at_least', 'At least'),
+                  ],
+                  (v) => change(() => setRir(p, v, rirLow, rirHigh)),
+                ),
+                TextButton(
+                  onPressed: () => setState(() => restRangeFields.add(k)),
+                  child: const Text('Show rest range bounds'),
+                ),
+              ],
+            ),
             ExpansionTile(
               title: const Text('Setup, coaching notes & tempo'),
               children: [
@@ -1399,12 +1455,17 @@ class _GenuineWorkspaceScreenState extends State<GenuineWorkspaceScreen> {
         Text(
           '${runningSummary(workout)}\nPersonalised pace and heart rate use the athlete’s separately confirmed training inputs. No athlete data is entered here.',
         ),
-        field(
-          'Workout notes',
-          workout['notes'],
-          (v) => change(() => workout['notes'] = v),
-          identity: '$key-workout-notes',
-          lines: 4,
+        ExpansionTile(
+          title: const Text('Additional workout guidance'),
+          children: [
+            field(
+              'Workout notes',
+              workout['notes'],
+              (v) => change(() => workout['notes'] = v),
+              identity: '$key-workout-notes',
+              lines: 4,
+            ),
+          ],
         ),
         for (var i = 0; i < steps.length; i++)
           Builder(
@@ -1463,7 +1524,7 @@ class _GenuineWorkspaceScreenState extends State<GenuineWorkspaceScreen> {
                         ? target['category'] as String
                         : target['kind'] as String,
                     [
-                      ('none', 'Authored effort; no fixed pace/HR'),
+                      ('none', 'Coached effort; no fixed pace/HR'),
                       ('heart_rate_zone_ref', 'Personalised Zone 2 heart rate'),
                       ('threshold', 'Personalised threshold pace'),
                       ('current_10k', 'Personalised current 10K pace'),

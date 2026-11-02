@@ -1,0 +1,158 @@
+{
+  "date": "2026-11-02",
+  "base": "906d6b6dfad635e87d37a99ee61059ec07279ef5",
+  "status": "LOCAL_READABILITY_VERIFIED_MANUAL_ACCEPTANCE_PENDING",
+  "verification": {
+    "focused_rendering_colour_backup_export_and_standalone_regressions_passed": 151,
+    "safety_groups_passed": 6,
+    "focused_rendering_theme_and_coach_checks_passed": 22,
+    "analysis_before": 362,
+    "analysis_after": 362,
+    "exact_sorted_diagnostics_equal": true,
+    "new_or_changed_file_diagnostics": 0,
+    "errors": 0,
+    "screenshots_available": false,
+    "native_visual_verification": false,
+    "browser_desktop_automation": false
+  },
+  "contrast": {
+    "normal_text_requirement": 4.5,
+    "essential_boundaries_requirement": 3,
+    "all_tested_actual_theme_pairs_pass": true,
+    "pairs": [
+      {
+        "foreground": "#20291f",
+        "background": "#f4f6f0",
+        "ratio": 13.793
+      },
+      {
+        "foreground": "#20291f",
+        "background": "#ffffff",
+        "ratio": 15.017
+      },
+      {
+        "foreground": "#53604e",
+        "background": "#ffffff",
+        "ratio": 6.665
+      },
+      {
+        "foreground": "#40552b",
+        "background": "#ffffff",
+        "ratio": 8.228
+      },
+      {
+        "foreground": "#eceeea",
+        "background": "#101412",
+        "ratio": 15.904
+      },
+      {
+        "foreground": "#939c94",
+        "background": "#101412",
+        "ratio": 6.565
+      },
+      {
+        "foreground": "#704100",
+        "background": "#fff3d6",
+        "ratio": 7.788
+      },
+      {
+        "foreground": "#53604e",
+        "background": "#e4e9de",
+        "ratio": 5.398
+      },
+      {
+        "foreground": "#243318",
+        "background": "#e4ecd9",
+        "ratio": 11.077
+      },
+      {
+        "foreground": "#667260",
+        "background": "#ffffff",
+        "ratio": 5.071
+      },
+      {
+        "foreground": "#667260",
+        "background": "#f4f6f0",
+        "ratio": 4.658
+      },
+      {
+        "foreground": "#667260",
+        "background": "#e4ecd9",
+        "ratio": 4.178
+      }
+    ]
+  },
+  "artifacts": {
+    "m11_full_selected_editable_workspace.json": {
+      "bytes": 629122,
+      "sha256": "2f956252f28371e9a0fe1a3d32bc7a619cf08af31f7e3b6f19f45316a967153b",
+      "matches_original_implementation_receipt": true
+    },
+    "m11_verified_editable_workspace.json": {
+      "bytes": 560929,
+      "sha256": "6ba5d766781203d7cc992c2ba90b85672a0da7a4f0821e6a5069aa3ad2259ef9",
+      "matches_original_implementation_receipt": true
+    },
+    "m11_verified_canonical_sources.tar": {
+      "bytes": 267264,
+      "sha256": "914dee9fa00daec4a564c36cadcd42b0a566d45e41729e32c8e875e0e5075f08",
+      "matches_original_implementation_receipt": true
+    },
+    "m11_verified_all_running_sources.tar": {
+      "bytes": 615936,
+      "sha256": "84c661c6d73049b6abc61a3c8cbb066f1274442c23b511c8409f2d98d9b6a7c5",
+      "matches_original_implementation_receipt": true
+    }
+  },
+  "preview": {
+    "url": "http://127.0.0.1:8313/",
+    "http": 200,
+    "new_theme_and_structured_renderer_modules": [
+      "packages/cohort_platform/features/programme_studio/genuine_authoring/prescription_presentation.dart.lib.js",
+      "packages/cohort_platform/features/programme_studio/genuine_authoring/structured_prescription_preview.dart.lib.js",
+      "packages/cohort_platform/features/programme_studio/genuine_authoring/builder_theme.dart.lib.js"
+    ],
+    "five_pinned_assets_byte_equal": true,
+    "browser_used": false
+  },
+  "preservation": {
+    "precommit_equal": true,
+    "older_existing_checkouts": 21,
+    "older_registrations": 25,
+    "files": 57211,
+    "explicit_env_temp_files": 22,
+    "indices_heads_refs_fetch_head_checked": true,
+    "bounded_bundle_inventory": {
+      "count": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "new_worktrees": 0
+  },
+  "W1_finding": {
+    "Tuesday": {
+      "seconds": 1500,
+      "steps": 1
+    },
+    "Wednesday": {
+      "seconds": 1500,
+      "steps": 1
+    },
+    "Friday": {
+      "seconds": 1500,
+      "steps": 1
+    },
+    "source_chain_agrees": true,
+    "Friday_title_mentions_strides_without_source_stride_steps": true,
+    "specific_screenshot_runtime_state_verified": false,
+    "prescriptions_altered": false
+  },
+  "authority": {
+    "new_programme_features": false,
+    "underlying_models_formats_values_units_rules_changed": false,
+    "hosted_catalogue_migration_programme_publication_assignment_athlete_actions": false,
+    "manual_founder_acceptance": false,
+    "D8": "PENDING",
+    "Gate_A": "OPEN"
+  },
+  "next_single_point": "Lee manually checks contrast and structured presentation; record acceptance or remaining friction"
+}

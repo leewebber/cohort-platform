@@ -7,6 +7,8 @@ import 'package:cohort_platform/features/programme_studio/composition/programme_
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'package:cohort_platform/features/programme_studio/genuine_authoring/builder_theme.dart';
+
 import 'genuine_workspace_test.dart' show selectedWorkspace;
 
 Finder field(String label) => find.byWidgetPredicate(
@@ -29,6 +31,7 @@ Future<void> mount(
   addTearDown(() => tester.binding.setSurfaceSize(null));
   await tester.pumpWidget(
     MaterialApp(
+      theme: founderBuilderTheme,
       home: ProgrammeFirstScreen.sourcePolicy(
         workspace: GenuineWorkspaceScreen(
           controller: c,
@@ -87,10 +90,14 @@ void main() {
       expect(find.text('Save changes'), findsNothing);
       await tapVisible(tester, find.text('Preview as athlete'));
       final text = tester
-          .widget<SelectableText>(
-            find.byKey(const ValueKey('athlete-prescription')).last,
+          .widgetList<Text>(
+            find.descendant(
+              of: find.byKey(const ValueKey('athlete-prescription')).last,
+              matching: find.byType(Text),
+            ),
           )
-          .data!;
+          .map((t) => t.data ?? '')
+          .join('\n');
       expect(text, contains('4 ×'));
       expect(find.textContaining('Unpublished changes'), findsWidgets);
       await tapVisible(tester, find.text('Close preview'));
@@ -162,12 +169,7 @@ void main() {
       await tapVisible(tester, find.text('Week 4'));
       await tapVisible(tester, find.text('Open session').at(1));
       await tapVisible(tester, find.text('Edit session'));
-      expect(
-        find.text(
-          '4 × 5 min — threshold pace, 90 sec easy between.\nPersonalised pace and heart rate use the athlete’s separately confirmed training inputs. No athlete data is entered here.',
-        ),
-        findsOneWidget,
-      );
+      expect(find.text('Workout duration · 42:30'), findsOneWidget);
       await tester.ensureVisible(field('Session title'));
       await tester.enterText(field('Session title'), 'Threshold review');
       await tapVisible(tester, find.text('Save changes'));
@@ -178,11 +180,15 @@ void main() {
       );
       await tapVisible(tester, find.text('Preview as athlete'));
       final readable = tester
-          .widget<SelectableText>(
-            find.byKey(const ValueKey('athlete-prescription')).last,
+          .widgetList<Text>(
+            find.descendant(
+              of: find.byKey(const ValueKey('athlete-prescription')).last,
+              matching: find.byType(Text),
+            ),
           )
-          .data!;
-      expect(readable, contains('42:30'));
+          .map((t) => t.data ?? '')
+          .join('\n');
+      expect(readable, contains('Total 42:30'));
       expect(readable, contains('Personalised threshold pace'));
       expect(readable, isNot(contains('M2.3')));
       expect(readable, isNot(contains('alpha_quality_pace_v1')));
@@ -346,4 +352,44 @@ void main() {
     expect(c.hasDrafts, isFalse);
     expect(tester.takeException(), isNull);
   });
+  testWidgets(
+    'rest bounds and alternate modes disclose without changing draft values',
+    (tester) async {
+      final c = selectedWorkspace();
+      addTearDown(c.dispose);
+      await mount(tester, c);
+      await tapVisible(tester, find.text('Open session').first);
+      await tapVisible(tester, find.text('Edit session'));
+      final saved = c.save();
+      expect(field('Rest (sec)'), findsWidgets);
+      await tapVisible(tester, find.text('Prescription options').first);
+      await tapVisible(tester, find.text('Show rest range bounds').first);
+      expect(field('Rest from (sec)'), findsWidgets);
+      expect(c.save(), saved);
+      expect(tester.takeException(), isNull);
+    },
+  );
+  testWidgets(
+    'modal and inline use the same typed renderer with a visible close control at narrow width',
+    (tester) async {
+      final c = selectedWorkspace();
+      addTearDown(c.dispose);
+      await mount(tester, c);
+      await tapVisible(tester, find.text('Week 4'));
+      await tapVisible(tester, find.text('Open session').at(1));
+      await tester.binding.setSurfaceSize(const Size(390, 850));
+      await tester.pumpAndSettle();
+      await tapVisible(tester, find.text('Preview as athlete'));
+      expect(
+        find.text('Coach readiness · not athlete instructions'),
+        findsWidgets,
+      );
+      expect(find.textContaining('3 recoveries'), findsWidgets);
+      final close = find.text('Close preview');
+      expect(tester.getBottomRight(close).dy, lessThanOrEqualTo(850));
+      expect(tester.getTopLeft(close).dy, greaterThanOrEqualTo(0));
+      await tapVisible(tester, close);
+      expect(tester.takeException(), isNull);
+    },
+  );
 }
