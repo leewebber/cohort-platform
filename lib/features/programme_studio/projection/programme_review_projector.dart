@@ -363,6 +363,28 @@ class ProgrammeReviewProjector {
       return null;
     }
     try {
+      if (bundle.localNativeGraphSha256 != null) {
+        if (bundle.publicationJson != null ||
+            bundle.spec.classification !=
+                ProgrammeReviewClassification.internalPrivate) {
+          throw const FormatException(
+            'Local native draft inspection cannot supply publication authority.',
+          );
+        }
+        findings.add(
+          const ProgrammeReviewFinding(
+            code: 'local_native_draft_not_publication',
+            severity: ProgrammeReviewFindingSeverity.info,
+            message:
+                'Exact local native source inspection. No content approval, historical freeze or hosted publication is established.',
+          ),
+        );
+        return const ReviewedProtocolGraphArtifact().inspect(
+          compileResult: compile,
+          source: graphSource,
+          expectedSha256: bundle.localNativeGraphSha256!,
+        );
+      }
       final publication = jsonDecode(bundle.publicationJson ?? '');
       if (publication is! Map) {
         throw const FormatException('Publication artifact is not an object.');
@@ -605,6 +627,22 @@ class ProgrammeReviewProjector {
       blocks = [_reviewedRunningBlock(runningProjection.block)];
       resolved = true;
     }
+    if (!resolved && reviewedGraph != null) {
+      final native = reviewedGraph.graphs
+          .where(
+            (g) =>
+                g['protocol_id'] == ref.protocolId &&
+                g['revision_number'] == ref.revisionNumber,
+          )
+          .toList();
+      if (native.length == 1) {
+        blocks = [
+          for (final raw in native.single['blocks'] as List)
+            _nativeReviewBlock(Map<String, Object?>.from(raw as Map)),
+        ];
+        resolved = blocks.isNotEmpty;
+      }
+    }
     if (!resolved) {
       sessionFindings.add(
         ProgrammeReviewFinding(
@@ -699,6 +737,32 @@ class ProgrammeReviewProjector {
       coachNotes: block['coach_notes']?.toString(),
     );
   }
+
+  ProgrammeReviewBlock _nativeReviewBlock(Map<String, Object?> block) =>
+      ProgrammeReviewBlock(
+        position: block['position'] as int,
+        title: block['title'] as String,
+        blockType: block['block_type'] as String,
+        sourceIdentity: 'exact_native_protocol_graph',
+        content: block['content'] as String?,
+        workoutFormat: block['workout_format'] as String?,
+        timerConfiguration: block['timer_config'] == null
+            ? null
+            : jsonEncode(block['timer_config']),
+        coachNotes: block['coach_notes'] as String?,
+        movements: [
+          for (final raw in block['exercises'] as List? ?? [])
+            ProgrammeReviewMovement(
+              position: raw['position'] as int,
+              exerciseId: raw['exercise_id'] as String?,
+              name:
+                  raw['display_label_override'] as String? ??
+                  raw['exercise_id'] as String? ??
+                  'Unresolved exercise setup',
+              rawPrescription: jsonEncode(raw['prescription']),
+            ),
+        ],
+      );
 
   ProgrammeReviewStructuredRunning _structuredRunning({
     required PlanPackageAuthoredRunningV1 running,

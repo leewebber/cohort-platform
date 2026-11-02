@@ -32,6 +32,18 @@ String sessionPrescription(D2CompiledSession s) => s.protocol.blocks
     .join('\n');
 
 class ProgrammeFirstScreen extends StatefulWidget {
+  /// The new policy supplies its view without making older entries import it.
+  const ProgrammeFirstScreen.sourcePolicy({
+    super.key,
+    required Widget workspace,
+  }) : sourcePolicyWorkspace = workspace,
+       controller = null,
+       advanced = _emptyAdvanced,
+       downloadSources = downloadSourceBundle,
+       downloadWorkspace = downloadEditableWorkspace,
+       chooseWorkspace = chooseEditableWorkspace,
+       chooseSources = chooseCanonicalSources;
+  static Widget _emptyAdvanced() => const SizedBox.shrink();
   const ProgrammeFirstScreen({
     super.key,
     required this.controller,
@@ -40,8 +52,9 @@ class ProgrammeFirstScreen extends StatefulWidget {
     this.downloadWorkspace = downloadEditableWorkspace,
     this.chooseWorkspace = chooseEditableWorkspace,
     this.chooseSources = chooseCanonicalSources,
-  });
-  final SyntheticCompositionController controller;
+  }) : sourcePolicyWorkspace = null;
+  final Widget? sourcePolicyWorkspace;
+  final SyntheticCompositionController? controller;
   final void Function(String) downloadWorkspace;
   final Future<String?> Function() chooseWorkspace;
   final Future<Uint8List?> Function() chooseSources;
@@ -52,7 +65,7 @@ class ProgrammeFirstScreen extends StatefulWidget {
 }
 
 class _ProgrammeFirstScreenState extends State<ProgrammeFirstScreen> {
-  SyntheticCompositionController get c => widget.controller;
+  SyntheticCompositionController get c => widget.controller!;
   bool sessions = false, everReviewed = false, openedExport = false;
   String? message;
   bool transferringWorkspace = false;
@@ -103,7 +116,10 @@ class _ProgrammeFirstScreenState extends State<ProgrammeFirstScreen> {
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
+  Widget build(BuildContext context) =>
+      widget.sourcePolicyWorkspace ?? _synthetic(context);
+
+  Widget _synthetic(BuildContext context) => Scaffold(
     appBar: AppBar(title: const Text('Programme Studio · local workspace')),
     body: !c.initialized
         ? const Center(child: Text('Opening example programme…'))

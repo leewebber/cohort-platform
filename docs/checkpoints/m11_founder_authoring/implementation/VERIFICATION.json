@@ -1,0 +1,106 @@
+{
+  "date": "2026-11-02",
+  "timezone": "Asia/Makassar",
+  "base": "12251df7414dfb7d41d3f56d8b35c177515f15fe",
+  "status": "LOCAL_IMPLEMENTATION_VERIFIED_MANUAL_FOUNDER_ACCEPTANCE_AND_GENUINE_ROWS_PENDING",
+  "coverage": {
+    "days": 70,
+    "strength_sessions": 20,
+    "running_sessions": 40,
+    "rest_days": 10,
+    "working_exercise_occurrences": 105,
+    "trusted_legacy_occurrences": 77,
+    "unresolved_occurrences": 28,
+    "complete_genuine_strength_admitted": 0,
+    "D8": "PENDING",
+    "Gate_A": "OPEN"
+  },
+  "tests": {
+    "affected_studio_private_graph_strength_running": {
+      "passed": 641,
+      "command": "flutter test --no-pub test/programme_studio test/programmes/private_protocol_graph_builder_test.dart test/models/strength_exercise_prescription_test.dart test/running_workout"
+    },
+    "final_native_editable_archive": {
+      "passed": 94
+    },
+    "final_source_policy_screen_route": {
+      "passed": 16
+    },
+    "catalogue_operator": {
+      "passed": 10,
+      "real_disposable_local_postgres": true,
+      "hosted_retention": false
+    },
+    "safety_groups": {
+      "passed": 6,
+      "failed": 0
+    }
+  },
+  "analysis": {
+    "before": 362,
+    "after": 362,
+    "errors": 0,
+    "new_diagnostic_identities": 0,
+    "changed_dart_diagnostics": 0,
+    "exact_sorted_diagnostic_rows_equal": true,
+    "suppressions_or_configuration_change": false
+  },
+  "web_build": {
+    "debug": "PASS",
+    "browser_or_desktop_control": false,
+    "wasm_claimed": false,
+    "dependency_dry_run_warning": "flutter_timezone 4.1.1 invalid_runtime_check_with_js_interop_types"
+  },
+  "artifact_readback": {
+    "status": "PASS_INDEPENDENT_ON_DISK_ARTIFACT_READBACK",
+    "full_draft_days": 70,
+    "working_prescriptions_unchanged": 105,
+    "unresolved_occurrences": 28,
+    "all_original_running_workouts_unchanged": 40,
+    "exported_running_graphs": 40,
+    "threshold_seconds": 2550,
+    "final_timed_seconds": 1980,
+    "final_distance_metres": 10000,
+    "artifacts": {
+      "m11_full_selected_editable_workspace.json": {
+        "bytes": 629122,
+        "sha256": "2f956252f28371e9a0fe1a3d32bc7a619cf08af31f7e3b6f19f45316a967153b"
+      },
+      "m11_verified_editable_workspace.json": {
+        "bytes": 560929,
+        "sha256": "6ba5d766781203d7cc992c2ba90b85672a0da7a4f0821e6a5069aa3ad2259ef9"
+      },
+      "m11_verified_canonical_sources.tar": {
+        "bytes": 267264,
+        "sha256": "914dee9fa00daec4a564c36cadcd42b0a566d45e41729e32c8e875e0e5075f08"
+      },
+      "m11_verified_all_running_sources.tar": {
+        "bytes": 615936,
+        "sha256": "84c661c6d73049b6abc61a3c8cbb066f1274442c23b511c8409f2d98d9b6a7c5"
+      }
+    }
+  },
+  "preservation": {
+    "precommit_measured_interval_equal": true,
+    "existing_older_checkouts": 21,
+    "older_registrations": 25,
+    "tracked_untracked_files": 57211,
+    "explicit_ignored_env_temp_files": 22,
+    "raw_indices_refs_fetch_head_checked": true,
+    "full_task_start_byte_inventory_available": false,
+    "new_managed_worktrees_created": 1,
+    "new_worktree_process_exception": "Created before noticing controlling-plan prohibition; no further lifecycle or cleanup action",
+    "bounded_temporary_bundle_count": 0,
+    "post_publication_receipt": "Retained separately after the final Git operation"
+  },
+  "authority": {
+    "hosted_cohort_contacts": 0,
+    "hosted_writes": 0,
+    "schema_migrations_added": 0,
+    "credentials_provisioned": 0,
+    "real_catalogue_ids_assigned": 0,
+    "programme_publication_or_athlete_mutation": false,
+    "founder_usability_acceptance": false
+  },
+  "next_single_point": "Separately provision/apply/verify-retain the exact three-record catalogue operation with actual operator role, audit and independently trusted receipt pin"
+}

@@ -10,6 +10,12 @@ import '../../protocol_authoring/synthetic_strength_session_compiler.dart';
 /// Derived files only. Receipt ownership/freshness is checked by the live caller;
 /// neither this archive nor its index grants publication or historical restore.
 class CanonicalSourceBundle {
+  /// Versioned native inventory is prepared and validated by its source policy.
+  /// The common transport writer owns USTAR bytes for both source profiles.
+  CanonicalSourceBundle.native(Map<String, String> verifiedFiles) {
+    files = Map.unmodifiable(verifiedFiles);
+    _archive = _tar(files);
+  }
   CanonicalSourceBundle.fromReview(CompositionReviewReceipt receipt) {
     final checked = reviewComposition(
       receipt.programmeSource,

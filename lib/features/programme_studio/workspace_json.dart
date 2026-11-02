@@ -35,10 +35,14 @@ List<dynamic> workspaceList(Object? v, String path, {int max = 128}) {
 }
 
 /// Bound nesting before jsonDecode, then reject even escaped duplicate keys.
-Map<String, dynamic> readWorkspaceJson(String text) {
-  if (text.length > workspaceMaxBytes ||
-      utf8.encode(text).length > workspaceMaxBytes) {
-    workspaceInvalid('File exceeds 2 MiB.');
+Map<String, dynamic> readWorkspaceJson(
+  String text, {
+  int maxBytes = workspaceMaxBytes,
+  int maxTextLength = 262144,
+  int maxNodes = 30000,
+}) {
+  if (text.length > maxBytes || utf8.encode(text).length > maxBytes) {
+    workspaceInvalid('File exceeds ${maxBytes ~/ (1024 * 1024)} MiB.');
   }
   var depth = 0, quoted = false, escaped = false;
   for (final c in text.split('')) {
@@ -61,8 +65,8 @@ Map<String, dynamic> readWorkspaceJson(String text) {
   final decoded = jsonDecode(text);
   var nodes = 0;
   void bound(Object? value) {
-    if (++nodes > 30000) workspaceInvalid('Too many input values.');
-    if (value is String && value.length > 262144) {
+    if (++nodes > maxNodes) workspaceInvalid('Too many input values.');
+    if (value is String && value.length > maxTextLength) {
       workspaceInvalid('Text field too large.');
     }
     if (value is num && !value.isFinite) workspaceInvalid('Non-finite number.');

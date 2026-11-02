@@ -1,5 +1,21 @@
 # Current repository checkpoint
 
+> **M1.1 founder-authoring implementation — local, 2026-11-02:**
+> [Implementation handoff](./m11_founder_authoring/implementation/HANDOFF.md) extends
+> existing Studio source policy/controller/review/file transport with genuine native
+> strength/running forms, one-to-ten-week arrangement/reuse, editable v4 and source
+> index v2. All 70 days/105 strength occurrences remain represented; 40 runs retain
+> exact native bodies (W4 Tuesday 42:30; final 10K plus 33 timed minutes). Three
+> genuine setup records still block 28 occurrences and all 20 complete strength
+> sessions. [Offline operation](./m11_catalogue_operation/HANDOFF.md) implements and
+> locally proves bounded prepare/apply/retain; no hosted provisioning/apply/retention
+> or publication occurred. 641 affected checks, final focused checks, ten local
+> operator checks and six safety groups pass; analysis comparison and artifact/Git
+> receipts are linked in the handoff. Manual founder acceptance remains pending.
+> D8 and programme publication/access stay separate. **Gate A OPEN. Next single
+> point: separately provision/run/retain the reviewed three-record catalogue operation.**
+
+
 > **M1.1 founder-authoring allocation — ready, 2026-11-01:**
 > [Handoff](./m11_founder_authoring/HANDOFF.md) and
 > [allocation](./m11_founder_authoring/ALLOCATION.md) bound genuine authoring in the

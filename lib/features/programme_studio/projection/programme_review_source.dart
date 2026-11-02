@@ -31,6 +31,7 @@ class ProgrammeReviewSourceBundle {
     this.founderYaml,
     this.publicationJson,
     this.reviewedProtocolGraphJson,
+    this.localNativeGraphSha256,
     this.executableProtocolSql = const [],
     this.correctionSql = const [],
   });
@@ -40,6 +41,10 @@ class ProgrammeReviewSourceBundle {
   final String? founderYaml;
   final String? publicationJson;
   final String? reviewedProtocolGraphJson;
+
+  /// Explicit local draft inspection, never publication attestation. Published
+  /// source bundles continue to require their original publication artifacts.
+  final String? localNativeGraphSha256;
   final List<String> executableProtocolSql;
   final List<ProgrammeSqlSource> correctionSql;
 }

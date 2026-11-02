@@ -25,7 +25,7 @@ class PreparedProgrammeSelection {
   final int _revision;
   final String _source;
   final Map<String, dynamic> _tree;
-  String get source => const PlanPackageV1YamlWriter().writeDraft(_tree);
+  String get source => _owner.writeDraft(_tree);
 }
 
 /// Transient editing of an allowlisted synthetic canonical source. Every edit
@@ -38,11 +38,15 @@ class ProgrammeAuthoringController extends ChangeNotifier {
     this.source,
     this.projector = const ProgrammeReviewProjector(),
   }) {
-    _trusted = _clone(
-      _compiler
-          .compile(jsonEncode(source?.trustedTree ?? fixture.sourceTree))
-          .canonicalJson!,
+    final baseline = _compiler.compile(
+      jsonEncode(source?.trustedTree ?? fixture.sourceTree),
     );
+    if (!baseline.isValid) {
+      throw FormatException(
+        baseline.issues.map((i) => '${i.path}: ${i.message}').join('\n'),
+      );
+    }
+    _trusted = _clone(baseline.canonicalJson!);
     loadSource(source?.originalSource ?? fixture.source);
   }
 
@@ -54,6 +58,10 @@ class ProgrammeAuthoringController extends ChangeNotifier {
   final ProgrammeReviewProjector projector;
   static const _compiler = PlanPackageCompiler();
   static const _writer = PlanPackageV1YamlWriter();
+  String writeDraft(Map<String, dynamic> tree) =>
+      source is NativeProgrammeAuthoringSource
+      ? (source! as NativeProgrammeAuthoringSource).writeDraft(tree)
+      : _writer.writeDraft(tree);
   static const programmeFields = {
     'name',
     'description',
@@ -85,7 +93,7 @@ class ProgrammeAuthoringController extends ChangeNotifier {
   List<PlanPackageValidationIssue> get issues => List.unmodifiable(_issues);
   String get originalSource => _originalSource;
   String get draftSource =>
-      _tree == null ? '' : _retainedDraftSource ?? _writer.writeDraft(_tree!);
+      _tree == null ? '' : _retainedDraftSource ?? writeDraft(_tree!);
   String? get currentHash => isCurrent ? _validated!.contentHashSha256 : null;
   ProgrammeReviewCatalog? get currentReview => isCurrent ? _review : null;
   String? get exportYaml => isCurrent ? _export : null;
@@ -145,7 +153,8 @@ class ProgrammeAuthoringController extends ChangeNotifier {
       notifyListeners();
       return false;
     }
-    if (compiled.manifest!.packageSchemaVersion != 1) {
+    if (compiled.manifest!.packageSchemaVersion !=
+        (this.source is NativeProgrammeAuthoringSource ? 2 : 1)) {
       _tree = null;
       _issues = [
         _issue(
@@ -182,15 +191,15 @@ class ProgrammeAuthoringController extends ChangeNotifier {
     guardWorkspaceYaml(text);
     final decoded = jsonDecode(jsonEncode(loadYaml(text)));
     if (decoded is! Map<String, dynamic> ||
-        (!retainSourceFormatting && _writer.writeDraft(decoded) != text) ||
+        (!retainSourceFormatting && writeDraft(decoded) != text) ||
         _scopeIssues(decoded).isNotEmpty ||
         (legacySchedule &&
             !_equal(_legacySkeleton(decoded), _legacySkeleton(_trusted)))) {
       workspaceInvalid('Unsupported programme source/template.');
     }
-    if (retainSourceFormatting && _writer.writeDraft(decoded) != text) {
+    if (retainSourceFormatting && writeDraft(decoded) != text) {
       final original = _compiler.compile(text);
-      final normalized = _compiler.compile(_writer.writeDraft(decoded));
+      final normalized = _compiler.compile(writeDraft(decoded));
       if (!original.isValid ||
           !normalized.isValid ||
           original.canonicalJson != normalized.canonicalJson) {
@@ -403,7 +412,10 @@ class ProgrammeAuthoringController extends ChangeNotifier {
               bundles: [source?.bundle(yaml) ?? fixture.bundle(yaml)],
             ),
           );
-          final programme = projected.developerFixtures.single;
+          final programme = [
+            ...projected.programmes,
+            ...projected.developerFixtures,
+          ].single;
           for (final session
               in programme.weeks
                   .expand((w) => w.days)
@@ -495,6 +507,7 @@ class ProgrammeAuthoringController extends ChangeNotifier {
       }
     }
     final trustedSlots = _trustedSlots;
+    if (source is NativeProgrammeAuthoringSource) return result;
     for (final week in candidate['weeks'] as List) {
       for (final day in week['days'] as List) {
         for (final raw in day['slots'] as List) {
@@ -621,7 +634,7 @@ class ProgrammeAuthoringController extends ChangeNotifier {
     (candidate['programme'] as Map)['duration_weeks'] = 4;
     (candidate['programme'] as Map)['sessions_per_week'] = 2;
     candidate['sessions'] = references;
-    final check = _compiler.compile(_writer.writeDraft(candidate));
+    final check = _compiler.compile(writeDraft(candidate));
     final scope = _scopeIssues(candidate);
     if (!check.isValid || scope.isNotEmpty) {
       throw FormatException(
@@ -632,6 +645,10 @@ class ProgrammeAuthoringController extends ChangeNotifier {
   }
 
   void _checkScheduleShape(Map<String, dynamic> candidate) {
+    if (source is NativeProgrammeAuthoringSource) {
+      (source! as NativeProgrammeAuthoringSource).checkScheduleShape(candidate);
+      return;
+    }
     final weeks = candidate['weeks'];
     if (weeks is! List ||
         !{1, 4}.contains(weeks.length) ||
@@ -876,7 +893,7 @@ class ProgrammeAuthoringController extends ChangeNotifier {
     }
     targets.single['session_key'] = sessionKey;
     candidate['sessions'] = _clone(jsonEncode({'rows': references}))['rows'];
-    final check = _compiler.compile(_writer.writeDraft(candidate));
+    final check = _compiler.compile(writeDraft(candidate));
     final scope = _scopeIssues(candidate);
     if (!check.isValid || scope.isNotEmpty) {
       throw FormatException(
@@ -913,6 +930,25 @@ class ProgrammeAuthoringController extends ChangeNotifier {
     }
     _tree!['sessions'] = jsonDecode(jsonEncode(source!.sessionReferences));
   });
+
+  /// Common source-first arrangement transaction. Native policies supply the
+  /// bounded shape; locked contracts/references and canonical source stay here.
+  void editNativeArrangement(void Function(Map<String, dynamic>) change) {
+    if (source is! NativeProgrammeAuthoringSource) {
+      throw const FormatException(
+        'This source has fixed arrangement controls.',
+      );
+    }
+    _edit(() {
+      final candidate = tree!;
+      change(candidate);
+      final issues = _scopeIssues(candidate);
+      if (issues.isNotEmpty) {
+        throw FormatException(issues.map((e) => e.message).join('\n'));
+      }
+      _tree = candidate;
+    });
+  }
 
   void _edit(VoidCallback mutation) {
     final before = tree;

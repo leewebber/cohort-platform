@@ -16,7 +16,10 @@ Never _refuse(String message) =>
 /// Strict in-memory subset of the existing export container. Never extracts or
 /// follows paths. PAX/GNU/compressed archives, links and directory entries are
 /// intentionally unsupported; re-download the uncompressed Studio TAR instead.
-Map<String, String> readCanonicalArchive(Uint8List input) {
+Map<String, String> readCanonicalArchive(
+  Uint8List input, {
+  bool nativeGraphs = false,
+}) {
   if (input.length > canonicalArchiveMaxBytes ||
       input.length < 1024 ||
       input.length % 512 != 0) {
@@ -93,7 +96,17 @@ Map<String, String> readCanonicalArchive(Uint8List input) {
         }.contains(path) &&
         !RegExp(
           r'^sessions/session-[ab]-v[1-9][0-9]{0,6}\.founder\.yaml$',
-        ).hasMatch(path)) {
+        ).hasMatch(path) &&
+        !(nativeGraphs &&
+            ({
+                  'programme.canonical.json',
+                  'protocol-graphs.json',
+                  'catalogue-evidence.json',
+                  'origin-inventory.json',
+                  'prescription-review.txt',
+                  'validation.json',
+                }.contains(path) ||
+                RegExp(r'^native-graphs/graph-\d{4}\.json$').hasMatch(path)))) {
       _refuse(
         'Unsupported or unsafe archive path "$path". Use the complete Studio file set.',
       );

@@ -2,6 +2,7 @@ import 'package:founder_importer/features/founder_programme_import/founder_progr
 
 import '../../../models/strength_exercise_prescription.dart';
 import '../../../models/strength_prescription_formatter.dart';
+import '../../../models/authored_int_range.dart';
 import '../domain/programme_review_models.dart';
 import '../workspace_json.dart';
 
@@ -159,6 +160,82 @@ class MovementPrescriptionReview {
     scalar('distance_m', 'Distance: ', suffix: ' m');
     scalar('coach_cue', 'Cue: ', quote: true);
     scalar('notes', 'Prescription notes: ', quote: true);
+    for (final key in [
+      'rest_seconds_range',
+      'rest_after_group_seconds_range',
+      'rir_range',
+    ]) {
+      if (!fields.containsKey(key)) continue;
+      handled.add(key);
+      try {
+        final range = AuthoredIntRange.fromJson(fields[key]);
+        if (!range.isValid) {
+          throw const FormatException('Invalid authored range.');
+        }
+        lines.add(
+          '${key == 'rir_range'
+              ? 'RIR'
+              : key == 'rest_seconds_range'
+              ? 'Rest seconds'
+              : 'Rest after both sides / group seconds'}: ${range.min}–${range.max}',
+        );
+      } catch (_) {
+        limitations.add('Correct the authored $key range.');
+      }
+    }
+    scalar('hold_seconds', 'Extended hold: ', suffix: ' seconds');
+    if (fields.containsKey('performance_capture')) {
+      handled.add('performance_capture');
+      final capture = fields['performance_capture'];
+      if (capture is! Map ||
+          !capture.keys.every(
+            {'load_unit', 'load_label', 'duration_optional', 'rpe'}.contains,
+          )) {
+        limitations.add('Unknown performance-capture fields.');
+      } else {
+        if (capture['load_label'] != null) {
+          lines.add('Load logging: ${capture['load_label']}');
+        }
+        if (capture['load_unit'] != null) {
+          lines.add('Load unit: ${capture['load_unit']}');
+        }
+        if (capture['rpe'] == true) {
+          lines.add('Record actual RPE separately from RIR.');
+        }
+        if (capture['duration_optional'] == true) {
+          lines.add('Actual duration capture is optional.');
+        }
+      }
+    }
+    if (fields.containsKey('authored_details')) {
+      handled.add('authored_details');
+      final details = fields['authored_details'];
+      const known = {
+        'source_occurrence_id',
+        'source_repetitions_or_duration',
+        'source_rir',
+        'source_tempo_reference',
+        'source_rest_seconds',
+        'selection',
+        'variant_key',
+        'source_dose_status',
+        'planned_load_increase',
+        'rest_location',
+      };
+      if (details is! Map || !details.keys.every(known.contains)) {
+        limitations.add('Unknown authored prescription detail.');
+      } else {
+        if (details['source_rir'] != null) {
+          lines.add('Authored RIR: ${details['source_rir']}');
+        }
+        if (details['rest_location'] != null) {
+          lines.add('Rest location: ${details['rest_location']}');
+        }
+        if (details['planned_load_increase'] == false) {
+          lines.add('No planned load increase.');
+        }
+      }
+    }
     if (movement.notes != null &&
         movement.notes != fields['notes'] &&
         movement.notes != fields['coach_cue']) {

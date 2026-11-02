@@ -15,3 +15,11 @@ abstract interface class ProgrammeAuthoringSource {
   );
   ProgrammeReviewSourceBundle bundle(String exactYaml);
 }
+
+/// Optional policy for native graph sources. Fixed D1/D2 policies retain their
+/// original writer, supported week shapes and immutable source skeleton.
+abstract interface class NativeProgrammeAuthoringSource
+    implements ProgrammeAuthoringSource {
+  String writeDraft(Map<String, dynamic> tree);
+  void checkScheduleShape(Map<String, dynamic> tree);
+}

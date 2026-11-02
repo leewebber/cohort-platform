@@ -28,6 +28,8 @@ void main() {
     ).listSync(recursive: true).whereType<File>()) {
       if (!f.path.endsWith('.dart') ||
           f.path.contains('/programme_studio/composition/') ||
+          f.path.contains('/programme_studio/genuine_authoring/') ||
+          f.path.endsWith('main_programme_studio_founder_preview.dart') ||
           f.path.endsWith('main_programme_studio_composition_preview.dart')) {
         continue;
       }
@@ -40,6 +42,17 @@ void main() {
       }
     }
   });
+  test(
+    'older synthetic composition entry cannot import the genuine native policy',
+    () {
+      expect(
+        traversal
+            .reachable('lib/main_programme_studio_composition_preview.dart')
+            .where((p) => p.contains('/genuine_authoring/')),
+        isEmpty,
+      );
+    },
+  );
   test(
     'dedicated graph includes reused forms, existing compiler/Studio and no hosted or persistence services',
     () {

@@ -1,4 +1,5 @@
 import 'workspace_session_draft.dart';
+import '../local_revision_lifecycle.dart';
 import 'founder_strength_source_guard.dart';
 import '../workspace_json.dart';
 import '../../session_revision/models/session_revision_usage_models.dart';
@@ -36,13 +37,16 @@ class SyntheticSessionRevisionCatalogue {
     _frozen[1] = D2LocalRevision._(initial);
   }
   SyntheticSessionRevisionCatalogue.emptyRoot()
-    : lineage = SyntheticStrengthLineage.b,
-      _highestReserved = 0;
+    : lineage = SyntheticStrengthLineage.b {
+    _highestReserved = 0;
+  }
   final SyntheticStrengthLineage lineage;
   final Map<int, D2LocalRevision> _frozen = {};
-  final Map<int, int> _reservations = {};
-  final Map<int, int> _parents = {};
-  int _highestReserved = 1;
+  final _numbers = LocalRevisionNumbers();
+  Map<int, int> get _reservations => _numbers.reservations;
+  Map<int, int> get _parents => _numbers.parents;
+  int get _highestReserved => _numbers.highWater;
+  set _highestReserved(int value) => _numbers.highWater = value;
   int _sourceImportHighWater = 0;
   final Set<int> _importedSnapshots = {};
   bool get hasImportedSnapshots => _importedSnapshots.isNotEmpty;

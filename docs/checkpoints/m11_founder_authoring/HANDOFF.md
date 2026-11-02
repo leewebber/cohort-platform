@@ -1,5 +1,11 @@
 # M1.1 — founder-authoring allocation handoff
 
+> 2026-11-02 continuation: [local implementation handoff](implementation/HANDOFF.md),
+> [manual founder walkthrough](implementation/FOUNDER_WALKTHROUGH.md) and
+> [offline catalogue operation](../m11_catalogue_operation/HANDOFF.md). The dated
+> allocation-only status below is historical. Manual acceptance, genuine catalogue
+> retention, D8 and programme publication/Gate A closure remain open.
+
 2026-11-01 (Asia/Makassar). **ALLOCATION_READY; IMPLEMENTATION_NOT_STARTED;
 CATALOGUE_CONNECTION_UNPROVISIONED; GATE_A_OPEN.**
 
