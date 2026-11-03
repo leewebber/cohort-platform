@@ -6,6 +6,12 @@ This plan controls delivery priorities. It preserves technical authority contrac
 it does not grant implementation, content, hosted, account or release authority.
 [M0 findings and critical path](../checkpoints/m0_alpha_baseline/HANDOFF.md).
 
+> **Running selection applied, 2026-11-03:** all forty performance prescriptions,
+> exact Friday strides and final 10K +20 timed minutes now form the sole active seed.
+> [Fidelity receipt](../checkpoints/m11_selected_performance_running/HANDOFF.md).
+> Strength/evidence remain unchanged; founder usability, full D8, catalogue retention
+> and Gate A remain open. The next manual usability point below remains current.
+
 ## Current single point — M1.1 coach-facing founder authoring (2026-11-02)
 
 The bounded native founder workspace and offline three-record operation package are

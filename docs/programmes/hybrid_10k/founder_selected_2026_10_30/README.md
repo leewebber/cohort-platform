@@ -1,3 +1,5 @@
+> **ARCHIVED / SUPERSEDED — not an active running source.** See [the sole active source](../performance_selected_2026_11_03/README.md). Original data remains for provenance and compatibility.
+
 # Hybrid 10K — clarified strength doses; D8 review pending
 
 Read **[TEN_WEEK_REVIEW.md](TEN_WEEK_REVIEW.md)** for the one self-contained

@@ -16,9 +16,10 @@ import '../local_revision_lifecycle.dart';
 import '../workspace_json.dart';
 import 'native_session_source.dart';
 import 'catalogue_operation_receipt.dart';
+import 'selected_source_profiles.dart';
+export 'selected_source_profiles.dart'
+    show hybridSourceDirectory, archivedHybridSourceDirectory;
 
-const hybridSourceDirectory =
-    'docs/programmes/hybrid_10k/founder_selected_2026_10_30';
 const genuineWorkspaceProfile = 'hybrid10k_native_v2_legacy_rows_v1';
 
 class NativeRevision {
@@ -250,6 +251,10 @@ class GenuineWorkspace extends ChangeNotifier {
   int _programmeRevision = 0;
   bool _disposed = false;
   String? _savedText;
+  List<Map<String, String>> _trustedBootstrapSources = const [];
+  bool get isArchivedRunningSource =>
+      origins.keys.any((k) => k.startsWith('$archivedHybridSourceDirectory/'));
+
   List<NativeSessionReceipt>? _review;
   String? _reviewFingerprint;
   bool get hasDrafts => owners.values.any((o) => o.draft != null);
@@ -308,38 +313,29 @@ class GenuineWorkspace extends ChangeNotifier {
 
   static Future<GenuineWorkspace> load({AssetBundle? assets}) async {
     final bundle = assets ?? rootBundle;
-    final names = [
-      'SOURCE.json',
-      'SCHEDULE_CANDIDATE.json',
-      'STRENGTH_REVIEW_GRAPHS.json',
-      'RUNNING_BODIES.json',
-      'IDENTITY_INTAKE.json',
-    ];
-    final sources = await Future.wait(
-      names.map((n) => bundle.loadString('$hybridSourceDirectory/$n')),
+    final sources = <Map<String, String>>[];
+    for (final directory in [
+      hybridSourceDirectory,
+      archivedHybridSourceDirectory,
+    ]) {
+      final values = await Future.wait(
+        selectedSourceFiles.map((n) => bundle.loadString('$directory/$n')),
+      );
+      sources.add(Map.fromIterables(selectedSourceFiles, values));
+    }
+    return fromSelectedSources(
+      sources.first,
+      historicalSources: sources.skip(1).toList(),
     );
-    return fromSelectedSources(Map.fromIterables(names, sources));
   }
 
-  static GenuineWorkspace fromSelectedSources(Map<String, String> sources) {
-    // Source and exact row evidence must be repository-pinned, never a file's
-    // self-asserted genuine profile. Additional rows use a separate receipt gate.
-    const pins = {
-      'SOURCE.json':
-          'f12b5df97f0a9dc813c9610021ee82233414d2e2b1e6187dd0ae09745e3ecdf5',
-      'SCHEDULE_CANDIDATE.json':
-          '4276d149c61e9d5c476593da9360821a2bc5fe8b9bad896b7346f0e25fd4f02c',
-      'STRENGTH_REVIEW_GRAPHS.json':
-          '399fcdcf618ee85d474e973d0a53a3a950f052740d7b539056df95ed1517342e',
-      'RUNNING_BODIES.json':
-          '5d36176a57d8b610799cd72bf8be452bbf9a68fa7396ce4bf41877f83959491b',
-      'IDENTITY_INTAKE.json':
-          '5372a05dda6c2a4850794b94bb3c6beed654cbc55a2fc972ea1e8ab1c8f68652',
-    };
-    for (final pin in pins.entries) {
-      if (nativeDigest(sources[pin.key]!) != pin.value) {
-        throw const FormatException('Selected source bytes changed.');
-      }
+  static GenuineWorkspace fromSelectedSources(
+    Map<String, String> sources, {
+    List<Map<String, String>> historicalSources = const [],
+  }) {
+    final directory = verifiedSourceDirectory(sources);
+    for (final historical in historicalSources) {
+      verifiedSourceDirectory(historical);
     }
     final schedule = nativeCopy(
       jsonDecode(sources['SCHEDULE_CANDIDATE.json']!) as Map,
@@ -408,7 +404,7 @@ class GenuineWorkspace extends ChangeNotifier {
             (s) => s['session_id'] == id,
           )['day'],
           'path':
-              '$hybridSourceDirectory/${isStrength ? 'STRENGTH_REVIEW_GRAPHS.json' : 'RUNNING_BODIES.json'}',
+              '$directory/${isStrength ? 'STRENGTH_REVIEW_GRAPHS.json' : 'RUNNING_BODIES.json'}',
           'sha256': nativeDigest(
             sources[isStrength
                 ? 'STRENGTH_REVIEW_GRAPHS.json'
@@ -430,17 +426,22 @@ class GenuineWorkspace extends ChangeNotifier {
       }
     }
     schedule['sessions'] = refs;
-    return GenuineWorkspace._(
+    final workspace = GenuineWorkspace._(
       owners,
       LegacyCatalogueEvidence(
         jsonDecode(sources['IDENTITY_INTAKE.json']!) as Map<String, dynamic>,
       ),
       {
         for (final e in sources.entries)
-          '$hybridSourceDirectory/${e.key}': nativeDigest(e.value),
+          '$directory/${e.key}': nativeDigest(e.value),
       },
       schedule,
     );
+    workspace._trustedBootstrapSources = [
+      for (final profile in [sources, ...historicalSources])
+        Map.unmodifiable(profile),
+    ];
+    return workspace;
   }
 
   NativeRevision selected(String slotKey) {
@@ -1164,13 +1165,43 @@ class GenuineWorkspace extends ChangeNotifier {
   }
 
   PreparedGenuineOpen prepareOpen(String text) {
-    final candidate = _open(text, catalogue, origins, policy.trustedTree);
+    // A saved archived workspace keeps its own pinned root/evidence; opening it
+    // never upgrades prescriptions or borrows the current source's authority.
+    final requestedOrigins = readWorkspaceJson(text)['origin_inventory'];
+    GenuineWorkspace? historical;
+    var reference = this;
+    if (!nativeEqual(requestedOrigins, origins)) {
+      for (final profile in _trustedBootstrapSources) {
+        final directory = verifiedSourceDirectory(profile);
+        final inventory = {
+          for (final e in profile.entries)
+            '$directory/${e.key}': nativeDigest(e.value),
+        };
+        if (nativeEqual(inventory, requestedOrigins)) {
+          historical = fromSelectedSources(profile);
+          reference = historical;
+          break;
+        }
+      }
+    }
+    GenuineWorkspace candidate;
+    try {
+      candidate = _open(
+        text,
+        catalogue,
+        reference.origins,
+        reference.policy.trustedTree,
+      );
+    } catch (_) {
+      historical?.dispose();
+      rethrow;
+    }
     try {
       for (final owner in candidate.owners.values) {
         for (final revision in owner.revisions) {
           if (revision.origin['kind'] ==
               'retained_source_snapshot_history_unknown') {
-            final known = owners.values
+            final known = reference.owners.values
                 .expand((o) => o.revisions)
                 .where(
                   (r) => r.identity.protocolId == revision.identity.protocolId,
@@ -1188,7 +1219,10 @@ class GenuineWorkspace extends ChangeNotifier {
     } catch (_) {
       candidate.dispose();
       rethrow;
+    } finally {
+      historical?.dispose();
     }
+    candidate._trustedBootstrapSources = _trustedBootstrapSources;
     return PreparedGenuineOpen._(this, generation, candidate);
   }
 

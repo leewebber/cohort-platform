@@ -69,6 +69,11 @@ flutter:
   # the material Icons class.
   uses-material-design: true
   assets:
+    - docs/programmes/hybrid_10k/performance_selected_2026_11_03/SOURCE.json
+    - docs/programmes/hybrid_10k/performance_selected_2026_11_03/SCHEDULE_CANDIDATE.json
+    - docs/programmes/hybrid_10k/performance_selected_2026_11_03/STRENGTH_REVIEW_GRAPHS.json
+    - docs/programmes/hybrid_10k/performance_selected_2026_11_03/RUNNING_BODIES.json
+    - docs/programmes/hybrid_10k/performance_selected_2026_11_03/IDENTITY_INTAKE.json
     - docs/programmes/hybrid_10k/founder_selected_2026_10_30/SOURCE.json
     - docs/programmes/hybrid_10k/founder_selected_2026_10_30/SCHEDULE_CANDIDATE.json
     - docs/programmes/hybrid_10k/founder_selected_2026_10_30/STRENGTH_REVIEW_GRAPHS.json

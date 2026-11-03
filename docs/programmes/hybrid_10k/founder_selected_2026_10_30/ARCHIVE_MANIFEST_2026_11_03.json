@@ -1,0 +1,21 @@
+{
+  "status": "SUPERSEDED_ARCHIVED_NOT_ACTIVE",
+  "snapshot_git": "293903c3aa1a4aaecf055586d2a3d243f6ef1a70",
+  "successor": "../performance_selected_2026_11_03",
+  "purpose": "provenance and exact legacy editable-file reopening; no automatic upgrade",
+  "files_before_archive_banner": {
+    "AUDIT.json": "5809c1a8e2be35292ac5a14e1a782fc347edfb0383c94c96b02f57c3de37690a",
+    "SOURCE.json": "f12b5df97f0a9dc813c9610021ee82233414d2e2b1e6187dd0ae09745e3ecdf5",
+    "RUNNING_BODIES.json": "5d36176a57d8b610799cd72bf8be452bbf9a68fa7396ce4bf41877f83959491b",
+    "TRUSTED_INTAKE_REQUESTS.json": "3cfa104b25d388d487fefe36f2d30fd1cde388aec9e40170cc931cea00f47adf",
+    "SCHEDULE_CANDIDATE.json": "4276d149c61e9d5c476593da9360821a2bc5fe8b9bad896b7346f0e25fd4f02c",
+    "README.md": "342a21e3683037d4c24dfffb32b1d36cf7b52c9dc75159befe038571048a3559",
+    "EXACT_ROW_RETENTION_REQUEST.sql": "5834c56489e7856805651257ab7ab4403094381aed5e729abb8035e239d8d6a8",
+    "STRENGTH_REVIEW_GRAPHS.json": "399fcdcf618ee85d474e973d0a53a3a950f052740d7b539056df95ed1517342e",
+    "DOSE_CLARIFICATIONS.md": "e38cba504a1b40dcfe93e1fa72cee4b1804b0f4bee5078e7e240e41df9457b76",
+    "EXACT_IDENTITY_ACTIONS.md": "bfeb0b4990db0b6dd2340bfd941cfe6e41f7c7c81e374190f4432bca2d6119a8",
+    "FOUNDER_SELECTIONS.md": "dd7e08cc1b026b46307b42c491216543899879e202c3f665ce837f486bc0d6d8",
+    "IDENTITY_INTAKE.json": "5372a05dda6c2a4850794b94bb3c6beed654cbc55a2fc972ea1e8ab1c8f68652",
+    "TEN_WEEK_REVIEW.md": "f65358b81e3690938511ea5009bfcccbf20ae6593230118d8fbca828944e1a93"
+  }
+}

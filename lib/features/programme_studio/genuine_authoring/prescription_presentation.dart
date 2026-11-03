@@ -86,10 +86,11 @@ String runDuration(RunningDuration d) => switch (d.kind) {
 String runTarget(RunningTarget target) => switch (target.kind) {
   RunningTargetKind.none => 'Coached effort',
   RunningTargetKind.heartRateZoneRef => 'Personalised Zone 2 heart rate',
-  RunningTargetKind.qualityPaceRef =>
-    target.qualityCategory == 'threshold'
-        ? 'Personalised threshold pace'
-        : 'Personalised current 10K pace',
+  RunningTargetKind.qualityPaceRef => switch (target.qualityCategory) {
+    'threshold' => 'Personalised threshold pace',
+    'short_5k' => 'Personalised short-5K pace',
+    _ => 'Personalised current 10K pace',
+  },
   RunningTargetKind.rpeRange =>
     'RPE ${target.rpeCr10Low}–${target.rpeCr10High}/10',
   RunningTargetKind.rpe => 'RPE ${target.rpeCr10}/10',

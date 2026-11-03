@@ -42,8 +42,9 @@ void main() {
         c.inspect(copiedOwner).issues,
         anyElement(contains('Unresolved exercise setup')),
       );
-      final file = File('/private/tmp/m11_coach_strength_backup.json')
-        ..writeAsStringSync(c.save());
+      final file = File(
+        '/private/tmp/m11_performance_coach_strength_backup.json',
+      )..writeAsStringSync(c.save());
       final reopened = c.prepareOpen(file.readAsStringSync()).candidate;
       addTearDown(reopened.dispose);
       expect(reopened.save(), file.readAsStringSync());
@@ -145,8 +146,9 @@ void main() {
       c.excludeUnusedSources();
       expect(await c.refreshReview(), isTrue, reason: c.errors.join('\n'));
       final archive = NativeSourceBundle.prepare(c);
-      final file = File('/private/tmp/m11_coach_verified_running.tar')
-        ..writeAsBytesSync(archive.transport.archiveBytes);
+      final file = File(
+        '/private/tmp/m11_performance_coach_verified_running.tar',
+      )..writeAsBytesSync(archive.transport.archiveBytes);
       final reopened = NativeSourceBundle.open(
         file.readAsBytesSync(),
         c.catalogue,

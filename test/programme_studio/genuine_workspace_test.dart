@@ -9,7 +9,7 @@ import 'package:cohort_platform/features/programme_studio/genuine_authoring/nati
 import 'package:cohort_platform/features/programme_studio/composition/source_export/canonical_source_bundle.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-GenuineWorkspace selectedWorkspace() => GenuineWorkspace.fromSelectedSources({
+Map<String, String> sourceFiles(String directory) => {
   for (final name in [
     'SOURCE.json',
     'SCHEDULE_CANDIDATE.json',
@@ -17,8 +17,12 @@ GenuineWorkspace selectedWorkspace() => GenuineWorkspace.fromSelectedSources({
     'RUNNING_BODIES.json',
     'IDENTITY_INTAKE.json',
   ])
-    name: File('$hybridSourceDirectory/$name').readAsStringSync(),
-});
+    name: File('$directory/$name').readAsStringSync(),
+};
+GenuineWorkspace selectedWorkspace() => GenuineWorkspace.fromSelectedSources(
+  sourceFiles(hybridSourceDirectory),
+  historicalSources: [sourceFiles(archivedHybridSourceDirectory)],
+);
 
 void main() {
   test(
@@ -107,7 +111,7 @@ void main() {
         hasLength(10),
       );
       File(
-        '/private/tmp/m11_full_selected_editable_workspace.json',
+        '/private/tmp/m11_performance_full_selected_editable_workspace.json',
       ).writeAsStringSync(c.save());
       final receipts = [for (final o in c.owners.values) c.inspect(o)];
       expect(receipts.where((r) => r.admitted), hasLength(40));
@@ -134,7 +138,7 @@ void main() {
       final finalRun = c.selected('LW10K-W10-D07');
       final finalBlock = (jsonDecode(finalRun.source)['blocks'] as List).single;
       expect(runningTotals(finalBlock['timer_config']['running_workout']), (
-        seconds: 1980,
+        seconds: 1200,
         metres: 10000,
       ));
       expect(await c.refreshReview(), isFalse);
@@ -277,10 +281,10 @@ void main() {
       );
       expect(
         restored.inspectRevision(restored.selected('LW10K-W10-D07')).readable,
-        contains('33:00'),
+        contains('20:00'),
       );
       File(
-        '/private/tmp/m11_verified_all_running_sources.tar',
+        '/private/tmp/m11_performance_verified_all_running_sources.tar',
       ).writeAsBytesSync(export.transport.archiveBytes);
     },
   );
@@ -316,10 +320,10 @@ void main() {
       addTearDown(savedAgain.candidate.dispose);
       expect(savedAgain.candidate.save(), reopened.save());
       File(
-        '/private/tmp/m11_verified_canonical_sources.tar',
+        '/private/tmp/m11_performance_verified_canonical_sources.tar',
       ).writeAsBytesSync(bundle.transport.archiveBytes);
       File(
-        '/private/tmp/m11_verified_editable_workspace.json',
+        '/private/tmp/m11_performance_verified_editable_workspace.json',
       ).writeAsStringSync(c.save());
       final tampered = Map<String, String>.of(files);
       tampered['protocol-graphs.json'] = '[]';

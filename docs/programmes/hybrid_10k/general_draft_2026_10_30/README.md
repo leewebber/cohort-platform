@@ -1,3 +1,5 @@
+> **ARCHIVED / SUPERSEDED — not an active running source.** See [the sole active source](../performance_selected_2026_11_03/README.md). Original data remains for provenance and compatibility.
+
 # General Hybrid 10K PB — reconciled draft
 
 2026-10-30 (Asia/Makassar). **GENERAL SOURCE RECONCILED; NOT BLANKET APPROVED,

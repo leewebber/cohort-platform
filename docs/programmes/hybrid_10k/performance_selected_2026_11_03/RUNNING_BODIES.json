@@ -1,0 +1,4708 @@
+[
+  {
+    "source_session_id": "LW10K-W01-D02",
+    "source_week": 1,
+    "source_day": 2,
+    "fixed_seconds": 2550,
+    "distance_metres": 0,
+    "content_status": "FOUNDER_SELECTED_RUNNING_2026_11_03_FULL_D8_PENDING",
+    "workout": {
+      "schema_version": 1,
+      "workout_id": "LW10K-W01-D02-PERF-V1",
+      "title": "Threshold intervals",
+      "notes": "",
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W01-D02-PERF-P01",
+          "role": "warm_up",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 600000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Easy warm-up",
+          "notes": "Easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W01-D02-PERF-P02",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Relaxed acceleration",
+          "notes": "Relaxed and controlled, not a sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W01-D02-PERF-P03",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 40000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy recovery",
+          "notes": "Very easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W01-D02-PERF-P04",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Relaxed acceleration",
+          "notes": "Relaxed and controlled, not a sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W01-D02-PERF-P05",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 40000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy recovery",
+          "notes": "Very easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W01-D02-PERF-P06",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Relaxed acceleration",
+          "notes": "Relaxed and controlled, not a sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W01-D02-PERF-P07",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 40000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy recovery",
+          "notes": "Very easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W01-D02-PERF-P08",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 300000
+          },
+          "target": {
+            "kind": "alpha_quality_pace_v1",
+            "category": "threshold"
+          },
+          "label": "Threshold running",
+          "notes": "Use the athlete’s separately reviewed and accepted personalised target."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W01-D02-PERF-P09",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 90000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Easy recovery",
+          "notes": "Easy effort."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W01-D02-PERF-P10",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 300000
+          },
+          "target": {
+            "kind": "alpha_quality_pace_v1",
+            "category": "threshold"
+          },
+          "label": "Threshold running",
+          "notes": "Use the athlete’s separately reviewed and accepted personalised target."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W01-D02-PERF-P11",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 90000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Easy recovery",
+          "notes": "Easy effort."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W01-D02-PERF-P12",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 300000
+          },
+          "target": {
+            "kind": "alpha_quality_pace_v1",
+            "category": "threshold"
+          },
+          "label": "Threshold running",
+          "notes": "Use the athlete’s separately reviewed and accepted personalised target."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W01-D02-PERF-P13",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 90000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Easy recovery",
+          "notes": "Easy effort."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W01-D02-PERF-P14",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 300000
+          },
+          "target": {
+            "kind": "alpha_quality_pace_v1",
+            "category": "threshold"
+          },
+          "label": "Threshold running",
+          "notes": "Use the athlete’s separately reviewed and accepted personalised target."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W01-D02-PERF-P15",
+          "role": "cool_down",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 300000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy cooldown",
+          "notes": "Very easy running or walking; walking is included in session time."
+        }
+      ]
+    }
+  },
+  {
+    "source_session_id": "LW10K-W01-D03",
+    "source_week": 1,
+    "source_day": 3,
+    "fixed_seconds": 2700,
+    "distance_metres": 0,
+    "content_status": "FOUNDER_SELECTED_RUNNING_2026_11_03_FULL_D8_PENDING",
+    "workout": {
+      "schema_version": 1,
+      "workout_id": "LW10K-W01-D03-PERF-V1",
+      "title": "Zone 2 run",
+      "notes": "",
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W01-D03-PERF-P01",
+          "role": "warm_up",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 300000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy warm-up",
+          "notes": "Very easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W01-D03-PERF-P02",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 2100000
+          },
+          "target": {
+            "kind": "heart_rate_zone_ref",
+            "zone_ref": "athlete_confirmed_zone_2"
+          },
+          "label": "Zone 2 running",
+          "notes": "Use the athlete-confirmed numerical Zone 2 range."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W01-D03-PERF-P03",
+          "role": "cool_down",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 300000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy cooldown",
+          "notes": "Very easy running; walking permitted."
+        }
+      ]
+    }
+  },
+  {
+    "source_session_id": "LW10K-W01-D05",
+    "source_week": 1,
+    "source_day": 5,
+    "fixed_seconds": 2400,
+    "distance_metres": 0,
+    "content_status": "FOUNDER_SELECTED_RUNNING_2026_11_03_FULL_D8_PENDING",
+    "workout": {
+      "schema_version": 1,
+      "workout_id": "LW10K-W01-D05-PERF-V1",
+      "title": "Zone 2 run",
+      "notes": "",
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W01-D05-PERF-P01",
+          "role": "warm_up",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 300000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy warm-up",
+          "notes": "Very easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W01-D05-PERF-P02",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 1800000
+          },
+          "target": {
+            "kind": "heart_rate_zone_ref",
+            "zone_ref": "athlete_confirmed_zone_2"
+          },
+          "label": "Zone 2 running",
+          "notes": "Use the athlete-confirmed numerical Zone 2 range."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W01-D05-PERF-P03",
+          "role": "cool_down",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 300000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy cooldown",
+          "notes": "Very easy running; walking permitted."
+        }
+      ]
+    }
+  },
+  {
+    "source_session_id": "LW10K-W01-D07",
+    "source_week": 1,
+    "source_day": 7,
+    "fixed_seconds": 3900,
+    "distance_metres": 0,
+    "content_status": "FOUNDER_SELECTED_RUNNING_2026_11_03_FULL_D8_PENDING",
+    "workout": {
+      "schema_version": 1,
+      "workout_id": "LW10K-W01-D07-PERF-V1",
+      "title": "Long Zone 2 run",
+      "notes": "",
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W01-D07-PERF-P01",
+          "role": "warm_up",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 300000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy warm-up",
+          "notes": "Very easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W01-D07-PERF-P02",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 3300000
+          },
+          "target": {
+            "kind": "heart_rate_zone_ref",
+            "zone_ref": "athlete_confirmed_zone_2"
+          },
+          "label": "Zone 2 running",
+          "notes": "Use the athlete-confirmed numerical Zone 2 range."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W01-D07-PERF-P03",
+          "role": "cool_down",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 300000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy cooldown",
+          "notes": "Very easy running; walking permitted."
+        }
+      ]
+    }
+  },
+  {
+    "source_session_id": "LW10K-W02-D02",
+    "source_week": 2,
+    "source_day": 2,
+    "fixed_seconds": 2760,
+    "distance_metres": 0,
+    "content_status": "FOUNDER_SELECTED_RUNNING_2026_11_03_FULL_D8_PENDING",
+    "workout": {
+      "schema_version": 1,
+      "workout_id": "LW10K-W02-D02-PERF-V1",
+      "title": "Threshold intervals",
+      "notes": "",
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W02-D02-PERF-P01",
+          "role": "warm_up",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 600000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Easy warm-up",
+          "notes": "Easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W02-D02-PERF-P02",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Relaxed acceleration",
+          "notes": "Relaxed and controlled, not a sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W02-D02-PERF-P03",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 40000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy recovery",
+          "notes": "Very easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W02-D02-PERF-P04",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Relaxed acceleration",
+          "notes": "Relaxed and controlled, not a sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W02-D02-PERF-P05",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 40000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy recovery",
+          "notes": "Very easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W02-D02-PERF-P06",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Relaxed acceleration",
+          "notes": "Relaxed and controlled, not a sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W02-D02-PERF-P07",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 40000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy recovery",
+          "notes": "Very easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W02-D02-PERF-P08",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 480000
+          },
+          "target": {
+            "kind": "alpha_quality_pace_v1",
+            "category": "threshold"
+          },
+          "label": "Threshold running",
+          "notes": "Use the athlete’s separately reviewed and accepted personalised target."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W02-D02-PERF-P09",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 120000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Easy recovery",
+          "notes": "Easy effort."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W02-D02-PERF-P10",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 480000
+          },
+          "target": {
+            "kind": "alpha_quality_pace_v1",
+            "category": "threshold"
+          },
+          "label": "Threshold running",
+          "notes": "Use the athlete’s separately reviewed and accepted personalised target."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W02-D02-PERF-P11",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 120000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Easy recovery",
+          "notes": "Easy effort."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W02-D02-PERF-P12",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 480000
+          },
+          "target": {
+            "kind": "alpha_quality_pace_v1",
+            "category": "threshold"
+          },
+          "label": "Threshold running",
+          "notes": "Use the athlete’s separately reviewed and accepted personalised target."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W02-D02-PERF-P13",
+          "role": "cool_down",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 300000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy cooldown",
+          "notes": "Very easy running or walking; walking is included in session time."
+        }
+      ]
+    }
+  },
+  {
+    "source_session_id": "LW10K-W02-D03",
+    "source_week": 2,
+    "source_day": 3,
+    "fixed_seconds": 2700,
+    "distance_metres": 0,
+    "content_status": "FOUNDER_SELECTED_RUNNING_2026_11_03_FULL_D8_PENDING",
+    "workout": {
+      "schema_version": 1,
+      "workout_id": "LW10K-W02-D03-PERF-V1",
+      "title": "Zone 2 run",
+      "notes": "",
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W02-D03-PERF-P01",
+          "role": "warm_up",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 300000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy warm-up",
+          "notes": "Very easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W02-D03-PERF-P02",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 2100000
+          },
+          "target": {
+            "kind": "heart_rate_zone_ref",
+            "zone_ref": "athlete_confirmed_zone_2"
+          },
+          "label": "Zone 2 running",
+          "notes": "Use the athlete-confirmed numerical Zone 2 range."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W02-D03-PERF-P03",
+          "role": "cool_down",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 300000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy cooldown",
+          "notes": "Very easy running; walking permitted."
+        }
+      ]
+    }
+  },
+  {
+    "source_session_id": "LW10K-W02-D05",
+    "source_week": 2,
+    "source_day": 5,
+    "fixed_seconds": 2700,
+    "distance_metres": 0,
+    "content_status": "FOUNDER_SELECTED_RUNNING_2026_11_03_FULL_D8_PENDING",
+    "workout": {
+      "schema_version": 1,
+      "workout_id": "LW10K-W02-D05-PERF-V1",
+      "title": "Zone 2 run",
+      "notes": "",
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W02-D05-PERF-P01",
+          "role": "warm_up",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 300000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy warm-up",
+          "notes": "Very easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W02-D05-PERF-P02",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 2100000
+          },
+          "target": {
+            "kind": "heart_rate_zone_ref",
+            "zone_ref": "athlete_confirmed_zone_2"
+          },
+          "label": "Zone 2 running",
+          "notes": "Use the athlete-confirmed numerical Zone 2 range."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W02-D05-PERF-P03",
+          "role": "cool_down",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 300000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy cooldown",
+          "notes": "Very easy running; walking permitted."
+        }
+      ]
+    }
+  },
+  {
+    "source_session_id": "LW10K-W02-D07",
+    "source_week": 2,
+    "source_day": 7,
+    "fixed_seconds": 4200,
+    "distance_metres": 0,
+    "content_status": "FOUNDER_SELECTED_RUNNING_2026_11_03_FULL_D8_PENDING",
+    "workout": {
+      "schema_version": 1,
+      "workout_id": "LW10K-W02-D07-PERF-V1",
+      "title": "Long Zone 2 run",
+      "notes": "",
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W02-D07-PERF-P01",
+          "role": "warm_up",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 300000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy warm-up",
+          "notes": "Very easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W02-D07-PERF-P02",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 3600000
+          },
+          "target": {
+            "kind": "heart_rate_zone_ref",
+            "zone_ref": "athlete_confirmed_zone_2"
+          },
+          "label": "Zone 2 running",
+          "notes": "Use the athlete-confirmed numerical Zone 2 range."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W02-D07-PERF-P03",
+          "role": "cool_down",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 300000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy cooldown",
+          "notes": "Very easy running; walking permitted."
+        }
+      ]
+    }
+  },
+  {
+    "source_session_id": "LW10K-W03-D02",
+    "source_week": 3,
+    "source_day": 2,
+    "fixed_seconds": 2940,
+    "distance_metres": 0,
+    "content_status": "FOUNDER_SELECTED_RUNNING_2026_11_03_FULL_D8_PENDING",
+    "workout": {
+      "schema_version": 1,
+      "workout_id": "LW10K-W03-D02-PERF-V1",
+      "title": "Threshold intervals",
+      "notes": "",
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W03-D02-PERF-P01",
+          "role": "warm_up",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 600000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Easy warm-up",
+          "notes": "Easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W03-D02-PERF-P02",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Relaxed acceleration",
+          "notes": "Relaxed and controlled, not a sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W03-D02-PERF-P03",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 40000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy recovery",
+          "notes": "Very easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W03-D02-PERF-P04",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Relaxed acceleration",
+          "notes": "Relaxed and controlled, not a sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W03-D02-PERF-P05",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 40000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy recovery",
+          "notes": "Very easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W03-D02-PERF-P06",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Relaxed acceleration",
+          "notes": "Relaxed and controlled, not a sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W03-D02-PERF-P07",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 40000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy recovery",
+          "notes": "Very easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W03-D02-PERF-P08",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 540000
+          },
+          "target": {
+            "kind": "alpha_quality_pace_v1",
+            "category": "threshold"
+          },
+          "label": "Threshold running",
+          "notes": "Use the athlete’s separately reviewed and accepted personalised target."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W03-D02-PERF-P09",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 120000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Easy recovery",
+          "notes": "Easy effort."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W03-D02-PERF-P10",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 540000
+          },
+          "target": {
+            "kind": "alpha_quality_pace_v1",
+            "category": "threshold"
+          },
+          "label": "Threshold running",
+          "notes": "Use the athlete’s separately reviewed and accepted personalised target."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W03-D02-PERF-P11",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 120000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Easy recovery",
+          "notes": "Easy effort."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W03-D02-PERF-P12",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 540000
+          },
+          "target": {
+            "kind": "alpha_quality_pace_v1",
+            "category": "threshold"
+          },
+          "label": "Threshold running",
+          "notes": "Use the athlete’s separately reviewed and accepted personalised target."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W03-D02-PERF-P13",
+          "role": "cool_down",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 300000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy cooldown",
+          "notes": "Very easy running or walking; walking is included in session time."
+        }
+      ]
+    }
+  },
+  {
+    "source_session_id": "LW10K-W03-D03",
+    "source_week": 3,
+    "source_day": 3,
+    "fixed_seconds": 3000,
+    "distance_metres": 0,
+    "content_status": "FOUNDER_SELECTED_RUNNING_2026_11_03_FULL_D8_PENDING",
+    "workout": {
+      "schema_version": 1,
+      "workout_id": "LW10K-W03-D03-PERF-V1",
+      "title": "Zone 2 run",
+      "notes": "",
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W03-D03-PERF-P01",
+          "role": "warm_up",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 300000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy warm-up",
+          "notes": "Very easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W03-D03-PERF-P02",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 2400000
+          },
+          "target": {
+            "kind": "heart_rate_zone_ref",
+            "zone_ref": "athlete_confirmed_zone_2"
+          },
+          "label": "Zone 2 running",
+          "notes": "Use the athlete-confirmed numerical Zone 2 range."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W03-D03-PERF-P03",
+          "role": "cool_down",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 300000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy cooldown",
+          "notes": "Very easy running; walking permitted."
+        }
+      ]
+    }
+  },
+  {
+    "source_session_id": "LW10K-W03-D05",
+    "source_week": 3,
+    "source_day": 5,
+    "fixed_seconds": 2700,
+    "distance_metres": 0,
+    "content_status": "FOUNDER_SELECTED_RUNNING_2026_11_03_FULL_D8_PENDING",
+    "workout": {
+      "schema_version": 1,
+      "workout_id": "LW10K-W03-D05-PERF-V1",
+      "title": "Easy run with relaxed strides",
+      "notes": "",
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W03-D05-PERF-P01",
+          "role": "warm_up",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 300000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy warm-up",
+          "notes": "Very easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W03-D05-PERF-P02",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 1780000
+          },
+          "target": {
+            "kind": "heart_rate_zone_ref",
+            "zone_ref": "athlete_confirmed_zone_2"
+          },
+          "label": "Zone 2 running",
+          "notes": "Use the athlete-confirmed numerical Zone 2 range."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W03-D05-PERF-P03",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Relaxed stride",
+          "notes": "Relaxed and controlled, not a sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W03-D05-PERF-P04",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 60000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy recovery",
+          "notes": "Very easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W03-D05-PERF-P05",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Relaxed stride",
+          "notes": "Relaxed and controlled, not a sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W03-D05-PERF-P06",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 60000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy recovery",
+          "notes": "Very easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W03-D05-PERF-P07",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Relaxed stride",
+          "notes": "Relaxed and controlled, not a sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W03-D05-PERF-P08",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 60000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy recovery",
+          "notes": "Very easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W03-D05-PERF-P09",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Relaxed stride",
+          "notes": "Relaxed and controlled, not a sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W03-D05-PERF-P10",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 60000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy recovery",
+          "notes": "Very easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W03-D05-PERF-P11",
+          "role": "cool_down",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 300000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Easy cooldown",
+          "notes": "Easy running."
+        }
+      ]
+    }
+  },
+  {
+    "source_session_id": "LW10K-W03-D07",
+    "source_week": 3,
+    "source_day": 7,
+    "fixed_seconds": 4500,
+    "distance_metres": 0,
+    "content_status": "FOUNDER_SELECTED_RUNNING_2026_11_03_FULL_D8_PENDING",
+    "workout": {
+      "schema_version": 1,
+      "workout_id": "LW10K-W03-D07-PERF-V1",
+      "title": "Long Zone 2 run",
+      "notes": "",
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W03-D07-PERF-P01",
+          "role": "warm_up",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 300000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy warm-up",
+          "notes": "Very easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W03-D07-PERF-P02",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 3900000
+          },
+          "target": {
+            "kind": "heart_rate_zone_ref",
+            "zone_ref": "athlete_confirmed_zone_2"
+          },
+          "label": "Zone 2 running",
+          "notes": "Use the athlete-confirmed numerical Zone 2 range."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W03-D07-PERF-P03",
+          "role": "cool_down",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 300000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy cooldown",
+          "notes": "Very easy running; walking permitted."
+        }
+      ]
+    }
+  },
+  {
+    "source_session_id": "LW10K-W04-D02",
+    "source_week": 4,
+    "source_day": 2,
+    "fixed_seconds": 2550,
+    "distance_metres": 0,
+    "content_status": "FOUNDER_SELECTED_RUNNING_2026_11_03_FULL_D8_PENDING",
+    "workout": {
+      "schema_version": 1,
+      "workout_id": "LW10K-W04-D02-PERF-V1",
+      "title": "Consolidation threshold",
+      "notes": "",
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W04-D02-PERF-P01",
+          "role": "warm_up",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 600000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Easy warm-up",
+          "notes": "Easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W04-D02-PERF-P02",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Relaxed acceleration",
+          "notes": "Relaxed and controlled, not a sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W04-D02-PERF-P03",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 40000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy recovery",
+          "notes": "Very easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W04-D02-PERF-P04",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Relaxed acceleration",
+          "notes": "Relaxed and controlled, not a sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W04-D02-PERF-P05",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 40000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy recovery",
+          "notes": "Very easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W04-D02-PERF-P06",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Relaxed acceleration",
+          "notes": "Relaxed and controlled, not a sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W04-D02-PERF-P07",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 40000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy recovery",
+          "notes": "Very easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W04-D02-PERF-P08",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 300000
+          },
+          "target": {
+            "kind": "alpha_quality_pace_v1",
+            "category": "threshold"
+          },
+          "label": "Threshold running",
+          "notes": "Use the athlete’s separately reviewed and accepted personalised target."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W04-D02-PERF-P09",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 90000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Easy recovery",
+          "notes": "Easy effort."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W04-D02-PERF-P10",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 300000
+          },
+          "target": {
+            "kind": "alpha_quality_pace_v1",
+            "category": "threshold"
+          },
+          "label": "Threshold running",
+          "notes": "Use the athlete’s separately reviewed and accepted personalised target."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W04-D02-PERF-P11",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 90000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Easy recovery",
+          "notes": "Easy effort."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W04-D02-PERF-P12",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 300000
+          },
+          "target": {
+            "kind": "alpha_quality_pace_v1",
+            "category": "threshold"
+          },
+          "label": "Threshold running",
+          "notes": "Use the athlete’s separately reviewed and accepted personalised target."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W04-D02-PERF-P13",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 90000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Easy recovery",
+          "notes": "Easy effort."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W04-D02-PERF-P14",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 300000
+          },
+          "target": {
+            "kind": "alpha_quality_pace_v1",
+            "category": "threshold"
+          },
+          "label": "Threshold running",
+          "notes": "Use the athlete’s separately reviewed and accepted personalised target."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W04-D02-PERF-P15",
+          "role": "cool_down",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 300000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy cooldown",
+          "notes": "Very easy running or walking; walking is included in session time."
+        }
+      ]
+    }
+  },
+  {
+    "source_session_id": "LW10K-W04-D03",
+    "source_week": 4,
+    "source_day": 3,
+    "fixed_seconds": 2400,
+    "distance_metres": 0,
+    "content_status": "FOUNDER_SELECTED_RUNNING_2026_11_03_FULL_D8_PENDING",
+    "workout": {
+      "schema_version": 1,
+      "workout_id": "LW10K-W04-D03-PERF-V1",
+      "title": "Zone 2 run",
+      "notes": "",
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W04-D03-PERF-P01",
+          "role": "warm_up",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 300000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy warm-up",
+          "notes": "Very easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W04-D03-PERF-P02",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 1800000
+          },
+          "target": {
+            "kind": "heart_rate_zone_ref",
+            "zone_ref": "athlete_confirmed_zone_2"
+          },
+          "label": "Zone 2 running",
+          "notes": "Use the athlete-confirmed numerical Zone 2 range."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W04-D03-PERF-P03",
+          "role": "cool_down",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 300000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy cooldown",
+          "notes": "Very easy running; walking permitted."
+        }
+      ]
+    }
+  },
+  {
+    "source_session_id": "LW10K-W04-D05",
+    "source_week": 4,
+    "source_day": 5,
+    "fixed_seconds": 2400,
+    "distance_metres": 0,
+    "content_status": "FOUNDER_SELECTED_RUNNING_2026_11_03_FULL_D8_PENDING",
+    "workout": {
+      "schema_version": 1,
+      "workout_id": "LW10K-W04-D05-PERF-V1",
+      "title": "Zone 2 run",
+      "notes": "",
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W04-D05-PERF-P01",
+          "role": "warm_up",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 300000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy warm-up",
+          "notes": "Very easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W04-D05-PERF-P02",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 1800000
+          },
+          "target": {
+            "kind": "heart_rate_zone_ref",
+            "zone_ref": "athlete_confirmed_zone_2"
+          },
+          "label": "Zone 2 running",
+          "notes": "Use the athlete-confirmed numerical Zone 2 range."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W04-D05-PERF-P03",
+          "role": "cool_down",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 300000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy cooldown",
+          "notes": "Very easy running; walking permitted."
+        }
+      ]
+    }
+  },
+  {
+    "source_session_id": "LW10K-W04-D07",
+    "source_week": 4,
+    "source_day": 7,
+    "fixed_seconds": 3900,
+    "distance_metres": 0,
+    "content_status": "FOUNDER_SELECTED_RUNNING_2026_11_03_FULL_D8_PENDING",
+    "workout": {
+      "schema_version": 1,
+      "workout_id": "LW10K-W04-D07-PERF-V1",
+      "title": "Long Zone 2 run",
+      "notes": "",
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W04-D07-PERF-P01",
+          "role": "warm_up",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 300000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy warm-up",
+          "notes": "Very easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W04-D07-PERF-P02",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 3300000
+          },
+          "target": {
+            "kind": "heart_rate_zone_ref",
+            "zone_ref": "athlete_confirmed_zone_2"
+          },
+          "label": "Zone 2 running",
+          "notes": "Use the athlete-confirmed numerical Zone 2 range."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W04-D07-PERF-P03",
+          "role": "cool_down",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 300000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy cooldown",
+          "notes": "Very easy running; walking permitted."
+        }
+      ]
+    }
+  },
+  {
+    "source_session_id": "LW10K-W05-D02",
+    "source_week": 5,
+    "source_day": 2,
+    "fixed_seconds": 3120,
+    "distance_metres": 0,
+    "content_status": "FOUNDER_SELECTED_RUNNING_2026_11_03_FULL_D8_PENDING",
+    "workout": {
+      "schema_version": 1,
+      "workout_id": "LW10K-W05-D02-PERF-V1",
+      "title": "Threshold intervals",
+      "notes": "",
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W05-D02-PERF-P01",
+          "role": "warm_up",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 600000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Easy warm-up",
+          "notes": "Easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W05-D02-PERF-P02",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Relaxed acceleration",
+          "notes": "Relaxed and controlled, not a sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W05-D02-PERF-P03",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 40000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy recovery",
+          "notes": "Very easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W05-D02-PERF-P04",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Relaxed acceleration",
+          "notes": "Relaxed and controlled, not a sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W05-D02-PERF-P05",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 40000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy recovery",
+          "notes": "Very easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W05-D02-PERF-P06",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Relaxed acceleration",
+          "notes": "Relaxed and controlled, not a sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W05-D02-PERF-P07",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 40000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy recovery",
+          "notes": "Very easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W05-D02-PERF-P08",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 600000
+          },
+          "target": {
+            "kind": "alpha_quality_pace_v1",
+            "category": "threshold"
+          },
+          "label": "Threshold running",
+          "notes": "Use the athlete’s separately reviewed and accepted personalised target."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W05-D02-PERF-P09",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 120000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Easy recovery",
+          "notes": "Easy effort."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W05-D02-PERF-P10",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 600000
+          },
+          "target": {
+            "kind": "alpha_quality_pace_v1",
+            "category": "threshold"
+          },
+          "label": "Threshold running",
+          "notes": "Use the athlete’s separately reviewed and accepted personalised target."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W05-D02-PERF-P11",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 120000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Easy recovery",
+          "notes": "Easy effort."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W05-D02-PERF-P12",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 600000
+          },
+          "target": {
+            "kind": "alpha_quality_pace_v1",
+            "category": "threshold"
+          },
+          "label": "Threshold running",
+          "notes": "Use the athlete’s separately reviewed and accepted personalised target."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W05-D02-PERF-P13",
+          "role": "cool_down",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 300000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy cooldown",
+          "notes": "Very easy running or walking; walking is included in session time."
+        }
+      ]
+    }
+  },
+  {
+    "source_session_id": "LW10K-W05-D03",
+    "source_week": 5,
+    "source_day": 3,
+    "fixed_seconds": 3000,
+    "distance_metres": 0,
+    "content_status": "FOUNDER_SELECTED_RUNNING_2026_11_03_FULL_D8_PENDING",
+    "workout": {
+      "schema_version": 1,
+      "workout_id": "LW10K-W05-D03-PERF-V1",
+      "title": "Zone 2 run",
+      "notes": "",
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W05-D03-PERF-P01",
+          "role": "warm_up",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 300000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy warm-up",
+          "notes": "Very easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W05-D03-PERF-P02",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 2400000
+          },
+          "target": {
+            "kind": "heart_rate_zone_ref",
+            "zone_ref": "athlete_confirmed_zone_2"
+          },
+          "label": "Zone 2 running",
+          "notes": "Use the athlete-confirmed numerical Zone 2 range."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W05-D03-PERF-P03",
+          "role": "cool_down",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 300000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy cooldown",
+          "notes": "Very easy running; walking permitted."
+        }
+      ]
+    }
+  },
+  {
+    "source_session_id": "LW10K-W05-D05",
+    "source_week": 5,
+    "source_day": 5,
+    "fixed_seconds": 2700,
+    "distance_metres": 0,
+    "content_status": "FOUNDER_SELECTED_RUNNING_2026_11_03_FULL_D8_PENDING",
+    "workout": {
+      "schema_version": 1,
+      "workout_id": "LW10K-W05-D05-PERF-V1",
+      "title": "Easy run with relaxed strides",
+      "notes": "",
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W05-D05-PERF-P01",
+          "role": "warm_up",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 300000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy warm-up",
+          "notes": "Very easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W05-D05-PERF-P02",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 1780000
+          },
+          "target": {
+            "kind": "heart_rate_zone_ref",
+            "zone_ref": "athlete_confirmed_zone_2"
+          },
+          "label": "Zone 2 running",
+          "notes": "Use the athlete-confirmed numerical Zone 2 range."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W05-D05-PERF-P03",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Relaxed stride",
+          "notes": "Relaxed and controlled, not a sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W05-D05-PERF-P04",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 60000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy recovery",
+          "notes": "Very easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W05-D05-PERF-P05",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Relaxed stride",
+          "notes": "Relaxed and controlled, not a sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W05-D05-PERF-P06",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 60000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy recovery",
+          "notes": "Very easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W05-D05-PERF-P07",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Relaxed stride",
+          "notes": "Relaxed and controlled, not a sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W05-D05-PERF-P08",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 60000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy recovery",
+          "notes": "Very easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W05-D05-PERF-P09",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Relaxed stride",
+          "notes": "Relaxed and controlled, not a sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W05-D05-PERF-P10",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 60000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy recovery",
+          "notes": "Very easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W05-D05-PERF-P11",
+          "role": "cool_down",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 300000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Easy cooldown",
+          "notes": "Easy running."
+        }
+      ]
+    }
+  },
+  {
+    "source_session_id": "LW10K-W05-D07",
+    "source_week": 5,
+    "source_day": 7,
+    "fixed_seconds": 4500,
+    "distance_metres": 0,
+    "content_status": "FOUNDER_SELECTED_RUNNING_2026_11_03_FULL_D8_PENDING",
+    "workout": {
+      "schema_version": 1,
+      "workout_id": "LW10K-W05-D07-PERF-V1",
+      "title": "Long Zone 2 run",
+      "notes": "",
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W05-D07-PERF-P01",
+          "role": "warm_up",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 300000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy warm-up",
+          "notes": "Very easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W05-D07-PERF-P02",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 3900000
+          },
+          "target": {
+            "kind": "heart_rate_zone_ref",
+            "zone_ref": "athlete_confirmed_zone_2"
+          },
+          "label": "Zone 2 running",
+          "notes": "Use the athlete-confirmed numerical Zone 2 range."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W05-D07-PERF-P03",
+          "role": "cool_down",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 300000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy cooldown",
+          "notes": "Very easy running; walking permitted."
+        }
+      ]
+    }
+  },
+  {
+    "source_session_id": "LW10K-W06-D02",
+    "source_week": 6,
+    "source_day": 2,
+    "fixed_seconds": 2880,
+    "distance_metres": 0,
+    "content_status": "FOUNDER_SELECTED_RUNNING_2026_11_03_FULL_D8_PENDING",
+    "workout": {
+      "schema_version": 1,
+      "workout_id": "LW10K-W06-D02-PERF-V1",
+      "title": "10K intervals",
+      "notes": "",
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W06-D02-PERF-P01",
+          "role": "warm_up",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 600000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Easy warm-up",
+          "notes": "Easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W06-D02-PERF-P02",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Relaxed acceleration",
+          "notes": "Relaxed and controlled, not a sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W06-D02-PERF-P03",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 40000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy recovery",
+          "notes": "Very easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W06-D02-PERF-P04",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Relaxed acceleration",
+          "notes": "Relaxed and controlled, not a sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W06-D02-PERF-P05",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 40000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy recovery",
+          "notes": "Very easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W06-D02-PERF-P06",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Relaxed acceleration",
+          "notes": "Relaxed and controlled, not a sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W06-D02-PERF-P07",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 40000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy recovery",
+          "notes": "Very easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W06-D02-PERF-P08",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 360000
+          },
+          "target": {
+            "kind": "alpha_quality_pace_v1",
+            "category": "10k_specific"
+          },
+          "label": "10K pace running",
+          "notes": "Use the athlete’s separately reviewed and accepted personalised target."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W06-D02-PERF-P09",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 120000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Easy recovery",
+          "notes": "Easy effort."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W06-D02-PERF-P10",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 360000
+          },
+          "target": {
+            "kind": "alpha_quality_pace_v1",
+            "category": "10k_specific"
+          },
+          "label": "10K pace running",
+          "notes": "Use the athlete’s separately reviewed and accepted personalised target."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W06-D02-PERF-P11",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 120000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Easy recovery",
+          "notes": "Easy effort."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W06-D02-PERF-P12",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 360000
+          },
+          "target": {
+            "kind": "alpha_quality_pace_v1",
+            "category": "10k_specific"
+          },
+          "label": "10K pace running",
+          "notes": "Use the athlete’s separately reviewed and accepted personalised target."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W06-D02-PERF-P13",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 120000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Easy recovery",
+          "notes": "Easy effort."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W06-D02-PERF-P14",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 360000
+          },
+          "target": {
+            "kind": "alpha_quality_pace_v1",
+            "category": "10k_specific"
+          },
+          "label": "10K pace running",
+          "notes": "Use the athlete’s separately reviewed and accepted personalised target."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W06-D02-PERF-P15",
+          "role": "cool_down",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 300000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy cooldown",
+          "notes": "Very easy running or walking; walking is included in session time."
+        }
+      ]
+    }
+  },
+  {
+    "source_session_id": "LW10K-W06-D03",
+    "source_week": 6,
+    "source_day": 3,
+    "fixed_seconds": 3000,
+    "distance_metres": 0,
+    "content_status": "FOUNDER_SELECTED_RUNNING_2026_11_03_FULL_D8_PENDING",
+    "workout": {
+      "schema_version": 1,
+      "workout_id": "LW10K-W06-D03-PERF-V1",
+      "title": "Zone 2 run",
+      "notes": "",
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W06-D03-PERF-P01",
+          "role": "warm_up",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 300000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy warm-up",
+          "notes": "Very easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W06-D03-PERF-P02",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 2400000
+          },
+          "target": {
+            "kind": "heart_rate_zone_ref",
+            "zone_ref": "athlete_confirmed_zone_2"
+          },
+          "label": "Zone 2 running",
+          "notes": "Use the athlete-confirmed numerical Zone 2 range."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W06-D03-PERF-P03",
+          "role": "cool_down",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 300000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy cooldown",
+          "notes": "Very easy running; walking permitted."
+        }
+      ]
+    }
+  },
+  {
+    "source_session_id": "LW10K-W06-D05",
+    "source_week": 6,
+    "source_day": 5,
+    "fixed_seconds": 1710,
+    "distance_metres": 0,
+    "content_status": "FOUNDER_SELECTED_RUNNING_2026_11_03_FULL_D8_PENDING",
+    "workout": {
+      "schema_version": 1,
+      "workout_id": "LW10K-W06-D05-PERF-V1",
+      "title": "Short-5K intervals",
+      "notes": "",
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W06-D05-PERF-P01",
+          "role": "warm_up",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 600000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Easy warm-up",
+          "notes": "Easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W06-D05-PERF-P02",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 60000
+          },
+          "target": {
+            "kind": "alpha_quality_pace_v1",
+            "category": "short_5k"
+          },
+          "label": "Short-5K pace running",
+          "notes": "Use the athlete’s separately reviewed and accepted personalised target."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W06-D05-PERF-P03",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 90000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Easy recovery",
+          "notes": "Easy effort."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W06-D05-PERF-P04",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 60000
+          },
+          "target": {
+            "kind": "alpha_quality_pace_v1",
+            "category": "short_5k"
+          },
+          "label": "Short-5K pace running",
+          "notes": "Use the athlete’s separately reviewed and accepted personalised target."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W06-D05-PERF-P05",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 90000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Easy recovery",
+          "notes": "Easy effort."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W06-D05-PERF-P06",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 60000
+          },
+          "target": {
+            "kind": "alpha_quality_pace_v1",
+            "category": "short_5k"
+          },
+          "label": "Short-5K pace running",
+          "notes": "Use the athlete’s separately reviewed and accepted personalised target."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W06-D05-PERF-P07",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 90000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Easy recovery",
+          "notes": "Easy effort."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W06-D05-PERF-P08",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 60000
+          },
+          "target": {
+            "kind": "alpha_quality_pace_v1",
+            "category": "short_5k"
+          },
+          "label": "Short-5K pace running",
+          "notes": "Use the athlete’s separately reviewed and accepted personalised target."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W06-D05-PERF-P09",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 90000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Easy recovery",
+          "notes": "Easy effort."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W06-D05-PERF-P10",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 60000
+          },
+          "target": {
+            "kind": "alpha_quality_pace_v1",
+            "category": "short_5k"
+          },
+          "label": "Short-5K pace running",
+          "notes": "Use the athlete’s separately reviewed and accepted personalised target."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W06-D05-PERF-P11",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 90000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Easy recovery",
+          "notes": "Easy effort."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W06-D05-PERF-P12",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 60000
+          },
+          "target": {
+            "kind": "alpha_quality_pace_v1",
+            "category": "short_5k"
+          },
+          "label": "Short-5K pace running",
+          "notes": "Use the athlete’s separately reviewed and accepted personalised target."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W06-D05-PERF-P13",
+          "role": "cool_down",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 300000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Easy cooldown",
+          "notes": "Easy running."
+        }
+      ]
+    }
+  },
+  {
+    "source_session_id": "LW10K-W06-D07",
+    "source_week": 6,
+    "source_day": 7,
+    "fixed_seconds": 4500,
+    "distance_metres": 0,
+    "content_status": "FOUNDER_SELECTED_RUNNING_2026_11_03_FULL_D8_PENDING",
+    "workout": {
+      "schema_version": 1,
+      "workout_id": "LW10K-W06-D07-PERF-V1",
+      "title": "Long Zone 2 run",
+      "notes": "",
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W06-D07-PERF-P01",
+          "role": "warm_up",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 300000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy warm-up",
+          "notes": "Very easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W06-D07-PERF-P02",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 3900000
+          },
+          "target": {
+            "kind": "heart_rate_zone_ref",
+            "zone_ref": "athlete_confirmed_zone_2"
+          },
+          "label": "Zone 2 running",
+          "notes": "Use the athlete-confirmed numerical Zone 2 range."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W06-D07-PERF-P03",
+          "role": "cool_down",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 300000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy cooldown",
+          "notes": "Very easy running; walking permitted."
+        }
+      ]
+    }
+  },
+  {
+    "source_session_id": "LW10K-W07-D02",
+    "source_week": 7,
+    "source_day": 2,
+    "fixed_seconds": 2760,
+    "distance_metres": 0,
+    "content_status": "FOUNDER_SELECTED_RUNNING_2026_11_03_FULL_D8_PENDING",
+    "workout": {
+      "schema_version": 1,
+      "workout_id": "LW10K-W07-D02-PERF-V1",
+      "title": "10K intervals",
+      "notes": "",
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W07-D02-PERF-P01",
+          "role": "warm_up",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 600000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Easy warm-up",
+          "notes": "Easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W07-D02-PERF-P02",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Relaxed acceleration",
+          "notes": "Relaxed and controlled, not a sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W07-D02-PERF-P03",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 40000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy recovery",
+          "notes": "Very easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W07-D02-PERF-P04",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Relaxed acceleration",
+          "notes": "Relaxed and controlled, not a sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W07-D02-PERF-P05",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 40000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy recovery",
+          "notes": "Very easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W07-D02-PERF-P06",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Relaxed acceleration",
+          "notes": "Relaxed and controlled, not a sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W07-D02-PERF-P07",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 40000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy recovery",
+          "notes": "Very easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W07-D02-PERF-P08",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 480000
+          },
+          "target": {
+            "kind": "alpha_quality_pace_v1",
+            "category": "10k_specific"
+          },
+          "label": "10K pace running",
+          "notes": "Use the athlete’s separately reviewed and accepted personalised target."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W07-D02-PERF-P09",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 120000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Easy recovery",
+          "notes": "Easy effort."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W07-D02-PERF-P10",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 480000
+          },
+          "target": {
+            "kind": "alpha_quality_pace_v1",
+            "category": "10k_specific"
+          },
+          "label": "10K pace running",
+          "notes": "Use the athlete’s separately reviewed and accepted personalised target."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W07-D02-PERF-P11",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 120000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Easy recovery",
+          "notes": "Easy effort."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W07-D02-PERF-P12",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 480000
+          },
+          "target": {
+            "kind": "alpha_quality_pace_v1",
+            "category": "10k_specific"
+          },
+          "label": "10K pace running",
+          "notes": "Use the athlete’s separately reviewed and accepted personalised target."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W07-D02-PERF-P13",
+          "role": "cool_down",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 300000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy cooldown",
+          "notes": "Very easy running or walking; walking is included in session time."
+        }
+      ]
+    }
+  },
+  {
+    "source_session_id": "LW10K-W07-D03",
+    "source_week": 7,
+    "source_day": 3,
+    "fixed_seconds": 3000,
+    "distance_metres": 0,
+    "content_status": "FOUNDER_SELECTED_RUNNING_2026_11_03_FULL_D8_PENDING",
+    "workout": {
+      "schema_version": 1,
+      "workout_id": "LW10K-W07-D03-PERF-V1",
+      "title": "Zone 2 run",
+      "notes": "",
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W07-D03-PERF-P01",
+          "role": "warm_up",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 300000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy warm-up",
+          "notes": "Very easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W07-D03-PERF-P02",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 2400000
+          },
+          "target": {
+            "kind": "heart_rate_zone_ref",
+            "zone_ref": "athlete_confirmed_zone_2"
+          },
+          "label": "Zone 2 running",
+          "notes": "Use the athlete-confirmed numerical Zone 2 range."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W07-D03-PERF-P03",
+          "role": "cool_down",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 300000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy cooldown",
+          "notes": "Very easy running; walking permitted."
+        }
+      ]
+    }
+  },
+  {
+    "source_session_id": "LW10K-W07-D05",
+    "source_week": 7,
+    "source_day": 5,
+    "fixed_seconds": 1980,
+    "distance_metres": 0,
+    "content_status": "FOUNDER_SELECTED_RUNNING_2026_11_03_FULL_D8_PENDING",
+    "workout": {
+      "schema_version": 1,
+      "workout_id": "LW10K-W07-D05-PERF-V1",
+      "title": "Short-5K intervals",
+      "notes": "",
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W07-D05-PERF-P01",
+          "role": "warm_up",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 600000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Easy warm-up",
+          "notes": "Easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W07-D05-PERF-P02",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 120000
+          },
+          "target": {
+            "kind": "alpha_quality_pace_v1",
+            "category": "short_5k"
+          },
+          "label": "Short-5K pace running",
+          "notes": "Use the athlete’s separately reviewed and accepted personalised target."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W07-D05-PERF-P03",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 120000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Easy recovery",
+          "notes": "Easy effort."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W07-D05-PERF-P04",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 120000
+          },
+          "target": {
+            "kind": "alpha_quality_pace_v1",
+            "category": "short_5k"
+          },
+          "label": "Short-5K pace running",
+          "notes": "Use the athlete’s separately reviewed and accepted personalised target."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W07-D05-PERF-P05",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 120000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Easy recovery",
+          "notes": "Easy effort."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W07-D05-PERF-P06",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 120000
+          },
+          "target": {
+            "kind": "alpha_quality_pace_v1",
+            "category": "short_5k"
+          },
+          "label": "Short-5K pace running",
+          "notes": "Use the athlete’s separately reviewed and accepted personalised target."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W07-D05-PERF-P07",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 120000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Easy recovery",
+          "notes": "Easy effort."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W07-D05-PERF-P08",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 120000
+          },
+          "target": {
+            "kind": "alpha_quality_pace_v1",
+            "category": "short_5k"
+          },
+          "label": "Short-5K pace running",
+          "notes": "Use the athlete’s separately reviewed and accepted personalised target."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W07-D05-PERF-P09",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 120000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Easy recovery",
+          "notes": "Easy effort."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W07-D05-PERF-P10",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 120000
+          },
+          "target": {
+            "kind": "alpha_quality_pace_v1",
+            "category": "short_5k"
+          },
+          "label": "Short-5K pace running",
+          "notes": "Use the athlete’s separately reviewed and accepted personalised target."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W07-D05-PERF-P11",
+          "role": "cool_down",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 300000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Easy cooldown",
+          "notes": "Easy running."
+        }
+      ]
+    }
+  },
+  {
+    "source_session_id": "LW10K-W07-D07",
+    "source_week": 7,
+    "source_day": 7,
+    "fixed_seconds": 4500,
+    "distance_metres": 0,
+    "content_status": "FOUNDER_SELECTED_RUNNING_2026_11_03_FULL_D8_PENDING",
+    "workout": {
+      "schema_version": 1,
+      "workout_id": "LW10K-W07-D07-PERF-V1",
+      "title": "Long Zone 2 run",
+      "notes": "",
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W07-D07-PERF-P01",
+          "role": "warm_up",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 300000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy warm-up",
+          "notes": "Very easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W07-D07-PERF-P02",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 3900000
+          },
+          "target": {
+            "kind": "heart_rate_zone_ref",
+            "zone_ref": "athlete_confirmed_zone_2"
+          },
+          "label": "Zone 2 running",
+          "notes": "Use the athlete-confirmed numerical Zone 2 range."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W07-D07-PERF-P03",
+          "role": "cool_down",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 300000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy cooldown",
+          "notes": "Very easy running; walking permitted."
+        }
+      ]
+    }
+  },
+  {
+    "source_session_id": "LW10K-W08-D02",
+    "source_week": 8,
+    "source_day": 2,
+    "fixed_seconds": 2940,
+    "distance_metres": 0,
+    "content_status": "FOUNDER_SELECTED_RUNNING_2026_11_03_FULL_D8_PENDING",
+    "workout": {
+      "schema_version": 1,
+      "workout_id": "LW10K-W08-D02-PERF-V1",
+      "title": "Peak 10K specificity",
+      "notes": "",
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W08-D02-PERF-P01",
+          "role": "warm_up",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 600000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Easy warm-up",
+          "notes": "Easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W08-D02-PERF-P02",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Relaxed acceleration",
+          "notes": "Relaxed and controlled, not a sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W08-D02-PERF-P03",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 40000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy recovery",
+          "notes": "Very easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W08-D02-PERF-P04",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Relaxed acceleration",
+          "notes": "Relaxed and controlled, not a sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W08-D02-PERF-P05",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 40000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy recovery",
+          "notes": "Very easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W08-D02-PERF-P06",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Relaxed acceleration",
+          "notes": "Relaxed and controlled, not a sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W08-D02-PERF-P07",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 40000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy recovery",
+          "notes": "Very easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W08-D02-PERF-P08",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 540000
+          },
+          "target": {
+            "kind": "alpha_quality_pace_v1",
+            "category": "10k_specific"
+          },
+          "label": "10K pace running",
+          "notes": "Use the athlete’s separately reviewed and accepted personalised target."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W08-D02-PERF-P09",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 120000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Easy recovery",
+          "notes": "Easy effort."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W08-D02-PERF-P10",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 540000
+          },
+          "target": {
+            "kind": "alpha_quality_pace_v1",
+            "category": "10k_specific"
+          },
+          "label": "10K pace running",
+          "notes": "Use the athlete’s separately reviewed and accepted personalised target."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W08-D02-PERF-P11",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 120000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Easy recovery",
+          "notes": "Easy effort."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W08-D02-PERF-P12",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 540000
+          },
+          "target": {
+            "kind": "alpha_quality_pace_v1",
+            "category": "10k_specific"
+          },
+          "label": "10K pace running",
+          "notes": "Use the athlete’s separately reviewed and accepted personalised target."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W08-D02-PERF-P13",
+          "role": "cool_down",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 300000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy cooldown",
+          "notes": "Very easy running or walking; walking is included in session time."
+        }
+      ]
+    }
+  },
+  {
+    "source_session_id": "LW10K-W08-D03",
+    "source_week": 8,
+    "source_day": 3,
+    "fixed_seconds": 2700,
+    "distance_metres": 0,
+    "content_status": "FOUNDER_SELECTED_RUNNING_2026_11_03_FULL_D8_PENDING",
+    "workout": {
+      "schema_version": 1,
+      "workout_id": "LW10K-W08-D03-PERF-V1",
+      "title": "Zone 2 run",
+      "notes": "",
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W08-D03-PERF-P01",
+          "role": "warm_up",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 300000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy warm-up",
+          "notes": "Very easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W08-D03-PERF-P02",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 2100000
+          },
+          "target": {
+            "kind": "heart_rate_zone_ref",
+            "zone_ref": "athlete_confirmed_zone_2"
+          },
+          "label": "Zone 2 running",
+          "notes": "Use the athlete-confirmed numerical Zone 2 range."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W08-D03-PERF-P03",
+          "role": "cool_down",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 300000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy cooldown",
+          "notes": "Very easy running; walking permitted."
+        }
+      ]
+    }
+  },
+  {
+    "source_session_id": "LW10K-W08-D05",
+    "source_week": 8,
+    "source_day": 5,
+    "fixed_seconds": 1410,
+    "distance_metres": 0,
+    "content_status": "FOUNDER_SELECTED_RUNNING_2026_11_03_FULL_D8_PENDING",
+    "workout": {
+      "schema_version": 1,
+      "workout_id": "LW10K-W08-D05-PERF-V1",
+      "title": "Short-5K intervals — lighter Friday",
+      "notes": "",
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W08-D05-PERF-P01",
+          "role": "warm_up",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 600000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Easy warm-up",
+          "notes": "Easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W08-D05-PERF-P02",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 60000
+          },
+          "target": {
+            "kind": "alpha_quality_pace_v1",
+            "category": "short_5k"
+          },
+          "label": "Short-5K pace running",
+          "notes": "Use the athlete’s separately reviewed and accepted personalised target."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W08-D05-PERF-P03",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 90000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Easy recovery",
+          "notes": "Easy effort."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W08-D05-PERF-P04",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 60000
+          },
+          "target": {
+            "kind": "alpha_quality_pace_v1",
+            "category": "short_5k"
+          },
+          "label": "Short-5K pace running",
+          "notes": "Use the athlete’s separately reviewed and accepted personalised target."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W08-D05-PERF-P05",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 90000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Easy recovery",
+          "notes": "Easy effort."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W08-D05-PERF-P06",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 60000
+          },
+          "target": {
+            "kind": "alpha_quality_pace_v1",
+            "category": "short_5k"
+          },
+          "label": "Short-5K pace running",
+          "notes": "Use the athlete’s separately reviewed and accepted personalised target."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W08-D05-PERF-P07",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 90000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Easy recovery",
+          "notes": "Easy effort."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W08-D05-PERF-P08",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 60000
+          },
+          "target": {
+            "kind": "alpha_quality_pace_v1",
+            "category": "short_5k"
+          },
+          "label": "Short-5K pace running",
+          "notes": "Use the athlete’s separately reviewed and accepted personalised target."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W08-D05-PERF-P09",
+          "role": "cool_down",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 300000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Easy cooldown",
+          "notes": "Easy running."
+        }
+      ]
+    }
+  },
+  {
+    "source_session_id": "LW10K-W08-D07",
+    "source_week": 8,
+    "source_day": 7,
+    "fixed_seconds": 4500,
+    "distance_metres": 0,
+    "content_status": "FOUNDER_SELECTED_RUNNING_2026_11_03_FULL_D8_PENDING",
+    "workout": {
+      "schema_version": 1,
+      "workout_id": "LW10K-W08-D07-PERF-V1",
+      "title": "Long Zone 2 run",
+      "notes": "",
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W08-D07-PERF-P01",
+          "role": "warm_up",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 300000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy warm-up",
+          "notes": "Very easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W08-D07-PERF-P02",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 3900000
+          },
+          "target": {
+            "kind": "heart_rate_zone_ref",
+            "zone_ref": "athlete_confirmed_zone_2"
+          },
+          "label": "Zone 2 running",
+          "notes": "Use the athlete-confirmed numerical Zone 2 range."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W08-D07-PERF-P03",
+          "role": "cool_down",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 300000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy cooldown",
+          "notes": "Very easy running; walking permitted."
+        }
+      ]
+    }
+  },
+  {
+    "source_session_id": "LW10K-W09-D02",
+    "source_week": 9,
+    "source_day": 2,
+    "fixed_seconds": 2400,
+    "distance_metres": 0,
+    "content_status": "FOUNDER_SELECTED_RUNNING_2026_11_03_FULL_D8_PENDING",
+    "workout": {
+      "schema_version": 1,
+      "workout_id": "LW10K-W09-D02-PERF-V1",
+      "title": "10K intervals",
+      "notes": "",
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W09-D02-PERF-P01",
+          "role": "warm_up",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 600000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Easy warm-up",
+          "notes": "Easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W09-D02-PERF-P02",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Relaxed acceleration",
+          "notes": "Relaxed and controlled, not a sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W09-D02-PERF-P03",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 40000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy recovery",
+          "notes": "Very easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W09-D02-PERF-P04",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Relaxed acceleration",
+          "notes": "Relaxed and controlled, not a sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W09-D02-PERF-P05",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 40000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy recovery",
+          "notes": "Very easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W09-D02-PERF-P06",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Relaxed acceleration",
+          "notes": "Relaxed and controlled, not a sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W09-D02-PERF-P07",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 40000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy recovery",
+          "notes": "Very easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W09-D02-PERF-P08",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 360000
+          },
+          "target": {
+            "kind": "alpha_quality_pace_v1",
+            "category": "10k_specific"
+          },
+          "label": "10K pace running",
+          "notes": "Use the athlete’s separately reviewed and accepted personalised target."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W09-D02-PERF-P09",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 120000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Easy recovery",
+          "notes": "Easy effort."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W09-D02-PERF-P10",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 360000
+          },
+          "target": {
+            "kind": "alpha_quality_pace_v1",
+            "category": "10k_specific"
+          },
+          "label": "10K pace running",
+          "notes": "Use the athlete’s separately reviewed and accepted personalised target."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W09-D02-PERF-P11",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 120000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Easy recovery",
+          "notes": "Easy effort."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W09-D02-PERF-P12",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 360000
+          },
+          "target": {
+            "kind": "alpha_quality_pace_v1",
+            "category": "10k_specific"
+          },
+          "label": "10K pace running",
+          "notes": "Use the athlete’s separately reviewed and accepted personalised target."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W09-D02-PERF-P13",
+          "role": "cool_down",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 300000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy cooldown",
+          "notes": "Very easy running or walking; walking is included in session time."
+        }
+      ]
+    }
+  },
+  {
+    "source_session_id": "LW10K-W09-D03",
+    "source_week": 9,
+    "source_day": 3,
+    "fixed_seconds": 2700,
+    "distance_metres": 0,
+    "content_status": "FOUNDER_SELECTED_RUNNING_2026_11_03_FULL_D8_PENDING",
+    "workout": {
+      "schema_version": 1,
+      "workout_id": "LW10K-W09-D03-PERF-V1",
+      "title": "Zone 2 run",
+      "notes": "",
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W09-D03-PERF-P01",
+          "role": "warm_up",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 300000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy warm-up",
+          "notes": "Very easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W09-D03-PERF-P02",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 2100000
+          },
+          "target": {
+            "kind": "heart_rate_zone_ref",
+            "zone_ref": "athlete_confirmed_zone_2"
+          },
+          "label": "Zone 2 running",
+          "notes": "Use the athlete-confirmed numerical Zone 2 range."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W09-D03-PERF-P03",
+          "role": "cool_down",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 300000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy cooldown",
+          "notes": "Very easy running; walking permitted."
+        }
+      ]
+    }
+  },
+  {
+    "source_session_id": "LW10K-W09-D05",
+    "source_week": 9,
+    "source_day": 5,
+    "fixed_seconds": 1410,
+    "distance_metres": 0,
+    "content_status": "FOUNDER_SELECTED_RUNNING_2026_11_03_FULL_D8_PENDING",
+    "workout": {
+      "schema_version": 1,
+      "workout_id": "LW10K-W09-D05-PERF-V1",
+      "title": "Short-5K intervals",
+      "notes": "",
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W09-D05-PERF-P01",
+          "role": "warm_up",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 600000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Easy warm-up",
+          "notes": "Easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W09-D05-PERF-P02",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 60000
+          },
+          "target": {
+            "kind": "alpha_quality_pace_v1",
+            "category": "short_5k"
+          },
+          "label": "Short-5K pace running",
+          "notes": "Use the athlete’s separately reviewed and accepted personalised target."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W09-D05-PERF-P03",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 90000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Easy recovery",
+          "notes": "Easy effort."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W09-D05-PERF-P04",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 60000
+          },
+          "target": {
+            "kind": "alpha_quality_pace_v1",
+            "category": "short_5k"
+          },
+          "label": "Short-5K pace running",
+          "notes": "Use the athlete’s separately reviewed and accepted personalised target."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W09-D05-PERF-P05",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 90000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Easy recovery",
+          "notes": "Easy effort."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W09-D05-PERF-P06",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 60000
+          },
+          "target": {
+            "kind": "alpha_quality_pace_v1",
+            "category": "short_5k"
+          },
+          "label": "Short-5K pace running",
+          "notes": "Use the athlete’s separately reviewed and accepted personalised target."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W09-D05-PERF-P07",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 90000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Easy recovery",
+          "notes": "Easy effort."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W09-D05-PERF-P08",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 60000
+          },
+          "target": {
+            "kind": "alpha_quality_pace_v1",
+            "category": "short_5k"
+          },
+          "label": "Short-5K pace running",
+          "notes": "Use the athlete’s separately reviewed and accepted personalised target."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W09-D05-PERF-P09",
+          "role": "cool_down",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 300000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Easy cooldown",
+          "notes": "Easy running."
+        }
+      ]
+    }
+  },
+  {
+    "source_session_id": "LW10K-W09-D07",
+    "source_week": 9,
+    "source_day": 7,
+    "fixed_seconds": 3600,
+    "distance_metres": 0,
+    "content_status": "FOUNDER_SELECTED_RUNNING_2026_11_03_FULL_D8_PENDING",
+    "workout": {
+      "schema_version": 1,
+      "workout_id": "LW10K-W09-D07-PERF-V1",
+      "title": "Long Zone 2 run",
+      "notes": "",
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W09-D07-PERF-P01",
+          "role": "warm_up",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 300000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy warm-up",
+          "notes": "Very easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W09-D07-PERF-P02",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 3000000
+          },
+          "target": {
+            "kind": "heart_rate_zone_ref",
+            "zone_ref": "athlete_confirmed_zone_2"
+          },
+          "label": "Zone 2 running",
+          "notes": "Use the athlete-confirmed numerical Zone 2 range."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W09-D07-PERF-P03",
+          "role": "cool_down",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 300000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy cooldown",
+          "notes": "Very easy running; walking permitted."
+        }
+      ]
+    }
+  },
+  {
+    "source_session_id": "LW10K-W10-D02",
+    "source_week": 10,
+    "source_day": 2,
+    "fixed_seconds": 1680,
+    "distance_metres": 0,
+    "content_status": "FOUNDER_SELECTED_RUNNING_2026_11_03_FULL_D8_PENDING",
+    "workout": {
+      "schema_version": 1,
+      "workout_id": "LW10K-W10-D02-PERF-V1",
+      "title": "Taper sharpening",
+      "notes": "",
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W10-D02-PERF-P01",
+          "role": "warm_up",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 600000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Easy warm-up",
+          "notes": "Easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W10-D02-PERF-P02",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Relaxed acceleration",
+          "notes": "Relaxed and controlled, not a sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W10-D02-PERF-P03",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 40000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy recovery",
+          "notes": "Very easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W10-D02-PERF-P04",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Relaxed acceleration",
+          "notes": "Relaxed and controlled, not a sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W10-D02-PERF-P05",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 40000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy recovery",
+          "notes": "Very easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W10-D02-PERF-P06",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Relaxed acceleration",
+          "notes": "Relaxed and controlled, not a sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W10-D02-PERF-P07",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 40000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy recovery",
+          "notes": "Very easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W10-D02-PERF-P08",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 120000
+          },
+          "target": {
+            "kind": "alpha_quality_pace_v1",
+            "category": "10k_specific"
+          },
+          "label": "10K pace running",
+          "notes": "Use the athlete’s separately reviewed and accepted personalised target."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W10-D02-PERF-P09",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 120000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Easy recovery",
+          "notes": "Easy effort."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W10-D02-PERF-P10",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 120000
+          },
+          "target": {
+            "kind": "alpha_quality_pace_v1",
+            "category": "10k_specific"
+          },
+          "label": "10K pace running",
+          "notes": "Use the athlete’s separately reviewed and accepted personalised target."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W10-D02-PERF-P11",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 120000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Easy recovery",
+          "notes": "Easy effort."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W10-D02-PERF-P12",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 120000
+          },
+          "target": {
+            "kind": "alpha_quality_pace_v1",
+            "category": "10k_specific"
+          },
+          "label": "10K pace running",
+          "notes": "Use the athlete’s separately reviewed and accepted personalised target."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W10-D02-PERF-P13",
+          "role": "cool_down",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 300000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy cooldown",
+          "notes": "Very easy running or walking; walking is included in session time."
+        }
+      ]
+    }
+  },
+  {
+    "source_session_id": "LW10K-W10-D03",
+    "source_week": 10,
+    "source_day": 3,
+    "fixed_seconds": 2100,
+    "distance_metres": 0,
+    "content_status": "FOUNDER_SELECTED_RUNNING_2026_11_03_FULL_D8_PENDING",
+    "workout": {
+      "schema_version": 1,
+      "workout_id": "LW10K-W10-D03-PERF-V1",
+      "title": "Zone 2 run",
+      "notes": "",
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W10-D03-PERF-P01",
+          "role": "warm_up",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 300000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy warm-up",
+          "notes": "Very easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W10-D03-PERF-P02",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 1500000
+          },
+          "target": {
+            "kind": "heart_rate_zone_ref",
+            "zone_ref": "athlete_confirmed_zone_2"
+          },
+          "label": "Zone 2 running",
+          "notes": "Use the athlete-confirmed numerical Zone 2 range."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W10-D03-PERF-P03",
+          "role": "cool_down",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 300000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy cooldown",
+          "notes": "Very easy running; walking permitted."
+        }
+      ]
+    }
+  },
+  {
+    "source_session_id": "LW10K-W10-D05",
+    "source_week": 10,
+    "source_day": 5,
+    "fixed_seconds": 1200,
+    "distance_metres": 0,
+    "content_status": "FOUNDER_SELECTED_RUNNING_2026_11_03_FULL_D8_PENDING",
+    "workout": {
+      "schema_version": 1,
+      "workout_id": "LW10K-W10-D05-PERF-V1",
+      "title": "Easy run with relaxed strides",
+      "notes": "",
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W10-D05-PERF-P01",
+          "role": "warm_up",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 300000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy warm-up",
+          "notes": "Very easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W10-D05-PERF-P02",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 360000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Easy running",
+          "notes": "Easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W10-D05-PERF-P03",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Relaxed stride",
+          "notes": "Relaxed and controlled, not a sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W10-D05-PERF-P04",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 60000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy recovery",
+          "notes": "Very easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W10-D05-PERF-P05",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Relaxed stride",
+          "notes": "Relaxed and controlled, not a sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W10-D05-PERF-P06",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 60000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy recovery",
+          "notes": "Very easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W10-D05-PERF-P07",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Relaxed stride",
+          "notes": "Relaxed and controlled, not a sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W10-D05-PERF-P08",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 60000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy recovery",
+          "notes": "Very easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W10-D05-PERF-P09",
+          "role": "cool_down",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 300000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Easy cooldown",
+          "notes": "Easy running."
+        }
+      ]
+    }
+  },
+  {
+    "source_session_id": "LW10K-W10-D07",
+    "source_week": 10,
+    "source_day": 7,
+    "fixed_seconds": 1200,
+    "distance_metres": 10000,
+    "content_status": "FOUNDER_SELECTED_RUNNING_2026_11_03_FULL_D8_PENDING",
+    "workout": {
+      "schema_version": 1,
+      "workout_id": "LW10K-W10-D07-PERF-V1",
+      "title": "10K final assessment",
+      "notes": "",
+      "steps": [
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W10-D07-PERF-P01",
+          "role": "warm_up",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 600000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Easy warm-up",
+          "notes": "Easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W10-D07-PERF-P02",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Relaxed acceleration",
+          "notes": "Relaxed and controlled, not a sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W10-D07-PERF-P03",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 40000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy recovery",
+          "notes": "Very easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W10-D07-PERF-P04",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Relaxed acceleration",
+          "notes": "Relaxed and controlled, not a sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W10-D07-PERF-P05",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 40000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy recovery",
+          "notes": "Very easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W10-D07-PERF-P06",
+          "role": "work",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 20000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Relaxed acceleration",
+          "notes": "Relaxed and controlled, not a sprint."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W10-D07-PERF-P07",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 40000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Very easy recovery",
+          "notes": "Very easy running."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W10-D07-PERF-P08",
+          "role": "recovery",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 120000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Easy settling",
+          "notes": "Easy walking or jogging before the test."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W10-D07-PERF-P09",
+          "role": "work",
+          "duration": {
+            "kind": "distance",
+            "millimetres": 10000000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "10,000 m test",
+          "notes": "Distance-ended test; confirm actual external distance."
+        },
+        {
+          "kind": "atomic",
+          "step_id": "LW10K-W10-D07-PERF-P10",
+          "role": "cool_down",
+          "duration": {
+            "kind": "time",
+            "milliseconds": 300000
+          },
+          "target": {
+            "kind": "none"
+          },
+          "label": "Easy cooldown",
+          "notes": "Easy walking or jogging. No additional walks or drills are appended."
+        }
+      ]
+    }
+  }
+]

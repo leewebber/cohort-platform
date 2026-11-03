@@ -1,16 +1,16 @@
 # Manual coach-builder walkthrough
 
-Updated 2026-11-02 after Lee withheld usability acceptance of the initial workspace.
+Updated 2026-11-03 for the selected performance-running source. Lee's usability acceptance remains withheld.
 [Redesign handoff](../coach_redesign/HANDOFF.md) · [Readability/structured preview follow-up](../readability/HANDOFF.md). **Manual acceptance remains pending.**
 
 Start from the repository root:
 
 ```sh
-flutter run -d web-server --web-hostname 127.0.0.1 --web-port 8313 --target lib/main_programme_studio_founder_preview.dart --no-pub
+flutter run -d web-server --web-hostname 127.0.0.1 --web-port 8314 --target lib/main_programme_studio_founder_preview.dart --no-pub
 ```
 
 Open the printed URL manually. No browser/desktop automation is required or authorised.
-The entry starts with the selected ten-week programme, not an empty workspace.
+The entry starts with the 3 November selected performance-running programme, not an empty workspace. Older backups reopen their own archived prescriptions without automatic upgrade.
 Use Ctrl-C in the launching terminal to stop it.
 
 1. Select **Week 1**, Monday's **Open session**, then **Edit session**. Change the
@@ -71,12 +71,9 @@ history or approval. Older synthetic v1/v2/v3 backups continue to use the origin
 `lib/main_programme_studio_composition_preview.dart` entry; this founder entry uses
 native v4 backups.
 
-The final Sunday test is unchanged: 15 min easy, three cycles of 20 s stride plus
-100 s recovery (including after the third), 2 min easy settling, 10,000 m, 10 min
-cooldown. That is 23 min before + actual 10K time + 10 min after. The general source
-also retains 3–5 min walking and untimed mobility before, plus 3–5 min walking after,
-outside the native 33-minute body. This is a retained proposal, not blanket coaching
-approval. The native body is not the entire preparation/finish allowance.
+W6 Friday now offers **Training target → Personalised short-5K pace**, distinct from threshold and current-10K pace. It references the existing approved rule, not a numerical target invented in Studio.
+
+The selected final Sunday test is now 600 sec easy, three cycles of 20 sec relaxed acceleration +40 sec easy (including the final recovery), 120 sec easy settling, 10,000 m and 300 sec easy cooldown: **20 timed minutes plus actual test time**. No superseded external walks/drills are appended. An explicitly reopened archived backup retains its old 33-minute body and shows an archived-source notice. Full D8 is still separate from this running-source selection.
 
 Record Lee's actual result separately. Automated checks do not establish usability,
 browser picker/download acceptance, coaching approval or D8. Gate A remains OPEN.

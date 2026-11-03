@@ -1,5 +1,7 @@
 # Complete all-40 performance-running reconciliation
 
+> Historical pre-selection comparison. All running proposals and remaining stride/test choices were selected and applied on 2026-11-03; see [the current fidelity handoff](../m11_selected_performance_running/HANDOFF.md). This table is not the active programme.
+
 2026-11-03, Asia/Makassar. Selected implementation HEAD: `2214d88`.
 **All 40 selected runs compared. No selected prescription or application code changed.**
 

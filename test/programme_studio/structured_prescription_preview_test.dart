@@ -153,9 +153,12 @@ void main() {
         findsOneWidget,
       );
       expect(find.text('Personalised threshold pace'), findsOneWidget);
-      expect(find.textContaining('RPE 7/10'), findsOneWidget);
       expect(
-        find.textContaining('No extra mandatory walk before or after'),
+        find.textContaining('separately reviewed and accepted'),
+        findsOneWidget,
+      );
+      expect(
+        find.textContaining('walking is included in session time'),
         findsOneWidget,
       );
       expect(find.textContaining('Authored effort'), findsNothing);
@@ -182,26 +185,29 @@ void main() {
       expect(find.textContaining('unknown'), findsNothing);
     },
   );
-  test(
-    'fresh W1 Tue/Wed/Fri are actual one-step 25-minute selected sources',
-    () {
-      final c = selectedWorkspace();
-      addTearDown(c.dispose);
-      for (final day in ['02', '03', '05']) {
-        final g = jsonDecode(c.selected('LW10K-W01-D$day').source);
-        final run = const RunningWorkoutCodec().decodeMap(
-          Map<String, dynamic>.from(
-            g['blocks'][0]['timer_config']['running_workout'] as Map,
-          ),
-        );
-        expect(run.steps, hasLength(1));
-        expect(
-          (run.steps.single as RunningAtomicStep).duration,
-          const RunningDuration.time(1500000),
-        );
-      }
-    },
-  );
+  test('fresh W1 uses complete selected performance prescriptions', () {
+    final c = selectedWorkspace();
+    addTearDown(c.dispose);
+    for (final entry in {
+      '02': 2550,
+      '03': 2700,
+      '05': 2400,
+      '07': 3900,
+    }.entries) {
+      final g = jsonDecode(c.selected('LW10K-W01-D${entry.key}').source);
+      final run = const RunningWorkoutCodec().decodeMap(
+        Map<String, dynamic>.from(
+          g['blocks'][0]['timer_config']['running_workout'] as Map,
+        ),
+      );
+      expect(
+        groupRunningSteps(run.steps)
+            .expand((g) => g.steps)
+            .fold<int>(0, (n, s) => n + s.duration.milliseconds!),
+        entry.value * 1000,
+      );
+    }
+  });
   testWidgets('timed per-side hold is printed once with source conventions', (
     tester,
   ) async {

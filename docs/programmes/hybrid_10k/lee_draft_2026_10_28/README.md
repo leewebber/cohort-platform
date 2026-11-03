@@ -1,3 +1,5 @@
+> **ARCHIVED / SUPERSEDED — not an active running source.** See [the sole active source](../performance_selected_2026_11_03/README.md). Original data remains for provenance and compatibility.
+
 # Lee's retained ten-week draft
 
 2026-10-28 (Asia/Makassar). **GENUINE DRAFT; NOT CONTENT APPROVED, PUBLISHED OR ASSIGNED.**

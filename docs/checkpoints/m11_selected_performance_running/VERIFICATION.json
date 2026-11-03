@@ -1,0 +1,198 @@
+{
+  "status": "ALL_40_SELECTED_AND_VERIFIED_FULL_D8_PENDING",
+  "date": "2026-11-03",
+  "preserved_base": "293903c3aa1a4aaecf055586d2a3d243f6ef1a70",
+  "reference_sha256": "5799b67528ed286aa223ee8f105fc887c73316b357097d4b279532ceddea9e89",
+  "selection_sha256": "84241df05b3e2967103942d3ff0eb6373c5678b5e240e3b4c9667f047f3256bd",
+  "active_source": "docs/programmes/hybrid_10k/performance_selected_2026_11_03",
+  "assets": [
+    {
+      "path": "docs/programmes/hybrid_10k/performance_selected_2026_11_03/SOURCE.json",
+      "sha256": "96db2300a2c84f38b745bbf9f04743f857a96b768b5a7a94ef1690428fb6a0b2",
+      "bytes": 511583
+    },
+    {
+      "path": "docs/programmes/hybrid_10k/performance_selected_2026_11_03/RUNNING_BODIES.json",
+      "sha256": "38f9224913767959218b91468142cba498a772080a35fae52cf162468ca8ffef",
+      "bytes": 129596
+    },
+    {
+      "path": "docs/programmes/hybrid_10k/performance_selected_2026_11_03/SCHEDULE_CANDIDATE.json",
+      "sha256": "1177f92cc3f9adec1a6ab96bbc64661ed9aff66347ae39d873efd220d571df9f",
+      "bytes": 51885
+    },
+    {
+      "path": "docs/programmes/hybrid_10k/performance_selected_2026_11_03/STRENGTH_REVIEW_GRAPHS.json",
+      "sha256": "399fcdcf618ee85d474e973d0a53a3a950f052740d7b539056df95ed1517342e",
+      "bytes": 212181
+    },
+    {
+      "path": "docs/programmes/hybrid_10k/performance_selected_2026_11_03/IDENTITY_INTAKE.json",
+      "sha256": "5372a05dda6c2a4850794b94bb3c6beed654cbc55a2fc972ea1e8ab1c8f68652",
+      "bytes": 313344
+    }
+  ],
+  "sessions_verified": 40,
+  "ordered_roles_durations_distances_targets_match_independent_reference": true,
+  "between_only_quality_recovery_and_every_stride_recovery_verified": true,
+  "weekly_timed_seconds": [
+    11550,
+    12360,
+    13140,
+    11250,
+    13320,
+    12090,
+    12240,
+    11550,
+    10110,
+    6180
+  ],
+  "week10_note": "6180 timed seconds = 83 minutes before Sunday + 20 timed Sunday minutes, plus actual distance-ended test elapsed time. Permitted walking is included.",
+  "target_phase_counts": {
+    "none": 209,
+    "threshold": 17,
+    "athlete_confirmed_zone_2": 24,
+    "10k_specific": 16,
+    "short_5k": 19
+  },
+  "final_test": {
+    "distance_metres": 10000,
+    "timed_seconds": 1200,
+    "timed_phase_seconds": [
+      600,
+      20,
+      40,
+      20,
+      40,
+      20,
+      40,
+      120,
+      300
+    ],
+    "external_walks_drills_appended": false
+  },
+  "artifacts": [
+    {
+      "path": "/private/tmp/m11_performance_verified_full_v4.json",
+      "bytes": 623113,
+      "sha256": "7ad565d13f52a2aec453ee8be088c2508aa2ccf6c02df7cad2977bc71442da99"
+    },
+    {
+      "path": "/private/tmp/m11_performance_verified_all_40.tar",
+      "bytes": 583168,
+      "sha256": "aff9103abda873b04a981fb689491bc4a695360ec0971109e8142bb49811b908"
+    },
+    {
+      "path": "/private/tmp/m11_performance_full_selected_editable_workspace.json",
+      "bytes": 623113,
+      "sha256": "7ad565d13f52a2aec453ee8be088c2508aa2ccf6c02df7cad2977bc71442da99"
+    },
+    {
+      "path": "/private/tmp/m11_performance_archived_v4_backup.json",
+      "bytes": 636502,
+      "sha256": "0acdf9c71fff9c01342134fc3401e66776cc8e5b11f61cadae3a875a07cac7c8"
+    },
+    {
+      "path": "/private/tmp/m11_performance_legacy_clean_v4.json",
+      "bytes": 629122,
+      "sha256": "2f956252f28371e9a0fe1a3d32bc7a619cf08af31f7e3b6f19f45316a967153b"
+    }
+  ],
+  "saved_file_running_bodies_exact": 40,
+  "tar_consolidated_and_each_native_graph_file_exact": 40,
+  "tar_scope": "40 running sessions only; no full-programme admission or publication",
+  "editable_full_inventory": {
+    "running": 40,
+    "strength": 20,
+    "strength_prescriptions_unchanged": true
+  },
+  "legacy_data_byte_exact_at_293903c": true,
+  "catalogue": {
+    "missing_records": 3,
+    "unresolved_occurrences": 28,
+    "strength_sessions_blocked": 20,
+    "fabricated_identity_or_retention": false
+  },
+  "checks": {
+    "affected_flutter_pass": 671,
+    "independent_python_pass": 4,
+    "safety_groups_pass": 6,
+    "analysis_inherited_exact_rows": 362,
+    "analysis_errors": 0,
+    "analysis_new_findings": 0,
+    "browser_visual_or_founder_acceptance": false
+  },
+  "preview": {
+    "url": "http://127.0.0.1:8314/",
+    "http": 200,
+    "root_bytes": 1518,
+    "modules": {
+      "packages/cohort_platform/main_programme_studio_founder_preview.dart.lib.js": 21562,
+      "packages/cohort_platform/features/programme_studio/genuine_authoring/genuine_workspace_screen.dart.lib.js": 658951,
+      "packages/cohort_platform/features/programme_studio/genuine_authoring/selected_source_profiles.dart.lib.js": 10505
+    },
+    "assets_match_disk": [
+      {
+        "path": "docs/programmes/hybrid_10k/performance_selected_2026_11_03/SOURCE.json",
+        "sha256": "96db2300a2c84f38b745bbf9f04743f857a96b768b5a7a94ef1690428fb6a0b2",
+        "bytes": 511583
+      },
+      {
+        "path": "docs/programmes/hybrid_10k/performance_selected_2026_11_03/RUNNING_BODIES.json",
+        "sha256": "38f9224913767959218b91468142cba498a772080a35fae52cf162468ca8ffef",
+        "bytes": 129596
+      },
+      {
+        "path": "docs/programmes/hybrid_10k/performance_selected_2026_11_03/SCHEDULE_CANDIDATE.json",
+        "sha256": "1177f92cc3f9adec1a6ab96bbc64661ed9aff66347ae39d873efd220d571df9f",
+        "bytes": 51885
+      },
+      {
+        "path": "docs/programmes/hybrid_10k/performance_selected_2026_11_03/STRENGTH_REVIEW_GRAPHS.json",
+        "sha256": "399fcdcf618ee85d474e973d0a53a3a950f052740d7b539056df95ed1517342e",
+        "bytes": 212181
+      },
+      {
+        "path": "docs/programmes/hybrid_10k/performance_selected_2026_11_03/IDENTITY_INTAKE.json",
+        "sha256": "5372a05dda6c2a4850794b94bb3c6beed654cbc55a2fc972ea1e8ab1c8f68652",
+        "bytes": 313344
+      },
+      {
+        "path": "docs/programmes/hybrid_10k/founder_selected_2026_10_30/SOURCE.json",
+        "sha256": "f12b5df97f0a9dc813c9610021ee82233414d2e2b1e6187dd0ae09745e3ecdf5",
+        "bytes": 411888
+      },
+      {
+        "path": "docs/programmes/hybrid_10k/founder_selected_2026_10_30/RUNNING_BODIES.json",
+        "sha256": "5d36176a57d8b610799cd72bf8be452bbf9a68fa7396ce4bf41877f83959491b",
+        "bytes": 121544
+      },
+      {
+        "path": "docs/programmes/hybrid_10k/founder_selected_2026_10_30/SCHEDULE_CANDIDATE.json",
+        "sha256": "4276d149c61e9d5c476593da9360821a2bc5fe8b9bad896b7346f0e25fd4f02c",
+        "bytes": 53657
+      },
+      {
+        "path": "docs/programmes/hybrid_10k/founder_selected_2026_10_30/STRENGTH_REVIEW_GRAPHS.json",
+        "sha256": "399fcdcf618ee85d474e973d0a53a3a950f052740d7b539056df95ed1517342e",
+        "bytes": 212181
+      },
+      {
+        "path": "docs/programmes/hybrid_10k/founder_selected_2026_10_30/IDENTITY_INTAKE.json",
+        "sha256": "5372a05dda6c2a4850794b94bb3c6beed654cbc55a2fc972ea1e8ab1c8f68652",
+        "bytes": 313344
+      }
+    ],
+    "browser_or_visual_verification": false
+  },
+  "preservation_precommit": {
+    "matches_before_exact": true,
+    "older_existing_checkouts": 21,
+    "older_registrations": 25,
+    "raw_indices_heads_refs_files_env_temp_bundles_unchanged": true
+  },
+  "full_D8": false,
+  "founder_usability_acceptance": false,
+  "Gate_A_complete": false,
+  "hosted_or_athlete_writes": false
+}

@@ -568,13 +568,13 @@ String formatRunSeconds(int seconds) =>
   }
   if (metres > 10000 ||
       metres > 0 &&
-          (seconds != 1980 ||
+          (!{1200, 1980}.contains(seconds) ||
               (workout['steps'] as List).length < 2 ||
               workout['steps'][(workout['steps'] as List).length -
                       2]['duration']['kind'] !=
                   'distance')) {
     throw const FormatException(
-      'Retain the exact selected final 10,000 m body and 33 timed minutes; arbitrary distance workouts are outside this form.',
+      'Retain the selected final 10,000 m body and 20 timed minutes (33 only for archived sources); arbitrary distance workouts are outside this form.',
     );
   }
   return (seconds: seconds, metres: metres);

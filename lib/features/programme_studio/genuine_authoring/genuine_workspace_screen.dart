@@ -330,6 +330,10 @@ class _GenuineWorkspaceScreenState extends State<GenuineWorkspaceScreen> {
                   const Text(
                     'No autosave. Reloading loses changes since your last backup. Saving does not publish.',
                   ),
+                  if (c.isArchivedRunningSource)
+                    const Text(
+                      'Archived running source opened from backup. Prescriptions are preserved; new workspaces use the 3 November performance selection.',
+                    ),
                   if (message != null)
                     Text(
                       message!,
@@ -394,10 +398,11 @@ class _GenuineWorkspaceScreenState extends State<GenuineWorkspaceScreen> {
   }
 
   String targetChoice(Map target) => switch (target['kind']) {
-    'alpha_quality_pace_v1' =>
-      target['category'] == 'threshold'
-          ? 'Personalised threshold pace'
-          : 'Personalised current 10K pace',
+    'alpha_quality_pace_v1' => switch (target['category']) {
+      'threshold' => 'Personalised threshold pace',
+      'short_5k' => 'Personalised short-5K pace',
+      _ => 'Personalised current 10K pace',
+    },
     'heart_rate_zone_ref' => 'Personalised Zone 2 heart rate',
     'rpe_range' => 'Authored effort range',
     _ => 'Follow the coached effort',
@@ -1527,14 +1532,24 @@ class _GenuineWorkspaceScreenState extends State<GenuineWorkspaceScreen> {
                       ('none', 'Coached effort; no fixed pace/HR'),
                       ('heart_rate_zone_ref', 'Personalised Zone 2 heart rate'),
                       ('threshold', 'Personalised threshold pace'),
-                      ('current_10k', 'Personalised current 10K pace'),
+                      ('10k_specific', 'Personalised current 10K pace'),
+                      ('short_5k', 'Personalised short-5K pace'),
+                      if (target['category'] == 'current_10k')
+                        (
+                          'current_10k',
+                          'Legacy 10K draft target — select supported current 10K pace',
+                        ),
                       if (target['kind'] == 'rpe_range')
                         ('rpe_range', 'Retained authored RPE range'),
                     ],
                     (v) => change(
                       () => s['target'] = v == 'heart_rate_zone_ref'
                           ? {'kind': v, 'zone_ref': 'athlete_confirmed_zone_2'}
-                          : {'threshold', 'current_10k'}.contains(v)
+                          : {
+                              'threshold',
+                              '10k_specific',
+                              'short_5k',
+                            }.contains(v)
                           ? {'kind': 'alpha_quality_pace_v1', 'category': v}
                           : v == 'rpe_range'
                           ? target

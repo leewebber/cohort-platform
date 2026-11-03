@@ -1,5 +1,18 @@
 # Current repository checkpoint
 
+> **M1.1 selected performance running — 2026-11-03:**
+> [Fidelity receipt/handoff](./m11_selected_performance_running/HANDOFF.md) applies
+> all forty founder-selected performance runs and exact accepted stride expansions.
+> The active final test is 10,000 m +20 timed minutes with no superseded walks/drills.
+> The previous snapshot is archived and old editable files reopen unchanged. Strength
+> and genuine evidence are byte-exact; three missing records still block 28 occurrences
+> and all 20 complete strength sessions. Short-5K selection/labels use the existing
+> approved rule. Saved/reopened and actual running-only canonical exports preserve
+> all forty prescriptions. Founder usability, full D8 and Gate A remain OPEN.
+> Next single point: manual review of the updated selected-source preview.
+
+> Earlier entries below retain historical scope; their old running doses are superseded.
+
 > **M1.1 founder-authoring implementation — local, 2026-11-02:**
 > [Implementation handoff](./m11_founder_authoring/implementation/HANDOFF.md) extends
 > existing Studio source policy/controller/review/file transport with genuine native

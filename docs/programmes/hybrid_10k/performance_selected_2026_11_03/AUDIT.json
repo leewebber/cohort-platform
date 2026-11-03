@@ -1,0 +1,65 @@
+{
+  "running_reference_sha256": "5799b67528ed286aa223ee8f105fc887c73316b357097d4b279532ceddea9e89",
+  "selection_sha256": "84241df05b3e2967103942d3ff0eb6373c5678b5e240e3b4c9667f047f3256bd",
+  "archived_source_sha256": "f12b5df97f0a9dc813c9610021ee82233414d2e2b1e6187dd0ae09745e3ecdf5",
+  "runs": 40,
+  "strength_sessions": 20,
+  "rest_days": 10,
+  "weekly": [
+    {
+      "week": 1,
+      "timed_seconds": 11550,
+      "distance_metres": 0
+    },
+    {
+      "week": 2,
+      "timed_seconds": 12360,
+      "distance_metres": 0
+    },
+    {
+      "week": 3,
+      "timed_seconds": 13140,
+      "distance_metres": 0
+    },
+    {
+      "week": 4,
+      "timed_seconds": 11250,
+      "distance_metres": 0
+    },
+    {
+      "week": 5,
+      "timed_seconds": 13320,
+      "distance_metres": 0
+    },
+    {
+      "week": 6,
+      "timed_seconds": 12090,
+      "distance_metres": 0
+    },
+    {
+      "week": 7,
+      "timed_seconds": 12240,
+      "distance_metres": 0
+    },
+    {
+      "week": 8,
+      "timed_seconds": 11550,
+      "distance_metres": 0
+    },
+    {
+      "week": 9,
+      "timed_seconds": 10110,
+      "distance_metres": 0
+    },
+    {
+      "week": 10,
+      "timed_seconds": 6180,
+      "distance_metres": 10000
+    }
+  ],
+  "strength_preserved_byte_exact": true,
+  "catalogue_evidence_preserved_byte_exact": true,
+  "missing_catalogue_occurrences": 28,
+  "full_D8": false,
+  "published": false
+}

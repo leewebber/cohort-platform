@@ -392,4 +392,51 @@ void main() {
       expect(tester.takeException(), isNull);
     },
   );
+  testWidgets(
+    'short-5K target is offered and displayed as short-5K, then saved without substitution',
+    (tester) async {
+      final c = selectedWorkspace();
+      addTearDown(c.dispose);
+      await mount(tester, c);
+      await tapVisible(tester, find.text('Week 6'));
+      await tapVisible(tester, find.text('Open session').at(4));
+      expect(find.text('Personalised short-5K pace'), findsOneWidget);
+      await tapVisible(tester, find.text('Edit session'));
+      await tapVisible(tester, find.text('2. Short-5K pace running'));
+      final choice = find
+          .byWidgetPredicate(
+            (w) =>
+                w is DropdownButtonFormField<String> &&
+                w.decoration.labelText == 'Training target',
+          )
+          .first;
+      await tester.ensureVisible(choice);
+      final selected = tester.widget<DropdownButtonFormField<String>>(choice);
+      expect(selected.initialValue, 'short_5k');
+      final dropdown = tester.widget<DropdownButton<String>>(
+        find
+            .descendant(
+              of: choice,
+              matching: find.byType(DropdownButton<String>),
+            )
+            .first,
+      );
+      expect(
+        dropdown.items!.map((e) => e.value),
+        containsAll(['threshold', '10k_specific', 'short_5k']),
+      );
+      await tester.ensureVisible(field('Session title'));
+      await tester.enterText(field('Session title'), 'Short-5K session review');
+      await tapVisible(tester, find.text('Save changes'));
+      final graph = jsonDecode(c.selected('LW10K-W06-D05').source);
+      expect(
+        (graph['blocks'][0]['timer_config']['running_workout']['steps'] as List)
+            .where((s) => s['target']['kind'] == 'alpha_quality_pace_v1')
+            .map((s) => s['target']['category'])
+            .toSet(),
+        {'short_5k'},
+      );
+      expect(tester.takeException(), isNull);
+    },
+  );
 }
