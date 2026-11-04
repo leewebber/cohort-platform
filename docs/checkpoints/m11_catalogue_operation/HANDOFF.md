@@ -1,5 +1,12 @@
 # Exact three-setup operation — offline implementation
 
+> **2026-11-04 continuation:** [bounded founder acceptance and actual access outcome](operator_connection_2026_11_04/HANDOFF.md)
+> freeze discretionary authoring UI polish. The operation/rehearsal below are unchanged.
+> No usable existing connection was identified; the prior deployment login was expired
+> and removed. [Specific temporary-login decision](operator_connection_2026_11_04/ACCESS_DECISION.md)
+> names the established route, access scope and one exact founder action. No issuance,
+> apply, genuine retention or new strength admission occurred. D8/M1.1/Gate A stay open.
+
 Status: **IMPLEMENTED_AND_LOCALLY_REHEARSED; CONNECTION_UNPROVISIONED;
 NO_HOSTED_APPLY_OR_RETENTION.** Scope remains the [approved operation](../m11_founder_authoring/CATALOGUE_CAPABILITY.md).
 [OPERATION_REQUEST.json](OPERATION_REQUEST.json) retains the exact three intents,

@@ -1,5 +1,21 @@
 # Current repository checkpoint
 
+> **M1.1 bounded founder UI acceptance / operator connection — 2026-11-04:**
+> [Acceptance and access outcome](./m11_catalogue_operation/operator_connection_2026_11_04/HANDOFF.md)
+> records Lee's acceptance of the current lighter professional presentation,
+> structured sessions and editing as good enough for this stage. Freeze discretionary
+> authoring UI polish; no blanket workflow, backup, prescription or device verification.
+> D8 and programme publication remain separate. No configured existing operator DB
+> connection was identified; the prior task-specific login is recorded expired/removed.
+> [One exact access decision](./m11_catalogue_operation/operator_connection_2026_11_04/ACCESS_DECISION.md)
+> requests specific authority for the established temporary CLI login route, with broad
+> operator-role scope disclosed and bounded task use. No credentials issued, hosted
+> apply/retention or new graph admission. Existing 0/20 strength admission remains;
+> three exact records/28 occurrences unresolved. Current single point: establish that
+> connection, freshly preflight, run/retain the reviewed operation and attempt complete
+> local strength admission. **M1.1/Gate A OPEN.** Earlier UI-acceptance pauses below
+> are historical; their other verification/content boundaries remain intact.
+
 > **M1.1 selected performance running — 2026-11-03:**
 > [Fidelity receipt/handoff](./m11_selected_performance_running/HANDOFF.md) applies
 > all forty founder-selected performance runs and exact accepted stride expansions.

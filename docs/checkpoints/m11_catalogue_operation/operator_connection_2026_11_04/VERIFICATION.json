@@ -1,0 +1,57 @@
+{
+  "date": "2026-11-04",
+  "timezone": "Asia/Makassar",
+  "base_and_observed_remote_main": "479b7434072be543e8a5a78b0ad916ed5ef86a4b",
+  "founder_acceptance": {
+    "source": "Current explicit founder message",
+    "presentation_structured_sessions_editing_good_enough": true,
+    "discretionary_authoring_ui_polish_frozen": true,
+    "every_workflow_verified": false,
+    "manual_backup_roundtrip_verified": false,
+    "all_prescriptions_verified": false,
+    "athlete_device_verified": false,
+    "D8_approved": false
+  },
+  "operator_access": {
+    "status": "NO_CONFIGURED_EXISTING_OPERATOR_CONNECTION_SPECIFIC_TEMPORARY_LOGIN_AUTHORITY_REQUIRED",
+    "configured_libpq_service_found": false,
+    "standard_connection_environment_present": false,
+    "password_file_present": false,
+    "known_root_env_operator_names": [],
+    "psql": "/opt/homebrew/opt/libpq/bin/psql",
+    "psql_version": "18.4",
+    "cli_version_probe": "FAILED_SHARED_TELEMETRY_WRITE_SANDBOX_EPERM_NOT_RETRIED",
+    "prior_login_expiry_evidence": "docs/checkpoints/hyrox_schema_deployment_closeout/CREDENTIAL_CLEANUP.json",
+    "credential_endpoint_calls": 0,
+    "hosted_cohort_requests": 0,
+    "secret_values_printed": false
+  },
+  "checks": {
+    "current_pure_operator_guards_passed": 3,
+    "opt_in_database_tests_skipped": 7,
+    "offline_request_matches_committed": true,
+    "source_sha256": "f12b5df97f0a9dc813c9610021ee82233414d2e2b1e6187dd0ae09745e3ecdf5",
+    "write_set_sha256": "7ebba83be9d35c26c73ad2202fd149f5909fa71619d3b1266e465b18b847a746",
+    "active_archive_strength_equality": true,
+    "documentation_links_and_diff": "PASS"
+  },
+  "reused_unchanged_evidence": {
+    "operator_full_local_rehearsal": "docs/checkpoints/m11_founder_authoring/implementation/VERIFICATION.json at 479b743",
+    "latest_source_fidelity": "docs/checkpoints/m11_selected_performance_running/VERIFICATION.json at 479b743",
+    "no_fresh_hosted_dedup_or_graph_rebuild_claimed": true
+  },
+  "outcome": {
+    "new_genuine_records_retained": 0,
+    "new_genuine_records_created": 0,
+    "complete_strength_graphs_newly_admitted": 0,
+    "retained_complete_strength_admitted": 0,
+    "retained_complete_strength_total": 20,
+    "unresolved_occurrences": 28,
+    "genuine_hosted_apply": false,
+    "programme_publication": false,
+    "schema_or_athlete_mutation": false,
+    "M1_1_complete": false,
+    "Gate_A_complete": false
+  },
+  "preservation_and_publication": "Final measured comparison and exact push receipt retained separately under /private/tmp/m11_operator_connection_*_20261104.json"
+}

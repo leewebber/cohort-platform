@@ -6,35 +6,38 @@ This plan controls delivery priorities. It preserves technical authority contrac
 it does not grant implementation, content, hosted, account or release authority.
 [M0 findings and critical path](../checkpoints/m0_alpha_baseline/HANDOFF.md).
 
-> **Running selection applied, 2026-11-03:** all forty performance prescriptions,
-> exact Friday strides and final 10K +20 timed minutes now form the sole active seed.
-> [Fidelity receipt](../checkpoints/m11_selected_performance_running/HANDOFF.md).
-> Strength/evidence remain unchanged; founder usability, full D8, catalogue retention
-> and Gate A remain open. The next manual usability point below remains current.
+## Current single point — M1.1 operator connection and strength admission (2026-11-04)
 
-## Current single point — M1.1 coach-facing founder authoring (2026-11-02)
+Lee manually reviewed the current coaching workspace and accepts its lighter
+professional presentation, structured sessions and editing as good enough for this
+stage. **Bounded founder UI acceptance recorded; further discretionary authoring UI
+polish is frozen.** Preserve the accepted coaching direction. This does not establish
+every workflow, backup round trip, programme prescription or athlete-device behaviour.
+[Acceptance and current operator-access outcome](../checkpoints/m11_catalogue_operation/operator_connection_2026_11_04/HANDOFF.md).
 
-The bounded native founder workspace and offline three-record operation package are
-implemented. Lee withheld usability acceptance of the initial developer-facing UI.
-The [coach-facing redesign](../checkpoints/m11_founder_authoring/coach_redesign/HANDOFF.md)
-now leads with the programme schedule, compact strength/running editing, independent
-copies, direct athlete preview and explicit backup/open actions. It reuses existing
-Studio controllers, immutable source/version protections, native v4 editable files
-and canonical export components. No coaching prescription or athlete authority changed.
+The reviewed three-record operation is implemented and locally rehearsed. No usable
+existing operator connection was identified. The prior deployment login was separately
+authorised, expired and removed. The established legitimate route needs the
+[specific temporary-login access decision](../checkpoints/m11_catalogue_operation/operator_connection_2026_11_04/ACCESS_DECISION.md);
+no new movement approval, writer implementation, generic audit or unchanged lookup.
+The existing bounded three-record operation authority remains applicable, subject to
+its safeguards. After connection, freshly verify target, exact write set, dedup and
+conflicts, compatibility, holds and recovery, then perform only the permitted reviewed
+operation, retain genuine results/audit and attempt all twenty complete strength graphs.
+Unexpected drift or new permission/schema/ledger requirements stop the operation.
 
-**Next single point: Lee manually exercises this workflow and records acceptance or
-specific remaining friction**, using the
-[walkthrough](../checkpoints/m11_founder_authoring/implementation/FOUNDER_WALKTHROUGH.md).
-Automated checks do not grant founder usability acceptance.
+The active selected source retains all forty performance runs, exact Friday strides
+and the final 10K +20 timed minutes. [Fidelity receipt](../checkpoints/m11_selected_performance_running/HANDOFF.md).
+All 70 days/60 workouts and 105 strength occurrences remain represented. Eight trusted
+bindings cover 77 occurrences; three missing exact setups block 28 occurrences and
+all twenty complete strength sessions. New genuine records retained/created: zero;
+new complete strength graphs admitted: zero. No protected identity is repurposed.
 
-All 70 days/60 workouts remain the source coverage bound. Genuine retention of the
-three approved missing exercise setups is still a separate operational dependency:
-28 occurrences/all twenty strength sessions cannot yet become complete admitted
-executable graphs. Editable intent may be kept without inventing a published identity.
-The [original allocation](../checkpoints/m11_founder_authoring/ALLOCATION.md) and
-[catalogue-operation boundary](../checkpoints/m11_founder_authoring/CATALOGUE_CAPABILITY.md)
-remain binding. D8/content approval, complete admission, publication/access and the
-remaining M1–M4 outcomes stay separate. **Gate A OPEN.** No hosted authority follows.
+D8/full-programme content approval, publication/access and authenticated installed-device
+acceptance remain separate. No schema deployment, account creation, eligibility,
+assignment or athlete-data mutation follows. Father's genuine programme and the other
+M1–M4 outcomes remain open. **M1.1/Gate A OPEN.** Earlier manual usability next-step
+statements in retained checkpoints are historical within this bounded acceptance.
 
 ## Retained M4.5 bootstrap diagnosis (2026-11-01)
 
