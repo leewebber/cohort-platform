@@ -6,6 +6,13 @@ This plan controls delivery priorities. It preserves technical authority contrac
 it does not grant implementation, content, hosted, account or release authority.
 [M0 findings and critical path](../checkpoints/m0_alpha_baseline/HANDOFF.md).
 
+> **2026-11-04 authorised operation stop:** [Fresh target and credential closeout](../checkpoints/m11_catalogue_operation/inactive_target_2026_11_04/HANDOFF.md)
+> confirm Field Manual **INACTIVE**. Single temporary-login authority is granted but
+> unconsumed; no credential or catalogue write occurred. Current prerequisite:
+> separate authority to resume this existing project, then fresh preflight and the
+> reviewed operation under the unused login authority. UI acceptance/polish freeze
+> remain; D8, publication, M1.1 and Gate A remain open.
+
 ## Current single point — M1.1 operator connection and strength admission (2026-11-04)
 
 Lee manually reviewed the current coaching workspace and accepts its lighter
@@ -17,9 +24,10 @@ every workflow, backup round trip, programme prescription or athlete-device beha
 
 The reviewed three-record operation is implemented and locally rehearsed. No usable
 existing operator connection was identified. The prior deployment login was separately
-authorised, expired and removed. The established legitimate route needs the
-[specific temporary-login access decision](../checkpoints/m11_catalogue_operation/operator_connection_2026_11_04/ACCESS_DECISION.md);
-no new movement approval, writer implementation, generic audit or unchanged lookup.
+authorised, expired and removed. The [specific temporary-login access decision](../checkpoints/m11_catalogue_operation/operator_connection_2026_11_04/ACCESS_DECISION.md)
+was authorised by the founder on 2026-11-04. Fresh target inspection then stopped
+at INACTIVE before issuing it; project resumption remains separately unauthorised.
+No new movement approval, writer implementation, generic audit or unchanged lookup.
 The existing bounded three-record operation authority remains applicable, subject to
 its safeguards. After connection, freshly verify target, exact write set, dedup and
 conflicts, compatibility, holds and recovery, then perform only the permitted reviewed

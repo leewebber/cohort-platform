@@ -1,0 +1,20 @@
+{
+  "project": {
+    "id": "otnhhdxstdnwccehacku",
+    "name": "Cohort Field Manual",
+    "region": "eu-west-1",
+    "status": "INACTIVE",
+    "database": {
+      "host": "db.otnhhdxstdnwccehacku.supabase.co",
+      "version": "17.6.1.155",
+      "postgres_engine": "17",
+      "release_channel": "ga"
+    }
+  },
+  "metadata": {
+    "http_status": 200,
+    "captured_at": "2026-11-04T03:10:13.202204+00:00",
+    "request_id": null,
+    "raw_sha256": "68827da06a7f1ebb797b46e4e3b72fd296e2f1674991edab3396082efa25a376"
+  }
+}

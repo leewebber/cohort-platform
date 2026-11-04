@@ -1,5 +1,18 @@
 # Current repository checkpoint
 
+> **M1.1 authorised catalogue operation — inactive-target stop, 2026-11-04:**
+> [Actual result and credential closeout](./m11_catalogue_operation/inactive_target_2026_11_04/HANDOFF.md)
+> records the founder's specific single temporary-login authority. Fresh authenticated
+> target GET returned Cohort Field Manual otnhhdxstdnwccehacku / **INACTIVE** at
+> 11:10:13 WITA. Stopped before credential issuance, database/schema/dedup queries
+> or catalogue writes. No credential exists to expire/revoke; no use window began,
+> no replacement issued, no task DB connection or temporary credential file remains.
+> Exact mutations empty; genuine records 0, new complete strength admissions 0.
+> Earlier connection-authority request is satisfied; the new prerequisite is separate
+> authority to resume this existing project, then fresh preflight and the still-unused
+> single-login operation. UI acceptance/polish freeze stand; D8/publication separate.
+> **M1.1/Gate A OPEN.** No hosted-state change was made.
+
 > **M1.1 bounded founder UI acceptance / operator connection — 2026-11-04:**
 > [Acceptance and access outcome](./m11_catalogue_operation/operator_connection_2026_11_04/HANDOFF.md)
 > records Lee's acceptance of the current lighter professional presentation,

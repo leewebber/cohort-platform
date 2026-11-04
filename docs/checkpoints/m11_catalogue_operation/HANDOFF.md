@@ -1,5 +1,11 @@
 # Exact three-setup operation — offline implementation
 
+> **Authorised attempt, 2026-11-04:** [inactive-target stop and credential closeout](inactive_target_2026_11_04/HANDOFF.md)
+> record fresh Field Manual **INACTIVE**. The specific single-login authority is
+> granted but unused: no issuance, database query, apply or new retention/admission.
+> Resume needs separate hosted-state authority; then rerun fresh preflight. The
+> previous access question below is satisfied, and its evidence stays historical.
+
 > **2026-11-04 continuation:** [bounded founder acceptance and actual access outcome](operator_connection_2026_11_04/HANDOFF.md)
 > freeze discretionary authoring UI polish. The operation/rehearsal below are unchanged.
 > No usable existing connection was identified; the prior deployment login was expired
