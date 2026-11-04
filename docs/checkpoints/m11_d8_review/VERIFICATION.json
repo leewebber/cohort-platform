@@ -1,0 +1,29 @@
+{
+  "status": "PREPARED_AWAITING_FOUNDER_D8",
+  "base_commit": "e676e31af15d9c5a31d573c8215ce008d1980526",
+  "review_snapshot_sha256": "c8bdd10c724cdbf85c11021c5aa9936de82815804f89fa490715e821a2237c2d",
+  "generator_sha256": "f5c349a0ecb107dba3bb57119e3aadec52df73d2f141e48ca81a1c09499a4651",
+  "current_checks": {
+    "exact_17_input_pins": true,
+    "all_prior_checkpoint_and_archive_hashes": true,
+    "all_70_days": true,
+    "strength_prescriptions_exact": 105,
+    "running_bodies_exact": 40,
+    "all_60_original_review_segments_read_back": true,
+    "links_and_anchors_resolved": 177,
+    "D8_template_pending_no_founder_identity_or_timestamp": true
+  },
+  "unchanged_evidence_reused": {
+    "checkpoint": "e676e31",
+    "genuine_strength_admission": 20,
+    "complete_local_sessions": 60,
+    "hosted_protected_state_and_credential_closeout": "Retained prior evidence only, no fresh hosted check"
+  },
+  "no_runtime_or_ui_source_change": true,
+  "no_prescription_or_archive_change": true,
+  "no_broad_suite_repeated": true,
+  "no_hosted_or_credential_or_athlete_operation": true,
+  "D8": "PENDING",
+  "M1_1": "OPEN",
+  "Gate_A": "OPEN"
+}

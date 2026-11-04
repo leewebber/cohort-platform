@@ -1,5 +1,18 @@
 # Current repository checkpoint
 
+> **M1.1 complete genuine D8 review pack prepared — 2026-11-04:**
+> [Start the founder content review](../programmes/hybrid_10k/d8_review_2026_11_04/REVIEW.md)
+> or read the [preparation handoff](./m11_d8_review/HANDOFF.md). Ten week pages cover
+> all 70 days, 105 exact strength prescriptions and 40 ordered running bodies, reusing
+> e676e31 genuine catalogue/admission evidence and the unchanged full canonical archive.
+> Current hash/coverage/readback checks pass; no broad suites repeated or prescriptions,
+> UI/defaults, hosted state or credentials changed. Opening week is 192:30 timed run
+> minutes plus two strength sessions; numerical general entry wording remains unauthored.
+> Prior movement/dose/running selections stand. Exact review snapshot and pending
+> decision template are retained. Bounded UI acceptance/polish freeze remain.
+> Next single point: Lee's D8 content decision. **D8 PENDING; M1.1/Gate A OPEN.**
+> Publication/access and installed real-programme journey remain separate.
+
 > **M1.1 genuine catalogue operation / local strength admission — 2026-11-04:**
 > [Actual operation, retention and closeout](./m11_catalogue_operation/live_0431d08_2026_11_04/HANDOFF.md)
 > record healthy Field Manual and exact fresh preflight using corrected 0431d08.

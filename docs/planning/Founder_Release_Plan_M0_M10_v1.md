@@ -6,13 +6,13 @@ This plan controls delivery priorities. It preserves technical authority contrac
 it does not grant implementation, content, hosted, account or release authority.
 [M0 findings and critical path](../checkpoints/m0_alpha_baseline/HANDOFF.md).
 
-## Current single point — M1.1 D8 review of complete genuine source
+## Current single point — M1.1 founder D8 decision on the prepared source
 
-[Actual 0431d08 operation, retention, admission and closeout](../checkpoints/m11_catalogue_operation/live_0431d08_2026_11_04/HANDOFF.md) completes the narrowly reviewed catalogue operation. Fresh healthy Field Manual preflight matched; exactly EX-170/171/172 were inserted and genuinely retained. All 169 pre-existing rows, schema and five consumer guards stayed exact, including EX-029/EX-141. One login was revoked with zero CLI roles/backends verified and temporary credentials removed; no replacement or package repair during task use.
+The **[complete D8 review pack](../programmes/hybrid_10k/d8_review_2026_11_04/REVIEW.md)** is prepared from the genuine source at e676e31. Ten weekly pages cover all 70 days: 20 strength sessions, 40 runs and 10 rest days; all 105 strength prescriptions and ordered running bodies are exact. The full local canonical archive/editable workspace and actual 20/20 strength admission evidence are reused unchanged. [Current local preparation/readback proof](../checkpoints/m11_d8_review/HANDOFF.md) verifies hashes, full coverage and review-text correspondence without repeating broad suites or contacting Cohort hosted environments.
 
-After closeout, all 20 complete strength graphs admitted with the actual retained evidence: 28 missing identity occurrences resolved; all 105 prescriptions, 77 existing ID occurrences, 60 old revisions and 40 selected running bodies unchanged. New local editable and complete 60-session canonical artifacts passed readback/reopen/review. No default UI/source trust wiring or programme publication occurred.
+The review carries forward all existing movement/dose/running/target selections. Remaining D8 scope is complete composition/order, opening workload/general entry wording and labelled shared preparation/progression/fatigue/taper proposals. No numerical entry threshold is invented. The exact review fingerprint and pending decision template retain content scope without inventing acceptance.
 
-**Next single milestone point: D8 review of the complete genuine Hybrid 10K source/artifacts and exact prescriptions.** Bounded founder UI acceptance remains recorded and discretionary polish frozen. Programme approval/publication, hosted enablement and installed real-programme acceptance remain separate. No catalogue access action remains. Father's source and all other Gate A obligations remain; **M1.1/Gate A OPEN**. Prior operation attempts and local preparation evidence below remain historical.
+**Next single milestone point: Lee's D8 content decision on that prepared snapshot.** Bounded founder UI acceptance remains recorded; discretionary polish is frozen. No UI/default trust wiring, prescriptions, credentials or hosted state changed. Programme publication/access and installed real-programme acceptance remain separate. Father's source and all other Gate A obligations remain; **D8 PENDING; M1.1/Gate A OPEN**. The prior operation created/retained EX-170/171/172 and protected all old rows/consumers; no catalogue access action remains.
 
 ## Retained guard-compatibility package (live attempt and serialization repair above)
 

@@ -1,0 +1,2080 @@
+{
+  "kind": "D8_REVIEW_INVENTORY_NOT_APPROVAL",
+  "base_commit": "e676e31af15d9c5a31d573c8215ce008d1980526",
+  "source_archive_sha256": "c84060c5c5f97eaaf306006230cfc997a8132110012eec302a4e8b82a604d88a",
+  "package_sha256": "6b3de012e228487db043c39ae16759d29c71b51aa482c245cd164feb78c8caac",
+  "weekly": [
+    {
+      "week": 1,
+      "focus": "Performance foundation",
+      "timed_milliseconds": 11550000,
+      "distance_metres": 0,
+      "strength_working_sets": 27
+    },
+    {
+      "week": 2,
+      "focus": "Threshold build",
+      "timed_milliseconds": 12360000,
+      "distance_metres": 0,
+      "strength_working_sets": 27
+    },
+    {
+      "week": 3,
+      "focus": "Threshold build",
+      "timed_milliseconds": 13140000,
+      "distance_metres": 0,
+      "strength_working_sets": 27
+    },
+    {
+      "week": 4,
+      "focus": "Consolidation",
+      "timed_milliseconds": 11250000,
+      "distance_metres": 0,
+      "strength_working_sets": 21
+    },
+    {
+      "week": 5,
+      "focus": "Threshold development",
+      "timed_milliseconds": 13320000,
+      "distance_metres": 0,
+      "strength_working_sets": 27
+    },
+    {
+      "week": 6,
+      "focus": "10K specificity plus short-5K Friday",
+      "timed_milliseconds": 12090000,
+      "distance_metres": 0,
+      "strength_working_sets": 27
+    },
+    {
+      "week": 7,
+      "focus": "Standard build; not consolidation",
+      "timed_milliseconds": 12240000,
+      "distance_metres": 0,
+      "strength_working_sets": 27
+    },
+    {
+      "week": 8,
+      "focus": "Peak Tuesday specificity; lighter Friday",
+      "timed_milliseconds": 11550000,
+      "distance_metres": 0,
+      "strength_working_sets": 27
+    },
+    {
+      "week": 9,
+      "focus": "Reduce fatigue",
+      "timed_milliseconds": 10110000,
+      "distance_metres": 0,
+      "strength_working_sets": 16
+    },
+    {
+      "week": 10,
+      "focus": "Taper and distance-ended 10K test",
+      "timed_milliseconds": 6180000,
+      "distance_metres": 10000,
+      "strength_working_sets": 12
+    }
+  ],
+  "days": [
+    {
+      "review_reference": "LW10K-W01-D01",
+      "week": 1,
+      "day": 1,
+      "weekday": "Monday",
+      "title": "Monday selected strength",
+      "type": "strength",
+      "illustrative_date": "2026-11-02",
+      "source_instructions": [
+        "Review order shown; within-session order remains part of D8 review. Preparation and warm-up sets are separate from working sets."
+      ],
+      "review_path": "weeks/week-01.md#lw10k-w01-d01",
+      "graph_path": "native-graphs/graph-0001.json",
+      "graph_sha256": "4a18690dcc7e84ab61b01e6f028ed6c2183d9f183e793252f59e54bc7ad0d1c8",
+      "selected_revision": "session-379bb177-55b7-5535-8527-9047568a5ce9-r5",
+      "renderer_text_sha256": "27f55304f5a0fd05f43a1cafc2326e7b9b99da59d3556a5c580e0efbb2ad4e92",
+      "exercise_bindings": [
+        {
+          "source_occurrence_id": "W01-A-incline_db_press",
+          "variant": "incline_db_press",
+          "exercise_id": "EX-084",
+          "prescription_sha256": "f84cafe9f5c05815be488f0c1bd04cb9bb1a34729992949ab50bb17f38642a9c"
+        },
+        {
+          "source_occurrence_id": "W01-A-pull_up_bodyweight",
+          "variant": "pull_up_bodyweight",
+          "exercise_id": "EX-053",
+          "prescription_sha256": "ae9ab7d3e5f4bb64503ccecb8eb566c872c911ff4f86ae82ff62c12f7b9dd590"
+        },
+        {
+          "source_occurrence_id": "W01-A-chest_supported_db_row",
+          "variant": "chest_supported_db_row",
+          "exercise_id": "EX-170",
+          "prescription_sha256": "b6e0fa812c2b97a57a39df0a657a45e7e04ec16398abb43c914a28d126a9c972"
+        },
+        {
+          "source_occurrence_id": "W01-A-db_lateral_raise",
+          "variant": "db_lateral_raise",
+          "exercise_id": "EX-044",
+          "prescription_sha256": "29c0e1298bb6c64444d15a143b33690174dd3fce6c98431a4b435b94b8d21cd1"
+        },
+        {
+          "source_occurrence_id": "W01-A-cable_pallof_square",
+          "variant": "cable_pallof_square",
+          "exercise_id": "EX-114",
+          "prescription_sha256": "3817c478f618531dcc149af2692609addc9fa96be0a5a0c1690b4f14b76ea4ed"
+        }
+      ],
+      "summary": "5 exercises; 14 working sets"
+    },
+    {
+      "review_reference": "LW10K-W01-D02",
+      "week": 1,
+      "day": 2,
+      "weekday": "Tuesday",
+      "title": "Threshold intervals",
+      "type": "running",
+      "illustrative_date": "2026-11-03",
+      "source_instructions": [],
+      "review_path": "weeks/week-01.md#lw10k-w01-d02",
+      "graph_path": "native-graphs/graph-0002.json",
+      "graph_sha256": "54f7c31ebd9c975d777139fd5c68fa38d91a7bbcd5e5ab162d2a7974ee24c40b",
+      "selected_revision": "session-baf02122-f283-5521-a3a4-16b1de1fd63d-r2",
+      "renderer_text_sha256": "9c13fb5115a3c4d2cfba3c5e6d0d26c0fa4e13e2dcfcfe6bad49cc43e14dd528",
+      "timed_milliseconds": 2550000,
+      "distance_metres": 0,
+      "ordered_step_count": 15,
+      "steps_sha256": "461713120b5ff5a15bb7531b6d0f17c76c270222246fa1050665477ccb3dfe44",
+      "summary": "42:30"
+    },
+    {
+      "review_reference": "LW10K-W01-D03",
+      "week": 1,
+      "day": 3,
+      "weekday": "Wednesday",
+      "title": "Zone 2 run",
+      "type": "running",
+      "illustrative_date": "2026-11-04",
+      "source_instructions": [],
+      "review_path": "weeks/week-01.md#lw10k-w01-d03",
+      "graph_path": "native-graphs/graph-0003.json",
+      "graph_sha256": "d1c7d160d6aa0b2b1e51e39d02435df268afbeeaadc2ef5ddb0994183093e4bf",
+      "selected_revision": "session-43496cc4-773d-54cc-9ef4-db07b3aace5f-r2",
+      "renderer_text_sha256": "5b7aded8378790b427a423418ea42f490532b6d51960a43151fcaba8471e0669",
+      "timed_milliseconds": 2700000,
+      "distance_metres": 0,
+      "ordered_step_count": 3,
+      "steps_sha256": "b579f700d3941d1b78f0d69b205d7ea4ee10d1b85097048225d6247cb0af9040",
+      "summary": "45:00"
+    },
+    {
+      "review_reference": "LW10K-W01-D04",
+      "week": 1,
+      "day": 4,
+      "weekday": "Thursday",
+      "title": "Thursday selected strength",
+      "type": "strength",
+      "illustrative_date": "2026-11-05",
+      "source_instructions": [
+        "Review order shown; within-session order remains part of D8 review. Preparation and warm-up sets are separate from working sets."
+      ],
+      "review_path": "weeks/week-01.md#lw10k-w01-d04",
+      "graph_path": "native-graphs/graph-0004.json",
+      "graph_sha256": "12b6a139595d492e7394e85e646cd2869a8ed700a39324c7eb64f6b12af6c242",
+      "selected_revision": "session-21fc299c-06ba-5506-8553-0209780cbfe3-r5",
+      "renderer_text_sha256": "9e4afdbe51686b514353ce2518ddf115098c9c0aa4cf2c8972d6f1d61b652a8d",
+      "exercise_bindings": [
+        {
+          "source_occurrence_id": "W01-B-barbell_rdl",
+          "variant": "barbell_rdl",
+          "exercise_id": "EX-078",
+          "prescription_sha256": "6570f8cb316ad82ab6c35b715fb6e10d387cc50e9cad4fe6bcf35207bf3a7d2c"
+        },
+        {
+          "source_occurrence_id": "W01-B-reverse_lunge_db",
+          "variant": "reverse_lunge_db",
+          "exercise_id": "EX-172",
+          "prescription_sha256": "f8e60ec2df2c2fdcf543ae22720c516e7b62c9108e750d58db7574329728057a"
+        },
+        {
+          "source_occurrence_id": "W01-B-seated_supported_db_press",
+          "variant": "seated_supported_db_press",
+          "exercise_id": "EX-171",
+          "prescription_sha256": "49a110a6e3e7d10cbb152a943f745cc856d0546584ada3e9671a2e1dc264edcc"
+        },
+        {
+          "source_occurrence_id": "W01-B-bench_supported_db_row",
+          "variant": "bench_supported_db_row",
+          "exercise_id": "EX-038",
+          "prescription_sha256": "718a2c492dbfbbd5054bb59affab8b60c79009bd38f6fc80bb1146d4c554088a"
+        },
+        {
+          "source_occurrence_id": "W01-B-machine_standing_calf",
+          "variant": "machine_standing_calf",
+          "exercise_id": "EX-125",
+          "prescription_sha256": "195598fdcd2fd889b1b0e89de71b431603eb8cb1700e3e22ffd9549b2cf2d6e6"
+        },
+        {
+          "source_occurrence_id": "W01-B-side_plank",
+          "variant": "side_plank",
+          "exercise_id": "EX-116",
+          "prescription_sha256": "31ce71159f7165948b83a974a0cd1066a616be8b19571301820d53da942e4fe9"
+        }
+      ],
+      "summary": "6 exercises; 13 working sets"
+    },
+    {
+      "review_reference": "LW10K-W01-D05",
+      "week": 1,
+      "day": 5,
+      "weekday": "Friday",
+      "title": "Zone 2 run",
+      "type": "running",
+      "illustrative_date": "2026-11-06",
+      "source_instructions": [],
+      "review_path": "weeks/week-01.md#lw10k-w01-d05",
+      "graph_path": "native-graphs/graph-0005.json",
+      "graph_sha256": "39437811c53a8bf52d4fb42da5df257d5b97f9f9b970d407dc6a4224656e18f5",
+      "selected_revision": "session-63a11e44-8efd-57ac-99d2-c7e2b7f44a43-r2",
+      "renderer_text_sha256": "c57140aca0bcb155fba9d88daf2c8d77ce413ff8fb995c3d2c193f8b52481c97",
+      "timed_milliseconds": 2400000,
+      "distance_metres": 0,
+      "ordered_step_count": 3,
+      "steps_sha256": "e56c8089ee72152451a8f3921ea4d0896126a908a6328e59428963d410d81f45",
+      "summary": "40:00"
+    },
+    {
+      "review_reference": "LW10K-W01-D06",
+      "week": 1,
+      "day": 6,
+      "weekday": "Saturday",
+      "title": "Rest",
+      "type": "rest",
+      "illustrative_date": "2026-11-07",
+      "source_instructions": [
+        "No required training. Normal walking and optional gentle mobility; do not make up missed sessions."
+      ],
+      "review_path": "weeks/week-01.md#lw10k-w01-d06",
+      "graph_path": null,
+      "graph_sha256": null,
+      "selected_revision": null,
+      "summary": "Rest; no required training"
+    },
+    {
+      "review_reference": "LW10K-W01-D07",
+      "week": 1,
+      "day": 7,
+      "weekday": "Sunday",
+      "title": "Long Zone 2 run",
+      "type": "running",
+      "illustrative_date": "2026-11-08",
+      "source_instructions": [],
+      "review_path": "weeks/week-01.md#lw10k-w01-d07",
+      "graph_path": "native-graphs/graph-0006.json",
+      "graph_sha256": "0202ad2b0f7083d5b7869cdf4fd369e1f829a5b29895a765fc9f2ae462b99410",
+      "selected_revision": "session-939762f3-bb11-592e-86e6-bd9a9fb8c153-r2",
+      "renderer_text_sha256": "fe6126d36c6d70e26450e725160c04da5565bf7abe2641f3d593ba8fa4d2c450",
+      "timed_milliseconds": 3900000,
+      "distance_metres": 0,
+      "ordered_step_count": 3,
+      "steps_sha256": "f558eecdae5de1575f78ce4e29bb74e1030f0e78399169412812f7b48041a0ca",
+      "summary": "65:00"
+    },
+    {
+      "review_reference": "LW10K-W02-D01",
+      "week": 2,
+      "day": 1,
+      "weekday": "Monday",
+      "title": "Monday selected strength",
+      "type": "strength",
+      "illustrative_date": "2026-11-09",
+      "source_instructions": [
+        "Review order shown; within-session order remains part of D8 review. Preparation and warm-up sets are separate from working sets."
+      ],
+      "review_path": "weeks/week-02.md#lw10k-w02-d01",
+      "graph_path": "native-graphs/graph-0007.json",
+      "graph_sha256": "02bcff2f0d959b9dd5ebe42550c23145d7fb34788d5e3af7e10b79d9f64c75c9",
+      "selected_revision": "session-6aec11af-45d5-5fb9-9e4d-fbcc49d9e767-r5",
+      "renderer_text_sha256": "27f55304f5a0fd05f43a1cafc2326e7b9b99da59d3556a5c580e0efbb2ad4e92",
+      "exercise_bindings": [
+        {
+          "source_occurrence_id": "W02-A-incline_db_press",
+          "variant": "incline_db_press",
+          "exercise_id": "EX-084",
+          "prescription_sha256": "de674323c4d7e4a98dc9b4c0ad97c037ec57fd86f3569f732c04f37794556583"
+        },
+        {
+          "source_occurrence_id": "W02-A-pull_up_bodyweight",
+          "variant": "pull_up_bodyweight",
+          "exercise_id": "EX-053",
+          "prescription_sha256": "419acad09139f2b479d912605345ce7e9b70b12cb1d70b747a7f6e49f90dad64"
+        },
+        {
+          "source_occurrence_id": "W02-A-chest_supported_db_row",
+          "variant": "chest_supported_db_row",
+          "exercise_id": "EX-170",
+          "prescription_sha256": "813a1002a974bc56e16a44b79a2d9ec844b72259cae00cf55319bdee26e1c5e3"
+        },
+        {
+          "source_occurrence_id": "W02-A-db_lateral_raise",
+          "variant": "db_lateral_raise",
+          "exercise_id": "EX-044",
+          "prescription_sha256": "675f4d386918e94fbedbbfdfd5b4ef58bbf9587027b3d4fe4512c97fc691aa2e"
+        },
+        {
+          "source_occurrence_id": "W02-A-cable_pallof_square",
+          "variant": "cable_pallof_square",
+          "exercise_id": "EX-114",
+          "prescription_sha256": "8a2815633c98f2d0863db6b5df62b58d44f4826be17c8e0571845db0e67e2b2b"
+        }
+      ],
+      "summary": "5 exercises; 14 working sets"
+    },
+    {
+      "review_reference": "LW10K-W02-D02",
+      "week": 2,
+      "day": 2,
+      "weekday": "Tuesday",
+      "title": "Threshold intervals",
+      "type": "running",
+      "illustrative_date": "2026-11-10",
+      "source_instructions": [],
+      "review_path": "weeks/week-02.md#lw10k-w02-d02",
+      "graph_path": "native-graphs/graph-0008.json",
+      "graph_sha256": "1ea1e070478bc69e9f7ec23d44b31affbf5e1005454aba830ff75ccd54da84a4",
+      "selected_revision": "session-fcb86f6f-07ac-5f1b-b9b9-5fa7d4544827-r2",
+      "renderer_text_sha256": "d3e1bfe784ec1b30d6516b349f88b57f0feb6b2f17bed51ba3294c060d737111",
+      "timed_milliseconds": 2760000,
+      "distance_metres": 0,
+      "ordered_step_count": 13,
+      "steps_sha256": "9b0204a0faba58d57365fd87345f708869f9996e7bd4872313f3072d4dbe5923",
+      "summary": "46:00"
+    },
+    {
+      "review_reference": "LW10K-W02-D03",
+      "week": 2,
+      "day": 3,
+      "weekday": "Wednesday",
+      "title": "Zone 2 run",
+      "type": "running",
+      "illustrative_date": "2026-11-11",
+      "source_instructions": [],
+      "review_path": "weeks/week-02.md#lw10k-w02-d03",
+      "graph_path": "native-graphs/graph-0009.json",
+      "graph_sha256": "bfd6a3426fe26551e764d0dad2fc73e4031ce3dade754dd4a430f02520501aa3",
+      "selected_revision": "session-4d650387-b504-5c80-9bc2-a6534d88863b-r2",
+      "renderer_text_sha256": "5b7aded8378790b427a423418ea42f490532b6d51960a43151fcaba8471e0669",
+      "timed_milliseconds": 2700000,
+      "distance_metres": 0,
+      "ordered_step_count": 3,
+      "steps_sha256": "e7b41d0d3100110a647509cd9bdabb2d73ef92adffb586472b3eeda91bca78ec",
+      "summary": "45:00"
+    },
+    {
+      "review_reference": "LW10K-W02-D04",
+      "week": 2,
+      "day": 4,
+      "weekday": "Thursday",
+      "title": "Thursday selected strength",
+      "type": "strength",
+      "illustrative_date": "2026-11-12",
+      "source_instructions": [
+        "Review order shown; within-session order remains part of D8 review. Preparation and warm-up sets are separate from working sets."
+      ],
+      "review_path": "weeks/week-02.md#lw10k-w02-d04",
+      "graph_path": "native-graphs/graph-0010.json",
+      "graph_sha256": "00f9ed66e7471c13d8f0f5f3cc565eb24e35cc14e62e86849511792dc2cd784a",
+      "selected_revision": "session-e7f72978-bb3e-5252-bcbd-ee996d53ac3e-r5",
+      "renderer_text_sha256": "9e4afdbe51686b514353ce2518ddf115098c9c0aa4cf2c8972d6f1d61b652a8d",
+      "exercise_bindings": [
+        {
+          "source_occurrence_id": "W02-B-barbell_rdl",
+          "variant": "barbell_rdl",
+          "exercise_id": "EX-078",
+          "prescription_sha256": "3ed15c9b5f751eab93e7591fed1bc22919c97557e51dc775b486053f4a5d7941"
+        },
+        {
+          "source_occurrence_id": "W02-B-reverse_lunge_db",
+          "variant": "reverse_lunge_db",
+          "exercise_id": "EX-172",
+          "prescription_sha256": "beb3864c193f8e01f387d06023c9835847a791e827d9d4307aff317260dc4809"
+        },
+        {
+          "source_occurrence_id": "W02-B-seated_supported_db_press",
+          "variant": "seated_supported_db_press",
+          "exercise_id": "EX-171",
+          "prescription_sha256": "7d33c9512a0f017cc520ea3a34fe5c6bbea5a16b87c4836c4677492ceb09b41c"
+        },
+        {
+          "source_occurrence_id": "W02-B-bench_supported_db_row",
+          "variant": "bench_supported_db_row",
+          "exercise_id": "EX-038",
+          "prescription_sha256": "fd3fb67eb13d91ea19e0b50a06691a5bfb818fdd6bd4ca0a3f865b70f3e55eab"
+        },
+        {
+          "source_occurrence_id": "W02-B-machine_standing_calf",
+          "variant": "machine_standing_calf",
+          "exercise_id": "EX-125",
+          "prescription_sha256": "e5de88a2e1c08a6e50728c0e287ac1feb70a5a939febf26fb57e15e5ffe56b8a"
+        },
+        {
+          "source_occurrence_id": "W02-B-side_plank",
+          "variant": "side_plank",
+          "exercise_id": "EX-116",
+          "prescription_sha256": "c1fe389c79b25fbb7d496efe6b80382ff7011a4c0996ad288d59b19e6e8b6c11"
+        }
+      ],
+      "summary": "6 exercises; 13 working sets"
+    },
+    {
+      "review_reference": "LW10K-W02-D05",
+      "week": 2,
+      "day": 5,
+      "weekday": "Friday",
+      "title": "Zone 2 run",
+      "type": "running",
+      "illustrative_date": "2026-11-13",
+      "source_instructions": [],
+      "review_path": "weeks/week-02.md#lw10k-w02-d05",
+      "graph_path": "native-graphs/graph-0011.json",
+      "graph_sha256": "1e112c3d572d5fd651cdeaddb692bf1f8408a82e61a9fbc4c730c4e6f7b48353",
+      "selected_revision": "session-57a3b9c7-9da1-52a8-9600-f2d1fbb1e64a-r2",
+      "renderer_text_sha256": "5b7aded8378790b427a423418ea42f490532b6d51960a43151fcaba8471e0669",
+      "timed_milliseconds": 2700000,
+      "distance_metres": 0,
+      "ordered_step_count": 3,
+      "steps_sha256": "ccf2cb15b67a4ef672658c07f5e0355167dda1f43de559ec0781242f2a3c6047",
+      "summary": "45:00"
+    },
+    {
+      "review_reference": "LW10K-W02-D06",
+      "week": 2,
+      "day": 6,
+      "weekday": "Saturday",
+      "title": "Rest",
+      "type": "rest",
+      "illustrative_date": "2026-11-14",
+      "source_instructions": [
+        "No required training. Normal walking and optional gentle mobility; do not make up missed sessions."
+      ],
+      "review_path": "weeks/week-02.md#lw10k-w02-d06",
+      "graph_path": null,
+      "graph_sha256": null,
+      "selected_revision": null,
+      "summary": "Rest; no required training"
+    },
+    {
+      "review_reference": "LW10K-W02-D07",
+      "week": 2,
+      "day": 7,
+      "weekday": "Sunday",
+      "title": "Long Zone 2 run",
+      "type": "running",
+      "illustrative_date": "2026-11-15",
+      "source_instructions": [],
+      "review_path": "weeks/week-02.md#lw10k-w02-d07",
+      "graph_path": "native-graphs/graph-0012.json",
+      "graph_sha256": "186ce834459476cd3c8b67a146820a0877af95a150b6ac15d6df698fa1b2cf7e",
+      "selected_revision": "session-74717952-b073-5d01-9df1-cfbd40df7c70-r2",
+      "renderer_text_sha256": "5739f9b87d34e7e1c74fe9e1ac3a103e70375f9818dcf847ef3bbed084944702",
+      "timed_milliseconds": 4200000,
+      "distance_metres": 0,
+      "ordered_step_count": 3,
+      "steps_sha256": "f879a3252693dbaa92f9a4d5b7052caf18f429788baa743dbd85558ffa1b84f6",
+      "summary": "70:00"
+    },
+    {
+      "review_reference": "LW10K-W03-D01",
+      "week": 3,
+      "day": 1,
+      "weekday": "Monday",
+      "title": "Monday selected strength",
+      "type": "strength",
+      "illustrative_date": "2026-11-16",
+      "source_instructions": [
+        "Review order shown; within-session order remains part of D8 review. Preparation and warm-up sets are separate from working sets."
+      ],
+      "review_path": "weeks/week-03.md#lw10k-w03-d01",
+      "graph_path": "native-graphs/graph-0013.json",
+      "graph_sha256": "5baeb34137c05e6070f31fd8032584ad7d3a4f86cac94f399c0d86913e3af320",
+      "selected_revision": "session-da3a1810-a65f-5e19-a7dc-e7d276839e44-r5",
+      "renderer_text_sha256": "27f55304f5a0fd05f43a1cafc2326e7b9b99da59d3556a5c580e0efbb2ad4e92",
+      "exercise_bindings": [
+        {
+          "source_occurrence_id": "W03-A-incline_db_press",
+          "variant": "incline_db_press",
+          "exercise_id": "EX-084",
+          "prescription_sha256": "2df1ac61e55a40525f8d28eb248dc7d390b0e753349ee3af7b6bd2950c5eef6f"
+        },
+        {
+          "source_occurrence_id": "W03-A-pull_up_bodyweight",
+          "variant": "pull_up_bodyweight",
+          "exercise_id": "EX-053",
+          "prescription_sha256": "d74905b03dd1f98298cd9e64c1e578fdf94f27f8939b4eae191550726d10c27e"
+        },
+        {
+          "source_occurrence_id": "W03-A-chest_supported_db_row",
+          "variant": "chest_supported_db_row",
+          "exercise_id": "EX-170",
+          "prescription_sha256": "109d669d9bbb040f6055644ac0166c11f6ff92e91ddc0d343644937f794b33ce"
+        },
+        {
+          "source_occurrence_id": "W03-A-db_lateral_raise",
+          "variant": "db_lateral_raise",
+          "exercise_id": "EX-044",
+          "prescription_sha256": "8d165fbc49cd23075ab4334a692ace62207112e967117df2757de44ecb470399"
+        },
+        {
+          "source_occurrence_id": "W03-A-cable_pallof_square",
+          "variant": "cable_pallof_square",
+          "exercise_id": "EX-114",
+          "prescription_sha256": "c50c3a3af5f5f174846b78f940f9081c2f103d018672817ca86c890193627fbd"
+        }
+      ],
+      "summary": "5 exercises; 14 working sets"
+    },
+    {
+      "review_reference": "LW10K-W03-D02",
+      "week": 3,
+      "day": 2,
+      "weekday": "Tuesday",
+      "title": "Threshold intervals",
+      "type": "running",
+      "illustrative_date": "2026-11-17",
+      "source_instructions": [],
+      "review_path": "weeks/week-03.md#lw10k-w03-d02",
+      "graph_path": "native-graphs/graph-0014.json",
+      "graph_sha256": "6cb0b2fbbd30381a4c8671b1b54280a9d7855f681f3adef88201683fd664e9d5",
+      "selected_revision": "session-3116c98a-5e21-5ce1-8e3b-9b708479454f-r2",
+      "renderer_text_sha256": "c580608fa46c067f8a2fce333eaaeb9ba8903ca5ec17a457c8b78e4f594d1290",
+      "timed_milliseconds": 2940000,
+      "distance_metres": 0,
+      "ordered_step_count": 13,
+      "steps_sha256": "12f85364ec94d3a5a75c2444686c6980d0a9cacd592e049455ddd3415c1592b7",
+      "summary": "49:00"
+    },
+    {
+      "review_reference": "LW10K-W03-D03",
+      "week": 3,
+      "day": 3,
+      "weekday": "Wednesday",
+      "title": "Zone 2 run",
+      "type": "running",
+      "illustrative_date": "2026-11-18",
+      "source_instructions": [],
+      "review_path": "weeks/week-03.md#lw10k-w03-d03",
+      "graph_path": "native-graphs/graph-0015.json",
+      "graph_sha256": "068115edbf57952d264fc1f5a2bda4d497a551f7f77fffd72b31355f3f1ff4a5",
+      "selected_revision": "session-b9aa43f7-9dc3-539c-b183-3ab339654758-r2",
+      "renderer_text_sha256": "e8f3965e6fcc5cc24f3028d70dd90bffcd7acc36bf9f0c98acf0e19a49d158de",
+      "timed_milliseconds": 3000000,
+      "distance_metres": 0,
+      "ordered_step_count": 3,
+      "steps_sha256": "827c7f3e62ac009d30df0c1a17d78d3d633171a8ec284bdd4b551babfcf3546c",
+      "summary": "50:00"
+    },
+    {
+      "review_reference": "LW10K-W03-D04",
+      "week": 3,
+      "day": 4,
+      "weekday": "Thursday",
+      "title": "Thursday selected strength",
+      "type": "strength",
+      "illustrative_date": "2026-11-19",
+      "source_instructions": [
+        "Review order shown; within-session order remains part of D8 review. Preparation and warm-up sets are separate from working sets."
+      ],
+      "review_path": "weeks/week-03.md#lw10k-w03-d04",
+      "graph_path": "native-graphs/graph-0016.json",
+      "graph_sha256": "28f79a379a1126df3e65ad60455f44f30947d31a6dba80387736286e6996b2a2",
+      "selected_revision": "session-2052df8e-b4dd-58e0-9c03-17f98f138e24-r5",
+      "renderer_text_sha256": "9e4afdbe51686b514353ce2518ddf115098c9c0aa4cf2c8972d6f1d61b652a8d",
+      "exercise_bindings": [
+        {
+          "source_occurrence_id": "W03-B-barbell_rdl",
+          "variant": "barbell_rdl",
+          "exercise_id": "EX-078",
+          "prescription_sha256": "cf51c880ed2eb521182c2465d1d4a3040d6c4a4eaeb6b67d790d6924bc9fc3cc"
+        },
+        {
+          "source_occurrence_id": "W03-B-reverse_lunge_db",
+          "variant": "reverse_lunge_db",
+          "exercise_id": "EX-172",
+          "prescription_sha256": "d68ff5d33de8ba5e0630ac99f92e4d826c22255f5d5b3a25923c624657af4a7d"
+        },
+        {
+          "source_occurrence_id": "W03-B-seated_supported_db_press",
+          "variant": "seated_supported_db_press",
+          "exercise_id": "EX-171",
+          "prescription_sha256": "5abaedb2fc421fe850778fdea5a44e1ff91573aa7372246362b834c0d474bd38"
+        },
+        {
+          "source_occurrence_id": "W03-B-bench_supported_db_row",
+          "variant": "bench_supported_db_row",
+          "exercise_id": "EX-038",
+          "prescription_sha256": "fefdd2d33081512a07161efaab2c5ff723eb8ca9cfb4663cac5fa2fb6a9be3cd"
+        },
+        {
+          "source_occurrence_id": "W03-B-machine_standing_calf",
+          "variant": "machine_standing_calf",
+          "exercise_id": "EX-125",
+          "prescription_sha256": "2bcc7e5992b8c8eb53565f0443b0c441c6edc0410246f77aae3d6fd2be37c2d3"
+        },
+        {
+          "source_occurrence_id": "W03-B-side_plank",
+          "variant": "side_plank",
+          "exercise_id": "EX-116",
+          "prescription_sha256": "14adf780931a7f67ef86ed64b9ffca80c56158c340a058d24f8cf00a1a772159"
+        }
+      ],
+      "summary": "6 exercises; 13 working sets"
+    },
+    {
+      "review_reference": "LW10K-W03-D05",
+      "week": 3,
+      "day": 5,
+      "weekday": "Friday",
+      "title": "Easy run with relaxed strides",
+      "type": "running",
+      "illustrative_date": "2026-11-20",
+      "source_instructions": [],
+      "review_path": "weeks/week-03.md#lw10k-w03-d05",
+      "graph_path": "native-graphs/graph-0017.json",
+      "graph_sha256": "d33ba49d8a98ae3edfcf98e872c2a1b3609624bee677a3cc16b929622116badf",
+      "selected_revision": "session-1ea65fa9-b267-51ba-9525-584d6f8e3783-r2",
+      "renderer_text_sha256": "07870e68bf3026d4ddf3205bb7fc64526d2fab9216295a665761189994ad219d",
+      "timed_milliseconds": 2700000,
+      "distance_metres": 0,
+      "ordered_step_count": 11,
+      "steps_sha256": "02dd86976bdeb89f15edfecca430a8e7828bee9fe8365ccdce862aef107a0f32",
+      "summary": "45:00"
+    },
+    {
+      "review_reference": "LW10K-W03-D06",
+      "week": 3,
+      "day": 6,
+      "weekday": "Saturday",
+      "title": "Rest",
+      "type": "rest",
+      "illustrative_date": "2026-11-21",
+      "source_instructions": [
+        "No required training. Normal walking and optional gentle mobility; do not make up missed sessions."
+      ],
+      "review_path": "weeks/week-03.md#lw10k-w03-d06",
+      "graph_path": null,
+      "graph_sha256": null,
+      "selected_revision": null,
+      "summary": "Rest; no required training"
+    },
+    {
+      "review_reference": "LW10K-W03-D07",
+      "week": 3,
+      "day": 7,
+      "weekday": "Sunday",
+      "title": "Long Zone 2 run",
+      "type": "running",
+      "illustrative_date": "2026-11-22",
+      "source_instructions": [],
+      "review_path": "weeks/week-03.md#lw10k-w03-d07",
+      "graph_path": "native-graphs/graph-0018.json",
+      "graph_sha256": "3333abaf636694338e3397f30c9b6e17f1f654b2d23a3c02ff1d099809855446",
+      "selected_revision": "session-9d2ae8c0-e828-5a54-bdba-c2c05d76d364-r2",
+      "renderer_text_sha256": "1a0044bc444f8bd77bc4bef2915243f73e4b55070396fb0d4a07d62cbc9358b4",
+      "timed_milliseconds": 4500000,
+      "distance_metres": 0,
+      "ordered_step_count": 3,
+      "steps_sha256": "0b7a3c46a109df2008d19b66479d2d92d0314794c16a684c169243abf9c447d5",
+      "summary": "75:00"
+    },
+    {
+      "review_reference": "LW10K-W04-D01",
+      "week": 4,
+      "day": 1,
+      "weekday": "Monday",
+      "title": "Monday selected strength",
+      "type": "strength",
+      "illustrative_date": "2026-11-23",
+      "source_instructions": [
+        "Review order shown; within-session order remains part of D8 review. Preparation and warm-up sets are separate from working sets."
+      ],
+      "review_path": "weeks/week-04.md#lw10k-w04-d01",
+      "graph_path": "native-graphs/graph-0019.json",
+      "graph_sha256": "b0111d6ac38b27c6f3bd55f545941a20a23f3ccb3439cefac35edf75170afeab",
+      "selected_revision": "session-2d045c4d-0da3-583f-823c-f6d2fa3c0443-r5",
+      "renderer_text_sha256": "6b95acf83df21d2762a9842895c936363d323fb852b05386864eb7cb3a730e86",
+      "exercise_bindings": [
+        {
+          "source_occurrence_id": "W04-A-incline_db_press",
+          "variant": "incline_db_press",
+          "exercise_id": "EX-084",
+          "prescription_sha256": "00a15b892fed9bdbd6103a69b39a89b2599c9b562a5ad6c86c1443f855e25bae"
+        },
+        {
+          "source_occurrence_id": "W04-A-pull_up_bodyweight",
+          "variant": "pull_up_bodyweight",
+          "exercise_id": "EX-053",
+          "prescription_sha256": "f95d868b9eea5c1ca780448a40d55693201f5041c60a0e4b31cad886b93bc7d9"
+        },
+        {
+          "source_occurrence_id": "W04-A-chest_supported_db_row",
+          "variant": "chest_supported_db_row",
+          "exercise_id": "EX-170",
+          "prescription_sha256": "b228c28a879191db3122480ddcd513e7cc231dbbaabd7a6d7ba93f7b09ca587a"
+        },
+        {
+          "source_occurrence_id": "W04-A-db_lateral_raise",
+          "variant": "db_lateral_raise",
+          "exercise_id": "EX-044",
+          "prescription_sha256": "d5fce2f140203fefc0a5b0428dc8317f259283e6d0f63f1d38e7dbf92ba64fa5"
+        },
+        {
+          "source_occurrence_id": "W04-A-cable_pallof_square",
+          "variant": "cable_pallof_square",
+          "exercise_id": "EX-114",
+          "prescription_sha256": "2a7f31c80827dd23ae0052e9cad3dc58e5768957a0acd213559a72e2c3662d5f"
+        }
+      ],
+      "summary": "5 exercises; 10 working sets"
+    },
+    {
+      "review_reference": "LW10K-W04-D02",
+      "week": 4,
+      "day": 2,
+      "weekday": "Tuesday",
+      "title": "Consolidation threshold",
+      "type": "running",
+      "illustrative_date": "2026-11-24",
+      "source_instructions": [],
+      "review_path": "weeks/week-04.md#lw10k-w04-d02",
+      "graph_path": "native-graphs/graph-0020.json",
+      "graph_sha256": "8e22048fc0c796bd07255791f33cdf7f579108c970653e988f93d4469102b2a9",
+      "selected_revision": "session-e8afd9a6-7246-598d-b6f9-6fb59096a76e-r2",
+      "renderer_text_sha256": "69f09e15f41982c2d5d2c95a4499e5e2cae3a12fe25d13b4e3adcb1c6fa5d3b9",
+      "timed_milliseconds": 2550000,
+      "distance_metres": 0,
+      "ordered_step_count": 15,
+      "steps_sha256": "cb8b4422ba7fc1582c9a0cfb61c001f719fea98eedee8576693f74c75210688e",
+      "summary": "42:30"
+    },
+    {
+      "review_reference": "LW10K-W04-D03",
+      "week": 4,
+      "day": 3,
+      "weekday": "Wednesday",
+      "title": "Zone 2 run",
+      "type": "running",
+      "illustrative_date": "2026-11-25",
+      "source_instructions": [],
+      "review_path": "weeks/week-04.md#lw10k-w04-d03",
+      "graph_path": "native-graphs/graph-0021.json",
+      "graph_sha256": "6e28de3ccd0b480f43c26c30e12a5bfd5ec1700b2ae154805386a239d635d479",
+      "selected_revision": "session-f6675795-cabc-5706-b1bf-7c5a08f62528-r2",
+      "renderer_text_sha256": "c57140aca0bcb155fba9d88daf2c8d77ce413ff8fb995c3d2c193f8b52481c97",
+      "timed_milliseconds": 2400000,
+      "distance_metres": 0,
+      "ordered_step_count": 3,
+      "steps_sha256": "b44fe8bc307433896a8a5c904fc59fe99349068d7e9a3bb9d8c80de28036bea1",
+      "summary": "40:00"
+    },
+    {
+      "review_reference": "LW10K-W04-D04",
+      "week": 4,
+      "day": 4,
+      "weekday": "Thursday",
+      "title": "Thursday selected strength",
+      "type": "strength",
+      "illustrative_date": "2026-11-26",
+      "source_instructions": [
+        "Review order shown; within-session order remains part of D8 review. Preparation and warm-up sets are separate from working sets."
+      ],
+      "review_path": "weeks/week-04.md#lw10k-w04-d04",
+      "graph_path": "native-graphs/graph-0022.json",
+      "graph_sha256": "ce0c646e079b76e7c3a773b65f6ffaa8e01573f29d195c1b25e5d0756d83c358",
+      "selected_revision": "session-d5f28dd7-25fd-53e3-ba85-b297c17420e4-r5",
+      "renderer_text_sha256": "60484ea34f446d20cbf263980408a2916e46ea8e32b0b71fe41b9c64ab526022",
+      "exercise_bindings": [
+        {
+          "source_occurrence_id": "W04-B-barbell_rdl",
+          "variant": "barbell_rdl",
+          "exercise_id": "EX-078",
+          "prescription_sha256": "b195d6e2f2f716e1e28108250a3ce96fd52612bfa191c6190e8aa4d556818402"
+        },
+        {
+          "source_occurrence_id": "W04-B-reverse_lunge_db",
+          "variant": "reverse_lunge_db",
+          "exercise_id": "EX-172",
+          "prescription_sha256": "e404b32fff5f73071dd43dd50868e80266771cd06df68ecc37da20a4d51a5382"
+        },
+        {
+          "source_occurrence_id": "W04-B-seated_supported_db_press",
+          "variant": "seated_supported_db_press",
+          "exercise_id": "EX-171",
+          "prescription_sha256": "14d2f565ca9c31ea45476d34e1036ebcbac23561243f430d1798c6439b209e00"
+        },
+        {
+          "source_occurrence_id": "W04-B-bench_supported_db_row",
+          "variant": "bench_supported_db_row",
+          "exercise_id": "EX-038",
+          "prescription_sha256": "9224f6ccbfdf968acc43fa7258b06e955e17ea7c6b8d5e750f067fe12fb63b2e"
+        },
+        {
+          "source_occurrence_id": "W04-B-machine_standing_calf",
+          "variant": "machine_standing_calf",
+          "exercise_id": "EX-125",
+          "prescription_sha256": "c30c1e21b169d9d14125cf7da76833fe54a59fc2c42373abe7dc5ac9e12145f0"
+        },
+        {
+          "source_occurrence_id": "W04-B-side_plank",
+          "variant": "side_plank",
+          "exercise_id": "EX-116",
+          "prescription_sha256": "e500a7d2d0b6224272ad388a8bf593d340ae9095a29be482cef1ecbed8badfb3"
+        }
+      ],
+      "summary": "6 exercises; 11 working sets"
+    },
+    {
+      "review_reference": "LW10K-W04-D05",
+      "week": 4,
+      "day": 5,
+      "weekday": "Friday",
+      "title": "Zone 2 run",
+      "type": "running",
+      "illustrative_date": "2026-11-27",
+      "source_instructions": [],
+      "review_path": "weeks/week-04.md#lw10k-w04-d05",
+      "graph_path": "native-graphs/graph-0023.json",
+      "graph_sha256": "3ad922e9e160420dbf32d17804bf4b803912cd63eaa796b424c671d979e63d6b",
+      "selected_revision": "session-4a8dee15-c86d-5822-be7d-0241e9a3077f-r2",
+      "renderer_text_sha256": "c57140aca0bcb155fba9d88daf2c8d77ce413ff8fb995c3d2c193f8b52481c97",
+      "timed_milliseconds": 2400000,
+      "distance_metres": 0,
+      "ordered_step_count": 3,
+      "steps_sha256": "7875a4841fbf4a13c43c8ffb3b0b600ef7beff86afada59002d2270c7f4b67fc",
+      "summary": "40:00"
+    },
+    {
+      "review_reference": "LW10K-W04-D06",
+      "week": 4,
+      "day": 6,
+      "weekday": "Saturday",
+      "title": "Rest",
+      "type": "rest",
+      "illustrative_date": "2026-11-28",
+      "source_instructions": [
+        "No required training. Normal walking and optional gentle mobility; do not make up missed sessions."
+      ],
+      "review_path": "weeks/week-04.md#lw10k-w04-d06",
+      "graph_path": null,
+      "graph_sha256": null,
+      "selected_revision": null,
+      "summary": "Rest; no required training"
+    },
+    {
+      "review_reference": "LW10K-W04-D07",
+      "week": 4,
+      "day": 7,
+      "weekday": "Sunday",
+      "title": "Long Zone 2 run",
+      "type": "running",
+      "illustrative_date": "2026-11-29",
+      "source_instructions": [],
+      "review_path": "weeks/week-04.md#lw10k-w04-d07",
+      "graph_path": "native-graphs/graph-0024.json",
+      "graph_sha256": "d84a18f4e097d728fcba0dde78fddd486dd9ccb81bf5ec76284703442f17baf3",
+      "selected_revision": "session-c54df464-7cf0-5aad-9c1b-87f1481f40da-r2",
+      "renderer_text_sha256": "fe6126d36c6d70e26450e725160c04da5565bf7abe2641f3d593ba8fa4d2c450",
+      "timed_milliseconds": 3900000,
+      "distance_metres": 0,
+      "ordered_step_count": 3,
+      "steps_sha256": "792fce0215a885794151f059fbcd9024f8c3c217ed22e14b546115fee00c66cc",
+      "summary": "65:00"
+    },
+    {
+      "review_reference": "LW10K-W05-D01",
+      "week": 5,
+      "day": 1,
+      "weekday": "Monday",
+      "title": "Monday selected strength",
+      "type": "strength",
+      "illustrative_date": "2026-11-30",
+      "source_instructions": [
+        "Review order shown; within-session order remains part of D8 review. Preparation and warm-up sets are separate from working sets."
+      ],
+      "review_path": "weeks/week-05.md#lw10k-w05-d01",
+      "graph_path": "native-graphs/graph-0025.json",
+      "graph_sha256": "64667f6e8a458175af4335dc42122101aa338386a0d9ab85fd41d9f50a594ea2",
+      "selected_revision": "session-c2b9a2a5-a0fd-5b32-9b5a-db285799c0a3-r5",
+      "renderer_text_sha256": "27f55304f5a0fd05f43a1cafc2326e7b9b99da59d3556a5c580e0efbb2ad4e92",
+      "exercise_bindings": [
+        {
+          "source_occurrence_id": "W05-A-incline_db_press",
+          "variant": "incline_db_press",
+          "exercise_id": "EX-084",
+          "prescription_sha256": "d49701f619669f6e00fa1d0c0e9baef56016261c5a264c6969118ff3f3b651e0"
+        },
+        {
+          "source_occurrence_id": "W05-A-pull_up_bodyweight",
+          "variant": "pull_up_bodyweight",
+          "exercise_id": "EX-053",
+          "prescription_sha256": "fd0813e1ebdba8392e76b968478aa0ec15c78df649da64420b1c0fb806730c48"
+        },
+        {
+          "source_occurrence_id": "W05-A-chest_supported_db_row",
+          "variant": "chest_supported_db_row",
+          "exercise_id": "EX-170",
+          "prescription_sha256": "9be4844441ae690c935e6e10366439554b3b9e21e0a1ccda28fc023adf272898"
+        },
+        {
+          "source_occurrence_id": "W05-A-db_lateral_raise",
+          "variant": "db_lateral_raise",
+          "exercise_id": "EX-044",
+          "prescription_sha256": "998c03a36ad7d1980344a480904a6c7a661a26d9e1cfaf579691c81dcfe1031d"
+        },
+        {
+          "source_occurrence_id": "W05-A-cable_pallof_square",
+          "variant": "cable_pallof_square",
+          "exercise_id": "EX-114",
+          "prescription_sha256": "7685224dbc2b3293757be15a081579d4ff1ba47169d032351549004261937c6c"
+        }
+      ],
+      "summary": "5 exercises; 14 working sets"
+    },
+    {
+      "review_reference": "LW10K-W05-D02",
+      "week": 5,
+      "day": 2,
+      "weekday": "Tuesday",
+      "title": "Threshold intervals",
+      "type": "running",
+      "illustrative_date": "2026-12-01",
+      "source_instructions": [],
+      "review_path": "weeks/week-05.md#lw10k-w05-d02",
+      "graph_path": "native-graphs/graph-0026.json",
+      "graph_sha256": "010974f0878f86b1dee93fc52e98f0e21cd306abb64829ea95d807d2e1c7c357",
+      "selected_revision": "session-d65948b6-69b5-570b-8d4a-6e96e5908314-r2",
+      "renderer_text_sha256": "247ec6b1ef784fadab8a0eec2c35583ab28ed9c620c204a6b557b8eeae6ff19c",
+      "timed_milliseconds": 3120000,
+      "distance_metres": 0,
+      "ordered_step_count": 13,
+      "steps_sha256": "e87f4bb5e7ba1a3ed1d75e5646d591712413652ca1441b6af915da4696d4ed31",
+      "summary": "52:00"
+    },
+    {
+      "review_reference": "LW10K-W05-D03",
+      "week": 5,
+      "day": 3,
+      "weekday": "Wednesday",
+      "title": "Zone 2 run",
+      "type": "running",
+      "illustrative_date": "2026-12-02",
+      "source_instructions": [],
+      "review_path": "weeks/week-05.md#lw10k-w05-d03",
+      "graph_path": "native-graphs/graph-0027.json",
+      "graph_sha256": "34fea2088f0707df6b5f5e1ad4c2455599c6a03045ad98a321f01fbb40bc56ac",
+      "selected_revision": "session-31891ea0-b339-5f67-ab8c-deebae40d54c-r2",
+      "renderer_text_sha256": "e8f3965e6fcc5cc24f3028d70dd90bffcd7acc36bf9f0c98acf0e19a49d158de",
+      "timed_milliseconds": 3000000,
+      "distance_metres": 0,
+      "ordered_step_count": 3,
+      "steps_sha256": "7b8c8620063c8f497be74737cd43074e8550febfe2e1a781d8f90af2fb8fbe46",
+      "summary": "50:00"
+    },
+    {
+      "review_reference": "LW10K-W05-D04",
+      "week": 5,
+      "day": 4,
+      "weekday": "Thursday",
+      "title": "Thursday selected strength",
+      "type": "strength",
+      "illustrative_date": "2026-12-03",
+      "source_instructions": [
+        "Review order shown; within-session order remains part of D8 review. Preparation and warm-up sets are separate from working sets."
+      ],
+      "review_path": "weeks/week-05.md#lw10k-w05-d04",
+      "graph_path": "native-graphs/graph-0028.json",
+      "graph_sha256": "dfa9d0a8ec793cab8bdf4c325d6f6d1e6d7510135a86cddfe7b40bc980af9f9e",
+      "selected_revision": "session-eb3d69ec-b232-5fb8-ba32-c7cf00cc794d-r5",
+      "renderer_text_sha256": "9e4afdbe51686b514353ce2518ddf115098c9c0aa4cf2c8972d6f1d61b652a8d",
+      "exercise_bindings": [
+        {
+          "source_occurrence_id": "W05-B-barbell_rdl",
+          "variant": "barbell_rdl",
+          "exercise_id": "EX-078",
+          "prescription_sha256": "17cdc046144be04daf654623e9431316f229c5cc388a59d5db3fc032bc776f88"
+        },
+        {
+          "source_occurrence_id": "W05-B-reverse_lunge_db",
+          "variant": "reverse_lunge_db",
+          "exercise_id": "EX-172",
+          "prescription_sha256": "e9bcbf020695e0a660a759da1cf2e9803f3c01af619d74fddb7476cd60d6a28e"
+        },
+        {
+          "source_occurrence_id": "W05-B-seated_supported_db_press",
+          "variant": "seated_supported_db_press",
+          "exercise_id": "EX-171",
+          "prescription_sha256": "407f9527a8de89f914c5dd3b5dbb1b981d58561b19fd9f7fa3d8ae5fd441bbb8"
+        },
+        {
+          "source_occurrence_id": "W05-B-bench_supported_db_row",
+          "variant": "bench_supported_db_row",
+          "exercise_id": "EX-038",
+          "prescription_sha256": "6ed597726b6dd17f479dc4095b4e71ddee774bcc500536cea04d022156586819"
+        },
+        {
+          "source_occurrence_id": "W05-B-machine_standing_calf",
+          "variant": "machine_standing_calf",
+          "exercise_id": "EX-125",
+          "prescription_sha256": "b7ab3f31a1a718c243152817a42683b666e9bd638fc4f8a371abc26503336ad3"
+        },
+        {
+          "source_occurrence_id": "W05-B-side_plank",
+          "variant": "side_plank",
+          "exercise_id": "EX-116",
+          "prescription_sha256": "5ce6128f9f453f419d639c080b4f7363c3f92f0c0b177414e94158b5a958a6a7"
+        }
+      ],
+      "summary": "6 exercises; 13 working sets"
+    },
+    {
+      "review_reference": "LW10K-W05-D05",
+      "week": 5,
+      "day": 5,
+      "weekday": "Friday",
+      "title": "Easy run with relaxed strides",
+      "type": "running",
+      "illustrative_date": "2026-12-04",
+      "source_instructions": [],
+      "review_path": "weeks/week-05.md#lw10k-w05-d05",
+      "graph_path": "native-graphs/graph-0029.json",
+      "graph_sha256": "227de5fa2ad70c8ed39762c0532b54a6a505418ca969d75554249ddfd18ce20d",
+      "selected_revision": "session-9353deb4-1360-59bd-8785-5c88ee68c7d2-r2",
+      "renderer_text_sha256": "07870e68bf3026d4ddf3205bb7fc64526d2fab9216295a665761189994ad219d",
+      "timed_milliseconds": 2700000,
+      "distance_metres": 0,
+      "ordered_step_count": 11,
+      "steps_sha256": "a75514aa0acb08d58f41c5a46caf78fa39cbc3a42309f072ad7b8716fa666e0a",
+      "summary": "45:00"
+    },
+    {
+      "review_reference": "LW10K-W05-D06",
+      "week": 5,
+      "day": 6,
+      "weekday": "Saturday",
+      "title": "Rest",
+      "type": "rest",
+      "illustrative_date": "2026-12-05",
+      "source_instructions": [
+        "No required training. Normal walking and optional gentle mobility; do not make up missed sessions."
+      ],
+      "review_path": "weeks/week-05.md#lw10k-w05-d06",
+      "graph_path": null,
+      "graph_sha256": null,
+      "selected_revision": null,
+      "summary": "Rest; no required training"
+    },
+    {
+      "review_reference": "LW10K-W05-D07",
+      "week": 5,
+      "day": 7,
+      "weekday": "Sunday",
+      "title": "Long Zone 2 run",
+      "type": "running",
+      "illustrative_date": "2026-12-06",
+      "source_instructions": [],
+      "review_path": "weeks/week-05.md#lw10k-w05-d07",
+      "graph_path": "native-graphs/graph-0030.json",
+      "graph_sha256": "22ee65eaf1fbdfe263b7c50d621473374c968e15106be210f862681ae0d49a88",
+      "selected_revision": "session-d9e7a99e-887a-569f-90e0-989c3bd84954-r2",
+      "renderer_text_sha256": "1a0044bc444f8bd77bc4bef2915243f73e4b55070396fb0d4a07d62cbc9358b4",
+      "timed_milliseconds": 4500000,
+      "distance_metres": 0,
+      "ordered_step_count": 3,
+      "steps_sha256": "919cb95484923c0134d9148f4a900bb2813d347c3366d0b47de3aadc3ba13752",
+      "summary": "75:00"
+    },
+    {
+      "review_reference": "LW10K-W06-D01",
+      "week": 6,
+      "day": 1,
+      "weekday": "Monday",
+      "title": "Monday selected strength",
+      "type": "strength",
+      "illustrative_date": "2026-12-07",
+      "source_instructions": [
+        "Review order shown; within-session order remains part of D8 review. Preparation and warm-up sets are separate from working sets."
+      ],
+      "review_path": "weeks/week-06.md#lw10k-w06-d01",
+      "graph_path": "native-graphs/graph-0031.json",
+      "graph_sha256": "45fea33f6b58ab71cab970d23c51d6ac9fc6a737c2bda0c164ae41af317ed607",
+      "selected_revision": "session-18d0f55a-76b8-5d60-9fc4-2ea5698fdf7b-r5",
+      "renderer_text_sha256": "27f55304f5a0fd05f43a1cafc2326e7b9b99da59d3556a5c580e0efbb2ad4e92",
+      "exercise_bindings": [
+        {
+          "source_occurrence_id": "W06-A-incline_db_press",
+          "variant": "incline_db_press",
+          "exercise_id": "EX-084",
+          "prescription_sha256": "5c6893999840e38fd8bd79dd4c6609849f31ffeb5c2d81ebdc8691e2289d59fd"
+        },
+        {
+          "source_occurrence_id": "W06-A-pull_up_bodyweight",
+          "variant": "pull_up_bodyweight",
+          "exercise_id": "EX-053",
+          "prescription_sha256": "12b33a17caa13b62f3825e9f17b5c7ec548b5c31a9a69ea6edfa9accac6dfcc2"
+        },
+        {
+          "source_occurrence_id": "W06-A-chest_supported_db_row",
+          "variant": "chest_supported_db_row",
+          "exercise_id": "EX-170",
+          "prescription_sha256": "8344211654993550381f88875f7e9c4912fdaaf6a3b36a3243296743b169323a"
+        },
+        {
+          "source_occurrence_id": "W06-A-db_lateral_raise",
+          "variant": "db_lateral_raise",
+          "exercise_id": "EX-044",
+          "prescription_sha256": "2538e376a9f4610168a6a14e80d314d165bfb83724aecc936dccaefa952a02dc"
+        },
+        {
+          "source_occurrence_id": "W06-A-cable_pallof_square",
+          "variant": "cable_pallof_square",
+          "exercise_id": "EX-114",
+          "prescription_sha256": "874a4e45276ccc755cf8b86bf115ed34b372060ba93dbdf8896f0c6e1eea4818"
+        }
+      ],
+      "summary": "5 exercises; 14 working sets"
+    },
+    {
+      "review_reference": "LW10K-W06-D02",
+      "week": 6,
+      "day": 2,
+      "weekday": "Tuesday",
+      "title": "10K intervals",
+      "type": "running",
+      "illustrative_date": "2026-12-08",
+      "source_instructions": [],
+      "review_path": "weeks/week-06.md#lw10k-w06-d02",
+      "graph_path": "native-graphs/graph-0032.json",
+      "graph_sha256": "f389c9a7a5c3a5d6e4baab67ac0122939b836876ff3dd2486f9fd57430b29412",
+      "selected_revision": "session-44f05b2a-a55a-5766-a9b4-00b2db46ea71-r2",
+      "renderer_text_sha256": "1501a4371b14f72508db04421d31b19deeff30a4e81b122b7da2a5919e1edd34",
+      "timed_milliseconds": 2880000,
+      "distance_metres": 0,
+      "ordered_step_count": 15,
+      "steps_sha256": "2db5abc6335a64edd74e4f1cd6d0af83d81c6016179039df2559cbf6b3df6459",
+      "summary": "48:00"
+    },
+    {
+      "review_reference": "LW10K-W06-D03",
+      "week": 6,
+      "day": 3,
+      "weekday": "Wednesday",
+      "title": "Zone 2 run",
+      "type": "running",
+      "illustrative_date": "2026-12-09",
+      "source_instructions": [],
+      "review_path": "weeks/week-06.md#lw10k-w06-d03",
+      "graph_path": "native-graphs/graph-0033.json",
+      "graph_sha256": "27cbfba0a622e43a4b18973d69520fc07ea35e0c32ac0921de1b7e4b3ff46502",
+      "selected_revision": "session-bf80b11c-5389-5268-8659-1655e36410e3-r2",
+      "renderer_text_sha256": "e8f3965e6fcc5cc24f3028d70dd90bffcd7acc36bf9f0c98acf0e19a49d158de",
+      "timed_milliseconds": 3000000,
+      "distance_metres": 0,
+      "ordered_step_count": 3,
+      "steps_sha256": "9bfab1af7f4d615b64b119dfb09cbf2bc49464f81be4a451d76551a57524f2bb",
+      "summary": "50:00"
+    },
+    {
+      "review_reference": "LW10K-W06-D04",
+      "week": 6,
+      "day": 4,
+      "weekday": "Thursday",
+      "title": "Thursday selected strength",
+      "type": "strength",
+      "illustrative_date": "2026-12-10",
+      "source_instructions": [
+        "Review order shown; within-session order remains part of D8 review. Preparation and warm-up sets are separate from working sets."
+      ],
+      "review_path": "weeks/week-06.md#lw10k-w06-d04",
+      "graph_path": "native-graphs/graph-0034.json",
+      "graph_sha256": "e768c4156c98cef095137eac42d2f238ced29eac4c5e148e01dffa8ec31394e7",
+      "selected_revision": "session-661a1086-1435-5e43-8dea-845528a38643-r5",
+      "renderer_text_sha256": "9e4afdbe51686b514353ce2518ddf115098c9c0aa4cf2c8972d6f1d61b652a8d",
+      "exercise_bindings": [
+        {
+          "source_occurrence_id": "W06-B-barbell_rdl",
+          "variant": "barbell_rdl",
+          "exercise_id": "EX-078",
+          "prescription_sha256": "8e15e1caafddb15353e21a817cc341fee32e45fbd09de2b2366a8fd7cb82dc79"
+        },
+        {
+          "source_occurrence_id": "W06-B-reverse_lunge_db",
+          "variant": "reverse_lunge_db",
+          "exercise_id": "EX-172",
+          "prescription_sha256": "fb2f081f892bcf6a99722674b497811b3bbf27d9932fc52eb8bdccc8d51c5570"
+        },
+        {
+          "source_occurrence_id": "W06-B-seated_supported_db_press",
+          "variant": "seated_supported_db_press",
+          "exercise_id": "EX-171",
+          "prescription_sha256": "9ea8394074b4d9d2300809a7afbcf9fa1b16d1cad4010e0418236961a948e8ea"
+        },
+        {
+          "source_occurrence_id": "W06-B-bench_supported_db_row",
+          "variant": "bench_supported_db_row",
+          "exercise_id": "EX-038",
+          "prescription_sha256": "cde0130ce76cfdc5106f77bbf9da9b2fcde73602a3f68be9c978fa3fcfb6e033"
+        },
+        {
+          "source_occurrence_id": "W06-B-machine_standing_calf",
+          "variant": "machine_standing_calf",
+          "exercise_id": "EX-125",
+          "prescription_sha256": "e791e6f5c65ed61af93c5b88646ff9102ba686acc25f5f50f552138344cc9215"
+        },
+        {
+          "source_occurrence_id": "W06-B-side_plank",
+          "variant": "side_plank",
+          "exercise_id": "EX-116",
+          "prescription_sha256": "952c12f2605d808cd0af3963c15425d0f5fad7f4b459effa096d3a34819c4641"
+        }
+      ],
+      "summary": "6 exercises; 13 working sets"
+    },
+    {
+      "review_reference": "LW10K-W06-D05",
+      "week": 6,
+      "day": 5,
+      "weekday": "Friday",
+      "title": "Short-5K intervals",
+      "type": "running",
+      "illustrative_date": "2026-12-11",
+      "source_instructions": [],
+      "review_path": "weeks/week-06.md#lw10k-w06-d05",
+      "graph_path": "native-graphs/graph-0035.json",
+      "graph_sha256": "ef37257ed6314932421936433e9a61fe9eb5e50a82a8bd37edaa019f5dc4d72d",
+      "selected_revision": "session-f010db80-69f7-502f-90f7-d6fb577ad005-r2",
+      "renderer_text_sha256": "74bc8a12b50afee283f7c484cc61b681b5e362c2c077a503c3f7714ed3a104f3",
+      "timed_milliseconds": 1710000,
+      "distance_metres": 0,
+      "ordered_step_count": 13,
+      "steps_sha256": "07bfa0416323ae8d099ada0edd54759da9b04593093b36ec0c36a23737439e67",
+      "summary": "28:30"
+    },
+    {
+      "review_reference": "LW10K-W06-D06",
+      "week": 6,
+      "day": 6,
+      "weekday": "Saturday",
+      "title": "Rest",
+      "type": "rest",
+      "illustrative_date": "2026-12-12",
+      "source_instructions": [
+        "No required training. Normal walking and optional gentle mobility; do not make up missed sessions."
+      ],
+      "review_path": "weeks/week-06.md#lw10k-w06-d06",
+      "graph_path": null,
+      "graph_sha256": null,
+      "selected_revision": null,
+      "summary": "Rest; no required training"
+    },
+    {
+      "review_reference": "LW10K-W06-D07",
+      "week": 6,
+      "day": 7,
+      "weekday": "Sunday",
+      "title": "Long Zone 2 run",
+      "type": "running",
+      "illustrative_date": "2026-12-13",
+      "source_instructions": [],
+      "review_path": "weeks/week-06.md#lw10k-w06-d07",
+      "graph_path": "native-graphs/graph-0036.json",
+      "graph_sha256": "d98e8ee25d0988a4c86bfcd6cfd9ebe774b13f9f9dbc0d3bc33c4a83b055d4c5",
+      "selected_revision": "session-09fc43aa-02be-52c9-9210-0fe46d68bb6d-r2",
+      "renderer_text_sha256": "1a0044bc444f8bd77bc4bef2915243f73e4b55070396fb0d4a07d62cbc9358b4",
+      "timed_milliseconds": 4500000,
+      "distance_metres": 0,
+      "ordered_step_count": 3,
+      "steps_sha256": "1302fe1a60bd2b0a78e0cc81340de6c5a4ed9384bb91b89ab1e1c4493476602b",
+      "summary": "75:00"
+    },
+    {
+      "review_reference": "LW10K-W07-D01",
+      "week": 7,
+      "day": 1,
+      "weekday": "Monday",
+      "title": "Monday selected strength",
+      "type": "strength",
+      "illustrative_date": "2026-12-14",
+      "source_instructions": [
+        "Review order shown; within-session order remains part of D8 review. Preparation and warm-up sets are separate from working sets."
+      ],
+      "review_path": "weeks/week-07.md#lw10k-w07-d01",
+      "graph_path": "native-graphs/graph-0037.json",
+      "graph_sha256": "639f1b075c24a396d6250fe36f96db22d2cc25d96653cde4e2f1f6b6fe3e895f",
+      "selected_revision": "session-e1978da3-e34b-5d08-a740-350a80d1926c-r5",
+      "renderer_text_sha256": "27f55304f5a0fd05f43a1cafc2326e7b9b99da59d3556a5c580e0efbb2ad4e92",
+      "exercise_bindings": [
+        {
+          "source_occurrence_id": "W07-A-incline_db_press",
+          "variant": "incline_db_press",
+          "exercise_id": "EX-084",
+          "prescription_sha256": "fb2be6eb1cfd1332fec785725c72f55e8132e9c4974069257b546d4c1475dc4a"
+        },
+        {
+          "source_occurrence_id": "W07-A-pull_up_bodyweight",
+          "variant": "pull_up_bodyweight",
+          "exercise_id": "EX-053",
+          "prescription_sha256": "84c001ee545459e9a05e752397ebb4bcd3642c05d79e9f1e84c07ec04c1a07af"
+        },
+        {
+          "source_occurrence_id": "W07-A-chest_supported_db_row",
+          "variant": "chest_supported_db_row",
+          "exercise_id": "EX-170",
+          "prescription_sha256": "4147d4d74021e751d23c082ce00d47cc1f97da5583657cf344b302c8037010d2"
+        },
+        {
+          "source_occurrence_id": "W07-A-db_lateral_raise",
+          "variant": "db_lateral_raise",
+          "exercise_id": "EX-044",
+          "prescription_sha256": "39dd4a77ca087ba72f860593cae017c0c879b38a160d0a6a0dde66a8f9e1d050"
+        },
+        {
+          "source_occurrence_id": "W07-A-cable_pallof_square",
+          "variant": "cable_pallof_square",
+          "exercise_id": "EX-114",
+          "prescription_sha256": "97146405f31bb98676a05ad5a4b7d8ac9ccf22e25a33b5d77793def905b7906a"
+        }
+      ],
+      "summary": "5 exercises; 14 working sets"
+    },
+    {
+      "review_reference": "LW10K-W07-D02",
+      "week": 7,
+      "day": 2,
+      "weekday": "Tuesday",
+      "title": "10K intervals",
+      "type": "running",
+      "illustrative_date": "2026-12-15",
+      "source_instructions": [],
+      "review_path": "weeks/week-07.md#lw10k-w07-d02",
+      "graph_path": "native-graphs/graph-0038.json",
+      "graph_sha256": "e1ccdf6646b8f485d74ee6842e370d373ce4418b803d4a90fcebaf1844eb9f17",
+      "selected_revision": "session-4b710afd-00c5-55b9-b9bb-11ce51daa47f-r2",
+      "renderer_text_sha256": "dbad8ca1c715f40f0f928c3ce308ae4b64945d049699f334e60ef018fc083acc",
+      "timed_milliseconds": 2760000,
+      "distance_metres": 0,
+      "ordered_step_count": 13,
+      "steps_sha256": "57b2e8c58151d88d0c843d084d7fb02f771bc9a6c9883da704868017408775ed",
+      "summary": "46:00"
+    },
+    {
+      "review_reference": "LW10K-W07-D03",
+      "week": 7,
+      "day": 3,
+      "weekday": "Wednesday",
+      "title": "Zone 2 run",
+      "type": "running",
+      "illustrative_date": "2026-12-16",
+      "source_instructions": [],
+      "review_path": "weeks/week-07.md#lw10k-w07-d03",
+      "graph_path": "native-graphs/graph-0039.json",
+      "graph_sha256": "b171c6996eb6e0f4a4073613588d8015ca491d39dad2c5064565d18eb17deff3",
+      "selected_revision": "session-d4ecea05-5ec7-58a9-b534-0cec24e53164-r2",
+      "renderer_text_sha256": "e8f3965e6fcc5cc24f3028d70dd90bffcd7acc36bf9f0c98acf0e19a49d158de",
+      "timed_milliseconds": 3000000,
+      "distance_metres": 0,
+      "ordered_step_count": 3,
+      "steps_sha256": "955f8999029c234223cd95d49baef0962f46c8260608b7a6f59f7cfd123772d3",
+      "summary": "50:00"
+    },
+    {
+      "review_reference": "LW10K-W07-D04",
+      "week": 7,
+      "day": 4,
+      "weekday": "Thursday",
+      "title": "Thursday selected strength",
+      "type": "strength",
+      "illustrative_date": "2026-12-17",
+      "source_instructions": [
+        "Review order shown; within-session order remains part of D8 review. Preparation and warm-up sets are separate from working sets."
+      ],
+      "review_path": "weeks/week-07.md#lw10k-w07-d04",
+      "graph_path": "native-graphs/graph-0040.json",
+      "graph_sha256": "5f2272c9fc20718f90733e2fee1be664eeb2439dcd2f559b7570f13a96e6693f",
+      "selected_revision": "session-696dede4-268c-5a31-8e3a-0e555a8f8b0c-r5",
+      "renderer_text_sha256": "9e4afdbe51686b514353ce2518ddf115098c9c0aa4cf2c8972d6f1d61b652a8d",
+      "exercise_bindings": [
+        {
+          "source_occurrence_id": "W07-B-barbell_rdl",
+          "variant": "barbell_rdl",
+          "exercise_id": "EX-078",
+          "prescription_sha256": "7aa1c3659d7b89f7eb050ebe69ad340cce1fcbf8c05eac421eb1faad418a16ae"
+        },
+        {
+          "source_occurrence_id": "W07-B-reverse_lunge_db",
+          "variant": "reverse_lunge_db",
+          "exercise_id": "EX-172",
+          "prescription_sha256": "f81962ca69c0e7926095a4452ec94b12cbd9a98e03ddd9f72668ae852605d70a"
+        },
+        {
+          "source_occurrence_id": "W07-B-seated_supported_db_press",
+          "variant": "seated_supported_db_press",
+          "exercise_id": "EX-171",
+          "prescription_sha256": "1c0bbe6ce6da9f275010f3f3d9ff2055931a6d3c40c4e708b8fb0666e81c51b9"
+        },
+        {
+          "source_occurrence_id": "W07-B-bench_supported_db_row",
+          "variant": "bench_supported_db_row",
+          "exercise_id": "EX-038",
+          "prescription_sha256": "7fabb65decd959ed4245d8f4034f740e8b2ec1207461b193d8543ddb57d6f8ae"
+        },
+        {
+          "source_occurrence_id": "W07-B-machine_standing_calf",
+          "variant": "machine_standing_calf",
+          "exercise_id": "EX-125",
+          "prescription_sha256": "e3caca48de7c24aa7d1fdba6c1daf77159ab4533c072e8a282ca6e2f0e54bdd8"
+        },
+        {
+          "source_occurrence_id": "W07-B-side_plank",
+          "variant": "side_plank",
+          "exercise_id": "EX-116",
+          "prescription_sha256": "cf824e0da93b40465b6b8195071c263d5f584cf477a64e456ef3a4f3088d6303"
+        }
+      ],
+      "summary": "6 exercises; 13 working sets"
+    },
+    {
+      "review_reference": "LW10K-W07-D05",
+      "week": 7,
+      "day": 5,
+      "weekday": "Friday",
+      "title": "Short-5K intervals",
+      "type": "running",
+      "illustrative_date": "2026-12-18",
+      "source_instructions": [],
+      "review_path": "weeks/week-07.md#lw10k-w07-d05",
+      "graph_path": "native-graphs/graph-0041.json",
+      "graph_sha256": "611520b7e0b16e4e126eed6d1bb1806b1cf3fb56842b616bb8b848a2b363beb4",
+      "selected_revision": "session-54f39e5d-e386-5e07-a677-9a24eb15e3e6-r2",
+      "renderer_text_sha256": "b91289068c949ab02ad36623beebd3400ea6a4e155d7719f9f0b8e90cd4b3265",
+      "timed_milliseconds": 1980000,
+      "distance_metres": 0,
+      "ordered_step_count": 11,
+      "steps_sha256": "e54400cdc7f22f01d6b26700ea362a1ea3d0febc6f72f57bd6d77a965ad59ea3",
+      "summary": "33:00"
+    },
+    {
+      "review_reference": "LW10K-W07-D06",
+      "week": 7,
+      "day": 6,
+      "weekday": "Saturday",
+      "title": "Rest",
+      "type": "rest",
+      "illustrative_date": "2026-12-19",
+      "source_instructions": [
+        "No required training. Normal walking and optional gentle mobility; do not make up missed sessions."
+      ],
+      "review_path": "weeks/week-07.md#lw10k-w07-d06",
+      "graph_path": null,
+      "graph_sha256": null,
+      "selected_revision": null,
+      "summary": "Rest; no required training"
+    },
+    {
+      "review_reference": "LW10K-W07-D07",
+      "week": 7,
+      "day": 7,
+      "weekday": "Sunday",
+      "title": "Long Zone 2 run",
+      "type": "running",
+      "illustrative_date": "2026-12-20",
+      "source_instructions": [],
+      "review_path": "weeks/week-07.md#lw10k-w07-d07",
+      "graph_path": "native-graphs/graph-0042.json",
+      "graph_sha256": "915397d77c153320aba87ee7a3a97e2f49b7fbd0d9a84d9cf6746741c555b182",
+      "selected_revision": "session-a95f0a65-4152-50c7-80b1-675746aa3cfa-r2",
+      "renderer_text_sha256": "1a0044bc444f8bd77bc4bef2915243f73e4b55070396fb0d4a07d62cbc9358b4",
+      "timed_milliseconds": 4500000,
+      "distance_metres": 0,
+      "ordered_step_count": 3,
+      "steps_sha256": "74f55e63d1ab21158c39d4ec7767499c244721b504181207b23e2dbd65c1c773",
+      "summary": "75:00"
+    },
+    {
+      "review_reference": "LW10K-W08-D01",
+      "week": 8,
+      "day": 1,
+      "weekday": "Monday",
+      "title": "Monday selected strength",
+      "type": "strength",
+      "illustrative_date": "2026-12-21",
+      "source_instructions": [
+        "Review order shown; within-session order remains part of D8 review. Preparation and warm-up sets are separate from working sets."
+      ],
+      "review_path": "weeks/week-08.md#lw10k-w08-d01",
+      "graph_path": "native-graphs/graph-0043.json",
+      "graph_sha256": "c587347b1b7557d32c733ca62a12c1f2d166fd9b704fd4d00ee93b9fee9f7d1d",
+      "selected_revision": "session-308b82a9-d6b7-5c6d-a94b-b83c0b0d349a-r5",
+      "renderer_text_sha256": "27f55304f5a0fd05f43a1cafc2326e7b9b99da59d3556a5c580e0efbb2ad4e92",
+      "exercise_bindings": [
+        {
+          "source_occurrence_id": "W08-A-incline_db_press",
+          "variant": "incline_db_press",
+          "exercise_id": "EX-084",
+          "prescription_sha256": "a2b5c889f01e904f68f62c1982cbfcf4c60410e67c4ff79e7c59b814221da5ac"
+        },
+        {
+          "source_occurrence_id": "W08-A-pull_up_bodyweight",
+          "variant": "pull_up_bodyweight",
+          "exercise_id": "EX-053",
+          "prescription_sha256": "30fa4ba9d1510b732bf7ab1a3f2b221ea1cf5d9f1fd2a88914153c8485894aad"
+        },
+        {
+          "source_occurrence_id": "W08-A-chest_supported_db_row",
+          "variant": "chest_supported_db_row",
+          "exercise_id": "EX-170",
+          "prescription_sha256": "1c4b51efbb8239a438dcbeecdc2e035aea6c493611533c32861c3264f3a6e7e6"
+        },
+        {
+          "source_occurrence_id": "W08-A-db_lateral_raise",
+          "variant": "db_lateral_raise",
+          "exercise_id": "EX-044",
+          "prescription_sha256": "27207168785a691f5d77cb19b761707e665273239ee152eace08cf3955122e82"
+        },
+        {
+          "source_occurrence_id": "W08-A-cable_pallof_square",
+          "variant": "cable_pallof_square",
+          "exercise_id": "EX-114",
+          "prescription_sha256": "8c58ed749b7ce248568fbfa063a36724f4f99809968da895ea8c80dcee605da4"
+        }
+      ],
+      "summary": "5 exercises; 14 working sets"
+    },
+    {
+      "review_reference": "LW10K-W08-D02",
+      "week": 8,
+      "day": 2,
+      "weekday": "Tuesday",
+      "title": "Peak 10K specificity",
+      "type": "running",
+      "illustrative_date": "2026-12-22",
+      "source_instructions": [],
+      "review_path": "weeks/week-08.md#lw10k-w08-d02",
+      "graph_path": "native-graphs/graph-0044.json",
+      "graph_sha256": "64ec55b01c8c445ed2759a47a37233593ee04e5ef6375ba4235d192f50e120f1",
+      "selected_revision": "session-c82ec1f8-e007-5f52-8d2b-a91f46df370c-r2",
+      "renderer_text_sha256": "5dd5a37622fc5fffd3dddf2f2bd50453281ae1f7b3bf210345b06abc9476cc2d",
+      "timed_milliseconds": 2940000,
+      "distance_metres": 0,
+      "ordered_step_count": 13,
+      "steps_sha256": "f614f64b4bfc8fed7a4678e79499c12a5da0107f453f2eed21170b004590f41e",
+      "summary": "49:00"
+    },
+    {
+      "review_reference": "LW10K-W08-D03",
+      "week": 8,
+      "day": 3,
+      "weekday": "Wednesday",
+      "title": "Zone 2 run",
+      "type": "running",
+      "illustrative_date": "2026-12-23",
+      "source_instructions": [],
+      "review_path": "weeks/week-08.md#lw10k-w08-d03",
+      "graph_path": "native-graphs/graph-0045.json",
+      "graph_sha256": "9f8037d47d9e8a19aa0bbd47af842408e415150e383640f901bf879e7bc86213",
+      "selected_revision": "session-2d770815-cd17-5501-9e01-9aa555a95bb0-r2",
+      "renderer_text_sha256": "5b7aded8378790b427a423418ea42f490532b6d51960a43151fcaba8471e0669",
+      "timed_milliseconds": 2700000,
+      "distance_metres": 0,
+      "ordered_step_count": 3,
+      "steps_sha256": "3d6e48b3c5144e014150db14047ce9c824a3cb556386d035d5cd4677ee2f53b3",
+      "summary": "45:00"
+    },
+    {
+      "review_reference": "LW10K-W08-D04",
+      "week": 8,
+      "day": 4,
+      "weekday": "Thursday",
+      "title": "Thursday selected strength",
+      "type": "strength",
+      "illustrative_date": "2026-12-24",
+      "source_instructions": [
+        "Review order shown; within-session order remains part of D8 review. Preparation and warm-up sets are separate from working sets."
+      ],
+      "review_path": "weeks/week-08.md#lw10k-w08-d04",
+      "graph_path": "native-graphs/graph-0046.json",
+      "graph_sha256": "40ea1c045e6a38ff3d79dbbc1838f6f1403f0faac4aecacd608dff1a5e04b737",
+      "selected_revision": "session-d44b2d25-63fb-5508-97a8-172f611fd422-r5",
+      "renderer_text_sha256": "df5fe2032bfdaab93c476bd57563efda64ec18299de483abc9dca1c0e9327428",
+      "exercise_bindings": [
+        {
+          "source_occurrence_id": "W08-B-barbell_rdl",
+          "variant": "barbell_rdl",
+          "exercise_id": "EX-078",
+          "prescription_sha256": "31e6cce84d14d44910932e26bcf73f2ae64c984ae93f69e5504b3a4a8c921f40"
+        },
+        {
+          "source_occurrence_id": "W08-B-reverse_lunge_db",
+          "variant": "reverse_lunge_db",
+          "exercise_id": "EX-172",
+          "prescription_sha256": "ee105cfc2343a9ae4199eec586bced4799f6df7ece30549f269aa1b708398015"
+        },
+        {
+          "source_occurrence_id": "W08-B-seated_supported_db_press",
+          "variant": "seated_supported_db_press",
+          "exercise_id": "EX-171",
+          "prescription_sha256": "62bb111db2aa41a4923978c45b9d5dfeb4badfae9743c31081e868cddc2ee075"
+        },
+        {
+          "source_occurrence_id": "W08-B-bench_supported_db_row",
+          "variant": "bench_supported_db_row",
+          "exercise_id": "EX-038",
+          "prescription_sha256": "e4a2eeb351a612cbebc8295077f80c53c9c4350204f9a87bb33b445c680f3891"
+        },
+        {
+          "source_occurrence_id": "W08-B-machine_standing_calf",
+          "variant": "machine_standing_calf",
+          "exercise_id": "EX-125",
+          "prescription_sha256": "91950e0aac42e40578bb30110ac2d800cd9ec830d3cd82aab1bda49de41c63c1"
+        },
+        {
+          "source_occurrence_id": "W08-B-side_plank",
+          "variant": "side_plank",
+          "exercise_id": "EX-116",
+          "prescription_sha256": "6ff7be59ccc94055c59c69fd3234e879b61c8f0c94d73711d9bc65c503195f34"
+        }
+      ],
+      "summary": "6 exercises; 13 working sets"
+    },
+    {
+      "review_reference": "LW10K-W08-D05",
+      "week": 8,
+      "day": 5,
+      "weekday": "Friday",
+      "title": "Short-5K intervals — lighter Friday",
+      "type": "running",
+      "illustrative_date": "2026-12-25",
+      "source_instructions": [],
+      "review_path": "weeks/week-08.md#lw10k-w08-d05",
+      "graph_path": "native-graphs/graph-0047.json",
+      "graph_sha256": "28a88bb808da2ffd7757f9906a792f8212f99b49c3ec462d616c5907705eb638",
+      "selected_revision": "session-37c5ad17-bc27-56f6-812c-c99929b5832e-r2",
+      "renderer_text_sha256": "a02d22a638ad527271015a2ad73ca6a3a85e0b289401b9ecaf33e8f6e970b516",
+      "timed_milliseconds": 1410000,
+      "distance_metres": 0,
+      "ordered_step_count": 9,
+      "steps_sha256": "5fb790d068112d923b204f7e9038c4a70c25463e6841361c26d470f3342a771f",
+      "summary": "23:30"
+    },
+    {
+      "review_reference": "LW10K-W08-D06",
+      "week": 8,
+      "day": 6,
+      "weekday": "Saturday",
+      "title": "Rest",
+      "type": "rest",
+      "illustrative_date": "2026-12-26",
+      "source_instructions": [
+        "No required training. Normal walking and optional gentle mobility; do not make up missed sessions."
+      ],
+      "review_path": "weeks/week-08.md#lw10k-w08-d06",
+      "graph_path": null,
+      "graph_sha256": null,
+      "selected_revision": null,
+      "summary": "Rest; no required training"
+    },
+    {
+      "review_reference": "LW10K-W08-D07",
+      "week": 8,
+      "day": 7,
+      "weekday": "Sunday",
+      "title": "Long Zone 2 run",
+      "type": "running",
+      "illustrative_date": "2026-12-27",
+      "source_instructions": [],
+      "review_path": "weeks/week-08.md#lw10k-w08-d07",
+      "graph_path": "native-graphs/graph-0048.json",
+      "graph_sha256": "ed1904ae753f49b9af78e907154a392af94209c12b964a9a6c940060e8b29fda",
+      "selected_revision": "session-f8c3ee75-dd3c-5fbc-808d-07ea66c6b7bb-r2",
+      "renderer_text_sha256": "1a0044bc444f8bd77bc4bef2915243f73e4b55070396fb0d4a07d62cbc9358b4",
+      "timed_milliseconds": 4500000,
+      "distance_metres": 0,
+      "ordered_step_count": 3,
+      "steps_sha256": "966837a02365e09707b5ed74fbd4cee7cd611622528dff6223dff044480be89a",
+      "summary": "75:00"
+    },
+    {
+      "review_reference": "LW10K-W09-D01",
+      "week": 9,
+      "day": 1,
+      "weekday": "Monday",
+      "title": "Monday selected strength",
+      "type": "strength",
+      "illustrative_date": "2026-12-28",
+      "source_instructions": [
+        "Review order shown; within-session order remains part of D8 review. Preparation and warm-up sets are separate from working sets."
+      ],
+      "review_path": "weeks/week-09.md#lw10k-w09-d01",
+      "graph_path": "native-graphs/graph-0049.json",
+      "graph_sha256": "259de3f35b6d183acb96ed931c7cc0641fa438f01dbae9cfabd8aa38a5f4610b",
+      "selected_revision": "session-2a69637d-75c7-557d-b5dc-ba5e49b257d0-r5",
+      "renderer_text_sha256": "3af1fb9ab22adfe0ae6c8da7e19fdee6f76b7ecdd2dbb819fb7b6dfa0a76c20e",
+      "exercise_bindings": [
+        {
+          "source_occurrence_id": "W09-A-incline_db_press",
+          "variant": "incline_db_press",
+          "exercise_id": "EX-084",
+          "prescription_sha256": "4e89dd16e6868baa46a73395383bd8098f5842e0515109c5b0d5d236e1690c3f"
+        },
+        {
+          "source_occurrence_id": "W09-A-pull_up_bodyweight",
+          "variant": "pull_up_bodyweight",
+          "exercise_id": "EX-053",
+          "prescription_sha256": "dcd98dfeaa546e3d2c35d4c80548d6c84a28db7ab4238303301ff68f9aa8420e"
+        },
+        {
+          "source_occurrence_id": "W09-A-chest_supported_db_row",
+          "variant": "chest_supported_db_row",
+          "exercise_id": "EX-170",
+          "prescription_sha256": "a98411355abf2ed25e3ae464d967558782177dc5b8e594307dd0daed9d505b09"
+        },
+        {
+          "source_occurrence_id": "W09-A-db_lateral_raise",
+          "variant": "db_lateral_raise",
+          "exercise_id": "EX-044",
+          "prescription_sha256": "26adf772cece72367aa3f801943a011441a7253c2ff48b65a2e3aa3f4bc05848"
+        },
+        {
+          "source_occurrence_id": "W09-A-cable_pallof_square",
+          "variant": "cable_pallof_square",
+          "exercise_id": "EX-114",
+          "prescription_sha256": "cdd08a5d562f2772577bec1aa2ec844f497a89ddb2f4e2b5892997e5ff2a0bb6"
+        }
+      ],
+      "summary": "5 exercises; 9 working sets"
+    },
+    {
+      "review_reference": "LW10K-W09-D02",
+      "week": 9,
+      "day": 2,
+      "weekday": "Tuesday",
+      "title": "10K intervals",
+      "type": "running",
+      "illustrative_date": "2026-12-29",
+      "source_instructions": [],
+      "review_path": "weeks/week-09.md#lw10k-w09-d02",
+      "graph_path": "native-graphs/graph-0050.json",
+      "graph_sha256": "b40d7e04d56ca3341f8b80f53c7b25234d40bc27db4452d1d9018b96a743a706",
+      "selected_revision": "session-cde0bbe4-0af4-5d4a-a0cb-fd17398eb7d3-r2",
+      "renderer_text_sha256": "20efc432283ce05bd644424d78fca7e10f23beff2795bb307ba1e1e5a814cbb5",
+      "timed_milliseconds": 2400000,
+      "distance_metres": 0,
+      "ordered_step_count": 13,
+      "steps_sha256": "7cdc81f1e2858f2c39c5ac1c59a3c876cc7181ec89be51be8717311037000136",
+      "summary": "40:00"
+    },
+    {
+      "review_reference": "LW10K-W09-D03",
+      "week": 9,
+      "day": 3,
+      "weekday": "Wednesday",
+      "title": "Zone 2 run",
+      "type": "running",
+      "illustrative_date": "2026-12-30",
+      "source_instructions": [],
+      "review_path": "weeks/week-09.md#lw10k-w09-d03",
+      "graph_path": "native-graphs/graph-0051.json",
+      "graph_sha256": "62954422838cafce4ea7a8494a98c9f3a9d804619b75495db290ccdf5954744d",
+      "selected_revision": "session-029597e8-d816-5e64-b9a0-e47e81c4c108-r2",
+      "renderer_text_sha256": "5b7aded8378790b427a423418ea42f490532b6d51960a43151fcaba8471e0669",
+      "timed_milliseconds": 2700000,
+      "distance_metres": 0,
+      "ordered_step_count": 3,
+      "steps_sha256": "066b92977fbdbe5142374668b0004124f0ac9a330b6f9e6c766658cc2982408a",
+      "summary": "45:00"
+    },
+    {
+      "review_reference": "LW10K-W09-D04",
+      "week": 9,
+      "day": 4,
+      "weekday": "Thursday",
+      "title": "Thursday selected strength",
+      "type": "strength",
+      "illustrative_date": "2026-12-31",
+      "source_instructions": [
+        "Review order shown; within-session order remains part of D8 review. Preparation and warm-up sets are separate from working sets."
+      ],
+      "review_path": "weeks/week-09.md#lw10k-w09-d04",
+      "graph_path": "native-graphs/graph-0052.json",
+      "graph_sha256": "3ca9b056bfb4eccd277b2522949a5e90d5cf69cadec21c4839c87c4eb33506af",
+      "selected_revision": "session-0a6de07f-0ee6-5850-b903-acee407ca491-r5",
+      "renderer_text_sha256": "9015e0c5195429c1718045b4970d4689b3497738330fc0e9290e61ff0ec24709",
+      "exercise_bindings": [
+        {
+          "source_occurrence_id": "W09-B-barbell_rdl",
+          "variant": "barbell_rdl",
+          "exercise_id": "EX-078",
+          "prescription_sha256": "0b14d41fe6075f77a92cbff223a6c09d01b66d33f333c00d5e142194c2e14feb"
+        },
+        {
+          "source_occurrence_id": "W09-B-seated_supported_db_press",
+          "variant": "seated_supported_db_press",
+          "exercise_id": "EX-171",
+          "prescription_sha256": "dc26f0ac1934ca17a36702a6f09f6dde44c2cde4261b857b4011ecf8a66ef51c"
+        },
+        {
+          "source_occurrence_id": "W09-B-bench_supported_db_row",
+          "variant": "bench_supported_db_row",
+          "exercise_id": "EX-038",
+          "prescription_sha256": "3ad9f3ae5263db57b70c13648ded828dff9766a143547372793d6d8690ac1885"
+        },
+        {
+          "source_occurrence_id": "W09-B-machine_standing_calf",
+          "variant": "machine_standing_calf",
+          "exercise_id": "EX-125",
+          "prescription_sha256": "6137d943cd678432a33e38e18dc03279610fe6b73014185815ef92fb8b9ab3a0"
+        },
+        {
+          "source_occurrence_id": "W09-B-side_plank",
+          "variant": "side_plank",
+          "exercise_id": "EX-116",
+          "prescription_sha256": "fc6ce0501c12e4b854de262db978ef6075517208d332b96082d976c1aca0a4b4"
+        }
+      ],
+      "summary": "5 exercises; 7 working sets"
+    },
+    {
+      "review_reference": "LW10K-W09-D05",
+      "week": 9,
+      "day": 5,
+      "weekday": "Friday",
+      "title": "Short-5K intervals",
+      "type": "running",
+      "illustrative_date": "2027-01-01",
+      "source_instructions": [],
+      "review_path": "weeks/week-09.md#lw10k-w09-d05",
+      "graph_path": "native-graphs/graph-0053.json",
+      "graph_sha256": "95168768765035497ca5966ac78b17b9a2f60421178804ca4f1aaeac62f1df79",
+      "selected_revision": "session-924f3647-cd34-5bf1-88ec-7bb0e1f9ae6a-r2",
+      "renderer_text_sha256": "87233e966c319628bc4f3d82254724fd89caed1c7e3eb0786e5c2c53b822d054",
+      "timed_milliseconds": 1410000,
+      "distance_metres": 0,
+      "ordered_step_count": 9,
+      "steps_sha256": "838916657925ea61678765f0462278a41cac1c764cac84201349600b17eb2459",
+      "summary": "23:30"
+    },
+    {
+      "review_reference": "LW10K-W09-D06",
+      "week": 9,
+      "day": 6,
+      "weekday": "Saturday",
+      "title": "Rest",
+      "type": "rest",
+      "illustrative_date": "2027-01-02",
+      "source_instructions": [
+        "No required training. Normal walking and optional gentle mobility; do not make up missed sessions."
+      ],
+      "review_path": "weeks/week-09.md#lw10k-w09-d06",
+      "graph_path": null,
+      "graph_sha256": null,
+      "selected_revision": null,
+      "summary": "Rest; no required training"
+    },
+    {
+      "review_reference": "LW10K-W09-D07",
+      "week": 9,
+      "day": 7,
+      "weekday": "Sunday",
+      "title": "Long Zone 2 run",
+      "type": "running",
+      "illustrative_date": "2027-01-03",
+      "source_instructions": [],
+      "review_path": "weeks/week-09.md#lw10k-w09-d07",
+      "graph_path": "native-graphs/graph-0054.json",
+      "graph_sha256": "8051c28b916ebe97eadae92500afa643fe4cbd2a25edc3cd09084fadc9b8abfd",
+      "selected_revision": "session-370218c5-441d-570c-bd36-ae08b3380ee4-r2",
+      "renderer_text_sha256": "23a395b0a4329b2385cdb02ea24823252ead5eaae830cac6332a3687806fb5af",
+      "timed_milliseconds": 3600000,
+      "distance_metres": 0,
+      "ordered_step_count": 3,
+      "steps_sha256": "a5027b19546140e89e40c350e6f2b192bab644fb1800eff43299f1f3677210c7",
+      "summary": "60:00"
+    },
+    {
+      "review_reference": "LW10K-W10-D01",
+      "week": 10,
+      "day": 1,
+      "weekday": "Monday",
+      "title": "Monday selected strength",
+      "type": "strength",
+      "illustrative_date": "2027-01-04",
+      "source_instructions": [
+        "Review order shown; within-session order remains part of D8 review. Preparation and warm-up sets are separate from working sets."
+      ],
+      "review_path": "weeks/week-10.md#lw10k-w10-d01",
+      "graph_path": "native-graphs/graph-0055.json",
+      "graph_sha256": "a088f20ba83eea3aaa44a05a28f45f2c89e69e4b488260196b6b9755c35eafc7",
+      "selected_revision": "session-13a6135f-439c-5e10-ac06-bc3e506596f9-r5",
+      "renderer_text_sha256": "afc90628614c24fad65bee6200eae53faab0181053b4d6d53bd2ebb1712eee6c",
+      "exercise_bindings": [
+        {
+          "source_occurrence_id": "W10-A-incline_db_press",
+          "variant": "incline_db_press",
+          "exercise_id": "EX-084",
+          "prescription_sha256": "8cb75bc1e2fd82d3e0ba54079aee38bf745e92ee5ecef8fcbdea953f0b5824f8"
+        },
+        {
+          "source_occurrence_id": "W10-A-pull_up_bodyweight",
+          "variant": "pull_up_bodyweight",
+          "exercise_id": "EX-053",
+          "prescription_sha256": "6dda493e305e379c783bce2deb05c43bbf1cdf520420dbab7eff6794583c3267"
+        },
+        {
+          "source_occurrence_id": "W10-A-chest_supported_db_row",
+          "variant": "chest_supported_db_row",
+          "exercise_id": "EX-170",
+          "prescription_sha256": "0fb87828fa507098965a473ca9bc1c2fa0faae2f2b2f9496ceddadcec8dc211a"
+        },
+        {
+          "source_occurrence_id": "W10-A-db_lateral_raise",
+          "variant": "db_lateral_raise",
+          "exercise_id": "EX-044",
+          "prescription_sha256": "dc4dc57b1c11d6d798ecb12417577adeefaa61014f3bd880b80019dd8af25f55"
+        },
+        {
+          "source_occurrence_id": "W10-A-cable_pallof_square",
+          "variant": "cable_pallof_square",
+          "exercise_id": "EX-114",
+          "prescription_sha256": "02043e298d6f65e9213bf34670320fc0aa5f0c3f3fe5ccb693352178dba92690"
+        }
+      ],
+      "summary": "5 exercises; 8 working sets"
+    },
+    {
+      "review_reference": "LW10K-W10-D02",
+      "week": 10,
+      "day": 2,
+      "weekday": "Tuesday",
+      "title": "Taper sharpening",
+      "type": "running",
+      "illustrative_date": "2027-01-05",
+      "source_instructions": [],
+      "review_path": "weeks/week-10.md#lw10k-w10-d02",
+      "graph_path": "native-graphs/graph-0056.json",
+      "graph_sha256": "6585f96e87862198faeb0ce1ce86dacd801d695a06c63e303e62477d209499a7",
+      "selected_revision": "session-cbd90fb8-37ff-5458-b991-6c41b6fcd63e-r2",
+      "renderer_text_sha256": "8ddf08261141c42f633caef0a2dcd46ad98067daedd785ac0b19054a00baa9d3",
+      "timed_milliseconds": 1680000,
+      "distance_metres": 0,
+      "ordered_step_count": 13,
+      "steps_sha256": "15055c9f793df361b886797b5fd9c6cd063c7de06d61b6d214b12e27badb0623",
+      "summary": "28:00"
+    },
+    {
+      "review_reference": "LW10K-W10-D03",
+      "week": 10,
+      "day": 3,
+      "weekday": "Wednesday",
+      "title": "Zone 2 run",
+      "type": "running",
+      "illustrative_date": "2027-01-06",
+      "source_instructions": [],
+      "review_path": "weeks/week-10.md#lw10k-w10-d03",
+      "graph_path": "native-graphs/graph-0057.json",
+      "graph_sha256": "a10e56741e2d776efdd79252ed884049b54c15d7984df73c9fb5ad7a8edcd0c6",
+      "selected_revision": "session-e97108b8-57d9-5eae-8809-33a3699939b6-r2",
+      "renderer_text_sha256": "d7c92a748e9f7c823eb98c8bff23c8414fc5e201cbffc95d9c53562e2df9279c",
+      "timed_milliseconds": 2100000,
+      "distance_metres": 0,
+      "ordered_step_count": 3,
+      "steps_sha256": "0405eecfa058cf650d23327610f5bab4b7f328a6f80be02c3780f1ede6574b99",
+      "summary": "35:00"
+    },
+    {
+      "review_reference": "LW10K-W10-D04",
+      "week": 10,
+      "day": 4,
+      "weekday": "Thursday",
+      "title": "Upper-body taper exception",
+      "type": "strength",
+      "illustrative_date": "2027-01-07",
+      "source_instructions": [
+        "Review order shown; within-session order remains part of D8 review. Preparation and warm-up sets are separate from working sets."
+      ],
+      "review_path": "weeks/week-10.md#lw10k-w10-d04",
+      "graph_path": "native-graphs/graph-0060.json",
+      "graph_sha256": "65589a7d74f135e1ef621a3b4edcc84ab600056b92ab25083cfb75d231604e8a",
+      "selected_revision": "session-02346200-732e-56d4-a637-f20e7d75b7b4-r5",
+      "renderer_text_sha256": "58eb337c616bba70b0bd06577eb1c1e948bc256837e8691cc86e2df44a23128b",
+      "exercise_bindings": [
+        {
+          "source_occurrence_id": "W10-B-seated_supported_db_press",
+          "variant": "seated_supported_db_press",
+          "exercise_id": "EX-171",
+          "prescription_sha256": "7b71ecdb60702190410e5ea1cb5b7449d4335b9bf32d55f25e817f2d30ce340f"
+        },
+        {
+          "source_occurrence_id": "W10-B-bench_supported_db_row",
+          "variant": "bench_supported_db_row",
+          "exercise_id": "EX-038",
+          "prescription_sha256": "c24d5e2de2e4b7081de8af0e1f83ab6ed54c1e8147cdeb1307f6feef9810f1aa"
+        }
+      ],
+      "summary": "2 exercises; 4 working sets"
+    },
+    {
+      "review_reference": "LW10K-W10-D05",
+      "week": 10,
+      "day": 5,
+      "weekday": "Friday",
+      "title": "Easy run with relaxed strides",
+      "type": "running",
+      "illustrative_date": "2027-01-08",
+      "source_instructions": [],
+      "review_path": "weeks/week-10.md#lw10k-w10-d05",
+      "graph_path": "native-graphs/graph-0058.json",
+      "graph_sha256": "57e579270189e8c3539b3156571d038112d2412dae3e8bbfa9e86a5feaec9c02",
+      "selected_revision": "session-fe801431-6348-5b56-8081-396a810e7fd4-r2",
+      "renderer_text_sha256": "501ad833781d2acc5d8e43bb6bec72d8d67aa08a70d611cce4704c287eaab362",
+      "timed_milliseconds": 1200000,
+      "distance_metres": 0,
+      "ordered_step_count": 9,
+      "steps_sha256": "4f193a9f7fa34b03247c9ee389f4d8c18fe24cb876f1076e6ba981ae58ec05a3",
+      "summary": "20:00"
+    },
+    {
+      "review_reference": "LW10K-W10-D06",
+      "week": 10,
+      "day": 6,
+      "weekday": "Saturday",
+      "title": "Rest",
+      "type": "rest",
+      "illustrative_date": "2027-01-09",
+      "source_instructions": [
+        "No required training. Normal walking and optional gentle mobility; do not make up missed sessions."
+      ],
+      "review_path": "weeks/week-10.md#lw10k-w10-d06",
+      "graph_path": null,
+      "graph_sha256": null,
+      "selected_revision": null,
+      "summary": "Rest; no required training"
+    },
+    {
+      "review_reference": "LW10K-W10-D07",
+      "week": 10,
+      "day": 7,
+      "weekday": "Sunday",
+      "title": "10K final assessment",
+      "type": "running",
+      "illustrative_date": "2027-01-10",
+      "source_instructions": [],
+      "review_path": "weeks/week-10.md#lw10k-w10-d07",
+      "graph_path": "native-graphs/graph-0059.json",
+      "graph_sha256": "61e8d0362a4ed54ea143d892eef67662bbb92008b01ac61a60c05458c97e4c38",
+      "selected_revision": "session-d1f03e44-ae64-5a40-a52e-675881e8f077-r2",
+      "renderer_text_sha256": "cc6f013cd9a89ec5ad125d6704db0e2777e262978e3024256b418042e201a67a",
+      "timed_milliseconds": 1200000,
+      "distance_metres": 10000,
+      "ordered_step_count": 10,
+      "steps_sha256": "460fb7de025053c2f9a9951f4dec451d82610a8ae1f07fbb07f144403ac68310",
+      "summary": "20:00 + 10,000 m (actual elapsed time)"
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "classification": "CURRENT_LOCAL_D8_DERIVATION_CHECKS_NOT_CONTENT_APPROVAL",
+  "all_60_retained_rendered_session_texts_read_back_exact": true,
+  "all_70_day_instructions_present": true,
+  "all_review_links_and_day_anchors_valid": 177,
+  "founder_decision": "PENDING",
+  "no_broad_suite_repeated": true,
+  "source_archive_sha256": "c84060c5c5f97eaaf306006230cfc997a8132110012eec302a4e8b82a604d88a"
+}

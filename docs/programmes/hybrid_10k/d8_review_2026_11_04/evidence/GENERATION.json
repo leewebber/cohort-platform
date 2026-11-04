@@ -1,0 +1,127 @@
+{
+  "input_pins": {
+    "docs/programmes/hybrid_10k/performance_selected_2026_11_03/SOURCE.json": "96db2300a2c84f38b745bbf9f04743f857a96b768b5a7a94ef1690428fb6a0b2",
+    "docs/programmes/hybrid_10k/performance_selected_2026_11_03/RUNNING_BODIES.json": "38f9224913767959218b91468142cba498a772080a35fae52cf162468ca8ffef",
+    "docs/programmes/hybrid_10k/performance_selected_2026_11_03/STRENGTH_REVIEW_GRAPHS.json": "399fcdcf618ee85d474e973d0a53a3a950f052740d7b539056df95ed1517342e",
+    "docs/programmes/hybrid_10k/performance_selected_2026_11_03/TEN_WEEK_REVIEW.md": "fd854937ec93884834a80e56abbee87a394314cbc8bcc168d506c6b0c0d53adb",
+    "docs/programmes/hybrid_10k/founder_selected_2026_10_30/TEN_WEEK_REVIEW.md": "f65358b81e3690938511ea5009bfcccbf20ae6593230118d8fbca828944e1a93",
+    "docs/programmes/hybrid_10k/founder_selected_2026_10_30/FOUNDER_SELECTIONS.md": "dd7e08cc1b026b46307b42c491216543899879e202c3f665ce837f486bc0d6d8",
+    "docs/programmes/hybrid_10k/founder_selected_2026_10_30/DOSE_CLARIFICATIONS.md": "e38cba504a1b40dcfe93e1fa72cee4b1804b0f4bee5078e7e240e41df9457b76",
+    "docs/programmes/hybrid_10k/general_draft_2026_10_30/GENERAL_GUIDANCE.md": "1aabcb3034f88efb0d2a29e280ffc141b759371c9364c28015d2dc51c79370c3",
+    "docs/programmes/hybrid_10k/RUNNING_SELECTION_2026_11_03.md": "84241df05b3e2967103942d3ff0eb6373c5678b5e240e3b4c9667f047f3256bd",
+    "docs/checkpoints/m23_quality_target_admission/DECISIONS.md": "968ed2c3a84923a422a9f13797a282da454e5cde714315c856c97cf3144c1efa",
+    "docs/checkpoints/m11_catalogue_operation/live_0431d08_2026_11_04/SHA256.json": "1924011b127e85b7377166508ab516ccf613da22e9c02431b61b946dc1ff433f",
+    "docs/checkpoints/m11_catalogue_operation/live_0431d08_2026_11_04/admitted/canonical-source.tar": "c84060c5c5f97eaaf306006230cfc997a8132110012eec302a4e8b82a604d88a",
+    "docs/checkpoints/m11_catalogue_operation/live_0431d08_2026_11_04/admitted/workspace.json": "97da258a505a8fa78bfd354c247df0054fec4a8af5b3e462d0dfedd423d68de1",
+    "docs/checkpoints/m11_catalogue_operation/live_0431d08_2026_11_04/evidence/OPERATOR_TRUST.json": "cfb94cfa4ccb234740deca0943bf327e8898e4a8ef79318d34c05e1bf3b6c0bd",
+    "docs/checkpoints/m11_catalogue_operation/live_0431d08_2026_11_04/evidence/OPERATOR_AUDIT.json": "f23f77765d56f634fad466d094b7ecbfd4019324a375df07fe2e42e1ec060293",
+    "docs/checkpoints/m11_catalogue_operation/live_0431d08_2026_11_04/evidence/retained/receipt.json": "f7261883ef7da25d35f09889f2706c9bd3d26bc33a853d8a0ff358b24fb21b62",
+    "docs/checkpoints/m11_catalogue_operation/live_0431d08_2026_11_04/evidence/ADMISSION.json": "c0b75eb33380acb3ba0393474cc8b65fe7137584f8f223d8886356126015013a"
+  },
+  "base_commit": "e676e31af15d9c5a31d573c8215ce008d1980526",
+  "days": 70,
+  "strength_sessions": 20,
+  "running_sessions": 40,
+  "rest_days": 10,
+  "strength_prescriptions_exact": 105,
+  "prior_identity_occurrences_unchanged": 77,
+  "genuine_missing_bindings": {
+    "chest_supported_db_row": 10,
+    "reverse_lunge_db": 8,
+    "seated_supported_db_press": 10
+  },
+  "all_40_running_steps_exact": true,
+  "canonical_archive_and_all_member_hashes_verified": true,
+  "all_retained_checkpoint_hashes_verified": true,
+  "all_60_existing_renderer_segments_carried_verbatim_as_html_escaped_lines": true,
+  "final_test_distance_metres": 10000,
+  "final_test_timed_milliseconds": 1200000,
+  "weekly": [
+    {
+      "week": 1,
+      "focus": "Performance foundation",
+      "timed_milliseconds": 11550000,
+      "distance_metres": 0,
+      "strength_working_sets": 27
+    },
+    {
+      "week": 2,
+      "focus": "Threshold build",
+      "timed_milliseconds": 12360000,
+      "distance_metres": 0,
+      "strength_working_sets": 27
+    },
+    {
+      "week": 3,
+      "focus": "Threshold build",
+      "timed_milliseconds": 13140000,
+      "distance_metres": 0,
+      "strength_working_sets": 27
+    },
+    {
+      "week": 4,
+      "focus": "Consolidation",
+      "timed_milliseconds": 11250000,
+      "distance_metres": 0,
+      "strength_working_sets": 21
+    },
+    {
+      "week": 5,
+      "focus": "Threshold development",
+      "timed_milliseconds": 13320000,
+      "distance_metres": 0,
+      "strength_working_sets": 27
+    },
+    {
+      "week": 6,
+      "focus": "10K specificity plus short-5K Friday",
+      "timed_milliseconds": 12090000,
+      "distance_metres": 0,
+      "strength_working_sets": 27
+    },
+    {
+      "week": 7,
+      "focus": "Standard build; not consolidation",
+      "timed_milliseconds": 12240000,
+      "distance_metres": 0,
+      "strength_working_sets": 27
+    },
+    {
+      "week": 8,
+      "focus": "Peak Tuesday specificity; lighter Friday",
+      "timed_milliseconds": 11550000,
+      "distance_metres": 0,
+      "strength_working_sets": 27
+    },
+    {
+      "week": 9,
+      "focus": "Reduce fatigue",
+      "timed_milliseconds": 10110000,
+      "distance_metres": 0,
+      "strength_working_sets": 16
+    },
+    {
+      "week": 10,
+      "focus": "Taper and distance-ended 10K test",
+      "timed_milliseconds": 6180000,
+      "distance_metres": 10000,
+      "strength_working_sets": 12
+    }
+  ],
+  "review_status": "PREPARED_AWAITING_FOUNDER_D8",
+  "publication": "NOT_PERFORMED",
+  "Gate_A": "OPEN",
+  "generated_files_sha256": {
+    "weeks/week-01.md": "80ba2e42924b79fd83ab0496db3ca833404f6fdde0cc2e3785db657562d11b58",
+    "weeks/week-02.md": "35db53cbeffd9b2ecba4c9c224fa23ed3bb62c0922f98566293366c82068e698",
+    "weeks/week-03.md": "f2aac0f2503330d948dd4d27b93d083488c0d5f6b19eb1fc836abeebbbbd6c3f",
+    "weeks/week-04.md": "ae32b792294c2b95a994cb5769b5f5efabbeba7c7af13aec9368e93defcf91de",
+    "weeks/week-05.md": "f7a5b4a75d3bada1a51aac25b4e7dcb287547d9212f6361f676322c253509310",
+    "weeks/week-06.md": "ef013ad89de5da109940f5c62c95c73042b1b518a073344e8e300647527b4bf7",
+    "weeks/week-07.md": "13a3f94219e2ee6f9c2926441e3875beb75bed27903f51e8e1768a35af044e8c",
+    "weeks/week-08.md": "7200753868d564994bfa99455d68420ff4a624088eec1536cc33921a8e57a58e",
+    "weeks/week-09.md": "b21f3941abe9668f0fc015435a2a482caf4593a77be61df3fba4f2bcda89e757",
+    "weeks/week-10.md": "29e8c5d699cf02ebebf680a73edfe8cb306292a6932a887fc6f413a9c2f4edd2",
+    "REVIEW_INDEX.json": "ec685dbc3823c81570cab0f481a0c34a98f56bc4cb60b4b8c500b728d7b91262"
+  }
+}

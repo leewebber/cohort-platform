@@ -1,0 +1,14 @@
+{
+  "before_equals_precommit": true,
+  "older_existing_checkouts": 20,
+  "other_registrations": 25,
+  "tracked_untracked_files": 54537,
+  "explicit_env_temp_files": 21,
+  "refs_sha256": "1fa966f5d754b98963d75aa09d0e9765ae28b11cefd2b2195eb7d65d0ace1b85",
+  "fetch_head_sha256": "407b7685e8191502134c30d17eb68408f7bacd4aeb19124ada6b563979537d91",
+  "bounded_bundles": {
+    "count": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "before_inventory_sha256": "955f64daf2db2c9eec485f2d7ea00f3b9bc8e238e65cfdf79d8eb936ce992ad8"
+}

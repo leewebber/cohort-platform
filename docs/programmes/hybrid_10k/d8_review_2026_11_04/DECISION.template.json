@@ -1,0 +1,16 @@
+{
+  "kind": "FOUNDER_D8_DECISION_TEMPLATE_NOT_AN_EVENT",
+  "review_snapshot_sha256": "c8bdd10c724cdbf85c11021c5aa9936de82815804f89fa490715e821a2237c2d",
+  "source_base_commit": "e676e31af15d9c5a31d573c8215ce008d1980526",
+  "reviewer": null,
+  "decision": "PENDING",
+  "recorded_at": null,
+  "entry_scope_decision": null,
+  "exact_entry_wording_if_changed": null,
+  "composition_and_strength_order": null,
+  "preparation_and_progression_prose": null,
+  "fatigue_and_supporting_effort_prose": null,
+  "complete_taper_and_final_assessment_integration": null,
+  "exact_changes": [],
+  "boundary": "Content decision only. No programme publication, hosted/permission/account/eligibility/assignment/athlete authority. M1.1 and Gate A remain open."
+}

@@ -1,0 +1,24 @@
+{
+  "base_commit": "e676e31af15d9c5a31d573c8215ce008d1980526",
+  "days": 70,
+  "strength_sessions": 20,
+  "running_sessions": 40,
+  "rest_days": 10,
+  "strength_prescriptions_exact": 105,
+  "prior_identity_occurrences_unchanged": 77,
+  "genuine_missing_bindings": {
+    "chest_supported_db_row": 10,
+    "reverse_lunge_db": 8,
+    "seated_supported_db_press": 10
+  },
+  "all_40_running_steps_exact": true,
+  "canonical_archive_and_all_member_hashes_verified": true,
+  "all_retained_checkpoint_hashes_verified": true,
+  "all_60_existing_renderer_segments_carried_verbatim_as_html_escaped_lines": true,
+  "final_test_distance_metres": 10000,
+  "final_test_timed_milliseconds": 1200000,
+  "review_status": "PREPARED_AWAITING_FOUNDER_D8",
+  "publication": "NOT_PERFORMED",
+  "Gate_A": "OPEN",
+  "exact_review_scope_and_pending_template_verified": true
+}

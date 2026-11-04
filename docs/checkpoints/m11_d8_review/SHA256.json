@@ -1,0 +1,97 @@
+{
+  "kind": "D8_REVIEW_PREPARATION_NON_SECRET_CHECKPOINT",
+  "files": {
+    "docs/checkpoints/m11_d8_review/HANDOFF.md": {
+      "sha256": "7df7ac034b679063e747be325e770441224d449dd95a44c228466900e729c134",
+      "bytes": 6183
+    },
+    "docs/checkpoints/m11_d8_review/VERIFICATION.json": {
+      "sha256": "ed58f231b0fc620e7c3949a4e84fc10735c6d2427fb0e6daa984062bc884cd0e",
+      "bytes": 1147
+    },
+    "docs/checkpoints/m11_d8_review/evidence/INDEPENDENT_READBACK.json": {
+      "sha256": "c2a58fa0e17af3ce351af30139c0ef1cd3044d720e0a13ba8a0b1b7652826e2d",
+      "bytes": 403
+    },
+    "docs/checkpoints/m11_d8_review/evidence/PREPARATION_CHECK.txt": {
+      "sha256": "a3b65fd4b126573abc0f320c56a84762aba4742d0568026048ea1c927035ef1c",
+      "bytes": 850
+    },
+    "docs/checkpoints/m11_d8_review/evidence/PRESERVATION.json": {
+      "sha256": "27eb919e9a75f51fd90acccfcc94a72b29592c1d5cfe823cbb239bcbbc14e3b2",
+      "bytes": 568
+    },
+    "docs/checkpoints/m11_d8_review/evidence/independent_readback.py": {
+      "sha256": "d2326f5238159d01c99fc9ddb26c2a0336a8adb8e3eb3d50f2b414c57117ca25",
+      "bytes": 1911
+    },
+    "docs/programmes/hybrid_10k/d8_review_2026_11_04/CONTENT_NOTES.md": {
+      "sha256": "5bd8818cc41178c09a56eb70c40271a8412ee89cda3b541dbc0fc0bea8e5e022",
+      "bytes": 11305
+    },
+    "docs/programmes/hybrid_10k/d8_review_2026_11_04/DECISION.template.json": {
+      "sha256": "c0f11be2f0dcc9ce9a802dd60e52aa3f7e6dfa7ff79eea997a0c5b98dea76d14",
+      "bytes": 743
+    },
+    "docs/programmes/hybrid_10k/d8_review_2026_11_04/REVIEW.md": {
+      "sha256": "1f120c770b79cd2e2b18f0405ba97b433bfe1507ed8f25c8cc58b03d886ec543",
+      "bytes": 8078
+    },
+    "docs/programmes/hybrid_10k/d8_review_2026_11_04/REVIEW_INDEX.json": {
+      "sha256": "ec685dbc3823c81570cab0f481a0c34a98f56bc4cb60b4b8c500b728d7b91262",
+      "bytes": 85682
+    },
+    "docs/programmes/hybrid_10k/d8_review_2026_11_04/REVIEW_SCOPE.json": {
+      "sha256": "d2ab039d6c8d6c873c2141cef145352d749cda430ba4ff3a9b85e7265591a82d",
+      "bytes": 4554
+    },
+    "docs/programmes/hybrid_10k/d8_review_2026_11_04/evidence/GENERATION.json": {
+      "sha256": "5526e20f6282cbf19ecbd6802290e80aac07954598130d82a22ecab55c546343",
+      "bytes": 6256
+    },
+    "docs/programmes/hybrid_10k/d8_review_2026_11_04/weeks/week-01.md": {
+      "sha256": "80ba2e42924b79fd83ab0496db3ca833404f6fdde0cc2e3785db657562d11b58",
+      "bytes": 14318
+    },
+    "docs/programmes/hybrid_10k/d8_review_2026_11_04/weeks/week-02.md": {
+      "sha256": "35db53cbeffd9b2ecba4c9c224fa23ed3bb62c0922f98566293366c82068e698",
+      "bytes": 14007
+    },
+    "docs/programmes/hybrid_10k/d8_review_2026_11_04/weeks/week-03.md": {
+      "sha256": "f2aac0f2503330d948dd4d27b93d083488c0d5f6b19eb1fc836abeebbbbd6c3f",
+      "bytes": 14842
+    },
+    "docs/programmes/hybrid_10k/d8_review_2026_11_04/weeks/week-04.md": {
+      "sha256": "ae32b792294c2b95a994cb5769b5f5efabbeba7c7af13aec9368e93defcf91de",
+      "bytes": 14391
+    },
+    "docs/programmes/hybrid_10k/d8_review_2026_11_04/weeks/week-05.md": {
+      "sha256": "f7a5b4a75d3bada1a51aac25b4e7dcb287547d9212f6361f676322c253509310",
+      "bytes": 14851
+    },
+    "docs/programmes/hybrid_10k/d8_review_2026_11_04/weeks/week-06.md": {
+      "sha256": "ef013ad89de5da109940f5c62c95c73042b1b518a073344e8e300647527b4bf7",
+      "bytes": 15924
+    },
+    "docs/programmes/hybrid_10k/d8_review_2026_11_04/weeks/week-07.md": {
+      "sha256": "13a3f94219e2ee6f9c2926441e3875beb75bed27903f51e8e1768a35af044e8c",
+      "bytes": 15308
+    },
+    "docs/programmes/hybrid_10k/d8_review_2026_11_04/weeks/week-08.md": {
+      "sha256": "7200753868d564994bfa99455d68420ff4a624088eec1536cc33921a8e57a58e",
+      "bytes": 15290
+    },
+    "docs/programmes/hybrid_10k/d8_review_2026_11_04/weeks/week-09.md": {
+      "sha256": "b21f3941abe9668f0fc015435a2a482caf4593a77be61df3fba4f2bcda89e757",
+      "bytes": 14207
+    },
+    "docs/programmes/hybrid_10k/d8_review_2026_11_04/weeks/week-10.md": {
+      "sha256": "29e8c5d699cf02ebebf680a73edfe8cb306292a6932a887fc6f413a9c2f4edd2",
+      "bytes": 13283
+    },
+    "tool/programmes/hybrid_10k/prepare_d8_review.py": {
+      "sha256": "f5c349a0ecb107dba3bb57119e3aadec52df73d2f141e48ca81a1c09499a4651",
+      "bytes": 17413
+    }
+  }
+}
