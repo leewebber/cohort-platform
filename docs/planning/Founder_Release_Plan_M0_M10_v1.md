@@ -6,32 +6,13 @@ This plan controls delivery priorities. It preserves technical authority contrac
 it does not grant implementation, content, hosted, account or release authority.
 [M0 findings and critical path](../checkpoints/m0_alpha_baseline/HANDOFF.md).
 
-## Current single point — M1.1 corrected preparation, later live operation pending
+## Current single point — M1.1 D8 review of complete genuine source
 
-The founder-authorised fresh attempt at 8618697 verified healthy Field Manual,
-matching 169-row/schema/consumer state and no target collisions. It issued one
-temporary login, but no database transaction was sent: the pre-apply hash gate
-exposed a canonical manifest/seed ordering defect. Canonical regeneration passed
-only when 74 seconds remained, below the helper's 90-second execution/readback
-reserve. No forced apply or replacement login occurred.
-[Exact result, protected postchecks and actual revocation](../checkpoints/m11_catalogue_operation/live_attempt_8618697_2026_11_04/HANDOFF.md).
+[Actual 0431d08 operation, retention, admission and closeout](../checkpoints/m11_catalogue_operation/live_0431d08_2026_11_04/HANDOFF.md) completes the narrowly reviewed catalogue operation. Fresh healthy Field Manual preflight matched; exactly EX-170/171/172 were inserted and genuinely retained. All 169 pre-existing rows, schema and five consumer guards stayed exact, including EX-029/EX-141. One login was revoked with zero CLI roles/backends verified and temporary credentials removed; no replacement or package repair during task use.
 
-All existing catalogue rows/schema and five consumer guards are unchanged.
-The login was revoked with zero CLI roles/backends verified and temporary secrets
-removed. No genuine records were created/retained. Actual complete strength
-admission remains 0/20 with 28 missing occurrences; full review/export refuses.
+After closeout, all 20 complete strength graphs admitted with the actual retained evidence: 28 missing identity occurrences resolved; all 105 prescriptions, 77 existing ID occurrences, 60 old revisions and 40 selected running bodies unchanged. New local editable and complete 60-session canonical artifacts passed readback/reopen/review. No default UI/source trust wiring or programme publication occurred.
 
-The local serialization-only repair sorts INSERT keys. All 24 focused tests pass,
-now including real prepare CLI -> canonical files -> exact pin before synthetic
-apply/retain/retry. No guard was weakened and no values/identity semantics changed.
-[Corrected later-attempt package and new code pins](../checkpoints/m11_catalogue_operation/live_attempt_8618697_2026_11_04/NEXT_ATTEMPT.md)
-separate the failed live attempt from this post-closeout local proof. The former
-one-login authority is consumed/closed; no new live attempt is authorised here.
-
-Next single point is one separately authorised later operation with fresh target/
-inventory/role/expiry and canonical hashes, genuine three-record retention and
-complete local strength admission. UI acceptance/polish freeze stand. D8/programme
-publication/installed real-programme acceptance stay separate; M1.1/Gate A OPEN.
+**Next single milestone point: D8 review of the complete genuine Hybrid 10K source/artifacts and exact prescriptions.** Bounded founder UI acceptance remains recorded and discretionary polish frozen. Programme approval/publication, hosted enablement and installed real-programme acceptance remain separate. No catalogue access action remains. Father's source and all other Gate A obligations remain; **M1.1/Gate A OPEN**. Prior operation attempts and local preparation evidence below remain historical.
 
 ## Retained guard-compatibility package (live attempt and serialization repair above)
 

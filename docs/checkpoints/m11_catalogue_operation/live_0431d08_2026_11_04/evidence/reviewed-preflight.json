@@ -1,0 +1,42 @@
+{
+  "status": "FRESH_PREFLIGHT_MATCHES_REVIEWED_SCOPE",
+  "catalogue_rows": 169,
+  "retained_baseline_sha256": "e50f28f22083c30820165b0356e3780ff6769860a46278b5b40f7d9359f36546",
+  "equality_to_retained_genuine": {
+    "columns": true,
+    "constraints": true,
+    "indexes": true,
+    "rows": true,
+    "consumer_guard": true
+  },
+  "targets": [
+    {
+      "variant": "chest_supported_db_row",
+      "exact_matches": [],
+      "slug_lookup_matches": []
+    },
+    {
+      "variant": "seated_supported_db_press",
+      "exact_matches": [],
+      "slug_lookup_matches": []
+    },
+    {
+      "variant": "reverse_lunge_db",
+      "exact_matches": [],
+      "slug_lookup_matches": []
+    }
+  ],
+  "tls": {
+    "verify_full": true,
+    "host": "aws-0-eu-west-1.pooler.supabase.com",
+    "port": 6543,
+    "tls_version": "TLSv1.3",
+    "certificate_sha256": "03709ca44d1b06e4504da0a83b6ca065761edc704cd5634bcc3894fd5c7b3248"
+  },
+  "duplicate_rows_preserved": [
+    "EX-029",
+    "EX-141"
+  ],
+  "single_login_issued": false,
+  "project_resumption_requested": false
+}

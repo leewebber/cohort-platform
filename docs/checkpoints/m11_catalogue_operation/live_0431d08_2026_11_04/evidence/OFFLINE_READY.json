@@ -1,0 +1,36 @@
+{
+  "package_commit": "0431d08ce372eb22ca81ee7502992bd08dad99ee",
+  "no_further_offline_repair_required": true,
+  "code_and_command_hashes": {
+    "/Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/tool/catalogue/m11_setup_operation.py": "79acf5c7928067fc43ec2b59efd86dfd7d05a74416db8e97dd12050a4436b0e7",
+    "/Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/tool/catalogue/m11_setup_operation_test.py": "1200b3bfc85a17150bf9342bf46ae18490710e88f77a7e5dc49cf4ecae4c0a9d",
+    "/Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/docs/checkpoints/m11_catalogue_setup_creation/WRITE_SET.json": "7ebba83be9d35c26c73ad2202fd149f5909fa71619d3b1266e465b18b847a746",
+    "/Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/docs/checkpoints/m11_catalogue_operation/OPERATION_REQUEST.json": "e61df10275aaaeb89c0a85fa8e18efd46847c47992922eb84820451356cd668f",
+    "/Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/docs/checkpoints/m11_catalogue_operation/guard_compatibility_2026_11_04/DECISIONS.template.json": "6ffc121ae09fce28673ec8012818502d6eb49d8bde679bd983895c68598cb08e",
+    "/Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/docs/programmes/hybrid_10k/founder_selected_2026_10_30/SOURCE.json": "f12b5df97f0a9dc813c9610021ee82233414d2e2b1e6187dd0ae09745e3ecdf5",
+    "/private/tmp/m11_live_0431d08_20261104/support.py": "ae7735d4419113195bf0f5764b0f17ae6d4b937af703d01b3aeacd457bd28418",
+    "/private/tmp/m11_live_0431d08_20261104/preflight.py": "45a5ce69904707240f1bd9a63e21054aab6c9ab2963f2c8e50f1c0c1111d5b82",
+    "/private/tmp/m11_live_0431d08_20261104/live.py": "2f7270d008b0b99068217afcd5b0d37d2234c0cd8838b34f95381162e2b5ea34"
+  },
+  "local_rehearsal": {
+    "all_unique_target_reuse": true,
+    "apply": "APPLIED",
+    "catalogue_rows_after": 172,
+    "catalogue_rows_before": 169,
+    "classification": "SYNTHETIC_LOCAL_FIXTURE",
+    "duplicate_group_preserved": true,
+    "hosted_retention": false,
+    "input_retained_sha256": "e50f28f22083c30820165b0356e3780ff6769860a46278b5b40f7d9359f36546",
+    "manifest_sha256": "5014ded2523ae1f2a010f9f69c062eb4e051942333d6860488f7748bc56b2863",
+    "preexisting_rows_exact": true,
+    "real_prepare_cli_and_pin_roundtrip": true,
+    "replay": "EXACT_STATE_REPLAY_NOOP_AUDIT_REQUIRED",
+    "seed_sha256": "b48f223f22b1a18f5ff1038cbde71764749ef9d255222a60f3b3ea09895174e8",
+    "synthetic_consumer_links_and_guards_unchanged": true
+  },
+  "exact_commands": {
+    "preflight": "PYTHONDONTWRITEBYTECODE=1 python3 /private/tmp/m11_live_0431d08_20261104/preflight.py",
+    "single_login_apply_postcheck_retain_closeout": "PYTHONDONTWRITEBYTECODE=1 python3 /private/tmp/m11_live_0431d08_20261104/live.py"
+  },
+  "scope": "Published generator; fresh canonical prepare/pin; exact guarded op.apply transaction; independent op.retain/read-only postcheck; unconditional supported credential closeout. No package repair or replacement while credential active."
+}

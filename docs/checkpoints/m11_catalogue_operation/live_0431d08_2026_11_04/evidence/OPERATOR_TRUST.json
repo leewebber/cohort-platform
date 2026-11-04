@@ -1,0 +1,6 @@
+{
+  "source": "Current authorised operator/audit handoff with independent authenticated readback",
+  "receipt_sha256": "f7261883ef7da25d35f09889f2706c9bd3d26bc33a853d8a0ff358b24fb21b62",
+  "audit_reference": "supabase-cli-login:a5510f770d978a56-CGK:m11_live_0431d08_20261104",
+  "audit_sha256": "f23f77765d56f634fad466d094b7ecbfd4019324a375df07fe2e42e1ec060293"
+}

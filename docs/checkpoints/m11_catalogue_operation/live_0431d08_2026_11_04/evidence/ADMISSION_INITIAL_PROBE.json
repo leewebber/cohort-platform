@@ -1,0 +1,6 @@
+{
+  "classification": "ACTUAL_INITIAL_OFFLINE_PROBE_FAILURE",
+  "raw_output_utf8": "00:00 +0: loading /private/tmp/m11_live_0431d08_20261104/genuine_admission_test.dart\n00:00 +0: genuine hosted three-record evidence admits complete preserved strength graphs and local full source archive\n00:00 +0 -1: genuine hosted three-record evidence admits complete preserved strength graphs and local full source archive [E]\n  Bad state: No element\n  dart:collection                                                                                    ListBase.singleWhere\n  package:cohort_platform/features/programme_studio/genuine_authoring/genuine_workspace.dart 448:30  GenuineWorkspace.selected\n  /private/tmp/m11_live_0431d08_20261104/genuine_admission_test.dart 19:67                           main.<fn>\n  \n00:00 +0 -1: Some tests failed.\n\nFailing tests:\n  /private/tmp/m11_live_0431d08_20261104/genuine_admission_test.dart: genuine hosted three-record evidence admits complete preserved strength graphs and local full source archive\n",
+  "raw_output_sha256": "d041001d9797f6a678c325cf789409dbe77e3c74296c5cb92f42426cdc9f0d01",
+  "reason": "Probe selected rest entries as training occurrences; corrected after credential revocation."
+}

@@ -1,5 +1,13 @@
 # Exact three-setup operation — offline implementation
 
+> **Current actual result, 2026-11-04:** [genuine operation / retention / local admission](live_0431d08_2026_11_04/HANDOFF.md).
+> Corrected 0431d08 run created and retained EX-170/171/172, preserving all 169
+> old rows/schema/five consumer guards. One login revoked with zero CLI roles/backends
+> verified; temporary credentials removed. After closeout all 20 strength graphs
+> admitted; complete 60-session local artifacts verified. Next: D8 exact-source review.
+> UI acceptance/polish freeze stand; D8/publication/M1.1/Gate A remain separate/open.
+> Earlier no-record/no-admission and connection states below are historical.
+
 > **Latest live result, 2026-11-04:** [preflight / zero-apply result / closeout](live_attempt_8618697_2026_11_04/HANDOFF.md).
 > 8618697 preflight matched, but canonical seed validation exposed serialization
 > ordering and the remaining native login lifetime then fell below the reserved

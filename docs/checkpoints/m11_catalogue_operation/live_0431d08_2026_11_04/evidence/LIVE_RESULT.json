@@ -1,0 +1,209 @@
+{
+  "status": "APPLIED_AND_GENUINELY_RETAINED",
+  "catalogue_transaction_sent": true,
+  "catalogue_before": 169,
+  "catalogue_after": 172,
+  "result_rows": {
+    "chest_supported_db_row": {
+      "name": "Bilateral chest-supported dumbbell row",
+      "slug": "bilateral-chest-supported-dumbbell-row",
+      "setup": "Chest supported; bilateral row with two dumbbells. No bench angle or grip added.",
+      "purpose": null,
+      "category": null,
+      "equipment": "two dumbbells, chest support",
+      "execution": "Chest supported; bilateral row with two dumbbells. No bench angle or grip added.",
+      "image_url": null,
+      "published": true,
+      "video_url": null,
+      "regression": null,
+      "unilateral": null,
+      "body_region": null,
+      "environment": null,
+      "exercise_id": "EX-170",
+      "progression": null,
+      "skill_score": null,
+      "safety_notes": null,
+      "best_used_for": null,
+      "coaching_cues": null,
+      "exercise_type": null,
+      "fatigue_score": null,
+      "rest_guidance": null,
+      "scaling_notes": null,
+      "movement_plane": null,
+      "notes_internal": null,
+      "tempo_guidance": null,
+      "breathing_notes": null,
+      "common_mistakes": null,
+      "loading_options": null,
+      "primary_muscles": null,
+      "movement_pattern": null,
+      "coaching_priority": null,
+      "related_protocols": null,
+      "equipment_category": null,
+      "primary_capability": null,
+      "rep_range_guidance": null,
+      "technical_complexity": null,
+      "secondary_muscle_groups": null
+    },
+    "seated_supported_db_press": {
+      "name": "Seated supported neutral-grip dumbbell shoulder press",
+      "slug": "seated-supported-neutral-grip-dumbbell-shoulder-press",
+      "setup": "Seated with near-upright back support; two dumbbells; neutral grip; strict execution without leg drive.",
+      "purpose": null,
+      "category": null,
+      "equipment": "two dumbbells, near-upright back support",
+      "execution": "Seated with near-upright back support; two dumbbells; neutral grip; strict execution without leg drive.",
+      "image_url": null,
+      "published": true,
+      "video_url": null,
+      "regression": null,
+      "unilateral": null,
+      "body_region": null,
+      "environment": null,
+      "exercise_id": "EX-171",
+      "progression": null,
+      "skill_score": null,
+      "safety_notes": null,
+      "best_used_for": null,
+      "coaching_cues": null,
+      "exercise_type": null,
+      "fatigue_score": null,
+      "rest_guidance": null,
+      "scaling_notes": null,
+      "movement_plane": null,
+      "notes_internal": null,
+      "tempo_guidance": null,
+      "breathing_notes": null,
+      "common_mistakes": null,
+      "loading_options": null,
+      "primary_muscles": null,
+      "movement_pattern": null,
+      "coaching_priority": null,
+      "related_protocols": null,
+      "equipment_category": null,
+      "primary_capability": null,
+      "rep_range_guidance": null,
+      "technical_complexity": null,
+      "secondary_muscle_groups": null
+    },
+    "reverse_lunge_db": {
+      "name": "Two-dumbbell reverse lunge",
+      "slug": "two-dumbbell-reverse-lunge",
+      "setup": "Two dumbbells held at the sides with neutral grip; complete one side then the other. No added depth, stride or box requirement.",
+      "purpose": null,
+      "category": null,
+      "equipment": "two dumbbells",
+      "execution": "Two dumbbells held at the sides with neutral grip; complete one side then the other. No added depth, stride or box requirement.",
+      "image_url": null,
+      "published": true,
+      "video_url": null,
+      "regression": null,
+      "unilateral": null,
+      "body_region": null,
+      "environment": null,
+      "exercise_id": "EX-172",
+      "progression": null,
+      "skill_score": null,
+      "safety_notes": null,
+      "best_used_for": null,
+      "coaching_cues": null,
+      "exercise_type": null,
+      "fatigue_score": null,
+      "rest_guidance": null,
+      "scaling_notes": null,
+      "movement_plane": null,
+      "notes_internal": null,
+      "tempo_guidance": null,
+      "breathing_notes": null,
+      "common_mistakes": null,
+      "loading_options": null,
+      "primary_muscles": null,
+      "movement_pattern": null,
+      "coaching_priority": null,
+      "related_protocols": null,
+      "equipment_category": null,
+      "primary_capability": null,
+      "rep_range_guidance": null,
+      "technical_complexity": null,
+      "secondary_muscle_groups": null
+    }
+  },
+  "receipt_sha256": "f7261883ef7da25d35f09889f2706c9bd3d26bc33a853d8a0ff358b24fb21b62",
+  "audit_reference": "supabase-cli-login:a5510f770d978a56-CGK:m11_live_0431d08_20261104",
+  "protected_rows_and_consumers_unchanged": true,
+  "closeout": {
+    "started_at": "2026-11-04T05:01:53.501134+00:00",
+    "replacement_issued": false,
+    "temporary_login_use_stopped": true,
+    "temporary_material_removed": true,
+    "precheck": {
+      "data": [
+        {
+          "state": {
+            "roles": [
+              {
+                "name": "cli_login_postgres",
+                "valid_until": "2026-11-04T05:06:23.708504+00:00"
+              }
+            ],
+            "backends": [
+              {
+                "user": "cli_login_postgres",
+                "state": "idle",
+                "application_name": "m11_live_0431d08_20261104"
+              }
+            ]
+          }
+        }
+      ],
+      "metadata": {
+        "method": "POST",
+        "path": "/database/query/read-only",
+        "http_status": 201,
+        "started_at": "2026-11-04T05:01:53.537453+00:00",
+        "captured_at": "2026-11-04T05:01:55.179089+00:00",
+        "raw_sha256": "3ed355c22ec5a1e690ebe0dee056f415d06c0e6ef2ba2cb7493a4ac3aa3da1d4",
+        "request_id": null,
+        "cf_ray": "a551103bbb9b2df9-DPS"
+      }
+    },
+    "supported_delete": {
+      "data": {
+        "message": "ok"
+      },
+      "metadata": {
+        "method": "DELETE",
+        "path": "/cli/login-role",
+        "http_status": 200,
+        "started_at": "2026-11-04T05:01:55.212479+00:00",
+        "captured_at": "2026-11-04T05:01:56.717531+00:00",
+        "raw_sha256": "762c2749580c286a68d4528d912a4afa02a17dc2025c6c65b17b0dfab8291408",
+        "request_id": null,
+        "cf_ray": "a55110453ca62dee-DPS"
+      }
+    },
+    "postcheck": {
+      "data": [
+        {
+          "state": {
+            "cli_roles": 0,
+            "cli_backends": 0
+          }
+        }
+      ],
+      "metadata": {
+        "method": "POST",
+        "path": "/database/query/read-only",
+        "http_status": 201,
+        "started_at": "2026-11-04T05:01:56.764444+00:00",
+        "captured_at": "2026-11-04T05:01:58.369634+00:00",
+        "raw_sha256": "6bd12ea39e7c42d3821e511dc628dfafaefc1e4e90b626426599c6b972e5b0c3",
+        "request_id": null,
+        "cf_ray": "a551104f6e662df9-DPS"
+      }
+    },
+    "revoked_and_connections_closed": true,
+    "closed_at": "2026-11-04T05:01:58.370861+00:00",
+    "temporary_material_remaining": false
+  }
+}

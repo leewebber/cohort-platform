@@ -1,0 +1,36 @@
+{
+  "classification": "GENUINE_OPERATOR_OPERATION_WITH_INDEPENDENT_AUTHENTICATED_READBACK",
+  "target_ref": "otnhhdxstdnwccehacku",
+  "request_id": "m11-live-three-setups-0431d08-20261104",
+  "audit_reference": "supabase-cli-login:a5510f770d978a56-CGK:m11_live_0431d08_20261104",
+  "pins": {
+    "manifest.json": "ae8b22cfc4d373849f78183f3d3b67cef5acd91366e2564fad583dd980aa1f7a",
+    "seed.sql": "da5811d020698a7ddade0453f68af4681997c4c04d85c735103990b5b1a1d51c"
+  },
+  "operator_identity": {
+    "ssl": false,
+    "role": "postgres",
+    "database": "postgres",
+    "server_addr": "2a05:d018:cb1:bb00:c220:5959:efec:de1/128",
+    "server_port": 5432,
+    "session_user": "cli_login_postgres",
+    "system_identifier": "7656985631720456337"
+  },
+  "applied_state_captured_at": "2026-11-04 05:01:39.096264+00",
+  "apply_status": "APPLIED",
+  "independent_metadata": {
+    "method": "POST",
+    "path": "/database/query/read-only",
+    "http_status": 201,
+    "started_at": "2026-11-04T05:01:51.050780+00:00",
+    "captured_at": "2026-11-04T05:01:53.478790+00:00",
+    "raw_sha256": "23ae811b86a81725595d18e8f17d115e448e66673e472839c94d15ad7c826750",
+    "request_id": null,
+    "cf_ray": "a551102b7f202df9-DPS"
+  },
+  "all_old_rows_exact": true,
+  "all_consumer_guards_equal": true,
+  "receipt_sha256": "f7261883ef7da25d35f09889f2706c9bd3d26bc33a853d8a0ff358b24fb21b62",
+  "native_pgaudit_log": "none",
+  "limits": "Trusted operator execution and independent SELECT-only readback; local hashes are not tamper-proof server logs, and no canonical definition/version/publication/audit event is fabricated"
+}

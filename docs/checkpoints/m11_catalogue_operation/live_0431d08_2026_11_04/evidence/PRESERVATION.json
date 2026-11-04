@@ -1,0 +1,14 @@
+{
+  "measured_before_equals_precommit": true,
+  "older_existing_checkouts": 20,
+  "older_registrations": 25,
+  "tracked_untracked_files": 54537,
+  "explicit_env_temp_files": 21,
+  "bounded_backup_bundles": {
+    "count": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "refs_sha256": "b511e462887897c79e2e2aecba33e53daed646cce00cb87ee0d70804a59e2634",
+  "fetch_head_sha256": "407b7685e8191502134c30d17eb68408f7bacd4aeb19124ada6b563979537d91",
+  "before_inventory_sha256": "55799023ca702cb22c7300f111eaee24ab933af35f94292230aab8e7083c3b1b"
+}

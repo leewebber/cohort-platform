@@ -1,0 +1,3 @@
+00:00 +0: loading /private/tmp/m11_live_0431d08_20261104/genuine_admission_test.dart
+00:00 +0: genuine hosted three-record evidence admits complete preserved strength graphs and local full source archive
+00:18 +1: All tests passed!

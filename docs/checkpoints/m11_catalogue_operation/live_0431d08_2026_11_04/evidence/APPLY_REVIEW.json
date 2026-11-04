@@ -1,0 +1,45 @@
+{
+  "reviewed_at": "2026-11-04T05:01:28.854418+00:00",
+  "pins": {
+    "manifest.json": "ae8b22cfc4d373849f78183f3d3b67cef5acd91366e2564fad583dd980aa1f7a",
+    "seed.sql": "da5811d020698a7ddade0453f68af4681997c4c04d85c735103990b5b1a1d51c"
+  },
+  "target": "otnhhdxstdnwccehacku",
+  "request_id": "m11-live-three-setups-0431d08-20261104",
+  "principal": "cli_login_postgres",
+  "role": "postgres",
+  "remaining_native_seconds": 294.85408,
+  "operation_fields": [
+    {
+      "equipment": "two dumbbells, chest support",
+      "execution": "Chest supported; bilateral row with two dumbbells. No bench angle or grip added.",
+      "exercise_id": "EX-170",
+      "name": "Bilateral chest-supported dumbbell row",
+      "published": true,
+      "setup": "Chest supported; bilateral row with two dumbbells. No bench angle or grip added.",
+      "slug": "bilateral-chest-supported-dumbbell-row"
+    },
+    {
+      "equipment": "two dumbbells, near-upright back support",
+      "execution": "Seated with near-upright back support; two dumbbells; neutral grip; strict execution without leg drive.",
+      "exercise_id": "EX-171",
+      "name": "Seated supported neutral-grip dumbbell shoulder press",
+      "published": true,
+      "setup": "Seated with near-upright back support; two dumbbells; neutral grip; strict execution without leg drive.",
+      "slug": "seated-supported-neutral-grip-dumbbell-shoulder-press"
+    },
+    {
+      "equipment": "two dumbbells",
+      "execution": "Two dumbbells held at the sides with neutral grip; complete one side then the other. No added depth, stride or box requirement.",
+      "exercise_id": "EX-172",
+      "name": "Two-dumbbell reverse lunge",
+      "published": true,
+      "setup": "Two dumbbells held at the sides with neutral grip; complete one side then the other. No added depth, stride or box requirement.",
+      "slug": "two-dumbbell-reverse-lunge"
+    }
+  ],
+  "other_writes": [],
+  "canonical_pin_roundtrip": true,
+  "review_basis": "Fresh full expected-state/target-scoped checks and standing founder exact three-record authority; source values fixed by hash-pinned generator",
+  "unknown_outcome_recovery": "Same pinned IDs and independent readback; no blind replay or replacement allocation"
+}

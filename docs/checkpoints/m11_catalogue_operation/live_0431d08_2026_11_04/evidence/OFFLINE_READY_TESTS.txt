@@ -1,0 +1,7 @@
+test_canonical_manifest_roundtrip_preserves_exact_generated_seed (m11_setup_operation_test.Guards.test_canonical_manifest_roundtrip_preserves_exact_generated_seed) ... ok
+test_retained_169_insert_retain_replay_reuse_preserves_duplicate_rows_and_consumers (m11_setup_operation_test.RetainedInventory.test_retained_169_insert_retain_replay_reuse_preserves_duplicate_rows_and_consumers) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 6.947s
+
+OK

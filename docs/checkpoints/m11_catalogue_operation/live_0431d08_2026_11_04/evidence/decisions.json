@@ -1,0 +1,29 @@
+[
+  {
+    "source_variant": "chest_supported_db_row",
+    "action": "create",
+    "reuse_id": null,
+    "slug": "bilateral-chest-supported-dumbbell-row",
+    "exact_setup_review_reference": "Founder exact WRITE_SET 7ebba83be9d35c26c73ad2202fd149f5909fa71619d3b1266e465b18b847a746; current full-inventory exact setup/lookup review; raw preflight SHA256 b7c783017291025da5f6144c52724ed1ce483c42b426afe77a10dcaf5359cffd",
+    "reviewed_extra_fields": {},
+    "field_review_reference": null
+  },
+  {
+    "source_variant": "seated_supported_db_press",
+    "action": "create",
+    "reuse_id": null,
+    "slug": "seated-supported-neutral-grip-dumbbell-shoulder-press",
+    "exact_setup_review_reference": "Founder exact WRITE_SET 7ebba83be9d35c26c73ad2202fd149f5909fa71619d3b1266e465b18b847a746; current full-inventory exact setup/lookup review; raw preflight SHA256 b7c783017291025da5f6144c52724ed1ce483c42b426afe77a10dcaf5359cffd",
+    "reviewed_extra_fields": {},
+    "field_review_reference": null
+  },
+  {
+    "source_variant": "reverse_lunge_db",
+    "action": "create",
+    "reuse_id": null,
+    "slug": "two-dumbbell-reverse-lunge",
+    "exact_setup_review_reference": "Founder exact WRITE_SET 7ebba83be9d35c26c73ad2202fd149f5909fa71619d3b1266e465b18b847a746; current full-inventory exact setup/lookup review; raw preflight SHA256 b7c783017291025da5f6144c52724ed1ce483c42b426afe77a10dcaf5359cffd",
+    "reviewed_extra_fields": {},
+    "field_review_reference": null
+  }
+]

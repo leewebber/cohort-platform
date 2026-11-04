@@ -1,5 +1,20 @@
 # Current repository checkpoint
 
+> **M1.1 genuine catalogue operation / local strength admission — 2026-11-04:**
+> [Actual operation, retention and closeout](./m11_catalogue_operation/live_0431d08_2026_11_04/HANDOFF.md)
+> record healthy Field Manual and exact fresh preflight using corrected 0431d08.
+> Offline canonical/full transaction-readback rehearsal passed before one login.
+> Exactly EX-170/171/172 inserted; all 169 old rows, schema and five consumer guards
+> unchanged, including EX-029/EX-141. Genuine operator bundle and independent
+> authenticated readback retained. Login revoked; zero CLI roles/backends verified
+> 13:01:58 WITA; temporary credentials removed. After closeout, 20/20 complete
+> strength graphs admitted with 28 missing identities resolved; all 105 prescriptions,
+> 77 prior IDs, 60 old revisions and 40 selected running bodies preserved. New local
+> editable file and full 60-session canonical archive pass readback/reopen/review.
+> No default UI/source trust wiring or programme publication. UI acceptance/polish
+> freeze stand. Next single point: D8 review of the complete genuine source/artifacts.
+> **D8/publication/installed journey separate; M1.1/Gate A OPEN.**
+
 > **M1.1 fresh live attempt / preparation repair — 2026-11-04:**
 > [Exact result and closeout](./m11_catalogue_operation/live_attempt_8618697_2026_11_04/HANDOFF.md)
 > record healthy Field Manual and matching fresh 169-row/schema/consumer preflight.

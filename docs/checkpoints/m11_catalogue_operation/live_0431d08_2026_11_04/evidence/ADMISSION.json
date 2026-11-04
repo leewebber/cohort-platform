@@ -1,0 +1,200 @@
+{
+  "classification": "GENUINE_HOSTED_EVIDENCE_LOCAL_STRENGTH_ADMISSION",
+  "catalogue_ids": {
+    "chest_supported_db_row": "EX-170",
+    "seated_supported_db_press": "EX-171",
+    "reverse_lunge_db": "EX-172"
+  },
+  "trust_receipt_sha256": "f7261883ef7da25d35f09889f2706c9bd3d26bc33a853d8a0ff358b24fb21b62",
+  "complete_strength_admitted": 20,
+  "complete_strength_attempted": 20,
+  "resolved_occurrences": {
+    "chest_supported_db_row": 10,
+    "reverse_lunge_db": 8,
+    "seated_supported_db_press": 10
+  },
+  "existing_id_occurrences_unchanged": 77,
+  "all_105_strength_prescriptions_unchanged": true,
+  "all_old_revision_bytes_preserved": true,
+  "old_revision_count": 60,
+  "running_sources_unchanged": 40,
+  "complete_programme_review": true,
+  "archive_session_count": 60,
+  "editable_roundtrip_exact": true,
+  "archive_readback_verified": true,
+  "archive_reopen_review": true,
+  "workspace_sha256": "97da258a505a8fa78bfd354c247df0054fec4a8af5b3e462d0dfedd423d68de1",
+  "validation": {
+    "status": "LOCALLY_VALIDATED_NOT_APPROVED_OR_PUBLISHED",
+    "package_sha256": "6b3de012e228487db043c39ae16759d29c71b51aa482c245cd164feb78c8caac",
+    "graphs_sha256": "8323b9f4fb644d618d47525d861da60ef8a4c3d7698d3e27204b1b613929a458",
+    "D8": "PENDING",
+    "Gate_A": "OPEN"
+  },
+  "D8": "PENDING",
+  "programme_publication": "NOT_PERFORMED",
+  "M1_1": "OPEN",
+  "Gate_A": "OPEN",
+  "sessions": [
+    {
+      "session_id": "LW10K-W01-D01",
+      "old_revision_key": "session-379bb177-55b7-5535-8527-9047568a5ce9-r4",
+      "new_revision_key": "session-379bb177-55b7-5535-8527-9047568a5ce9-r5",
+      "source_sha256": "4a18690dcc7e84ab61b01e6f028ed6c2183d9f183e793252f59e54bc7ad0d1c8",
+      "admitted": true,
+      "prescriptions_unchanged": true
+    },
+    {
+      "session_id": "LW10K-W01-D04",
+      "old_revision_key": "session-21fc299c-06ba-5506-8553-0209780cbfe3-r4",
+      "new_revision_key": "session-21fc299c-06ba-5506-8553-0209780cbfe3-r5",
+      "source_sha256": "12b6a139595d492e7394e85e646cd2869a8ed700a39324c7eb64f6b12af6c242",
+      "admitted": true,
+      "prescriptions_unchanged": true
+    },
+    {
+      "session_id": "LW10K-W02-D01",
+      "old_revision_key": "session-6aec11af-45d5-5fb9-9e4d-fbcc49d9e767-r4",
+      "new_revision_key": "session-6aec11af-45d5-5fb9-9e4d-fbcc49d9e767-r5",
+      "source_sha256": "02bcff2f0d959b9dd5ebe42550c23145d7fb34788d5e3af7e10b79d9f64c75c9",
+      "admitted": true,
+      "prescriptions_unchanged": true
+    },
+    {
+      "session_id": "LW10K-W02-D04",
+      "old_revision_key": "session-e7f72978-bb3e-5252-bcbd-ee996d53ac3e-r4",
+      "new_revision_key": "session-e7f72978-bb3e-5252-bcbd-ee996d53ac3e-r5",
+      "source_sha256": "00f9ed66e7471c13d8f0f5f3cc565eb24e35cc14e62e86849511792dc2cd784a",
+      "admitted": true,
+      "prescriptions_unchanged": true
+    },
+    {
+      "session_id": "LW10K-W03-D01",
+      "old_revision_key": "session-da3a1810-a65f-5e19-a7dc-e7d276839e44-r4",
+      "new_revision_key": "session-da3a1810-a65f-5e19-a7dc-e7d276839e44-r5",
+      "source_sha256": "5baeb34137c05e6070f31fd8032584ad7d3a4f86cac94f399c0d86913e3af320",
+      "admitted": true,
+      "prescriptions_unchanged": true
+    },
+    {
+      "session_id": "LW10K-W03-D04",
+      "old_revision_key": "session-2052df8e-b4dd-58e0-9c03-17f98f138e24-r4",
+      "new_revision_key": "session-2052df8e-b4dd-58e0-9c03-17f98f138e24-r5",
+      "source_sha256": "28f79a379a1126df3e65ad60455f44f30947d31a6dba80387736286e6996b2a2",
+      "admitted": true,
+      "prescriptions_unchanged": true
+    },
+    {
+      "session_id": "LW10K-W04-D01",
+      "old_revision_key": "session-2d045c4d-0da3-583f-823c-f6d2fa3c0443-r4",
+      "new_revision_key": "session-2d045c4d-0da3-583f-823c-f6d2fa3c0443-r5",
+      "source_sha256": "b0111d6ac38b27c6f3bd55f545941a20a23f3ccb3439cefac35edf75170afeab",
+      "admitted": true,
+      "prescriptions_unchanged": true
+    },
+    {
+      "session_id": "LW10K-W04-D04",
+      "old_revision_key": "session-d5f28dd7-25fd-53e3-ba85-b297c17420e4-r4",
+      "new_revision_key": "session-d5f28dd7-25fd-53e3-ba85-b297c17420e4-r5",
+      "source_sha256": "ce0c646e079b76e7c3a773b65f6ffaa8e01573f29d195c1b25e5d0756d83c358",
+      "admitted": true,
+      "prescriptions_unchanged": true
+    },
+    {
+      "session_id": "LW10K-W05-D01",
+      "old_revision_key": "session-c2b9a2a5-a0fd-5b32-9b5a-db285799c0a3-r4",
+      "new_revision_key": "session-c2b9a2a5-a0fd-5b32-9b5a-db285799c0a3-r5",
+      "source_sha256": "64667f6e8a458175af4335dc42122101aa338386a0d9ab85fd41d9f50a594ea2",
+      "admitted": true,
+      "prescriptions_unchanged": true
+    },
+    {
+      "session_id": "LW10K-W05-D04",
+      "old_revision_key": "session-eb3d69ec-b232-5fb8-ba32-c7cf00cc794d-r4",
+      "new_revision_key": "session-eb3d69ec-b232-5fb8-ba32-c7cf00cc794d-r5",
+      "source_sha256": "dfa9d0a8ec793cab8bdf4c325d6f6d1e6d7510135a86cddfe7b40bc980af9f9e",
+      "admitted": true,
+      "prescriptions_unchanged": true
+    },
+    {
+      "session_id": "LW10K-W06-D01",
+      "old_revision_key": "session-18d0f55a-76b8-5d60-9fc4-2ea5698fdf7b-r4",
+      "new_revision_key": "session-18d0f55a-76b8-5d60-9fc4-2ea5698fdf7b-r5",
+      "source_sha256": "45fea33f6b58ab71cab970d23c51d6ac9fc6a737c2bda0c164ae41af317ed607",
+      "admitted": true,
+      "prescriptions_unchanged": true
+    },
+    {
+      "session_id": "LW10K-W06-D04",
+      "old_revision_key": "session-661a1086-1435-5e43-8dea-845528a38643-r4",
+      "new_revision_key": "session-661a1086-1435-5e43-8dea-845528a38643-r5",
+      "source_sha256": "e768c4156c98cef095137eac42d2f238ced29eac4c5e148e01dffa8ec31394e7",
+      "admitted": true,
+      "prescriptions_unchanged": true
+    },
+    {
+      "session_id": "LW10K-W07-D01",
+      "old_revision_key": "session-e1978da3-e34b-5d08-a740-350a80d1926c-r4",
+      "new_revision_key": "session-e1978da3-e34b-5d08-a740-350a80d1926c-r5",
+      "source_sha256": "639f1b075c24a396d6250fe36f96db22d2cc25d96653cde4e2f1f6b6fe3e895f",
+      "admitted": true,
+      "prescriptions_unchanged": true
+    },
+    {
+      "session_id": "LW10K-W07-D04",
+      "old_revision_key": "session-696dede4-268c-5a31-8e3a-0e555a8f8b0c-r4",
+      "new_revision_key": "session-696dede4-268c-5a31-8e3a-0e555a8f8b0c-r5",
+      "source_sha256": "5f2272c9fc20718f90733e2fee1be664eeb2439dcd2f559b7570f13a96e6693f",
+      "admitted": true,
+      "prescriptions_unchanged": true
+    },
+    {
+      "session_id": "LW10K-W08-D01",
+      "old_revision_key": "session-308b82a9-d6b7-5c6d-a94b-b83c0b0d349a-r4",
+      "new_revision_key": "session-308b82a9-d6b7-5c6d-a94b-b83c0b0d349a-r5",
+      "source_sha256": "c587347b1b7557d32c733ca62a12c1f2d166fd9b704fd4d00ee93b9fee9f7d1d",
+      "admitted": true,
+      "prescriptions_unchanged": true
+    },
+    {
+      "session_id": "LW10K-W08-D04",
+      "old_revision_key": "session-d44b2d25-63fb-5508-97a8-172f611fd422-r4",
+      "new_revision_key": "session-d44b2d25-63fb-5508-97a8-172f611fd422-r5",
+      "source_sha256": "40ea1c045e6a38ff3d79dbbc1838f6f1403f0faac4aecacd608dff1a5e04b737",
+      "admitted": true,
+      "prescriptions_unchanged": true
+    },
+    {
+      "session_id": "LW10K-W09-D01",
+      "old_revision_key": "session-2a69637d-75c7-557d-b5dc-ba5e49b257d0-r4",
+      "new_revision_key": "session-2a69637d-75c7-557d-b5dc-ba5e49b257d0-r5",
+      "source_sha256": "259de3f35b6d183acb96ed931c7cc0641fa438f01dbae9cfabd8aa38a5f4610b",
+      "admitted": true,
+      "prescriptions_unchanged": true
+    },
+    {
+      "session_id": "LW10K-W09-D04",
+      "old_revision_key": "session-0a6de07f-0ee6-5850-b903-acee407ca491-r4",
+      "new_revision_key": "session-0a6de07f-0ee6-5850-b903-acee407ca491-r5",
+      "source_sha256": "3ca9b056bfb4eccd277b2522949a5e90d5cf69cadec21c4839c87c4eb33506af",
+      "admitted": true,
+      "prescriptions_unchanged": true
+    },
+    {
+      "session_id": "LW10K-W10-D01",
+      "old_revision_key": "session-13a6135f-439c-5e10-ac06-bc3e506596f9-r4",
+      "new_revision_key": "session-13a6135f-439c-5e10-ac06-bc3e506596f9-r5",
+      "source_sha256": "a088f20ba83eea3aaa44a05a28f45f2c89e69e4b488260196b6b9755c35eafc7",
+      "admitted": true,
+      "prescriptions_unchanged": true
+    },
+    {
+      "session_id": "LW10K-W10-D04",
+      "old_revision_key": "session-02346200-732e-56d4-a637-f20e7d75b7b4-r4",
+      "new_revision_key": "session-02346200-732e-56d4-a637-f20e7d75b7b4-r5",
+      "source_sha256": "65589a7d74f135e1ef621a3b4edcc84ab600056b92ab25083cfb75d231604e8a",
+      "admitted": true,
+      "prescriptions_unchanged": true
+    }
+  ]
+}

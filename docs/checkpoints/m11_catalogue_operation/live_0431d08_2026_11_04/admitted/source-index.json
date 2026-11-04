@@ -1,0 +1,798 @@
+{
+  "files_sha256": {
+    "README.md": "1c0a92b769701e1b26ddcc158296a49218841d5acdd74dbf7079c14ca6216f48",
+    "catalogue-evidence.json": "fcddc76d6cd2d5e1e0f8285ac96196a480ff4784e9004b591cbe3427176946a4",
+    "native-graphs/graph-0001.json": "4a18690dcc7e84ab61b01e6f028ed6c2183d9f183e793252f59e54bc7ad0d1c8",
+    "native-graphs/graph-0002.json": "54f7c31ebd9c975d777139fd5c68fa38d91a7bbcd5e5ab162d2a7974ee24c40b",
+    "native-graphs/graph-0003.json": "d1c7d160d6aa0b2b1e51e39d02435df268afbeeaadc2ef5ddb0994183093e4bf",
+    "native-graphs/graph-0004.json": "12b6a139595d492e7394e85e646cd2869a8ed700a39324c7eb64f6b12af6c242",
+    "native-graphs/graph-0005.json": "39437811c53a8bf52d4fb42da5df257d5b97f9f9b970d407dc6a4224656e18f5",
+    "native-graphs/graph-0006.json": "0202ad2b0f7083d5b7869cdf4fd369e1f829a5b29895a765fc9f2ae462b99410",
+    "native-graphs/graph-0007.json": "02bcff2f0d959b9dd5ebe42550c23145d7fb34788d5e3af7e10b79d9f64c75c9",
+    "native-graphs/graph-0008.json": "1ea1e070478bc69e9f7ec23d44b31affbf5e1005454aba830ff75ccd54da84a4",
+    "native-graphs/graph-0009.json": "bfd6a3426fe26551e764d0dad2fc73e4031ce3dade754dd4a430f02520501aa3",
+    "native-graphs/graph-0010.json": "00f9ed66e7471c13d8f0f5f3cc565eb24e35cc14e62e86849511792dc2cd784a",
+    "native-graphs/graph-0011.json": "1e112c3d572d5fd651cdeaddb692bf1f8408a82e61a9fbc4c730c4e6f7b48353",
+    "native-graphs/graph-0012.json": "186ce834459476cd3c8b67a146820a0877af95a150b6ac15d6df698fa1b2cf7e",
+    "native-graphs/graph-0013.json": "5baeb34137c05e6070f31fd8032584ad7d3a4f86cac94f399c0d86913e3af320",
+    "native-graphs/graph-0014.json": "6cb0b2fbbd30381a4c8671b1b54280a9d7855f681f3adef88201683fd664e9d5",
+    "native-graphs/graph-0015.json": "068115edbf57952d264fc1f5a2bda4d497a551f7f77fffd72b31355f3f1ff4a5",
+    "native-graphs/graph-0016.json": "28f79a379a1126df3e65ad60455f44f30947d31a6dba80387736286e6996b2a2",
+    "native-graphs/graph-0017.json": "d33ba49d8a98ae3edfcf98e872c2a1b3609624bee677a3cc16b929622116badf",
+    "native-graphs/graph-0018.json": "3333abaf636694338e3397f30c9b6e17f1f654b2d23a3c02ff1d099809855446",
+    "native-graphs/graph-0019.json": "b0111d6ac38b27c6f3bd55f545941a20a23f3ccb3439cefac35edf75170afeab",
+    "native-graphs/graph-0020.json": "8e22048fc0c796bd07255791f33cdf7f579108c970653e988f93d4469102b2a9",
+    "native-graphs/graph-0021.json": "6e28de3ccd0b480f43c26c30e12a5bfd5ec1700b2ae154805386a239d635d479",
+    "native-graphs/graph-0022.json": "ce0c646e079b76e7c3a773b65f6ffaa8e01573f29d195c1b25e5d0756d83c358",
+    "native-graphs/graph-0023.json": "3ad922e9e160420dbf32d17804bf4b803912cd63eaa796b424c671d979e63d6b",
+    "native-graphs/graph-0024.json": "d84a18f4e097d728fcba0dde78fddd486dd9ccb81bf5ec76284703442f17baf3",
+    "native-graphs/graph-0025.json": "64667f6e8a458175af4335dc42122101aa338386a0d9ab85fd41d9f50a594ea2",
+    "native-graphs/graph-0026.json": "010974f0878f86b1dee93fc52e98f0e21cd306abb64829ea95d807d2e1c7c357",
+    "native-graphs/graph-0027.json": "34fea2088f0707df6b5f5e1ad4c2455599c6a03045ad98a321f01fbb40bc56ac",
+    "native-graphs/graph-0028.json": "dfa9d0a8ec793cab8bdf4c325d6f6d1e6d7510135a86cddfe7b40bc980af9f9e",
+    "native-graphs/graph-0029.json": "227de5fa2ad70c8ed39762c0532b54a6a505418ca969d75554249ddfd18ce20d",
+    "native-graphs/graph-0030.json": "22ee65eaf1fbdfe263b7c50d621473374c968e15106be210f862681ae0d49a88",
+    "native-graphs/graph-0031.json": "45fea33f6b58ab71cab970d23c51d6ac9fc6a737c2bda0c164ae41af317ed607",
+    "native-graphs/graph-0032.json": "f389c9a7a5c3a5d6e4baab67ac0122939b836876ff3dd2486f9fd57430b29412",
+    "native-graphs/graph-0033.json": "27cbfba0a622e43a4b18973d69520fc07ea35e0c32ac0921de1b7e4b3ff46502",
+    "native-graphs/graph-0034.json": "e768c4156c98cef095137eac42d2f238ced29eac4c5e148e01dffa8ec31394e7",
+    "native-graphs/graph-0035.json": "ef37257ed6314932421936433e9a61fe9eb5e50a82a8bd37edaa019f5dc4d72d",
+    "native-graphs/graph-0036.json": "d98e8ee25d0988a4c86bfcd6cfd9ebe774b13f9f9dbc0d3bc33c4a83b055d4c5",
+    "native-graphs/graph-0037.json": "639f1b075c24a396d6250fe36f96db22d2cc25d96653cde4e2f1f6b6fe3e895f",
+    "native-graphs/graph-0038.json": "e1ccdf6646b8f485d74ee6842e370d373ce4418b803d4a90fcebaf1844eb9f17",
+    "native-graphs/graph-0039.json": "b171c6996eb6e0f4a4073613588d8015ca491d39dad2c5064565d18eb17deff3",
+    "native-graphs/graph-0040.json": "5f2272c9fc20718f90733e2fee1be664eeb2439dcd2f559b7570f13a96e6693f",
+    "native-graphs/graph-0041.json": "611520b7e0b16e4e126eed6d1bb1806b1cf3fb56842b616bb8b848a2b363beb4",
+    "native-graphs/graph-0042.json": "915397d77c153320aba87ee7a3a97e2f49b7fbd0d9a84d9cf6746741c555b182",
+    "native-graphs/graph-0043.json": "c587347b1b7557d32c733ca62a12c1f2d166fd9b704fd4d00ee93b9fee9f7d1d",
+    "native-graphs/graph-0044.json": "64ec55b01c8c445ed2759a47a37233593ee04e5ef6375ba4235d192f50e120f1",
+    "native-graphs/graph-0045.json": "9f8037d47d9e8a19aa0bbd47af842408e415150e383640f901bf879e7bc86213",
+    "native-graphs/graph-0046.json": "40ea1c045e6a38ff3d79dbbc1838f6f1403f0faac4aecacd608dff1a5e04b737",
+    "native-graphs/graph-0047.json": "28a88bb808da2ffd7757f9906a792f8212f99b49c3ec462d616c5907705eb638",
+    "native-graphs/graph-0048.json": "ed1904ae753f49b9af78e907154a392af94209c12b964a9a6c940060e8b29fda",
+    "native-graphs/graph-0049.json": "259de3f35b6d183acb96ed931c7cc0641fa438f01dbae9cfabd8aa38a5f4610b",
+    "native-graphs/graph-0050.json": "b40d7e04d56ca3341f8b80f53c7b25234d40bc27db4452d1d9018b96a743a706",
+    "native-graphs/graph-0051.json": "62954422838cafce4ea7a8494a98c9f3a9d804619b75495db290ccdf5954744d",
+    "native-graphs/graph-0052.json": "3ca9b056bfb4eccd277b2522949a5e90d5cf69cadec21c4839c87c4eb33506af",
+    "native-graphs/graph-0053.json": "95168768765035497ca5966ac78b17b9a2f60421178804ca4f1aaeac62f1df79",
+    "native-graphs/graph-0054.json": "8051c28b916ebe97eadae92500afa643fe4cbd2a25edc3cd09084fadc9b8abfd",
+    "native-graphs/graph-0055.json": "a088f20ba83eea3aaa44a05a28f45f2c89e69e4b488260196b6b9755c35eafc7",
+    "native-graphs/graph-0056.json": "6585f96e87862198faeb0ce1ce86dacd801d695a06c63e303e62477d209499a7",
+    "native-graphs/graph-0057.json": "a10e56741e2d776efdd79252ed884049b54c15d7984df73c9fb5ad7a8edcd0c6",
+    "native-graphs/graph-0058.json": "57e579270189e8c3539b3156571d038112d2412dae3e8bbfa9e86a5feaec9c02",
+    "native-graphs/graph-0059.json": "61e8d0362a4ed54ea143d892eef67662bbb92008b01ac61a60c05458c97e4c38",
+    "native-graphs/graph-0060.json": "65589a7d74f135e1ef621a3b4edcc84ab600056b92ab25083cfb75d231604e8a",
+    "origin-inventory.json": "980c77443dfc33b39d3e12ef65ab1474105544e68737fe2aebbb4cf204ce16f6",
+    "prescription-review.txt": "a35e8f847bc2775a1e38911bbcc2907b8e9bbecc2c8653c62e00e85b242f46dc",
+    "programme.canonical.json": "6b3de012e228487db043c39ae16759d29c71b51aa482c245cd164feb78c8caac",
+    "programme.plan-package.yaml": "d777c6e2b7953cba6179b90d8053a4704d9e33d13615fa0fb35bbcddc051dd95",
+    "protocol-graphs.json": "8323b9f4fb644d618d47525d861da60ef8a4c3d7698d3e27204b1b613929a458",
+    "validation.json": "fd411d661e79476702401f935814d33553571a55378784e0da96eb1699a91abf"
+  },
+  "kind": "derived_canonical_source_file_index",
+  "package_sha256": "6b3de012e228487db043c39ae16759d29c71b51aa482c245cd164feb78c8caac",
+  "profile": "hybrid10k_native_v2_legacy_rows_v1",
+  "sessions": [
+    {
+      "identity": {
+        "protocol_id": "protocol-9465be84-e6dd-4891-b980-7fd9e848a6f4",
+        "revision_number": 5,
+        "session_lineage_id": "379bb177-55b7-5535-8527-9047568a5ce9"
+      },
+      "path": "native-graphs/graph-0001.json",
+      "session_key": "session-379bb177-55b7-5535-8527-9047568a5ce9-r5",
+      "source_sha256": "4a18690dcc7e84ab61b01e6f028ed6c2183d9f183e793252f59e54bc7ad0d1c8",
+      "title": "Monday selected strength",
+      "type": "native_reviewed_protocol_graph"
+    },
+    {
+      "identity": {
+        "protocol_id": "LW10K-W01-D02-PERFORMANCE-20261103-R2",
+        "revision_number": 2,
+        "session_lineage_id": "baf02122-f283-5521-a3a4-16b1de1fd63d"
+      },
+      "path": "native-graphs/graph-0002.json",
+      "session_key": "session-baf02122-f283-5521-a3a4-16b1de1fd63d-r2",
+      "source_sha256": "54f7c31ebd9c975d777139fd5c68fa38d91a7bbcd5e5ab162d2a7974ee24c40b",
+      "title": "Threshold intervals",
+      "type": "native_reviewed_protocol_graph"
+    },
+    {
+      "identity": {
+        "protocol_id": "LW10K-W01-D03-PERFORMANCE-20261103-R2",
+        "revision_number": 2,
+        "session_lineage_id": "43496cc4-773d-54cc-9ef4-db07b3aace5f"
+      },
+      "path": "native-graphs/graph-0003.json",
+      "session_key": "session-43496cc4-773d-54cc-9ef4-db07b3aace5f-r2",
+      "source_sha256": "d1c7d160d6aa0b2b1e51e39d02435df268afbeeaadc2ef5ddb0994183093e4bf",
+      "title": "Zone 2 run",
+      "type": "native_reviewed_protocol_graph"
+    },
+    {
+      "identity": {
+        "protocol_id": "protocol-03df3757-3994-41e1-a15a-08e8e20b7886",
+        "revision_number": 5,
+        "session_lineage_id": "21fc299c-06ba-5506-8553-0209780cbfe3"
+      },
+      "path": "native-graphs/graph-0004.json",
+      "session_key": "session-21fc299c-06ba-5506-8553-0209780cbfe3-r5",
+      "source_sha256": "12b6a139595d492e7394e85e646cd2869a8ed700a39324c7eb64f6b12af6c242",
+      "title": "Thursday selected strength",
+      "type": "native_reviewed_protocol_graph"
+    },
+    {
+      "identity": {
+        "protocol_id": "LW10K-W01-D05-PERFORMANCE-20261103-R2",
+        "revision_number": 2,
+        "session_lineage_id": "63a11e44-8efd-57ac-99d2-c7e2b7f44a43"
+      },
+      "path": "native-graphs/graph-0005.json",
+      "session_key": "session-63a11e44-8efd-57ac-99d2-c7e2b7f44a43-r2",
+      "source_sha256": "39437811c53a8bf52d4fb42da5df257d5b97f9f9b970d407dc6a4224656e18f5",
+      "title": "Zone 2 run",
+      "type": "native_reviewed_protocol_graph"
+    },
+    {
+      "identity": {
+        "protocol_id": "LW10K-W01-D07-PERFORMANCE-20261103-R2",
+        "revision_number": 2,
+        "session_lineage_id": "939762f3-bb11-592e-86e6-bd9a9fb8c153"
+      },
+      "path": "native-graphs/graph-0006.json",
+      "session_key": "session-939762f3-bb11-592e-86e6-bd9a9fb8c153-r2",
+      "source_sha256": "0202ad2b0f7083d5b7869cdf4fd369e1f829a5b29895a765fc9f2ae462b99410",
+      "title": "Long Zone 2 run",
+      "type": "native_reviewed_protocol_graph"
+    },
+    {
+      "identity": {
+        "protocol_id": "protocol-108577c3-fec9-4ef8-be1d-84494d78ff9a",
+        "revision_number": 5,
+        "session_lineage_id": "6aec11af-45d5-5fb9-9e4d-fbcc49d9e767"
+      },
+      "path": "native-graphs/graph-0007.json",
+      "session_key": "session-6aec11af-45d5-5fb9-9e4d-fbcc49d9e767-r5",
+      "source_sha256": "02bcff2f0d959b9dd5ebe42550c23145d7fb34788d5e3af7e10b79d9f64c75c9",
+      "title": "Monday selected strength",
+      "type": "native_reviewed_protocol_graph"
+    },
+    {
+      "identity": {
+        "protocol_id": "LW10K-W02-D02-PERFORMANCE-20261103-R2",
+        "revision_number": 2,
+        "session_lineage_id": "fcb86f6f-07ac-5f1b-b9b9-5fa7d4544827"
+      },
+      "path": "native-graphs/graph-0008.json",
+      "session_key": "session-fcb86f6f-07ac-5f1b-b9b9-5fa7d4544827-r2",
+      "source_sha256": "1ea1e070478bc69e9f7ec23d44b31affbf5e1005454aba830ff75ccd54da84a4",
+      "title": "Threshold intervals",
+      "type": "native_reviewed_protocol_graph"
+    },
+    {
+      "identity": {
+        "protocol_id": "LW10K-W02-D03-PERFORMANCE-20261103-R2",
+        "revision_number": 2,
+        "session_lineage_id": "4d650387-b504-5c80-9bc2-a6534d88863b"
+      },
+      "path": "native-graphs/graph-0009.json",
+      "session_key": "session-4d650387-b504-5c80-9bc2-a6534d88863b-r2",
+      "source_sha256": "bfd6a3426fe26551e764d0dad2fc73e4031ce3dade754dd4a430f02520501aa3",
+      "title": "Zone 2 run",
+      "type": "native_reviewed_protocol_graph"
+    },
+    {
+      "identity": {
+        "protocol_id": "protocol-6a3e2c65-3955-4f40-a22b-c61be95b2f73",
+        "revision_number": 5,
+        "session_lineage_id": "e7f72978-bb3e-5252-bcbd-ee996d53ac3e"
+      },
+      "path": "native-graphs/graph-0010.json",
+      "session_key": "session-e7f72978-bb3e-5252-bcbd-ee996d53ac3e-r5",
+      "source_sha256": "00f9ed66e7471c13d8f0f5f3cc565eb24e35cc14e62e86849511792dc2cd784a",
+      "title": "Thursday selected strength",
+      "type": "native_reviewed_protocol_graph"
+    },
+    {
+      "identity": {
+        "protocol_id": "LW10K-W02-D05-PERFORMANCE-20261103-R2",
+        "revision_number": 2,
+        "session_lineage_id": "57a3b9c7-9da1-52a8-9600-f2d1fbb1e64a"
+      },
+      "path": "native-graphs/graph-0011.json",
+      "session_key": "session-57a3b9c7-9da1-52a8-9600-f2d1fbb1e64a-r2",
+      "source_sha256": "1e112c3d572d5fd651cdeaddb692bf1f8408a82e61a9fbc4c730c4e6f7b48353",
+      "title": "Zone 2 run",
+      "type": "native_reviewed_protocol_graph"
+    },
+    {
+      "identity": {
+        "protocol_id": "LW10K-W02-D07-PERFORMANCE-20261103-R2",
+        "revision_number": 2,
+        "session_lineage_id": "74717952-b073-5d01-9df1-cfbd40df7c70"
+      },
+      "path": "native-graphs/graph-0012.json",
+      "session_key": "session-74717952-b073-5d01-9df1-cfbd40df7c70-r2",
+      "source_sha256": "186ce834459476cd3c8b67a146820a0877af95a150b6ac15d6df698fa1b2cf7e",
+      "title": "Long Zone 2 run",
+      "type": "native_reviewed_protocol_graph"
+    },
+    {
+      "identity": {
+        "protocol_id": "protocol-c5f5343c-7926-416d-8096-518c759f6402",
+        "revision_number": 5,
+        "session_lineage_id": "da3a1810-a65f-5e19-a7dc-e7d276839e44"
+      },
+      "path": "native-graphs/graph-0013.json",
+      "session_key": "session-da3a1810-a65f-5e19-a7dc-e7d276839e44-r5",
+      "source_sha256": "5baeb34137c05e6070f31fd8032584ad7d3a4f86cac94f399c0d86913e3af320",
+      "title": "Monday selected strength",
+      "type": "native_reviewed_protocol_graph"
+    },
+    {
+      "identity": {
+        "protocol_id": "LW10K-W03-D02-PERFORMANCE-20261103-R2",
+        "revision_number": 2,
+        "session_lineage_id": "3116c98a-5e21-5ce1-8e3b-9b708479454f"
+      },
+      "path": "native-graphs/graph-0014.json",
+      "session_key": "session-3116c98a-5e21-5ce1-8e3b-9b708479454f-r2",
+      "source_sha256": "6cb0b2fbbd30381a4c8671b1b54280a9d7855f681f3adef88201683fd664e9d5",
+      "title": "Threshold intervals",
+      "type": "native_reviewed_protocol_graph"
+    },
+    {
+      "identity": {
+        "protocol_id": "LW10K-W03-D03-PERFORMANCE-20261103-R2",
+        "revision_number": 2,
+        "session_lineage_id": "b9aa43f7-9dc3-539c-b183-3ab339654758"
+      },
+      "path": "native-graphs/graph-0015.json",
+      "session_key": "session-b9aa43f7-9dc3-539c-b183-3ab339654758-r2",
+      "source_sha256": "068115edbf57952d264fc1f5a2bda4d497a551f7f77fffd72b31355f3f1ff4a5",
+      "title": "Zone 2 run",
+      "type": "native_reviewed_protocol_graph"
+    },
+    {
+      "identity": {
+        "protocol_id": "protocol-ddeac60a-80bf-4c6c-9212-5efbca425e03",
+        "revision_number": 5,
+        "session_lineage_id": "2052df8e-b4dd-58e0-9c03-17f98f138e24"
+      },
+      "path": "native-graphs/graph-0016.json",
+      "session_key": "session-2052df8e-b4dd-58e0-9c03-17f98f138e24-r5",
+      "source_sha256": "28f79a379a1126df3e65ad60455f44f30947d31a6dba80387736286e6996b2a2",
+      "title": "Thursday selected strength",
+      "type": "native_reviewed_protocol_graph"
+    },
+    {
+      "identity": {
+        "protocol_id": "LW10K-W03-D05-PERFORMANCE-20261103-R2",
+        "revision_number": 2,
+        "session_lineage_id": "1ea65fa9-b267-51ba-9525-584d6f8e3783"
+      },
+      "path": "native-graphs/graph-0017.json",
+      "session_key": "session-1ea65fa9-b267-51ba-9525-584d6f8e3783-r2",
+      "source_sha256": "d33ba49d8a98ae3edfcf98e872c2a1b3609624bee677a3cc16b929622116badf",
+      "title": "Easy run with relaxed strides",
+      "type": "native_reviewed_protocol_graph"
+    },
+    {
+      "identity": {
+        "protocol_id": "LW10K-W03-D07-PERFORMANCE-20261103-R2",
+        "revision_number": 2,
+        "session_lineage_id": "9d2ae8c0-e828-5a54-bdba-c2c05d76d364"
+      },
+      "path": "native-graphs/graph-0018.json",
+      "session_key": "session-9d2ae8c0-e828-5a54-bdba-c2c05d76d364-r2",
+      "source_sha256": "3333abaf636694338e3397f30c9b6e17f1f654b2d23a3c02ff1d099809855446",
+      "title": "Long Zone 2 run",
+      "type": "native_reviewed_protocol_graph"
+    },
+    {
+      "identity": {
+        "protocol_id": "protocol-9a85a28f-5989-4324-9d9e-85b4f308b041",
+        "revision_number": 5,
+        "session_lineage_id": "2d045c4d-0da3-583f-823c-f6d2fa3c0443"
+      },
+      "path": "native-graphs/graph-0019.json",
+      "session_key": "session-2d045c4d-0da3-583f-823c-f6d2fa3c0443-r5",
+      "source_sha256": "b0111d6ac38b27c6f3bd55f545941a20a23f3ccb3439cefac35edf75170afeab",
+      "title": "Monday selected strength",
+      "type": "native_reviewed_protocol_graph"
+    },
+    {
+      "identity": {
+        "protocol_id": "LW10K-W04-D02-PERFORMANCE-20261103-R2",
+        "revision_number": 2,
+        "session_lineage_id": "e8afd9a6-7246-598d-b6f9-6fb59096a76e"
+      },
+      "path": "native-graphs/graph-0020.json",
+      "session_key": "session-e8afd9a6-7246-598d-b6f9-6fb59096a76e-r2",
+      "source_sha256": "8e22048fc0c796bd07255791f33cdf7f579108c970653e988f93d4469102b2a9",
+      "title": "Consolidation threshold",
+      "type": "native_reviewed_protocol_graph"
+    },
+    {
+      "identity": {
+        "protocol_id": "LW10K-W04-D03-PERFORMANCE-20261103-R2",
+        "revision_number": 2,
+        "session_lineage_id": "f6675795-cabc-5706-b1bf-7c5a08f62528"
+      },
+      "path": "native-graphs/graph-0021.json",
+      "session_key": "session-f6675795-cabc-5706-b1bf-7c5a08f62528-r2",
+      "source_sha256": "6e28de3ccd0b480f43c26c30e12a5bfd5ec1700b2ae154805386a239d635d479",
+      "title": "Zone 2 run",
+      "type": "native_reviewed_protocol_graph"
+    },
+    {
+      "identity": {
+        "protocol_id": "protocol-5d8dc5fa-cf75-4f40-8825-17008d7d951c",
+        "revision_number": 5,
+        "session_lineage_id": "d5f28dd7-25fd-53e3-ba85-b297c17420e4"
+      },
+      "path": "native-graphs/graph-0022.json",
+      "session_key": "session-d5f28dd7-25fd-53e3-ba85-b297c17420e4-r5",
+      "source_sha256": "ce0c646e079b76e7c3a773b65f6ffaa8e01573f29d195c1b25e5d0756d83c358",
+      "title": "Thursday selected strength",
+      "type": "native_reviewed_protocol_graph"
+    },
+    {
+      "identity": {
+        "protocol_id": "LW10K-W04-D05-PERFORMANCE-20261103-R2",
+        "revision_number": 2,
+        "session_lineage_id": "4a8dee15-c86d-5822-be7d-0241e9a3077f"
+      },
+      "path": "native-graphs/graph-0023.json",
+      "session_key": "session-4a8dee15-c86d-5822-be7d-0241e9a3077f-r2",
+      "source_sha256": "3ad922e9e160420dbf32d17804bf4b803912cd63eaa796b424c671d979e63d6b",
+      "title": "Zone 2 run",
+      "type": "native_reviewed_protocol_graph"
+    },
+    {
+      "identity": {
+        "protocol_id": "LW10K-W04-D07-PERFORMANCE-20261103-R2",
+        "revision_number": 2,
+        "session_lineage_id": "c54df464-7cf0-5aad-9c1b-87f1481f40da"
+      },
+      "path": "native-graphs/graph-0024.json",
+      "session_key": "session-c54df464-7cf0-5aad-9c1b-87f1481f40da-r2",
+      "source_sha256": "d84a18f4e097d728fcba0dde78fddd486dd9ccb81bf5ec76284703442f17baf3",
+      "title": "Long Zone 2 run",
+      "type": "native_reviewed_protocol_graph"
+    },
+    {
+      "identity": {
+        "protocol_id": "protocol-e833624d-e558-4709-9d6f-3d9cbb007449",
+        "revision_number": 5,
+        "session_lineage_id": "c2b9a2a5-a0fd-5b32-9b5a-db285799c0a3"
+      },
+      "path": "native-graphs/graph-0025.json",
+      "session_key": "session-c2b9a2a5-a0fd-5b32-9b5a-db285799c0a3-r5",
+      "source_sha256": "64667f6e8a458175af4335dc42122101aa338386a0d9ab85fd41d9f50a594ea2",
+      "title": "Monday selected strength",
+      "type": "native_reviewed_protocol_graph"
+    },
+    {
+      "identity": {
+        "protocol_id": "LW10K-W05-D02-PERFORMANCE-20261103-R2",
+        "revision_number": 2,
+        "session_lineage_id": "d65948b6-69b5-570b-8d4a-6e96e5908314"
+      },
+      "path": "native-graphs/graph-0026.json",
+      "session_key": "session-d65948b6-69b5-570b-8d4a-6e96e5908314-r2",
+      "source_sha256": "010974f0878f86b1dee93fc52e98f0e21cd306abb64829ea95d807d2e1c7c357",
+      "title": "Threshold intervals",
+      "type": "native_reviewed_protocol_graph"
+    },
+    {
+      "identity": {
+        "protocol_id": "LW10K-W05-D03-PERFORMANCE-20261103-R2",
+        "revision_number": 2,
+        "session_lineage_id": "31891ea0-b339-5f67-ab8c-deebae40d54c"
+      },
+      "path": "native-graphs/graph-0027.json",
+      "session_key": "session-31891ea0-b339-5f67-ab8c-deebae40d54c-r2",
+      "source_sha256": "34fea2088f0707df6b5f5e1ad4c2455599c6a03045ad98a321f01fbb40bc56ac",
+      "title": "Zone 2 run",
+      "type": "native_reviewed_protocol_graph"
+    },
+    {
+      "identity": {
+        "protocol_id": "protocol-a86f688d-c51b-4033-b106-b0ee624c422a",
+        "revision_number": 5,
+        "session_lineage_id": "eb3d69ec-b232-5fb8-ba32-c7cf00cc794d"
+      },
+      "path": "native-graphs/graph-0028.json",
+      "session_key": "session-eb3d69ec-b232-5fb8-ba32-c7cf00cc794d-r5",
+      "source_sha256": "dfa9d0a8ec793cab8bdf4c325d6f6d1e6d7510135a86cddfe7b40bc980af9f9e",
+      "title": "Thursday selected strength",
+      "type": "native_reviewed_protocol_graph"
+    },
+    {
+      "identity": {
+        "protocol_id": "LW10K-W05-D05-PERFORMANCE-20261103-R2",
+        "revision_number": 2,
+        "session_lineage_id": "9353deb4-1360-59bd-8785-5c88ee68c7d2"
+      },
+      "path": "native-graphs/graph-0029.json",
+      "session_key": "session-9353deb4-1360-59bd-8785-5c88ee68c7d2-r2",
+      "source_sha256": "227de5fa2ad70c8ed39762c0532b54a6a505418ca969d75554249ddfd18ce20d",
+      "title": "Easy run with relaxed strides",
+      "type": "native_reviewed_protocol_graph"
+    },
+    {
+      "identity": {
+        "protocol_id": "LW10K-W05-D07-PERFORMANCE-20261103-R2",
+        "revision_number": 2,
+        "session_lineage_id": "d9e7a99e-887a-569f-90e0-989c3bd84954"
+      },
+      "path": "native-graphs/graph-0030.json",
+      "session_key": "session-d9e7a99e-887a-569f-90e0-989c3bd84954-r2",
+      "source_sha256": "22ee65eaf1fbdfe263b7c50d621473374c968e15106be210f862681ae0d49a88",
+      "title": "Long Zone 2 run",
+      "type": "native_reviewed_protocol_graph"
+    },
+    {
+      "identity": {
+        "protocol_id": "protocol-6a8545ca-f5fb-4c35-a0e1-f6d380c926bb",
+        "revision_number": 5,
+        "session_lineage_id": "18d0f55a-76b8-5d60-9fc4-2ea5698fdf7b"
+      },
+      "path": "native-graphs/graph-0031.json",
+      "session_key": "session-18d0f55a-76b8-5d60-9fc4-2ea5698fdf7b-r5",
+      "source_sha256": "45fea33f6b58ab71cab970d23c51d6ac9fc6a737c2bda0c164ae41af317ed607",
+      "title": "Monday selected strength",
+      "type": "native_reviewed_protocol_graph"
+    },
+    {
+      "identity": {
+        "protocol_id": "LW10K-W06-D02-PERFORMANCE-20261103-R2",
+        "revision_number": 2,
+        "session_lineage_id": "44f05b2a-a55a-5766-a9b4-00b2db46ea71"
+      },
+      "path": "native-graphs/graph-0032.json",
+      "session_key": "session-44f05b2a-a55a-5766-a9b4-00b2db46ea71-r2",
+      "source_sha256": "f389c9a7a5c3a5d6e4baab67ac0122939b836876ff3dd2486f9fd57430b29412",
+      "title": "10K intervals",
+      "type": "native_reviewed_protocol_graph"
+    },
+    {
+      "identity": {
+        "protocol_id": "LW10K-W06-D03-PERFORMANCE-20261103-R2",
+        "revision_number": 2,
+        "session_lineage_id": "bf80b11c-5389-5268-8659-1655e36410e3"
+      },
+      "path": "native-graphs/graph-0033.json",
+      "session_key": "session-bf80b11c-5389-5268-8659-1655e36410e3-r2",
+      "source_sha256": "27cbfba0a622e43a4b18973d69520fc07ea35e0c32ac0921de1b7e4b3ff46502",
+      "title": "Zone 2 run",
+      "type": "native_reviewed_protocol_graph"
+    },
+    {
+      "identity": {
+        "protocol_id": "protocol-06cf3e17-dc7a-4a50-830c-8b8db079bb2f",
+        "revision_number": 5,
+        "session_lineage_id": "661a1086-1435-5e43-8dea-845528a38643"
+      },
+      "path": "native-graphs/graph-0034.json",
+      "session_key": "session-661a1086-1435-5e43-8dea-845528a38643-r5",
+      "source_sha256": "e768c4156c98cef095137eac42d2f238ced29eac4c5e148e01dffa8ec31394e7",
+      "title": "Thursday selected strength",
+      "type": "native_reviewed_protocol_graph"
+    },
+    {
+      "identity": {
+        "protocol_id": "LW10K-W06-D05-PERFORMANCE-20261103-R2",
+        "revision_number": 2,
+        "session_lineage_id": "f010db80-69f7-502f-90f7-d6fb577ad005"
+      },
+      "path": "native-graphs/graph-0035.json",
+      "session_key": "session-f010db80-69f7-502f-90f7-d6fb577ad005-r2",
+      "source_sha256": "ef37257ed6314932421936433e9a61fe9eb5e50a82a8bd37edaa019f5dc4d72d",
+      "title": "Short-5K intervals",
+      "type": "native_reviewed_protocol_graph"
+    },
+    {
+      "identity": {
+        "protocol_id": "LW10K-W06-D07-PERFORMANCE-20261103-R2",
+        "revision_number": 2,
+        "session_lineage_id": "09fc43aa-02be-52c9-9210-0fe46d68bb6d"
+      },
+      "path": "native-graphs/graph-0036.json",
+      "session_key": "session-09fc43aa-02be-52c9-9210-0fe46d68bb6d-r2",
+      "source_sha256": "d98e8ee25d0988a4c86bfcd6cfd9ebe774b13f9f9dbc0d3bc33c4a83b055d4c5",
+      "title": "Long Zone 2 run",
+      "type": "native_reviewed_protocol_graph"
+    },
+    {
+      "identity": {
+        "protocol_id": "protocol-7a067f30-64f6-4b63-b4d7-83e3b43c7b06",
+        "revision_number": 5,
+        "session_lineage_id": "e1978da3-e34b-5d08-a740-350a80d1926c"
+      },
+      "path": "native-graphs/graph-0037.json",
+      "session_key": "session-e1978da3-e34b-5d08-a740-350a80d1926c-r5",
+      "source_sha256": "639f1b075c24a396d6250fe36f96db22d2cc25d96653cde4e2f1f6b6fe3e895f",
+      "title": "Monday selected strength",
+      "type": "native_reviewed_protocol_graph"
+    },
+    {
+      "identity": {
+        "protocol_id": "LW10K-W07-D02-PERFORMANCE-20261103-R2",
+        "revision_number": 2,
+        "session_lineage_id": "4b710afd-00c5-55b9-b9bb-11ce51daa47f"
+      },
+      "path": "native-graphs/graph-0038.json",
+      "session_key": "session-4b710afd-00c5-55b9-b9bb-11ce51daa47f-r2",
+      "source_sha256": "e1ccdf6646b8f485d74ee6842e370d373ce4418b803d4a90fcebaf1844eb9f17",
+      "title": "10K intervals",
+      "type": "native_reviewed_protocol_graph"
+    },
+    {
+      "identity": {
+        "protocol_id": "LW10K-W07-D03-PERFORMANCE-20261103-R2",
+        "revision_number": 2,
+        "session_lineage_id": "d4ecea05-5ec7-58a9-b534-0cec24e53164"
+      },
+      "path": "native-graphs/graph-0039.json",
+      "session_key": "session-d4ecea05-5ec7-58a9-b534-0cec24e53164-r2",
+      "source_sha256": "b171c6996eb6e0f4a4073613588d8015ca491d39dad2c5064565d18eb17deff3",
+      "title": "Zone 2 run",
+      "type": "native_reviewed_protocol_graph"
+    },
+    {
+      "identity": {
+        "protocol_id": "protocol-9a0f7b00-1419-48b5-951f-1a828b0d829d",
+        "revision_number": 5,
+        "session_lineage_id": "696dede4-268c-5a31-8e3a-0e555a8f8b0c"
+      },
+      "path": "native-graphs/graph-0040.json",
+      "session_key": "session-696dede4-268c-5a31-8e3a-0e555a8f8b0c-r5",
+      "source_sha256": "5f2272c9fc20718f90733e2fee1be664eeb2439dcd2f559b7570f13a96e6693f",
+      "title": "Thursday selected strength",
+      "type": "native_reviewed_protocol_graph"
+    },
+    {
+      "identity": {
+        "protocol_id": "LW10K-W07-D05-PERFORMANCE-20261103-R2",
+        "revision_number": 2,
+        "session_lineage_id": "54f39e5d-e386-5e07-a677-9a24eb15e3e6"
+      },
+      "path": "native-graphs/graph-0041.json",
+      "session_key": "session-54f39e5d-e386-5e07-a677-9a24eb15e3e6-r2",
+      "source_sha256": "611520b7e0b16e4e126eed6d1bb1806b1cf3fb56842b616bb8b848a2b363beb4",
+      "title": "Short-5K intervals",
+      "type": "native_reviewed_protocol_graph"
+    },
+    {
+      "identity": {
+        "protocol_id": "LW10K-W07-D07-PERFORMANCE-20261103-R2",
+        "revision_number": 2,
+        "session_lineage_id": "a95f0a65-4152-50c7-80b1-675746aa3cfa"
+      },
+      "path": "native-graphs/graph-0042.json",
+      "session_key": "session-a95f0a65-4152-50c7-80b1-675746aa3cfa-r2",
+      "source_sha256": "915397d77c153320aba87ee7a3a97e2f49b7fbd0d9a84d9cf6746741c555b182",
+      "title": "Long Zone 2 run",
+      "type": "native_reviewed_protocol_graph"
+    },
+    {
+      "identity": {
+        "protocol_id": "protocol-4233906e-bb45-4d11-a608-ced5314be9eb",
+        "revision_number": 5,
+        "session_lineage_id": "308b82a9-d6b7-5c6d-a94b-b83c0b0d349a"
+      },
+      "path": "native-graphs/graph-0043.json",
+      "session_key": "session-308b82a9-d6b7-5c6d-a94b-b83c0b0d349a-r5",
+      "source_sha256": "c587347b1b7557d32c733ca62a12c1f2d166fd9b704fd4d00ee93b9fee9f7d1d",
+      "title": "Monday selected strength",
+      "type": "native_reviewed_protocol_graph"
+    },
+    {
+      "identity": {
+        "protocol_id": "LW10K-W08-D02-PERFORMANCE-20261103-R2",
+        "revision_number": 2,
+        "session_lineage_id": "c82ec1f8-e007-5f52-8d2b-a91f46df370c"
+      },
+      "path": "native-graphs/graph-0044.json",
+      "session_key": "session-c82ec1f8-e007-5f52-8d2b-a91f46df370c-r2",
+      "source_sha256": "64ec55b01c8c445ed2759a47a37233593ee04e5ef6375ba4235d192f50e120f1",
+      "title": "Peak 10K specificity",
+      "type": "native_reviewed_protocol_graph"
+    },
+    {
+      "identity": {
+        "protocol_id": "LW10K-W08-D03-PERFORMANCE-20261103-R2",
+        "revision_number": 2,
+        "session_lineage_id": "2d770815-cd17-5501-9e01-9aa555a95bb0"
+      },
+      "path": "native-graphs/graph-0045.json",
+      "session_key": "session-2d770815-cd17-5501-9e01-9aa555a95bb0-r2",
+      "source_sha256": "9f8037d47d9e8a19aa0bbd47af842408e415150e383640f901bf879e7bc86213",
+      "title": "Zone 2 run",
+      "type": "native_reviewed_protocol_graph"
+    },
+    {
+      "identity": {
+        "protocol_id": "protocol-d046db81-c073-4fb4-882a-a8de40459025",
+        "revision_number": 5,
+        "session_lineage_id": "d44b2d25-63fb-5508-97a8-172f611fd422"
+      },
+      "path": "native-graphs/graph-0046.json",
+      "session_key": "session-d44b2d25-63fb-5508-97a8-172f611fd422-r5",
+      "source_sha256": "40ea1c045e6a38ff3d79dbbc1838f6f1403f0faac4aecacd608dff1a5e04b737",
+      "title": "Thursday selected strength",
+      "type": "native_reviewed_protocol_graph"
+    },
+    {
+      "identity": {
+        "protocol_id": "LW10K-W08-D05-PERFORMANCE-20261103-R2",
+        "revision_number": 2,
+        "session_lineage_id": "37c5ad17-bc27-56f6-812c-c99929b5832e"
+      },
+      "path": "native-graphs/graph-0047.json",
+      "session_key": "session-37c5ad17-bc27-56f6-812c-c99929b5832e-r2",
+      "source_sha256": "28a88bb808da2ffd7757f9906a792f8212f99b49c3ec462d616c5907705eb638",
+      "title": "Short-5K intervals — lighter Friday",
+      "type": "native_reviewed_protocol_graph"
+    },
+    {
+      "identity": {
+        "protocol_id": "LW10K-W08-D07-PERFORMANCE-20261103-R2",
+        "revision_number": 2,
+        "session_lineage_id": "f8c3ee75-dd3c-5fbc-808d-07ea66c6b7bb"
+      },
+      "path": "native-graphs/graph-0048.json",
+      "session_key": "session-f8c3ee75-dd3c-5fbc-808d-07ea66c6b7bb-r2",
+      "source_sha256": "ed1904ae753f49b9af78e907154a392af94209c12b964a9a6c940060e8b29fda",
+      "title": "Long Zone 2 run",
+      "type": "native_reviewed_protocol_graph"
+    },
+    {
+      "identity": {
+        "protocol_id": "protocol-e2a244ff-e5bc-441e-99fe-2da3e7061ae9",
+        "revision_number": 5,
+        "session_lineage_id": "2a69637d-75c7-557d-b5dc-ba5e49b257d0"
+      },
+      "path": "native-graphs/graph-0049.json",
+      "session_key": "session-2a69637d-75c7-557d-b5dc-ba5e49b257d0-r5",
+      "source_sha256": "259de3f35b6d183acb96ed931c7cc0641fa438f01dbae9cfabd8aa38a5f4610b",
+      "title": "Monday selected strength",
+      "type": "native_reviewed_protocol_graph"
+    },
+    {
+      "identity": {
+        "protocol_id": "LW10K-W09-D02-PERFORMANCE-20261103-R2",
+        "revision_number": 2,
+        "session_lineage_id": "cde0bbe4-0af4-5d4a-a0cb-fd17398eb7d3"
+      },
+      "path": "native-graphs/graph-0050.json",
+      "session_key": "session-cde0bbe4-0af4-5d4a-a0cb-fd17398eb7d3-r2",
+      "source_sha256": "b40d7e04d56ca3341f8b80f53c7b25234d40bc27db4452d1d9018b96a743a706",
+      "title": "10K intervals",
+      "type": "native_reviewed_protocol_graph"
+    },
+    {
+      "identity": {
+        "protocol_id": "LW10K-W09-D03-PERFORMANCE-20261103-R2",
+        "revision_number": 2,
+        "session_lineage_id": "029597e8-d816-5e64-b9a0-e47e81c4c108"
+      },
+      "path": "native-graphs/graph-0051.json",
+      "session_key": "session-029597e8-d816-5e64-b9a0-e47e81c4c108-r2",
+      "source_sha256": "62954422838cafce4ea7a8494a98c9f3a9d804619b75495db290ccdf5954744d",
+      "title": "Zone 2 run",
+      "type": "native_reviewed_protocol_graph"
+    },
+    {
+      "identity": {
+        "protocol_id": "protocol-192912c4-a794-4d8e-b9cb-2f51457d67d3",
+        "revision_number": 5,
+        "session_lineage_id": "0a6de07f-0ee6-5850-b903-acee407ca491"
+      },
+      "path": "native-graphs/graph-0052.json",
+      "session_key": "session-0a6de07f-0ee6-5850-b903-acee407ca491-r5",
+      "source_sha256": "3ca9b056bfb4eccd277b2522949a5e90d5cf69cadec21c4839c87c4eb33506af",
+      "title": "Thursday selected strength",
+      "type": "native_reviewed_protocol_graph"
+    },
+    {
+      "identity": {
+        "protocol_id": "LW10K-W09-D05-PERFORMANCE-20261103-R2",
+        "revision_number": 2,
+        "session_lineage_id": "924f3647-cd34-5bf1-88ec-7bb0e1f9ae6a"
+      },
+      "path": "native-graphs/graph-0053.json",
+      "session_key": "session-924f3647-cd34-5bf1-88ec-7bb0e1f9ae6a-r2",
+      "source_sha256": "95168768765035497ca5966ac78b17b9a2f60421178804ca4f1aaeac62f1df79",
+      "title": "Short-5K intervals",
+      "type": "native_reviewed_protocol_graph"
+    },
+    {
+      "identity": {
+        "protocol_id": "LW10K-W09-D07-PERFORMANCE-20261103-R2",
+        "revision_number": 2,
+        "session_lineage_id": "370218c5-441d-570c-bd36-ae08b3380ee4"
+      },
+      "path": "native-graphs/graph-0054.json",
+      "session_key": "session-370218c5-441d-570c-bd36-ae08b3380ee4-r2",
+      "source_sha256": "8051c28b916ebe97eadae92500afa643fe4cbd2a25edc3cd09084fadc9b8abfd",
+      "title": "Long Zone 2 run",
+      "type": "native_reviewed_protocol_graph"
+    },
+    {
+      "identity": {
+        "protocol_id": "protocol-b45b0cb4-997b-4e7a-abce-345cb67f2a28",
+        "revision_number": 5,
+        "session_lineage_id": "13a6135f-439c-5e10-ac06-bc3e506596f9"
+      },
+      "path": "native-graphs/graph-0055.json",
+      "session_key": "session-13a6135f-439c-5e10-ac06-bc3e506596f9-r5",
+      "source_sha256": "a088f20ba83eea3aaa44a05a28f45f2c89e69e4b488260196b6b9755c35eafc7",
+      "title": "Monday selected strength",
+      "type": "native_reviewed_protocol_graph"
+    },
+    {
+      "identity": {
+        "protocol_id": "LW10K-W10-D02-PERFORMANCE-20261103-R2",
+        "revision_number": 2,
+        "session_lineage_id": "cbd90fb8-37ff-5458-b991-6c41b6fcd63e"
+      },
+      "path": "native-graphs/graph-0056.json",
+      "session_key": "session-cbd90fb8-37ff-5458-b991-6c41b6fcd63e-r2",
+      "source_sha256": "6585f96e87862198faeb0ce1ce86dacd801d695a06c63e303e62477d209499a7",
+      "title": "Taper sharpening",
+      "type": "native_reviewed_protocol_graph"
+    },
+    {
+      "identity": {
+        "protocol_id": "LW10K-W10-D03-PERFORMANCE-20261103-R2",
+        "revision_number": 2,
+        "session_lineage_id": "e97108b8-57d9-5eae-8809-33a3699939b6"
+      },
+      "path": "native-graphs/graph-0057.json",
+      "session_key": "session-e97108b8-57d9-5eae-8809-33a3699939b6-r2",
+      "source_sha256": "a10e56741e2d776efdd79252ed884049b54c15d7984df73c9fb5ad7a8edcd0c6",
+      "title": "Zone 2 run",
+      "type": "native_reviewed_protocol_graph"
+    },
+    {
+      "identity": {
+        "protocol_id": "LW10K-W10-D05-PERFORMANCE-20261103-R2",
+        "revision_number": 2,
+        "session_lineage_id": "fe801431-6348-5b56-8081-396a810e7fd4"
+      },
+      "path": "native-graphs/graph-0058.json",
+      "session_key": "session-fe801431-6348-5b56-8081-396a810e7fd4-r2",
+      "source_sha256": "57e579270189e8c3539b3156571d038112d2412dae3e8bbfa9e86a5feaec9c02",
+      "title": "Easy run with relaxed strides",
+      "type": "native_reviewed_protocol_graph"
+    },
+    {
+      "identity": {
+        "protocol_id": "LW10K-W10-D07-PERFORMANCE-20261103-R2",
+        "revision_number": 2,
+        "session_lineage_id": "d1f03e44-ae64-5a40-a52e-675881e8f077"
+      },
+      "path": "native-graphs/graph-0059.json",
+      "session_key": "session-d1f03e44-ae64-5a40-a52e-675881e8f077-r2",
+      "source_sha256": "61e8d0362a4ed54ea143d892eef67662bbb92008b01ac61a60c05458c97e4c38",
+      "title": "10K final assessment",
+      "type": "native_reviewed_protocol_graph"
+    },
+    {
+      "identity": {
+        "protocol_id": "protocol-b9cec919-40d0-4900-bbb0-b244bb566170",
+        "revision_number": 5,
+        "session_lineage_id": "02346200-732e-56d4-a637-f20e7d75b7b4"
+      },
+      "path": "native-graphs/graph-0060.json",
+      "session_key": "session-02346200-732e-56d4-a637-f20e7d75b7b4-r5",
+      "source_sha256": "65589a7d74f135e1ef621a3b4edcc84ab600056b92ab25083cfb75d231604e8a",
+      "title": "Upper-body taper exception",
+      "type": "native_reviewed_protocol_graph"
+    }
+  ],
+  "version": 2
+}

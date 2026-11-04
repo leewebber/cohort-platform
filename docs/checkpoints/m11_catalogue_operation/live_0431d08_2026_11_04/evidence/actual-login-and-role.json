@@ -1,0 +1,25 @@
+{
+  "role": "postgres",
+  "expiry": "2026-11-04T05:06:23.708504+00:00",
+  "database": "postgres",
+  "memberships": [
+    {
+      "set": true,
+      "role": "postgres",
+      "admin": false,
+      "member": "cli_login_postgres",
+      "inherit": false
+    }
+  ],
+  "session_user": "cli_login_postgres",
+  "application_name": "m11_live_0431d08_20261104",
+  "native_pgaudit_log": "none",
+  "principal_attributes": {
+    "login": true,
+    "super": false,
+    "inherit": false,
+    "create_db": false,
+    "bypass_rls": false,
+    "create_role": false
+  }
+}
