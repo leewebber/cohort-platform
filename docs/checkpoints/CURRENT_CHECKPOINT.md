@@ -1,5 +1,18 @@
 # Current repository checkpoint
 
+> **M1.1 two D8 integration decisions approved — 2026-11-04:**
+> [Actual founder approval and added wording](../programmes/hybrid_10k/d8_approved_integration_2026_11_04/APPROVAL.md)
+> record both decisions explicitly approved against e676e31: unchanged 0..56-day
+> 5K freshness/renewal with conditional unavailability, and the proposed athlete copy.
+> Ten weekly explanations and forty exact session applications are retained as an
+> approved source-linked addendum. No prescription, target rule, archive, original
+> review or downloaded full-review bytes changed; no tests/full-pack regeneration,
+> hosted operation or programme publication. Original pending snapshots below are
+> historical; this approval covers the two integration decisions specifically.
+> Next single point: local candidate/publication-access readiness reconciliation
+> with the approved prose. Bounded UI acceptance/polish freeze stand.
+> **M1.1/Gate A OPEN; hosted/publication/installed journey remain separate.**
+
 > **M1.1 complete genuine D8 review pack prepared — 2026-11-04:**
 > [Start the founder content review](../programmes/hybrid_10k/d8_review_2026_11_04/REVIEW.md)
 > or read the [preparation handoff](./m11_d8_review/HANDOFF.md). Ten week pages cover

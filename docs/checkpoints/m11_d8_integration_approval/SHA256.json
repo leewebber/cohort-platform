@@ -1,0 +1,41 @@
+{
+  "kind": "NON_SECRET_TWO_DECISION_D8_APPROVAL_INTEGRITY",
+  "files": {
+    "docs/checkpoints/m11_d8_integration_approval/HANDOFF.md": {
+      "sha256": "97c16265e5b1884d44f1dc5f6c581092feedfe8ba79565afd22148afdcfc2356",
+      "bytes": 4290
+    },
+    "docs/checkpoints/m11_d8_integration_approval/PRESERVATION.json": {
+      "sha256": "c817b71d1aeed0617e89f3c95ecf952195eb4ad75261402e9fffa4df89297818",
+      "bytes": 487
+    },
+    "docs/checkpoints/m11_d8_integration_approval/VERIFICATION.json": {
+      "sha256": "12337cdfe9d679fa0cccecc825a8fc4f2a2baad50f12e2562dc4e66b4dbbf12d",
+      "bytes": 1054
+    },
+    "docs/programmes/hybrid_10k/d8_approved_integration_2026_11_04/APPROVAL.json": {
+      "sha256": "1b6ba4c55bd79b4e06db0fa07e8a38cc53dee34ae4b1fdced195ef3ceb88d510",
+      "bytes": 2821
+    },
+    "docs/programmes/hybrid_10k/d8_approved_integration_2026_11_04/APPROVAL.md": {
+      "sha256": "43baddb21b26d0128ef540e924266cd14f6b472d24af4711bce1d2e26dce0e0c",
+      "bytes": 2086
+    },
+    "docs/programmes/hybrid_10k/d8_approved_integration_2026_11_04/ATHLETE_WORDING.json": {
+      "sha256": "30e5354e31d16c71176eef6dfed6747c497570dbd478e09e27cc139f59cd1f8d",
+      "bytes": 21640
+    },
+    "docs/programmes/hybrid_10k/d8_approved_integration_2026_11_04/ATHLETE_WORDING.md": {
+      "sha256": "bba861965f7b26d975685fe22572769a13fd06a5bf4121593583d2aea29cfe55",
+      "bytes": 3721
+    },
+    "docs/programmes/hybrid_10k/d8_approved_integration_2026_11_04/FRESHNESS_REQUIREMENT.json": {
+      "sha256": "d04475ec6c2d133f529c7bb748868d5e55e7d55b00aeebea3ab915faf7edbe56",
+      "bytes": 5781
+    },
+    "docs/programmes/hybrid_10k/d8_approved_integration_2026_11_04/FRESHNESS_REQUIREMENT.md": {
+      "sha256": "749a08081e4f1932ceb1a3dce5488490ec0d279fdb83ca8d72dcd81aed3e69ce",
+      "bytes": 2699
+    }
+  }
+}

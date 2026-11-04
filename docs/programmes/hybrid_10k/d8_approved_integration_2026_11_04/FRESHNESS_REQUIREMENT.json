@@ -1,0 +1,151 @@
+{
+  "kind": "FOUNDER_APPROVED_CONTENT_REQUIREMENT_UNCHANGED_TARGET_RULE",
+  "source_base_commit": "e676e31af15d9c5a31d573c8215ce008d1980526",
+  "approved_decision": "Accept that this programme requires eligible 5K evidence at each new 5K-targeted start. Athletes may replace their input with a genuinely completed, representative sustained 5K, then explicitly confirm, review and accept the resulting targets. If eligible evidence is unavailable, affected starts remain unavailable. Preserve the 56-day rule, existing threshold-only manual alternative and frozen started sessions. Add no test or fallback.",
+  "eligible_age_local_civil_days_inclusive": [
+    0,
+    56
+  ],
+  "evaluated_at": "Actual new occurrence start, matching confirmed training/assignment IANA timezone; server transaction date under existing rule",
+  "genuine_renewal_requires": [
+    "Representative sustained 5K actually completed, with genuine performance date, elapsed time and sustained-effort confirmation",
+    "Explicit athlete input confirmation/source selection",
+    "Fresh exact target review and acceptance before the new start"
+  ],
+  "programme_entry_does_not_freeze_future_eligibility": true,
+  "started_sessions_keep_frozen_targets": true,
+  "new_programmed_5k_tests": false,
+  "new_fallback_targets": false,
+  "automatic_fallback_or_input_ingestion": false,
+  "sessions": [
+    {
+      "source_session_id": "LW10K-W01-D02",
+      "categories": [
+        "threshold"
+      ],
+      "eligible_5k_route_required_at_new_start": true,
+      "existing_explicit_manual_threshold_alternative": true,
+      "authored_rpe_fallback_available_in_selected_source": false
+    },
+    {
+      "source_session_id": "LW10K-W02-D02",
+      "categories": [
+        "threshold"
+      ],
+      "eligible_5k_route_required_at_new_start": true,
+      "existing_explicit_manual_threshold_alternative": true,
+      "authored_rpe_fallback_available_in_selected_source": false
+    },
+    {
+      "source_session_id": "LW10K-W03-D02",
+      "categories": [
+        "threshold"
+      ],
+      "eligible_5k_route_required_at_new_start": true,
+      "existing_explicit_manual_threshold_alternative": true,
+      "authored_rpe_fallback_available_in_selected_source": false
+    },
+    {
+      "source_session_id": "LW10K-W04-D02",
+      "categories": [
+        "threshold"
+      ],
+      "eligible_5k_route_required_at_new_start": true,
+      "existing_explicit_manual_threshold_alternative": true,
+      "authored_rpe_fallback_available_in_selected_source": false
+    },
+    {
+      "source_session_id": "LW10K-W05-D02",
+      "categories": [
+        "threshold"
+      ],
+      "eligible_5k_route_required_at_new_start": true,
+      "existing_explicit_manual_threshold_alternative": true,
+      "authored_rpe_fallback_available_in_selected_source": false
+    },
+    {
+      "source_session_id": "LW10K-W06-D02",
+      "categories": [
+        "10k_specific"
+      ],
+      "eligible_5k_route_required_at_new_start": true,
+      "existing_explicit_manual_threshold_alternative": false,
+      "authored_rpe_fallback_available_in_selected_source": false
+    },
+    {
+      "source_session_id": "LW10K-W06-D05",
+      "categories": [
+        "short_5k"
+      ],
+      "eligible_5k_route_required_at_new_start": true,
+      "existing_explicit_manual_threshold_alternative": false,
+      "authored_rpe_fallback_available_in_selected_source": false
+    },
+    {
+      "source_session_id": "LW10K-W07-D02",
+      "categories": [
+        "10k_specific"
+      ],
+      "eligible_5k_route_required_at_new_start": true,
+      "existing_explicit_manual_threshold_alternative": false,
+      "authored_rpe_fallback_available_in_selected_source": false
+    },
+    {
+      "source_session_id": "LW10K-W07-D05",
+      "categories": [
+        "short_5k"
+      ],
+      "eligible_5k_route_required_at_new_start": true,
+      "existing_explicit_manual_threshold_alternative": false,
+      "authored_rpe_fallback_available_in_selected_source": false
+    },
+    {
+      "source_session_id": "LW10K-W08-D02",
+      "categories": [
+        "10k_specific"
+      ],
+      "eligible_5k_route_required_at_new_start": true,
+      "existing_explicit_manual_threshold_alternative": false,
+      "authored_rpe_fallback_available_in_selected_source": false
+    },
+    {
+      "source_session_id": "LW10K-W08-D05",
+      "categories": [
+        "short_5k"
+      ],
+      "eligible_5k_route_required_at_new_start": true,
+      "existing_explicit_manual_threshold_alternative": false,
+      "authored_rpe_fallback_available_in_selected_source": false
+    },
+    {
+      "source_session_id": "LW10K-W09-D02",
+      "categories": [
+        "10k_specific"
+      ],
+      "eligible_5k_route_required_at_new_start": true,
+      "existing_explicit_manual_threshold_alternative": false,
+      "authored_rpe_fallback_available_in_selected_source": false
+    },
+    {
+      "source_session_id": "LW10K-W09-D05",
+      "categories": [
+        "short_5k"
+      ],
+      "eligible_5k_route_required_at_new_start": true,
+      "existing_explicit_manual_threshold_alternative": false,
+      "authored_rpe_fallback_available_in_selected_source": false
+    },
+    {
+      "source_session_id": "LW10K-W10-D02",
+      "categories": [
+        "10k_specific"
+      ],
+      "eligible_5k_route_required_at_new_start": true,
+      "existing_explicit_manual_threshold_alternative": false,
+      "authored_rpe_fallback_available_in_selected_source": false
+    }
+  ],
+  "availability": "Conditional on actual eligible evidence at each new start, not guaranteed for ten weeks by one pre-programme result",
+  "existing_rule_source": "docs/checkpoints/m23_quality_target_admission/DECISIONS.md",
+  "rule_source_sha256": "968ed2c3a84923a422a9f13797a282da454e5cde714315c856c97cf3144c1efa"
+}

@@ -1,0 +1,24 @@
+{
+  "classification": "CURRENT_DOCUMENT_DATA_CHECKS_NO_TEST_SUITE",
+  "approval_scope": "The two explicit D8 integration decisions against e676e31",
+  "weekly_texts": 10,
+  "exact_session_applications": 40,
+  "quality_freshness_applications": 14,
+  "existing_manual_threshold_alternative_sessions": 5,
+  "approved_wording_in_markdown_matches_json": true,
+  "source_slot_category_mapping_exact": true,
+  "all_e676_retained_evidence_hashes_unchanged": true,
+  "all_17_prepared_review_input_pins_unchanged": true,
+  "preserved_task_files": {
+    "downloadable_full_review_sha256": "76391d95af4a7ec2788546f2ffc1c75a07513e89d9f5b5e48ea1beb325d1bc30",
+    "original_review_scope_sha256": "d2ab039d6c8d6c873c2141cef145352d749cda430ba4ff3a9b85e7265591a82d",
+    "original_pending_template_sha256": "c0f11be2f0dcc9ce9a802dd60e52aa3f7e6dfa7ff79eea997a0c5b98dea76d14"
+  },
+  "links_resolved": 12,
+  "tests_rerun": false,
+  "full_review_pack_regenerated": false,
+  "hosted_operations": false,
+  "programme_publication": false,
+  "M1_1": "OPEN",
+  "Gate_A": "OPEN"
+}

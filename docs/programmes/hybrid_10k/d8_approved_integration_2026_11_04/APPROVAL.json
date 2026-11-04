@@ -1,0 +1,41 @@
+{
+  "kind": "LOCAL_FOUNDER_CONTENT_APPROVAL_RECORD_NOT_PUBLICATION_EVENT",
+  "recorded_at": "2026-11-04T05:54:42.926414+00:00",
+  "approval_date_local": "2026-11-04",
+  "authority": "Lee’s explicit current message in this chat",
+  "founder_message": "Approve both D8 decisions against e676e31. Record the freshness/renewal requirement and add the proposed athlete-facing wording. Preserve prescriptions and target rules; no hosted changes, programme publication or Gate A closure.",
+  "source_base_commit": "e676e31af15d9c5a31d573c8215ce008d1980526",
+  "review_preparation_commit": "7af068cb3097ae79561ba2205ad3e0cb6fa4aedc",
+  "review_snapshot_sha256": "c8bdd10c724cdbf85c11021c5aa9936de82815804f89fa490715e821a2237c2d",
+  "decisions": [
+    {
+      "id": "D8_INTEGRATION_1",
+      "subject": "5K freshness/renewal requirement with explicit affected-session unavailability",
+      "decision": "APPROVED",
+      "approved_text": "Accept that this programme requires eligible 5K evidence at each new 5K-targeted start. Athletes may replace their input with a genuinely completed, representative sustained 5K, then explicitly confirm, review and accept the resulting targets. If eligible evidence is unavailable, affected starts remain unavailable. Preserve the 56-day rule, existing threshold-only manual alternative and frozen started sessions. Add no test or fallback."
+    },
+    {
+      "id": "D8_INTEGRATION_2",
+      "subject": "Proposed athlete-facing freshness, weekly and reusable session explanations",
+      "decision": "APPROVED",
+      "wording_json_sha256": "30e5354e31d16c71176eef6dfed6747c497570dbd478e09e27cc139f59cd1f8d"
+    }
+  ],
+  "approved_files_sha256": {
+    "ATHLETE_WORDING.json": "30e5354e31d16c71176eef6dfed6747c497570dbd478e09e27cc139f59cd1f8d",
+    "ATHLETE_WORDING.md": "bba861965f7b26d975685fe22572769a13fd06a5bf4121593583d2aea29cfe55",
+    "FRESHNESS_REQUIREMENT.json": "d04475ec6c2d133f529c7bb748868d5e55e7d55b00aeebea3ab915faf7edbe56",
+    "FRESHNESS_REQUIREMENT.md": "749a08081e4f1932ceb1a3dce5488490ec0d279fdb83ca8d72dcd81aed3e69ce"
+  },
+  "status": "BOTH_REMAINING_D8_INTEGRATION_DECISIONS_APPROVED",
+  "approval_scope": "The two explicitly proposed integration decisions against e676e31, with additive explanatory text. No blanket workflow/device verification or additional programme approval is inferred.",
+  "programme_publication_authorised": false,
+  "hosted_changes_authorised": false,
+  "M1_1": "OPEN",
+  "Gate_A": "OPEN",
+  "preserved_task_files": {
+    "downloadable_full_review_sha256": "76391d95af4a7ec2788546f2ffc1c75a07513e89d9f5b5e48ea1beb325d1bc30",
+    "original_review_scope_sha256": "d2ab039d6c8d6c873c2141cef145352d749cda430ba4ff3a9b85e7265591a82d",
+    "original_pending_template_sha256": "c0f11be2f0dcc9ce9a802dd60e52aa3f7e6dfa7ff79eea997a0c5b98dea76d14"
+  }
+}
