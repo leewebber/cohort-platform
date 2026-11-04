@@ -1,0 +1,170 @@
+{
+  "date": "2026-11-04",
+  "timezone": "Asia/Makassar",
+  "base_and_fresh_remote_main": "e1115e8d99dc7c2330d9e74ef0596213254152ea",
+  "status": "LOCAL_GUARD_COMPATIBILITY_IMPLEMENTED_REHEARSED_NO_HOSTED_ACTION",
+  "root_cause": {
+    "duplicated_field": "exercises_v2.slug",
+    "duplicate_ids": [
+      "EX-029",
+      "EX-141"
+    ],
+    "primary_id_duplicate": false,
+    "actual_unique_slug_constraint": false,
+    "old_global_guard": "Unnecessarily broad assumption in new operation tooling",
+    "target_or_existing_intake_binding_dependency": false,
+    "full_inventory_preservation_dependency": true,
+    "legacy_slug_request_if_used": "Still ambiguous and refused by actual legacy resolver"
+  },
+  "fix": {
+    "no_id_exemption": true,
+    "full_inventory_kept": true,
+    "global_primary_id_uniqueness_kept": true,
+    "scoped_target_slug_lookup_unambiguous": true,
+    "canonical_new_slug_distinct_and_absent": true,
+    "trimmed_alias_collision_refused": true,
+    "multiple_exact_setup_candidates_refused": true,
+    "new_selected_role_initialisation": "Fixed quoted SET ROLE from pinned manifest, existing membership only",
+    "transaction_and_postcondition_algorithm_changed": false,
+    "state_query_or_receipt_format_changed": false,
+    "semantic_write_set_and_offline_request_changed": false
+  },
+  "tests": {
+    "python_complete_focused_passed": 23,
+    "python_command": "M11_LOCAL_DB=1 M11_REHEARSAL_OUT=NEW_LOCAL_PATH PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tool/catalogue -p m11_setup_operation_test.py -v",
+    "current_flutter_downstream_intake_checks_passed": 2,
+    "intake_command": "flutter test --no-pub --reporter expanded /private/tmp/m11_guard_compatibility_20261104/intake_final_test.dart",
+    "negative_cases": [
+      "duplicate primary ID",
+      "two planned records share new slug",
+      "target collides with existing duplicate",
+      "whitespace/BOM target alias",
+      "exact-ID reuse with ambiguous slug",
+      "multiple exact setup candidates",
+      "changed duplicate member",
+      "added duplicate member after prepare",
+      "post-prepare target lookup alias",
+      "changed duplicate during retry/retention",
+      "partial/mismatched operation",
+      "schema/consumer drift",
+      "role refusal",
+      "insert/deferred side-effect rollback",
+      "concurrent writer exclusion",
+      "manifest/receipt corruption"
+    ],
+    "local_containers": "Two uniquely named cached PostgreSQL containers, --network none --pull=never, task-owned teardown only",
+    "fixture_adjustments": "First runs exposed local role ADMIN and peer-socket setup errors; fixed to owned fixture role and already configured trusted loopback; final suite green"
+  },
+  "rehearsal": {
+    "all_unique_target_reuse": true,
+    "apply": "APPLIED",
+    "catalogue_rows_after": 172,
+    "catalogue_rows_before": 169,
+    "classification": "SYNTHETIC_LOCAL_FIXTURE",
+    "duplicate_group_preserved": true,
+    "hosted_retention": false,
+    "input_retained_sha256": "e50f28f22083c30820165b0356e3780ff6769860a46278b5b40f7d9359f36546",
+    "manifest_sha256": "bc5e96598f88eb9f3ae4a0fdf2766be3a743eb69f06721b5303a41d7816eac7a",
+    "preexisting_rows_exact": true,
+    "replay": "EXACT_STATE_REPLAY_NOOP_AUDIT_REQUIRED",
+    "seed_sha256": "a6bdad5fd0831662b1c12d476e921e5d8ff67e364a6b37b3b2a65a24c394bb28",
+    "synthetic_consumer_links_and_guards_unchanged": true
+  },
+  "downstream": {
+    "classification": "SYNTHETIC_LOCAL_FIXTURE_NOT_GENUINE_RETENTION",
+    "legacy_resolver": {
+      "unique_targets_resolved": 3,
+      "existing_duplicate_if_requested_refused": true,
+      "trimmed_target_dependency_refused": true,
+      "unrelated_duplicate_does_not_change_target_resolution": true
+    },
+    "studio_synthetic_rehearsal_refused": true,
+    "genuine_receipt_pin_installed": false
+  },
+  "authority": {
+    "live_preflight": false,
+    "credential_reads_or_issuance": 0,
+    "login_requested": false,
+    "hosted_writes": 0,
+    "hosted_permissions_or_migrations": false,
+    "old_login_authority_reused": false,
+    "genuine_catalogue_receipt_installed": false,
+    "genuine_new_record_count": 0,
+    "genuine_complete_strength_admitted": 0,
+    "retained_genuine_strength_status": "0/20; not rerun without genuine rows",
+    "D8": false,
+    "programme_publication": false,
+    "Gate_A_complete": false,
+    "M1_1_complete": false,
+    "hosted_cohort_contacts": 0
+  },
+  "package": {
+    "SHA256.json_sha256": "6b4789163b348f2e249a5d393dbe38a8d9851bea9e28bb071ee32a482061e6e9",
+    "future_live_manifest_and_seed": "Must be regenerated from later fresh authenticated inventory/identity/expiry and reviewed hashes",
+    "future_ids": "Not assigned by synthetic rehearsal",
+    "fresh_review_references_in_template": null
+  },
+  "preservation": "Final measured comparison and non-force main-only Git receipt retained under /private/tmp/m11_guard_compatibility_*_20261104.json",
+  "evidence": {
+    "evidence/INTAKE_FINAL.json": {
+      "sha256": "67a27cecf96a4b2fe3ee340bd7c7fc5fff321895a32a6467cab401b77f306f4a",
+      "bytes": 388
+    },
+    "evidence/INTAKE_FINAL_TESTS.txt": {
+      "sha256": "8fde78b506fed61fe19ee7ec03dafde858fb8caeef667a1858927827a4475a87",
+      "bytes": 348
+    },
+    "evidence/REPRODUCTION.json": {
+      "sha256": "edf18d6eeb19d227117f2467ef1767322e2ae3440a6d76f600267d6f24164352",
+      "bytes": 291
+    },
+    "evidence/TESTS_FINAL.txt": {
+      "sha256": "17adfe309a78a8024c938ba835ada166d31ff90cfd42dda765d66c7ffce11ff2",
+      "bytes": 4104
+    },
+    "evidence/intake_final_test.dart": {
+      "sha256": "94171123ba288c73e8bef0567d6cfaa9d9050ea825c037d4cc1530596ed2ec38",
+      "bytes": 3140
+    },
+    "evidence/local_rehearsal/SUMMARY.json": {
+      "sha256": "4c31cf14f49af4f81937e559efc7a9fb4d7a501f3257a4dace4f3c63a28e7e88",
+      "bytes": 597
+    },
+    "evidence/local_rehearsal/decisions.json": {
+      "sha256": "01eebf1fa32e38658495834b024b2bad1a053a4fbe6bd70e4d8fe0c18e0d826c",
+      "bytes": 806
+    },
+    "evidence/local_rehearsal/replay.json": {
+      "sha256": "9b1a2cbce50f466ea647d333f8c9f88eac74a70dd5d011bf37dc367b14ffb1ef",
+      "bytes": 418624
+    },
+    "evidence/local_rehearsal/retained/apply.json": {
+      "sha256": "4ef67eee57d3426ef0e48e1703bc8d4a23c4fa1492c0135113d650619feb1ad8",
+      "bytes": 414769
+    },
+    "evidence/local_rehearsal/retained/manifest.json": {
+      "sha256": "bc5e96598f88eb9f3ae4a0fdf2766be3a743eb69f06721b5303a41d7816eac7a",
+      "bytes": 384316
+    },
+    "evidence/local_rehearsal/retained/preflight.raw.json": {
+      "sha256": "0610627c5ccf5696a3e67da1d0a03b46725beb24aead80f43869d130b68c1804",
+      "bytes": 187800
+    },
+    "evidence/local_rehearsal/retained/readback.raw.json": {
+      "sha256": "2efe0bd8cddf7f3ac6ea462eeab8a0aeb6e062a5be5caa5f62e72f518b2d7597",
+      "bytes": 191354
+    },
+    "evidence/local_rehearsal/retained/receipt.json": {
+      "sha256": "9c4280d275a6d3dfa03c57635d1b4fade1e6f4ef67edac94257c12e9df02bf16",
+      "bytes": 4785
+    },
+    "evidence/local_rehearsal/retained/seed.sql": {
+      "sha256": "a6bdad5fd0831662b1c12d476e921e5d8ff67e364a6b37b3b2a65a24c394bb28",
+      "bytes": 362165
+    },
+    "evidence/local_rehearsal/snapshot.json": {
+      "sha256": "629a5dd8d57d072bb7287cce6c8a0fa9c7efa7fb78d72312d39c0c75832b24b1",
+      "bytes": 380068
+    }
+  }
+}

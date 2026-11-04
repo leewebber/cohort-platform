@@ -1,0 +1,8 @@
+{
+  "status": "REPRODUCED",
+  "immutable_retained_sha256": "e50f28f22083c30820165b0356e3780ff6769860a46278b5b40f7d9359f36546",
+  "classification": "SYNTHETIC_LOCAL_FIXTURE",
+  "error": "Ambiguous existing slug inventory; reconcile before allocation",
+  "rows": 169,
+  "hosted_requests": 0
+}

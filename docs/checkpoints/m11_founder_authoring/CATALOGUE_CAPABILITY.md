@@ -1,5 +1,16 @@
 # M1.1 — exact catalogue write/retention operation
 
+> **Compatibility clarification — 2026-11-04:** [local implementation/proof](../m11_catalogue_operation/guard_compatibility_2026_11_04/HANDOFF.md)
+> confirms exercise_id is primary identity; nullable legacy slug is a lookup label.
+> Global slug uniqueness is not a schema/authority requirement. Unrelated duplicate
+> groups remain fully pinned and unchanged; each chosen target lookup must be unique,
+> creations must introduce no ID/slug collision and ambiguous exact setup/reuse refuses.
+> Full locked expected-state/postchecks remain. No legacy repair or ID-specific
+> exemption. Explicit quoted SET ROLE selects only the pinned existing operator
+> membership. The semantic write set/query/receipt format are unchanged. This is
+> local-only verification, with no new login or live operation authorised.
+
+
 2026-11-01. **LOCAL IMPLEMENTATION ALLOCATION ONLY; NOTHING PROVISIONED/APPLIED.**
 This closes the planning gap behind “ask the catalogue owner”. It does not close the
 technical capability gap. [Allocation](ALLOCATION.md) and the existing exact

@@ -6,7 +6,35 @@ This plan controls delivery priorities. It preserves technical authority contrac
 it does not grant implementation, content, hosted, account or release authority.
 [M0 findings and critical path](../checkpoints/m0_alpha_baseline/HANDOFF.md).
 
-## Current single point — M1.1 duplicate-slug guard compatibility (2026-11-04)
+## Current single point — M1.1 reviewed catalogue operation awaiting one later live attempt
+
+The authorised local guard-compatibility slice is implemented and rehearsed.
+[Root cause, bounded fix and evidence](../checkpoints/m11_catalogue_operation/guard_compatibility_2026_11_04/HANDOFF.md)
+show the duplicate is a legacy slug lookup label, not a primary-ID collision or a
+dependency of the three target writes/intake. Existing EX-029/EX-141 rows/consumers
+are unchanged. Global slug uniqueness was an unsupported operation-tool assumption.
+Strict target lookup/collision checks now coexist with complete pinned old-row/
+schema/consumer pre/post equality and unchanged locked transaction/retry safeguards.
+
+23 focused Python checks and two actual downstream intake checks pass. The
+retained 169-row local baseline becomes 172 synthetic rows with every old row,
+duplicate group and synthetic consumer link preserved. Ambiguous requested slugs,
+exact candidates, collisions and drift still refuse; Studio rejects synthetic
+receipts. The exact semantic write set is unchanged.
+
+[Concrete refreshed package](../checkpoints/m11_catalogue_operation/guard_compatibility_2026_11_04/LIVE_ATTEMPT.md)
+pins code/inputs and synthetic manifests/seeds/readback. A later live attempt needs
+separate access authority and fresh target/inventory/role/expiry plus newly reviewed
+manifest/seed hashes; none is requested or issued here. No hosted contact, legacy
+repair, permission/migration or programme/athlete operation occurred in this task.
+Genuine records remain absent and genuine complete strength admission remains 0/20.
+
+Next single milestone point: one separately authorised bounded live attempt, genuine
+three-record retention and complete local strength admission. Bounded UI acceptance
+and discretionary polish freeze remain. D8, publication and installed real-programme
+acceptance stay separate; **M1.1/Gate A OPEN**.
+
+## Retained duplicate-slug preflight stop (resolved locally above)
 
 The authorised existing Field Manual project was resumed; all five services are
 healthy. The legitimate single-login cli_login_postgres / postgres route is proved

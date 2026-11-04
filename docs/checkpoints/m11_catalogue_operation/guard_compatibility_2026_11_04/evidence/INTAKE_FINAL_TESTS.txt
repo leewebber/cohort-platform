@@ -1,0 +1,5 @@
+00:00 +0: loading /private/tmp/m11_guard_compatibility_20261104/intake_final_test.dart
+00:00 +0: actual legacy resolver admits three unique target lookups and refuses used ambiguous slug
+00:00 +1: actual Studio receipt intake refuses the synthetic retained rehearsal even with matching file pins
+00:00 +2: (tearDownAll)
+00:00 +2: All tests passed!

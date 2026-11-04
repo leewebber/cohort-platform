@@ -1,0 +1,11 @@
+{
+  "classification": "SYNTHETIC_LOCAL_FIXTURE_NOT_GENUINE_RETENTION",
+  "legacy_resolver": {
+    "unique_targets_resolved": 3,
+    "existing_duplicate_if_requested_refused": true,
+    "trimmed_target_dependency_refused": true,
+    "unrelated_duplicate_does_not_change_target_resolution": true
+  },
+  "studio_synthetic_rehearsal_refused": true,
+  "genuine_receipt_pin_installed": false
+}

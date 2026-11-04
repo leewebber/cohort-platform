@@ -1,5 +1,22 @@
 # Current repository checkpoint
 
+> **M1.1 local catalogue guard compatibility — 2026-11-04:**
+> [Root cause/fix/rehearsal](./m11_catalogue_operation/guard_compatibility_2026_11_04/HANDOFF.md)
+> reproduces the retained 169-row global slug veto and replaces its unsupported
+> global uniqueness assumption with strict target lookup/collision checks. Primary
+> IDs, exact setup ambiguity, full old-row/schema/consumer equality, locked batch
+> rollback/retry and EX-029/EX-141 meanings stay protected; no ID exemption. Explicit
+> session role uses only the pinned existing membership. 23 local Python checks
+> and two actual downstream intake checks pass. 169 exact fixture rows -> 172;
+> all old rows/duplicate groups and synthetic consumer links/guards unchanged.
+> Synthetic receipts still refuse Studio intake. [Refreshed later-attempt package](./m11_catalogue_operation/guard_compatibility_2026_11_04/LIVE_ATTEMPT.md)
+> has code/input/local manifest/seed pins; live manifest/IDs/expiry must be fresh.
+> No hosted preflight, login request/issuance, writes, permission or migration.
+> Next single point: one separately authorised later live attempt, genuine retention
+> and complete strength admission. UI acceptance/polish freeze stand; D8/publication
+> separate; **M1.1/Gate A OPEN**. Earlier local-review approval pause is satisfied.
+
+
 > **M1.1 resumed operator preflight — 2026-11-04:**
 > [Genuine outcome / closeout](./m11_catalogue_operation/resumed_preflight_2026_11_04/HANDOFF.md)
 > record one authorised resume, five healthy services and a verified legitimate

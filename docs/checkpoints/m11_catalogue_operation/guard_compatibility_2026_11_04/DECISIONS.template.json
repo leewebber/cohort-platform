@@ -1,0 +1,29 @@
+[
+  {
+    "source_variant": "chest_supported_db_row",
+    "action": "create",
+    "reuse_id": null,
+    "slug": "bilateral-chest-supported-dumbbell-row",
+    "exact_setup_review_reference": null,
+    "reviewed_extra_fields": {},
+    "field_review_reference": null
+  },
+  {
+    "source_variant": "seated_supported_db_press",
+    "action": "create",
+    "reuse_id": null,
+    "slug": "seated-supported-neutral-grip-dumbbell-shoulder-press",
+    "exact_setup_review_reference": null,
+    "reviewed_extra_fields": {},
+    "field_review_reference": null
+  },
+  {
+    "source_variant": "reverse_lunge_db",
+    "action": "create",
+    "reuse_id": null,
+    "slug": "two-dumbbell-reverse-lunge",
+    "exact_setup_review_reference": null,
+    "reviewed_extra_fields": {},
+    "field_review_reference": null
+  }
+]

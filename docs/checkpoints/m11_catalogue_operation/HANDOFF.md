@@ -1,5 +1,15 @@
 # Exact three-setup operation — offline implementation
 
+> **Local compatibility verified, 2026-11-04:** [current root cause/fix/rehearsal](guard_compatibility_2026_11_04/HANDOFF.md).
+> Preserve unrelated duplicate-bearing rows as full pinned pre-state, while refusing
+> ambiguous target lookup/reuse or any collision/new ambiguity. No ID exemption.
+> Explicit pinned session role is supported. 23 local operator and two downstream
+> checks pass; [one-later-attempt package](guard_compatibility_2026_11_04/LIVE_ATTEMPT.md)
+> is ready locally. No live preflight, login request, new credential or hosted action.
+> Earlier guard-review authority request is satisfied; actual records/admission,
+> D8/publication and Gate A remain separate.
+
+
 > **Resumed attempt, 2026-11-04:** [genuine operator result / conflict / closeout](resumed_preflight_2026_11_04/HANDOFF.md).
 > Field Manual is healthy; operator route works. Existing EX-029/EX-141 duplicate
 > slug stops unchanged guard before allocation/seed/apply. Zero new records; 0/20

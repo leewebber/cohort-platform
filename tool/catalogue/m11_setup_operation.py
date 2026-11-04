@@ -106,16 +106,24 @@ def state_sql():
 
 
 class Psql:
-    def __init__(self, service):
+    def __init__(self, service, role=None):
         if not re.fullmatch(r'[A-Za-z][A-Za-z0-9_-]{0,63}', service or ''):
             reject('Use a separately provisioned libpq service name; connection strings are forbidden')
+        if role is not None and not re.fullmatch(r'[A-Za-z_][A-Za-z0-9_]{0,62}', role):
+            reject('Use only the reviewed operator role from the pinned manifest')
         self.service = service
+        self.role = role
 
     def run(self, sql):
         # psqlrc is disabled. Credentials are resolved by normal libpq outside
         # this tool. Never return stderr, a connection string or secret values.
         command = ['psql', '-X', '-q', '-A', '-t', '-v', 'ON_ERROR_STOP=1',
                    '--dbname=service=' + self.service + ' sslmode=verify-full']
+        # Supavisor may ignore startup role options. The normal CLI route uses
+        # explicit SET ROLE through the already authorised existing membership.
+        # The CLI caller derives this role only from the pinned manifest.
+        if self.role is not None:
+            sql = 'SET ROLE "' + self.role + '";\n' + sql
         try:
             result = subprocess.run(command, input=sql.encode(), stdout=subprocess.PIPE,
                                     stderr=subprocess.PIPE, timeout=90, check=False)
@@ -159,10 +167,26 @@ def validate_snapshot(snapshot):
     ids = [r['exercise_id'] for r in state['rows']]
     if len(ids) != len(set(ids)) or not PROTECTED <= set(ids):
         reject('Incomplete/duplicate inventory or protected rows absent')
-    slugs = [r['slug'] for r in state['rows'] if r['slug'] is not None]
-    if len(slugs) != len(set(slugs)):
-        reject('Ambiguous existing slug inventory; reconcile before allocation')
+    # Slug is a nullable legacy lookup label, not the primary identity. Existing
+    # duplicate groups stay in the exact pinned inventory; prepare checks every
+    # operation's lookup dependency instead of rewriting unrelated legacy rows.
     return columns
+
+
+def slug_lookup_matches(rows, slug):
+    """Collision detection only; never infer identity from a normalised label.
+
+    The legacy importer trims slug references. Conservatively include Python
+    whitespace and BOM edges, without lowercasing or fuzzy name matching.
+    """
+    def lookup_key(value):
+        if not isinstance(value, str):
+            return None
+        previous = None
+        while previous != value:
+            previous, value = value, value.strip().strip('\ufeff')
+        return value
+    return [r for r in rows if lookup_key(r['slug']) == slug]
 
 
 def prepare(snapshot, decisions, request_id):
@@ -181,6 +205,9 @@ def prepare(snapshot, decisions, request_id):
         keys(decision, ('source_variant', 'action', 'reuse_id', 'slug', 'exact_setup_review_reference', 'reviewed_extra_fields', 'field_review_reference'))
         if decision['source_variant'] != intent['source_variant'] or not decision['exact_setup_review_reference']:
             reject('Exact setup/owner review is required; search/name similarity is not binding authority')
+        if not isinstance(decision['slug'], str) or not re.fullmatch(r'[a-z0-9]+(?:-[a-z0-9]+)*', decision['slug']):
+            reject('Choose an explicit reviewed slug')
+        slug_matches = slug_lookup_matches(rows, decision['slug'])
         content = intent['proposed_catalogue_content']
         fields = {'name': content['name'], 'equipment': ', '.join(content['equipment']),
                   'setup': content['setup_and_execution'], 'execution': content['setup_and_execution'],
@@ -199,6 +226,8 @@ def prepare(snapshot, decisions, request_id):
             if len(found) != 1 or found[0]['exercise_id'] in PROTECTED:
                 reject('Reuse must pin one exact verified distinct identity')
             row = found[0]
+            if len(slug_matches) != 1 or slug_matches[0]['exercise_id'] != row['exercise_id']:
+                reject('Ambiguous operation slug lookup; exact ID alone cannot authorise a shared lookup label')
             if any(row.get(k) != v for k, v in fields.items()) or row['slug'] != decision['slug']:
                 reject('Reuse payload differs from reviewed identity')
             fields = row
@@ -207,10 +236,8 @@ def prepare(snapshot, decisions, request_id):
                 reject('An exact existing row must be explicitly reviewed; no duplicate allocation')
             max_id += 1
             fields.update(exercise_id=f'EX-{max_id:03d}', slug=decision['slug'])
-            if any(r['exercise_id'] == fields['exercise_id'] or r['slug'] == fields['slug'] for r in rows):
+            if slug_matches or any(r['exercise_id'] == fields['exercise_id'] for r in rows):
                 reject('Allocated ID/slug collision')
-            if not re.fullmatch(r'[a-z0-9]+(?:-[a-z0-9]+)*', fields['slug'] or ''):
-                reject('Choose an explicit reviewed slug')
             for c in columns.values():
                 if c['nullable'] == 'NO' and c['default'] is None and c['name'] not in fields:
                     reject('Unknown required catalogue field needs exact review: ' + c['name'])
@@ -437,7 +464,7 @@ def main():
     manifest, raw_seed = pinned(args.manifest, args.manifest_sha256, args.seed, args.seed_sha256)
     if manifest['classification'] != 'AUTHENTICATED_OPERATOR_PREFLIGHT':
         reject('Synthetic rehearsal manifests cannot execute through the operational CLI')
-    db = Psql(args.service)
+    db = Psql(args.service, role=manifest['operator_authorisation']['role'])
     if args.command == 'apply':
         # Refuse an existing receipt path before the DB transaction.
         if Path(args.out).exists(): reject('Preserve prior receipt; use a new acknowledgement file for this same pinned operation')
