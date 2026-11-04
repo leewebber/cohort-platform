@@ -10,6 +10,7 @@ import json
 import os
 from pathlib import Path
 import subprocess
+import sys
 import tempfile
 import threading
 import time
@@ -55,6 +56,27 @@ class Guards(unittest.TestCase):
         decisions[1]['slug'] = decisions[0]['slug']
         with self.assertRaisesRegex(ValueError, 'Duplicate planned identities/slugs'):
             op.prepare(retained_snapshot(), decisions, 'm11-two-planned-slugs')
+
+    def test_canonical_manifest_roundtrip_preserves_exact_generated_seed(self):
+        decisions = [{'source_variant': v, 'action': 'create', 'reuse_id': None,
+                      'slug': slug, 'exact_setup_review_reference': 'Synthetic exact content',
+                      'reviewed_extra_fields': {}, 'field_review_reference': None}
+                     for v, slug in zip(op.VARIANTS, SLUGS)]
+        manifest = op.prepare(retained_snapshot(), decisions, 'm11-canonical-seed-roundtrip')
+        raw_manifest = (op.encode(manifest) + chr(10)).encode()
+        raw_seed = op.seed(manifest).encode()
+        with tempfile.TemporaryDirectory(prefix='m11_canonical_pin_') as directory:
+            folder = Path(directory)
+            op.write_new(folder / 'manifest.json', raw_manifest)
+            op.write_new(folder / 'seed.sql', raw_seed)
+            reloaded, reloaded_seed = op.pinned(folder / 'manifest.json', op.sha(raw_manifest),
+                                                folder / 'seed.sql', op.sha(raw_seed))
+        self.assertEqual(reloaded, manifest)
+        self.assertEqual(reloaded_seed, raw_seed)
+        reordered = copy.deepcopy(manifest)
+        for operation in reordered['operations']:
+            operation['fields'] = dict(reversed(list(operation['fields'].items())))
+        self.assertEqual(op.seed(reordered).encode(), raw_seed)
 
     def test_duplicate_json_keys_refused(self):
         with tempfile.TemporaryDirectory(prefix='m11_guard_') as directory:
@@ -296,6 +318,22 @@ class RetainedInventory(unittest.TestCase):
         pair = [r for r in self.retained['rows'] if r['slug'] == 'bulgarian-split-squat']
         self.assertEqual({r['exercise_id'] for r in pair}, {'EX-029', 'EX-141'})
         self.assertNotIn('bulgarian-split-squat', SLUGS)
+        with tempfile.TemporaryDirectory(prefix='m11_prepare_cli_') as directory:
+            folder = Path(directory)
+            op.write_new(folder / 'snapshot.json', (op.encode(self.snapshot) + chr(10)).encode())
+            op.write_new(folder / 'decisions.json', (op.encode(self.decisions) + chr(10)).encode())
+            process = subprocess.run([sys.executable, str(op.ROOT / 'tool/catalogue/m11_setup_operation.py'),
+                                      'prepare', '--snapshot', str(folder / 'snapshot.json'),
+                                      '--decisions', str(folder / 'decisions.json'), '--request-id',
+                                      self.manifest['request_id'], '--out', str(folder / 'prepared')],
+                                     stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            self.assertEqual(process.returncode, 0, process.stderr.decode())
+            pins = op.load(folder / 'prepared/SHA256.json')
+            manifest, seed = op.pinned(folder / 'prepared/manifest.json', pins['manifest.json'],
+                                       folder / 'prepared/seed.sql', pins['seed.sql'])
+            self.assertEqual(manifest, self.manifest)
+            self.assertEqual(seed, self.seed)
+            self.manifest, self.seed = manifest, seed
         acknowledgement = op.apply(self.db, self.manifest, self.seed)
         self.assertEqual(acknowledgement['status'], 'APPLIED')
         after = json.loads(acknowledgement['after_raw'])
@@ -326,7 +364,7 @@ class RetainedInventory(unittest.TestCase):
                        'preexisting_rows_exact': True, 'duplicate_group_preserved': True,
                        'synthetic_consumer_links_and_guards_unchanged': True,
                        'apply': acknowledgement['status'], 'replay': replay['status'],
-                       'all_unique_target_reuse': True, 'hosted_retention': False,
+                       'all_unique_target_reuse': True, 'real_prepare_cli_and_pin_roundtrip': True, 'hosted_retention': False,
                        'manifest_sha256': op.sha((root / 'retained/manifest.json').read_bytes()),
                        'seed_sha256': op.sha(self.seed)}
             op.write_new(root / 'SUMMARY.json', (op.encode(summary) + '\n').encode())

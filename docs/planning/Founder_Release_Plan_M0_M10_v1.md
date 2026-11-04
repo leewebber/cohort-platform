@@ -6,7 +6,34 @@ This plan controls delivery priorities. It preserves technical authority contrac
 it does not grant implementation, content, hosted, account or release authority.
 [M0 findings and critical path](../checkpoints/m0_alpha_baseline/HANDOFF.md).
 
-## Current single point — M1.1 reviewed catalogue operation awaiting one later live attempt
+## Current single point — M1.1 corrected preparation, later live operation pending
+
+The founder-authorised fresh attempt at 8618697 verified healthy Field Manual,
+matching 169-row/schema/consumer state and no target collisions. It issued one
+temporary login, but no database transaction was sent: the pre-apply hash gate
+exposed a canonical manifest/seed ordering defect. Canonical regeneration passed
+only when 74 seconds remained, below the helper's 90-second execution/readback
+reserve. No forced apply or replacement login occurred.
+[Exact result, protected postchecks and actual revocation](../checkpoints/m11_catalogue_operation/live_attempt_8618697_2026_11_04/HANDOFF.md).
+
+All existing catalogue rows/schema and five consumer guards are unchanged.
+The login was revoked with zero CLI roles/backends verified and temporary secrets
+removed. No genuine records were created/retained. Actual complete strength
+admission remains 0/20 with 28 missing occurrences; full review/export refuses.
+
+The local serialization-only repair sorts INSERT keys. All 24 focused tests pass,
+now including real prepare CLI -> canonical files -> exact pin before synthetic
+apply/retain/retry. No guard was weakened and no values/identity semantics changed.
+[Corrected later-attempt package and new code pins](../checkpoints/m11_catalogue_operation/live_attempt_8618697_2026_11_04/NEXT_ATTEMPT.md)
+separate the failed live attempt from this post-closeout local proof. The former
+one-login authority is consumed/closed; no new live attempt is authorised here.
+
+Next single point is one separately authorised later operation with fresh target/
+inventory/role/expiry and canonical hashes, genuine three-record retention and
+complete local strength admission. UI acceptance/polish freeze stand. D8/programme
+publication/installed real-programme acceptance stay separate; M1.1/Gate A OPEN.
+
+## Retained guard-compatibility package (live attempt and serialization repair above)
 
 The authorised local guard-compatibility slice is implemented and rehearsed.
 [Root cause, bounded fix and evidence](../checkpoints/m11_catalogue_operation/guard_compatibility_2026_11_04/HANDOFF.md)

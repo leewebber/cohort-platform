@@ -1,5 +1,13 @@
 # M1.1 — exact catalogue write/retention operation
 
+> **Canonical preparation correction — 2026-11-04:** [live stop and local repair](../m11_catalogue_operation/live_attempt_8618697_2026_11_04/HANDOFF.md)
+> fix INSERT column/SELECT ordering to sorted keys so canonical manifest serialization
+> preserves exact seed bytes. Actual prepare CLI -> canonical files -> pin is now
+> a required regression/pre-apply check. No data values, source/query/receipt format,
+> target guard, permission, lock or recovery contract changed. The single login
+> was revoked after a zero-write attempt; no replacement or live retry is implied.
+
+
 > **Compatibility clarification — 2026-11-04:** [local implementation/proof](../m11_catalogue_operation/guard_compatibility_2026_11_04/HANDOFF.md)
 > confirms exercise_id is primary identity; nullable legacy slug is a lookup label.
 > Global slug uniqueness is not a schema/authority requirement. Unrelated duplicate

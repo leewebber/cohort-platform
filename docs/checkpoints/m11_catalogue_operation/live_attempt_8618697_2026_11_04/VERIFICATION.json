@@ -1,0 +1,302 @@
+{
+  "date": "2026-11-04",
+  "timezone": "Asia/Makassar",
+  "live_attempt_base": "8618697284e056bbcae0714aca4c484b205e3042",
+  "live_result": "FRESH_PREFLIGHT_MATCHED_NO_DATABASE_TRANSACTION_SENT_SEED_ROUNDTRIP_DEFECT_THEN_INSUFFICIENT_NATIVE_LIFETIME",
+  "target": {
+    "ref": "otnhhdxstdnwccehacku",
+    "name": "Cohort Field Manual",
+    "region": "eu-west-1",
+    "fresh_status": "ACTIVE_HEALTHY",
+    "services_healthy": 5,
+    "resume_requests": 0
+  },
+  "fresh_preflight": {
+    "catalogue_rows": 169,
+    "all_rows_columns_constraints_indexes_consumer_guards_match_prior": true,
+    "three_target_exact_matches": 0,
+    "target_slug_collisions": 0,
+    "legacy_duplicate_group_unchanged": [
+      "EX-029",
+      "EX-141"
+    ],
+    "normal_frontend_tls": "verify-full with pinned official CA",
+    "backend_pg_stat_ssl": false,
+    "backend_ssl_note": "Observed upstream pooler/backend state retained; not misreported as the client TLS check"
+  },
+  "credentials": {
+    "issuances": 1,
+    "replacements": 0,
+    "principal": "cli_login_postgres",
+    "effective_role": "postgres",
+    "request_started_at": "2026-11-04T04:33:00.808705+00:00",
+    "provider_ttl_seconds": 300,
+    "actual_provider_expiry": "2026-11-04T04:38:02.986612+00:00",
+    "task_use_deadline": "2026-11-04T04:38:02.986612+00:00",
+    "supported_revocation_http_status": 200,
+    "revocation_verified_at": "2026-11-04T04:37:47.421049+00:00",
+    "remaining_cli_roles": 0,
+    "remaining_cli_backends": 0,
+    "temporary_material_remaining": false
+  },
+  "preparation": {
+    "manifest_sha256": "77755d4f50d5fadc219d25fb9f51e3a1c1db31286f2556676f6ccb9115f52e5d",
+    "original_seed_sha256": "e153f2cb70f4fa9b9a0504f34a3a5f8994153287263a293c37dc68b067447b23",
+    "canonical_seed_sha256": "11c89dd0f799b1d26547127cc8475975e86e4dfd3eb8952b596c496174c7037c",
+    "first_gate": "Seed is not the exact data-only operation generated from the manifest",
+    "correction_during_preparation": "Regenerated through unchanged generator from canonical manifest; only three INSERT column/SELECT list orders differed",
+    "canonical_roundtrip_passed_before_expiry": true,
+    "remaining_lifetime_seconds_at_canonical_review": 74.343577,
+    "reserved_execution_seconds": 90,
+    "sole_database_apply_attempts": 0,
+    "live_tool_code_changed": false,
+    "proposed_not_created_ids": [
+      "EX-170",
+      "EX-171",
+      "EX-172"
+    ]
+  },
+  "mutations": {
+    "catalogue_write_set": [],
+    "associated_catalogue_writes": [],
+    "genuine_records_created": 0,
+    "genuine_new_exact_records_retained": 0,
+    "authorised_control_plane": [
+      "one temporary CLI login issuance",
+      "one supported CLI-login revocation"
+    ],
+    "schema_permission_broadening_password_reset_programme_publication_accounts_eligibility_assignments_athlete_writes": false
+  },
+  "postchecks": {
+    "unchanged": {
+      "columns": true,
+      "constraints": true,
+      "indexes": true,
+      "rows": true,
+      "consumer_guard": true
+    },
+    "catalogue_rows_before": 169,
+    "catalogue_rows_after": 169,
+    "catalogue_write_set": [],
+    "all_five_services_healthy": true,
+    "independent_role": "supabase_read_only_user"
+  },
+  "admission": {
+    "current_focused_flutter_checks_passed": 1,
+    "complete_strength_attempted": 20,
+    "complete_strength_admitted": 0,
+    "unresolved_occurrences": 28,
+    "whole_programme_review_and_export_refused": true,
+    "genuine_receipt_or_trust_pin_installed": false
+  },
+  "local_repair_after_closeout": {
+    "seed_field_order": "sorted(fields), replacing list(fields)",
+    "code_scope": "Canonical SQL column ordering only; no values, predicates, auth/hash checks, locks or expected-state checks changed",
+    "old_8618697_failure_reproduced": true,
+    "new_prepare_cli_and_pin_roundtrip_tested": true,
+    "python_checks_passed": 24,
+    "synthetic_rehearsal": {
+      "all_unique_target_reuse": true,
+      "apply": "APPLIED",
+      "catalogue_rows_after": 172,
+      "catalogue_rows_before": 169,
+      "classification": "SYNTHETIC_LOCAL_FIXTURE",
+      "duplicate_group_preserved": true,
+      "hosted_retention": false,
+      "input_retained_sha256": "e50f28f22083c30820165b0356e3780ff6769860a46278b5b40f7d9359f36546",
+      "manifest_sha256": "c947f8ac272dd14f082963a52c11546f5866f77c6366cbf9de22416b77119781",
+      "preexisting_rows_exact": true,
+      "real_prepare_cli_and_pin_roundtrip": true,
+      "replay": "EXACT_STATE_REPLAY_NOOP_AUDIT_REQUIRED",
+      "seed_sha256": "a320dbc8595678ca19a2331b4710e81243093bce92eb7c758c84bbed12b117d5",
+      "synthetic_consumer_links_and_guards_unchanged": true
+    },
+    "new_hosted_attempt_after_repair": false
+  },
+  "package_sha256": "c5086dd9c87f84dd7acc6ba3fd6cfcb302c8e13a55f5582ad361616c05421270",
+  "evidence": {
+    "evidence/ADMISSION.json": {
+      "sha256": "5dc544ba63323181b69034e74fb048c5a8ea8d8b2ae89abab184d4b5956401e9",
+      "bytes": 6105
+    },
+    "evidence/ADMISSION_TESTS.txt": {
+      "sha256": "d318358677b5f2b70a4a2261a3458de2cbed948296e55d17b2380f3e1a406725",
+      "bytes": 218
+    },
+    "evidence/APPLY_RETAIN_STOP.json": {
+      "sha256": "ee29625bd87715d0503c2ee28ae8c02a37b83584dbfc10414b7dc77d1b3d48a3",
+      "bytes": 196
+    },
+    "evidence/CANONICAL_APPLY_RETAIN_STOP.json": {
+      "sha256": "dcd352c814f86242116367d39b98c67e4b7e78895efc99b73a0646ee5dd2f879",
+      "bytes": 187
+    },
+    "evidence/CANONICAL_SEED_REVIEW.json": {
+      "sha256": "69848339e202bddbec1eac2e1c2c409fb5564700b5bbc1552204616d7450f0b1",
+      "bytes": 741
+    },
+    "evidence/ISSUE_PREPARE_STOP.json": {
+      "sha256": "6edd17a7a503b07eac44a5a858a028f2779024f14ab5a913a38665ac2f2229d3",
+      "bytes": 174
+    },
+    "evidence/ROUNDTRIP_8618697_REPRODUCED.txt": {
+      "sha256": "8fa70b657f02a4a9405947fcb7b86439441e92d20e0401bc5ad62e556a813975",
+      "bytes": 1396
+    },
+    "evidence/ROUNDTRIP_VERIFIED_TESTS.txt": {
+      "sha256": "aa0ca1583e52115b7acfa38768f680b57138635cf4854eec7f2be491bccb59fc",
+      "bytes": 4275
+    },
+    "evidence/actual-login-and-role-confirmed.json": {
+      "sha256": "d4010f1e79ddbc6ed92d0f7907d73fc126ba05bc96b10ac1c0ed5cc5a7f5a762",
+      "bytes": 406
+    },
+    "evidence/actual-login-and-role.json": {
+      "sha256": "ee8c6007b0fe32a85a7bd88839bbc3063cd3b4f55c807db0e2d0d7715ae49e3b",
+      "bytes": 389
+    },
+    "evidence/admission_probe_test.dart": {
+      "sha256": "e9e2b0dc7f84cba26515e6ff42256c29915060a5a723dba1dbbf764ec0357f06",
+      "bytes": 2617
+    },
+    "evidence/api-journal.jsonl": {
+      "sha256": "ae7974587258166b28728a7a4ff348050ea6a203cbe71fa56a49c69638d7078b",
+      "bytes": 3645
+    },
+    "evidence/canonical-pins.json": {
+      "sha256": "453eeb21d0f15cbecc270d8999ff4fa74fdf1ab2f610ea9fc96b40e112b770d0",
+      "bytes": 172
+    },
+    "evidence/credential-closeout.json": {
+      "sha256": "a24178323174e84c5ca590bc135fa21d6f9cda72aeeb9a76e2b255acbad4001a",
+      "bytes": 1934
+    },
+    "evidence/decisions.json": {
+      "sha256": "71760d52064dfb8215956bbc1533ea0cbeb59c4e883775c35c8751a8432060d0",
+      "bytes": 1575
+    },
+    "evidence/final-health.json": {
+      "sha256": "8801e4aaf913d73bfd2c8d29226d49702c626a3bf99006b0994aed5f035ae94e",
+      "bytes": 1310
+    },
+    "evidence/health.json": {
+      "sha256": "7fb2df4cceb75949b0437bd7198dafd9c98bbd8d95c0262cb6fba66aaccc171a",
+      "bytes": 1310
+    },
+    "evidence/login-attempt.json": {
+      "sha256": "0a2c5948b392e21d1f3c6d381251db5747d9e54b9375a8579a1d38c6b6ab963c",
+      "bytes": 201
+    },
+    "evidence/login-issued.json": {
+      "sha256": "6e3fd7a039eba1323730ab03f588f966b2e83a09813aacff1ba301c9c0a68ae1",
+      "bytes": 573
+    },
+    "evidence/no-apply-postcheck.raw.json": {
+      "sha256": "4c12f01235686533cab2d05926f5590f36a5c0e85d556bfb203d295213bfa808",
+      "bytes": 174338
+    },
+    "evidence/operator-preflight-confirmed.raw.json": {
+      "sha256": "5dd631daabed2976aa84b36106f0908cf298ff64d78903b17925c95c4be4dd54",
+      "bytes": 187857
+    },
+    "evidence/operator-preflight.raw.json": {
+      "sha256": "8250e18fde0dcef50cc686e6036650b49ea7efbd252dfbd1f401d1c3a79e0964",
+      "bytes": 187857
+    },
+    "evidence/planning-preflight.raw.json": {
+      "sha256": "94a8e36ce217cb40a049f3794100c476017ceed744d188c53fcc9925027d2827",
+      "bytes": 174338
+    },
+    "evidence/pooler.json": {
+      "sha256": "fe4377110043e5e1942587b99cf29ccf57bebeeb7cf91a2aba9c2a2651d0822c",
+      "bytes": 662
+    },
+    "evidence/prior-cli-roles-and-hooks.json": {
+      "sha256": "d4c69df1593f095535c13034313fb9518b067b05f76c0a3d6ac824295d0fe68c",
+      "bytes": 533
+    },
+    "evidence/project.json": {
+      "sha256": "74abc916132da31a86ae864a360ef30b66588cc1d4943a09edc78e9632a5535a",
+      "bytes": 488
+    },
+    "evidence/protected-postcheck.json": {
+      "sha256": "325e9e18bf02c725445bc934af0ecfae47bc84e8c4f3a12db67dc83a167bb1d9",
+      "bytes": 315
+    },
+    "evidence/reviewed-pins.json": {
+      "sha256": "dbd1981be052992c9494d9ab9dfbaf55bd2edfaaed06453a101fed49517fae29",
+      "bytes": 172
+    },
+    "evidence/reviewed-preflight.json": {
+      "sha256": "776c96d3d2528592b65ad15074167e4576b2b181a835bdffd76e99608475fd7d",
+      "bytes": 1064
+    },
+    "evidence/snapshot.json": {
+      "sha256": "fda24f300577ca054b0a846a5da9eb6e666ae7d864aef01b820729acde225163",
+      "bytes": 451233
+    },
+    "evidence/synthetic_local_repair_rehearsal/SUMMARY.json": {
+      "sha256": "a137c9601d77b76deafa79405d6d2091da23215750dfdb1aa8b76976dc9bbdb6",
+      "bytes": 639
+    },
+    "evidence/synthetic_local_repair_rehearsal/decisions.json": {
+      "sha256": "01eebf1fa32e38658495834b024b2bad1a053a4fbe6bd70e4d8fe0c18e0d826c",
+      "bytes": 806
+    },
+    "evidence/synthetic_local_repair_rehearsal/replay.json": {
+      "sha256": "89fa6148df437c1a43c907334b03ff1878c85771e260d7c286c951efb06eec31",
+      "bytes": 418624
+    },
+    "evidence/synthetic_local_repair_rehearsal/retained/apply.json": {
+      "sha256": "ef9d23eca889d199f122034c7680f7899f22f64aad555f9782e28c8fceb6e4e2",
+      "bytes": 414769
+    },
+    "evidence/synthetic_local_repair_rehearsal/retained/manifest.json": {
+      "sha256": "c947f8ac272dd14f082963a52c11546f5866f77c6366cbf9de22416b77119781",
+      "bytes": 384314
+    },
+    "evidence/synthetic_local_repair_rehearsal/retained/preflight.raw.json": {
+      "sha256": "056b59a1ebcd5317d0496bc7ecbbfcd80fdb057020940541308d793e7239bad4",
+      "bytes": 187799
+    },
+    "evidence/synthetic_local_repair_rehearsal/retained/readback.raw.json": {
+      "sha256": "4bc6eeb5887191b4efd2724d0e3274be2ab184ef4dc939fe60806aa1e2ae5cde",
+      "bytes": 191354
+    },
+    "evidence/synthetic_local_repair_rehearsal/retained/receipt.json": {
+      "sha256": "6d65fd72cea4321518dcac9de1c2b2bd3d06652e0e0c0278f088e25a4a03810e",
+      "bytes": 4785
+    },
+    "evidence/synthetic_local_repair_rehearsal/retained/seed.sql": {
+      "sha256": "a320dbc8595678ca19a2331b4710e81243093bce92eb7c758c84bbed12b117d5",
+      "bytes": 362165
+    },
+    "evidence/synthetic_local_repair_rehearsal/snapshot.json": {
+      "sha256": "f6ac4abfb9f69d3eb70fd6adb85a3685d4bb57b22f7c9b18e8f6156dd30e5b9b",
+      "bytes": 380066
+    },
+    "evidence/task-deadline.json": {
+      "sha256": "d5792ef6e1e97b6650c13b94887c196bd870033f7e5076f82f7f9d4c248641dc",
+      "bytes": 218
+    },
+    "evidence/unapplied_preparation/manifest.json": {
+      "sha256": "77755d4f50d5fadc219d25fb9f51e3a1c1db31286f2556676f6ccb9115f52e5d",
+      "bytes": 385954
+    },
+    "evidence/unapplied_preparation/seed.canonical.sql": {
+      "sha256": "11c89dd0f799b1d26547127cc8475975e86e4dfd3eb8952b596c496174c7037c",
+      "bytes": 362279
+    },
+    "evidence/unapplied_preparation/seed.original.sql": {
+      "sha256": "e153f2cb70f4fa9b9a0504f34a3a5f8994153287263a293c37dc68b067447b23",
+      "bytes": 362279
+    }
+  },
+  "preservation": "Final measured comparison and normal main-only publication receipt under /private/tmp/m11_live_apply_8618697_*_20261104.json",
+  "UI_acceptance_retained": true,
+  "discretionary_UI_polish_frozen": true,
+  "D8_approved": false,
+  "programme_publication": false,
+  "M1_1_complete": false,
+  "Gate_A_complete": false
+}

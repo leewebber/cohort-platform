@@ -1,0 +1,22 @@
+{
+  "data": [
+    {
+      "state": {
+        "roles": [],
+        "cli_backends": 0,
+        "catalogue_rules": [],
+        "catalogue_triggers": []
+      }
+    }
+  ],
+  "metadata": {
+    "method": "POST",
+    "path": "/database/query/read-only",
+    "http_status": 201,
+    "started_at": "2026-11-04T04:30:20.831053+00:00",
+    "captured_at": "2026-11-04T04:30:22.517936+00:00",
+    "raw_sha256": "e40ce7f2693c15c3641ba215d6f2b29787c5e5ee0e8a2cac1931d5aa637fee83",
+    "request_id": null,
+    "cf_ray": "a550e2062efb807d-CGK"
+  }
+}

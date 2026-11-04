@@ -1,0 +1,23 @@
+{
+  "data": [
+    {
+      "db_host": "aws-0-eu-west-1.pooler.supabase.com",
+      "db_port": 6543,
+      "db_user": "postgres.otnhhdxstdnwccehacku",
+      "db_name": "postgres",
+      "pool_mode": "transaction",
+      "identifier": "otnhhdxstdnwccehacku",
+      "database_type": "PRIMARY"
+    }
+  ],
+  "metadata": {
+    "method": "GET",
+    "path": "/config/database/pooler",
+    "http_status": 200,
+    "started_at": "2026-11-04T04:30:17.531231+00:00",
+    "captured_at": "2026-11-04T04:30:18.017550+00:00",
+    "raw_sha256": "81e2ef94541d5601edb277d04984854fc342ab16753352441e10fa50c60300d2",
+    "request_id": null,
+    "cf_ray": "a550e1f2eee36d12-CGK"
+  }
+}

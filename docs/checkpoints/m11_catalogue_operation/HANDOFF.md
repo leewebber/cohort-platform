@@ -1,5 +1,15 @@
 # Exact three-setup operation — offline implementation
 
+> **Latest live result, 2026-11-04:** [preflight / zero-apply result / closeout](live_attempt_8618697_2026_11_04/HANDOFF.md).
+> 8618697 preflight matched, but canonical seed validation exposed serialization
+> ordering and the remaining native login lifetime then fell below the reserved
+> execution/readback window. Zero catalogue writes; all 169 rows/consumer guards
+> unchanged; login revoked and zero CLI roles/backends verified. Deterministic
+> column ordering is fixed locally with 24 checks including the real prepare/pin
+> roundtrip. [Latest later-attempt package](live_attempt_8618697_2026_11_04/NEXT_ATTEMPT.md)
+> supersedes the old code pin without rewriting prior evidence. No new live access.
+
+
 > **Local compatibility verified, 2026-11-04:** [current root cause/fix/rehearsal](guard_compatibility_2026_11_04/HANDOFF.md).
 > Preserve unrelated duplicate-bearing rows as full pinned pre-state, while refusing
 > ambiguous target lookup/reuse or any collision/new ambiguity. No ID exemption.

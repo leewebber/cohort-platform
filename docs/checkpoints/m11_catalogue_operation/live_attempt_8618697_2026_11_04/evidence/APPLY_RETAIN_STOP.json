@@ -1,0 +1,5 @@
+{
+  "reason": "Seed is not the exact data-only operation generated from the manifest",
+  "captured_at": "2026-11-04T04:35:07.569684+00:00",
+  "new_id_allocation_or_blind_replay_forbidden": true
+}

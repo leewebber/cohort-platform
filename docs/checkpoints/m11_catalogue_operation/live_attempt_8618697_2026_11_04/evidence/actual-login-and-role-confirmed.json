@@ -1,0 +1,17 @@
+{
+  "role": "postgres",
+  "expiry": "2026-11-04T04:38:02.986612+00:00",
+  "captured_at": "2026-11-04T04:34:27.450258+00:00",
+  "memberships": [
+    {
+      "set": true,
+      "role": "postgres",
+      "admin": false,
+      "member": "cli_login_postgres",
+      "inherit": false
+    }
+  ],
+  "pgaudit_log": "none",
+  "session_user": "cli_login_postgres",
+  "application_name": "m11_live_8618697_20261104"
+}

@@ -1,5 +1,22 @@
 # Current repository checkpoint
 
+> **M1.1 fresh live attempt / preparation repair — 2026-11-04:**
+> [Exact result and closeout](./m11_catalogue_operation/live_attempt_8618697_2026_11_04/HANDOFF.md)
+> record healthy Field Manual and matching fresh 169-row/schema/consumer preflight.
+> One login issued. Before DB apply, the 8618697 seed gate exposed dict-order versus
+> canonical-JSON serialization mismatch. Canonical regeneration passed, but only
+> 74 seconds remained versus the 90-second execution/readback reserve; no transaction
+> was sent. Login revoked through supported endpoint; zero CLI roles/backends
+> verified 12:37:47 WITA, temporary secrets removed. All 169 rows/schema and five
+> consumer guards remain exact. Actual strength attempt: 0/20, 28 unresolved;
+> complete review/export refuses. No genuine records or trust pin installed.
+> Local-only repair after closeout sorts INSERT keys deterministically. 24 checks
+> now cover real prepare CLI -> canonical files -> pin -> synthetic apply/retain/
+> retry, including existing negative cases. [Corrected later-attempt package](./m11_catalogue_operation/live_attempt_8618697_2026_11_04/NEXT_ATTEMPT.md)
+> requires fresh separate access and hashes; no replacement login or hosted retry.
+> UI acceptance/polish freeze stand. **D8/publication separate; M1.1/Gate A OPEN.**
+
+
 > **M1.1 local catalogue guard compatibility — 2026-11-04:**
 > [Root cause/fix/rehearsal](./m11_catalogue_operation/guard_compatibility_2026_11_04/HANDOFF.md)
 > reproduces the retained 169-row global slug veto and replaces its unsupported

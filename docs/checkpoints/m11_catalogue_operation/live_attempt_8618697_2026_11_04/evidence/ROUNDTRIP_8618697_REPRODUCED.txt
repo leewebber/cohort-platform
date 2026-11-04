@@ -1,0 +1,20 @@
+test_canonical_manifest_roundtrip_preserves_exact_generated_seed (m11_setup_operation_test.Guards.test_canonical_manifest_roundtrip_preserves_exact_generated_seed) ... ERROR
+
+======================================================================
+ERROR: test_canonical_manifest_roundtrip_preserves_exact_generated_seed (m11_setup_operation_test.Guards.test_canonical_manifest_roundtrip_preserves_exact_generated_seed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/tool/catalogue/m11_setup_operation_test.py", line 72, in test_canonical_manifest_roundtrip_preserves_exact_generated_seed
+    reloaded, reloaded_seed = op.pinned(folder / 'manifest.json', op.sha(raw_manifest),
+                              ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                                        folder / 'seed.sql', op.sha(raw_seed))
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<string>", line 366, in pinned
+  File "<string>", line 40, in reject
+ValueError: Seed is not the exact data-only operation generated from the manifest
+
+----------------------------------------------------------------------
+Ran 1 test in 0.023s
+
+FAILED (errors=1)
+EXPECTED_8618697_SERIALIZATION_FAILURE_REPRODUCED_WITH_VALID_JSON

@@ -1,0 +1,3 @@
+00:00 +0: loading /private/tmp/m11_live_apply_8618697_20261104/admission_probe_test.dart
+00:00 +0: complete genuine strength admission remains refused after no-write catalogue conflict stop
+00:03 +1: All tests passed!

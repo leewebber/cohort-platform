@@ -1,0 +1,18 @@
+{
+  "reviewed_at": "2026-11-04T04:36:48.642681+00:00",
+  "unchanged_manifest_sha256": "77755d4f50d5fadc219d25fb9f51e3a1c1db31286f2556676f6ccb9115f52e5d",
+  "original_seed_sha256": "e153f2cb70f4fa9b9a0504f34a3a5f8994153287263a293c37dc68b067447b23",
+  "new_seed_sha256": "11c89dd0f799b1d26547127cc8475975e86e4dfd3eb8952b596c496174c7037c",
+  "difference": "Only field ordering in three INSERT column/SELECT lists; identical manifest values, code, predicates and checks",
+  "pinned_roundtrip_passed": true,
+  "database_apply_attempted_before_correction": false,
+  "tool_code_changed": false,
+  "target": "otnhhdxstdnwccehacku",
+  "ids": [
+    "EX-170",
+    "EX-171",
+    "EX-172"
+  ],
+  "principal": "cli_login_postgres",
+  "role": "postgres"
+}

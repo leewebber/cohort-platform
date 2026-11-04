@@ -1,0 +1,55 @@
+{
+  "data": [
+    {
+      "name": "db",
+      "healthy": true,
+      "status": "ACTIVE_HEALTHY"
+    },
+    {
+      "name": "auth",
+      "healthy": true,
+      "status": "ACTIVE_HEALTHY",
+      "info": {
+        "name": "GoTrue",
+        "version": "v2.197.0",
+        "description": "GoTrue is a user registration and authentication API"
+      }
+    },
+    {
+      "name": "rest",
+      "healthy": true,
+      "status": "ACTIVE_HEALTHY",
+      "info": {
+        "db_schema": "public,graphql_public"
+      }
+    },
+    {
+      "name": "storage",
+      "healthy": true,
+      "status": "ACTIVE_HEALTHY"
+    },
+    {
+      "name": "realtime",
+      "healthy": true,
+      "status": "ACTIVE_HEALTHY",
+      "info": {
+        "healthy": true,
+        "db_connected": false,
+        "replication_connected": false,
+        "connected_cluster": 0,
+        "node": "realtime@2406:da18:19fc:1d00:2bc5:e3e5:a578:8c6b",
+        "region": "ap-southeast-1"
+      }
+    }
+  ],
+  "metadata": {
+    "method": "GET",
+    "path": "/health",
+    "http_status": 200,
+    "started_at": "2026-11-04T04:30:15.671143+00:00",
+    "captured_at": "2026-11-04T04:30:17.489099+00:00",
+    "raw_sha256": "4078c4d58fc7c55bb80d6086982b38b05b386f4b7ec06e38f9298ef9a9a6fca0",
+    "request_id": null,
+    "cf_ray": "a550e1e68b1e910a-CGK"
+  }
+}

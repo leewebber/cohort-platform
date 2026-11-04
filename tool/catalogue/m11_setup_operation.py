@@ -311,7 +311,9 @@ def seed(manifest):
     insert = ''
     for op in planned:
         fields = op['fields']
-        names = list(fields)
+        # Canonical manifest JSON sorts object keys. SQL must not depend on the
+        # in-memory dict order before that serialization round trip.
+        names = sorted(fields)
         if any(not re.fullmatch(r'[a-z_]+', k) for k in names):
             reject('Invalid catalogue column')
         insert += 'INSERT INTO public.exercises_v2 (%s) SELECT %s FROM jsonb_populate_record(NULL::public.exercises_v2,%s);\n' % (
