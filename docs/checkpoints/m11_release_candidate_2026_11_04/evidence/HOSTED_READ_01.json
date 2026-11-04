@@ -1,0 +1,22 @@
+{
+  "data": [
+    {
+      "identity": {
+        "role": "supabase_read_only_user",
+        "database": "postgres",
+        "read_only": "on",
+        "captured_at": "2026-11-04T12:28:53.116365+00:00",
+        "session_user": "supabase_read_only_user"
+      }
+    }
+  ],
+  "metadata": {
+    "target_ref": "otnhhdxstdnwccehacku",
+    "method": "POST",
+    "path": "/database/query/read-only",
+    "http_status": 201,
+    "captured_at": "2026-11-04T12:28:53.087753+00:00",
+    "cf_ray": "a5539ef75c89da32-CGK",
+    "raw_sha256": "b8bd8842e4d2331c9d0f4b6f4afc504db428efe012a671e5a64ac22a45ba296f"
+  }
+}

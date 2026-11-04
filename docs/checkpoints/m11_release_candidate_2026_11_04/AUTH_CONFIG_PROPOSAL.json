@@ -1,0 +1,39 @@
+{
+  "status": "PROPOSED_NOT_APPLIED",
+  "target_ref": "otnhhdxstdnwccehacku",
+  "method": "PATCH",
+  "path": "/v1/projects/otnhhdxstdnwccehacku/config/auth",
+  "expected_before": {
+    "uri_allow_list": "http://localhost:55425/**",
+    "site_url": "http://localhost:55425",
+    "mailer_autoconfirm": false,
+    "disable_signup": false,
+    "external_email_enabled": true
+  },
+  "exact_payload": {
+    "uri_allow_list": "http://localhost:55425/**,cohortplatform://auth-callback"
+  },
+  "postcheck": "GET non-secret auth settings; exact old entries plus one native URI; signup/email confirmation and remaining settings unchanged",
+  "callback_client": "Native iOS/Android/macOS scheme cohortplatform, host auth-callback; existing supabase_flutter/app_links PKCE handler. Web retains provider default.",
+  "confirmation_template_preflight": {
+    "current_uses_confirmation_url": true,
+    "current_hardcoded_site_url": false,
+    "template_sha256": "c495b24123d38e4bc4295f06afe92a3c11e6ce00df09d81e2cb0706e3d7c79d8",
+    "template_change_required": false,
+    "recheck_before_apply": true
+  },
+  "mail_delivery": {
+    "observed_smtp_host": null,
+    "default_mailer_limit_per_hour": 2,
+    "required_identity_check": "Lee must use an already authorised organisation-member email for the existing default mailer, or a separately approved existing custom SMTP configuration is required. Do not add organisation membership for athlete access.",
+    "credentials": "No credential issuance or SMTP secrets in chat/Git; no provider/account creation in this task.",
+    "founder_choice": "Existing organisation account email, explicitly confirmed in this chat",
+    "custom_smtp_change_proposed": false
+  },
+  "no_changes": [
+    "Do not disable email confirmation",
+    "Do not reset passwords, broaden roles or make anonymous users",
+    "Do not change site_url or remove existing callbacks",
+    "Do not configure SMTP or alter templates without a concrete separately reviewed requirement"
+  ]
+}

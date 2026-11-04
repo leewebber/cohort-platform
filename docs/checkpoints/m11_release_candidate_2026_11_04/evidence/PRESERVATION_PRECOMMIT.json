@@ -1,0 +1,14 @@
+{
+  "classification": "UNCHANGED_OLDER_WORKSPACES_PRECOMMIT",
+  "before_manifest_sha256": "b0d44417aec31d98e63a9b54f6af71bbc7809868308cdcaf3f7d40c4c4834a62",
+  "after_manifest_sha256": "b0d44417aec31d98e63a9b54f6af71bbc7809868308cdcaf3f7d40c4c4834a62",
+  "equal": true,
+  "older_existing_checkouts": 20,
+  "older_registrations": 25,
+  "tracked_and_untracked_files": 54537,
+  "ignored_env_temp_files": 21,
+  "shared_refs_and_FETCH_HEAD_unchanged": true,
+  "bounded_existing_backup_count": 0,
+  "task_pre_existing_untracked_full_review_sha256": "76391d95af4a7ec2788546f2ffc1c75a07513e89d9f5b5e48ea1beb325d1bc30",
+  "full_review_staging": "EXCLUDED; byte-identical and untracked"
+}

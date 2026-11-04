@@ -1,0 +1,20 @@
+{
+  "closed_at_utc": "2026-11-04T13:09:28.012569+00:00",
+  "operational_hosted_login_issued": false,
+  "hosted_revocation_required": false,
+  "management_read_only_auth": "Existing normal capability read in process memory; no new credential issued or written",
+  "local_project_id": "s12g1104200410d935",
+  "task_owned_containers_remaining": 0,
+  "task_owned_volumes_remaining": 0,
+  "other_containers_unchanged": true,
+  "task_workdir_removed": true,
+  "temporary_local_secret_material_removed": [
+    "local-start.private.log",
+    "FRESH_REPLAY.private.log",
+    "enrolment.private-diagnostic.txt",
+    "status.private.json",
+    "acquire.private-diagnostic.txt"
+  ],
+  "local_status_file_absent": true,
+  "no_pre_existing_temp_or_backups_removed": true
+}

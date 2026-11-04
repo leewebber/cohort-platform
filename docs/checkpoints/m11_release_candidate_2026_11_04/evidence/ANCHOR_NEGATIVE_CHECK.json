@@ -1,0 +1,14 @@
+{
+  "classification": "DISPOSABLE_LOCAL_ONLY",
+  "function_identity_and_authority": {
+    "oid": "18231",
+    "acl_same": true,
+    "new_source": "ab6cfa3822b0ae4499ae58e2844a0e1dc26ac94952e8adb59b80d2eeb42c2c59",
+    "old_source": "c9c4c61622f8d3a22147b32e1e469548b07e293ec2078c4ed68f4399a16d8449",
+    "owner_same": true,
+    "security_same": true
+  },
+  "exact_repeat_noop": true,
+  "unexpected_body_refused": true,
+  "negative_transaction_rolled_back": true
+}

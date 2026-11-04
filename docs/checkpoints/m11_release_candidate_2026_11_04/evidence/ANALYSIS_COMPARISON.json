@@ -1,0 +1,10 @@
+{
+  "reference": "m45_auth_bootstrap immutable 362-finding checkpoint, retained /private/tmp/cohort_m45_analysis.log",
+  "reference_log_sha256": "37165c1f97522bc38e06a46e5fa438cc25feda3acdb526561104b445759dafd8",
+  "final_log_sha256": "a93d123c92eabc7e23cc30f5da15d6e7a1829b5b07bf36f3be8c20f0b9525045",
+  "reference_count": 362,
+  "current_count": 362,
+  "identical_diagnostics": true,
+  "errors": 0,
+  "changed_file_diagnostics": []
+}

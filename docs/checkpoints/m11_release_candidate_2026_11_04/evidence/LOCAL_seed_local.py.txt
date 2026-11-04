@@ -1,0 +1,11 @@
+from pathlib import Path
+import json,subprocess
+root=Path.cwd();out=Path('/private/tmp/m11_release_20261104');info=json.loads((out/'local-info.json').read_text());candidate=root/'docs/programmes/hybrid_10k/release_candidate_2026_11_04';meta=json.loads((candidate/'CANDIDATE.json').read_text());payload=json.loads((candidate/'publication-core.json').read_text());payload.update(programme_version_id=meta['proposed_programme_version_id'],owner_id='f1100000-0000-4000-8000-000000000003')
+cat=json.loads((candidate/'catalogue-evidence.json').read_text());sql=[]
+for entry in cat['catalogue_rows'].values():
+ row=entry['catalogue_row'];sql.append("INSERT INTO public.exercises_v2 SELECT (jsonb_populate_record(NULL::public.exercises_v2,$h10k$"+json.dumps(row)+"$h10k$::jsonb)).* ON CONFLICT(exercise_id) DO NOTHING;")
+sql.append("DO $body$ DECLARE result jsonb;BEGIN result:=public.publish_private_exact_programme_version_retained_v1($h10k$"+json.dumps(payload)+"$h10k$::jsonb); IF result->>'status'<>'published' THEN RAISE EXCEPTION 'Local genuine-content fixture refused: %',result; END IF;END $body$;")
+r=subprocess.run(['docker','exec','-i',info['container'],'psql','-X','-U','postgres','-d','postgres','-v','ON_ERROR_STOP=1'],input='\n'.join(sql).encode(),stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+(out/'LOCAL_FIXTURE_SEED.txt').write_bytes(r.stdout+r.stderr)
+if r.returncode:print('Local fixture refused; see retained bounded diagnostic');raise SystemExit(r.returncode)
+print('GENUINE_CONTENT_LOADED_ONLY_IN_DISPOSABLE_FIXTURE; 60 graphs; no hosted publication')

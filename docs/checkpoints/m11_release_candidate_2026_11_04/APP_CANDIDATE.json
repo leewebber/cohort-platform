@@ -1,0 +1,30 @@
+{
+  "status": "SOURCE_RELEASE_CANDIDATE_NOT_SIGNED_OR_INSTALLED",
+  "base_commit": "8be184ce8d21c36ae080ea41fe132655793b3ecc",
+  "proposed_app_version": "1.0.0+8",
+  "client_files_sha256": {
+    "pubspec.yaml": "a867cce8551314add9c4b995e8cc0fe4ad57dcf44853469c757fe6d07d7c172f",
+    "pubspec.lock": "e3309e33216d89cec5b40e11775a1b31f250c19b191ab526c184d9612e626b71",
+    "lib/features/auth/services/auth_service.dart": "a1a3c94b92a458b62b9d0e31d97720b03c9ae65d262d4d58d017f69317e2cd28",
+    "lib/features/auth/services/auth_confirmation_redirect.dart": "632e36c2446512e79f194916d5e1d9800998b2b74f00c9108afb208d2e96fa9e",
+    "lib/features/session/screens/quality_target_review_screen.dart": "57ec6811ef19879a370b233dba712cf71bc9eccf826f0aab5716962f491f86a2",
+    "lib/features/session/services/programme_training_session_start_supabase_store.dart": "eab5f711280dc43bbe8d604fa58a76499355fe4376c61e0046cf1718c923b5c6",
+    "lib/features/programme/content/hybrid_10k_release_copy.dart": "36c1b55687f578f7864f2df8c82147cd013594085c4df83d3a000ae3576e4bd3",
+    "ios/Runner/Info.plist": "088037b9b01bef45027ef595fc5224a39db87b96ad75be385e8687d4586d983a",
+    "android/app/src/main/AndroidManifest.xml": "d972e19caedbd1fbd394bce6295de9b1d9c23f2d0e8e555aae601d01eea0c8b3",
+    "macos/Runner/Info.plist": "d2473403615901ca5f6db06739a44b3e8a65b895fda113a0bec53722549561a4"
+  },
+  "programme_package_sha256": "9094bb34809723425dcac4b5936e3f6093a51961961f574e63ff5b5f0afec1b0",
+  "programme_graphs_sha256": "4962c590199cf117f155cdbd853b3436b5a252ba4df3a403f208d5308d0e5764",
+  "programme_archive_sha256": "7aa10e3ad7a891071641e06e75a8bf84231788523243054fa62e8d130c9af6ff",
+  "production_target": "https://otnhhdxstdnwccehacku.supabase.co",
+  "production_client_config": "Existing legitimate anon client key in an out-of-Git file; validated by tool/release/build_app.sh. No service key in client. No configured signed binary produced.",
+  "installed_platform_and_signing": "Verify Lee\u2019s actual device/platform and existing signing/distribution capability before building; no accounts/certificates/profiles created. Confirm proposed build 8 is unused in the actual distribution service.",
+  "internal_tools_enabled": false,
+  "Gate_A": "OPEN",
+  "existing_release_wrapper_targets": [
+    "ios",
+    "macos"
+  ],
+  "android_distribution": "No Android release/distribution is proposed; existing wrapper/signing are iOS/macOS only. The native callback registration is consistent with AuthService, not Android release acceptance."
+}

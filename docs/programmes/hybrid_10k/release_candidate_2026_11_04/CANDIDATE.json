@@ -1,0 +1,11 @@
+{
+  "status": "PREPARED_LOCAL_NOT_PUBLISHED",
+  "base_commit": "e676e31af15d9c5a31d573c8215ce008d1980526",
+  "approval_commit": "8be184ce8d21c36ae080ea41fe132655793b3ecc",
+  "proposed_programme_version_id": "b0290b33-2764-4e5b-ad78-3d4beafbb375",
+  "owner_id": null,
+  "package_sha256": "9094bb34809723425dcac4b5936e3f6093a51961961f574e63ff5b5f0afec1b0",
+  "graphs_sha256": "4962c590199cf117f155cdbd853b3436b5a252ba4df3a403f208d5308d0e5764",
+  "source_archive_sha256": "7aa10e3ad7a891071641e06e75a8bf84231788523243054fa62e8d130c9af6ff",
+  "notes": "Proposed immutable version identity only; fresh hosted absence/collision and actual authorised owner resolution required. No publication/activation event or recipient/assignment exists."
+}

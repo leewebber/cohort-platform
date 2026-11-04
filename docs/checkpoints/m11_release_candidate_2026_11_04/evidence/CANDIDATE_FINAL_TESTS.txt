@@ -1,0 +1,3 @@
+00:00 +0: loading /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/tool/programmes/hybrid_10k/build_release_candidate_test.dart
+00:00 +0: one genuine Hybrid 10K candidate retains every prescription and approved explanation
+00:23 +1: All tests passed!

@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+set -euo pipefail
+umask 077
+TASK_RELEASE_OUT=/private/tmp/m11_release_20261104
+source "$PWD/supabase/tests/lib/prepare_disposable_workdir.sh"
+sprint12_assert_no_hosted_intent
+sprint12_prepare_disposable_workdir > "$TASK_RELEASE_OUT/local-prepare.log"
+rm "$SPRINT12_WORKDIR/supabase/migrations/20261026120000_durable_publication_approval_events.sql"
+cat "$TESTS_DIR/sql/backfill_hosted_default_grants_fixture.sql" >> "$SPRINT12_WORKDIR/supabase/migrations/20260701000000_local_test_baseline_prereq.sql"
+cat >> "$SPRINT12_WORKDIR/supabase/config.toml" <<'LOCAL_AUTH'
+
+[auth.email]
+enable_signup = true
+enable_confirmations = false
+max_frequency = "0s"
+LOCAL_AUTH
+python3 - "$SPRINT12_WORKDIR" "$SPRINT12_PROJECT_ID" "$TASK_RELEASE_OUT" <<'PY'
+import json,sys
+from pathlib import Path
+Path(sys.argv[3]+'/local-info.json').write_text(json.dumps({'workdir':sys.argv[1],'project_id':sys.argv[2],'container':'supabase_db_'+sys.argv[2],'classification':'DISPOSABLE_LOOPBACK_ONLY_NO_REAL_ACCOUNTS_OR_ATHLETE_DATA'})+'\n')
+PY
+supabase start --workdir "$SPRINT12_WORKDIR" --exclude edge-runtime,imgproxy,mailpit,realtime,storage-api,studio,vector --ignore-health-check > "$TASK_RELEASE_OUT/local-start.private.log" 2>&1
+SPRINT12_DB_CONTAINER="$(sprint12_resolve_exact_db_container "$SPRINT12_PROJECT_ID")"
+sprint12_assert_local_container "$SPRINT12_DB_CONTAINER" "$SPRINT12_PROJECT_ID"
+supabase status -o json --workdir "$SPRINT12_WORKDIR" > "$TASK_RELEASE_OUT/status.private.json" 2>/dev/null
+python3 - "$SPRINT12_DB_CONTAINER" "$TASK_RELEASE_OUT" <<'PY'
+import sys,json
+from pathlib import Path
+p=Path(sys.argv[2]+'/status.private.json');x=json.loads(p.read_text());x['CONTAINER']=sys.argv[1];p.write_text(json.dumps(x));print('DISPOSABLE_LOOPBACK_STACK_READY; deferred producer excluded; four held migrations present in local replay')
+PY

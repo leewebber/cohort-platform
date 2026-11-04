@@ -1,0 +1,19 @@
+{
+  "status": "PREPARED_UNBOUND_REQUEST_NOT_SENT",
+  "target_ref": "otnhhdxstdnwccehacku",
+  "table": "public.private_programme_alpha_eligibility",
+  "reviewed_application_athlete_uid": null,
+  "programme_version_id": "b0290b33-2764-4e5b-ad78-3d4beafbb375",
+  "expires_at": null,
+  "revoked_at": null,
+  "requested_policy": "One exact athlete/version grant with no expiry, subject to explicit later approval; revocation stops future acquisition, not existing training/history",
+  "identity_source": "Lee\u2019s own normal verified email signup and authenticated application profile, after schema/client enablement",
+  "preconditions": [
+    "Explicitly reviewed real application UID and athlete role",
+    "Exact candidate version published/readback verified",
+    "No conflicting active programme; no replacement or direct assignment DML",
+    "If ordinary owner/relationship visibility already suffices, no eligibility insert is needed"
+  ],
+  "write_scope": "At most one INSERT if absent; identical existing tuple is read-only replay; conflicts refuse instead of UPDATE",
+  "no_account_creation_or_assignment": true
+}

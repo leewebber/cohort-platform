@@ -1,0 +1,12 @@
+00:00 +0: loading /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/programme_acquisition/authenticated_local_test.dart
+00:00 +0: new GoTrue athlete setup/private acquisition/security/restart
+M12_STAGE=signup
+M12_STAGE=setup
+M12_STAGE=visibility
+M12_STAGE=rollback
+M12_STAGE=concurrency
+M12_STAGE=calendar
+M12_STAGE=restart
+M12_STAGE=logout
+M12_STAGE=security
+00:03 +1: All tests passed!

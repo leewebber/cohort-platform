@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+set -euo pipefail
+umask 077
+TASK_RELEASE_OUT=/private/tmp/m11_release_20261104
+source "$PWD/supabase/tests/lib/target_guard.sh"
+TASK_LOCAL_DIR="$(python3 -c "import json;print(json.load(open('/private/tmp/m11_release_20261104/local-info.json'))['workdir'])")"
+TASK_LOCAL_ID="$(python3 -c "import json;print(json.load(open('/private/tmp/m11_release_20261104/local-info.json'))['project_id'])")"
+TASK_LOCAL_CONTAINER="supabase_db_${TASK_LOCAL_ID}"
+sprint12_assert_local_container "$TASK_LOCAL_CONTAINER" "$TASK_LOCAL_ID"
+cp supabase/migrations/20261104120000_private_alpha_explicit_start_anchor.sql "$TASK_LOCAL_DIR/supabase/migrations/"
+[[ ! -e "$TASK_LOCAL_DIR/supabase/migrations/20261026120000_durable_publication_approval_events.sql" ]]
+cat > "$TASK_LOCAL_DIR/supabase/migrations/20261026105900_m12_local_acl_witness.sql" <<'WITNESS'
+CREATE TABLE public.m12_pre_acls AS SELECT oid,proacl,proowner FROM pg_proc WHERE pronamespace='public'::regnamespace;
+WITNESS
+cat > "$TASK_LOCAL_DIR/supabase/migrations/20261104115900_m11_local_anchor_witness.sql" <<'WITNESS'
+CREATE TABLE public.m11_anchor_before AS SELECT oid,proowner,proacl,prosecdef,proconfig,encode(extensions.digest(convert_to(prosrc,'UTF8'),'sha256'),'hex') AS source_sha256 FROM pg_proc WHERE oid='public.materialise_athlete_plan_from_enrolment(uuid,text)'::regprocedure;
+WITNESS
+
+supabase db reset --local --no-seed --yes --workdir "$TASK_LOCAL_DIR" > "$TASK_RELEASE_OUT/FRESH_REPLAY.private.log" 2>&1
+python3 "$TASK_RELEASE_OUT/seed_local.py"
+COHORT_H10K_CONFIG="$TASK_RELEASE_OUT/status.private.json" COHORT_H10K_REPORT="$TASK_RELEASE_OUT/JOURNEY_FRESH.json" flutter test --no-pub --reporter expanded test/session/hybrid_10k_release_authenticated_local_test.dart > "$TASK_RELEASE_OUT/JOURNEY_FRESH_TESTS.txt" 2>&1
+# Existing legacy acquisition fixtures are compatibility evidence, separate from
+# the genuine candidate. Never enter the candidate or a hosted apply copy.
+dart run supabase/tests/fixtures/c2_programme_publication_fixture.dart "$TASK_RELEASE_OUT/legacy-fixture.sql" > "$TASK_RELEASE_OUT/LEGACY_GENERATION.txt" 2>&1
+docker exec -i "$TASK_LOCAL_CONTAINER" psql -X -U postgres -d postgres -v ON_ERROR_STOP=1 < "$TASK_RELEASE_OUT/legacy-fixture.sql" > "$TASK_RELEASE_OUT/LEGACY_SEED.txt" 2>&1
+docker exec -i "$TASK_LOCAL_CONTAINER" psql -X -U postgres -d postgres -v ON_ERROR_STOP=1 > "$TASK_RELEASE_OUT/LEGACY_PUBLICATION.txt" 2>&1 <<'SQL'
+DO $$ DECLARE p jsonb;r jsonb;BEGIN FOR p IN SELECT payload FROM public.c2p_payload LOOP r:=public.publish_private_exact_programme_version_retained_v1(p);IF r->>'status'<>'published' THEN RAISE EXCEPTION 'Disposable compatibility fixture refused';END IF;END LOOP;END $$;
+SQL
+COHORT_M12_CONFIG="$TASK_RELEASE_OUT/status.private.json" flutter test --no-pub --reporter expanded test/programme_acquisition/authenticated_local_test.dart > "$TASK_RELEASE_OUT/M12_COMPATIBILITY_TESTS.txt" 2>&1
+printf '%s\n' 'FRESH_FIVE_FILE_LOCAL_REPLAY_GENUINE_JOURNEY_AND_LEGACY_ACQUISITION_PASS'

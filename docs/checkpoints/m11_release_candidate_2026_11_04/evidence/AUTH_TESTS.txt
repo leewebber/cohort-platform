@@ -1,0 +1,34 @@
+00:00 +0: loading /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/auth/auth_confirmation_redirect_test.dart
+00:00 +0: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/auth/auth_controller_test.dart: ProfileProvisioningService creates profile with selected roles
+00:00 +1: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/auth/auth_controller_test.dart: ProfileProvisioningService rejects empty role selection
+00:00 +2: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/auth/auth_controller_test.dart: AuthController initialize with no session is unauthenticated
+00:00 +3: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/auth/auth_gate_widget_test.dart: AuthGate shows login when unauthenticated
+00:00 +4: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/auth/auth_gate_widget_test.dart: AuthGate shows login when unauthenticated
+00:00 +5: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/auth/auth_gate_widget_test.dart: AuthGate shows login when unauthenticated
+00:00 +6: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/auth/auth_gate_widget_test.dart: AuthGate shows login when unauthenticated
+00:00 +7: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/auth/auth_gate_widget_test.dart: AuthGate shows login when unauthenticated
+00:00 +8: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/auth/auth_gate_widget_test.dart: AuthGate shows login when unauthenticated
+00:00 +9: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/auth/auth_gate_widget_test.dart: AuthGate shows login when unauthenticated
+00:00 +10: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/auth/auth_gate_widget_test.dart: AuthGate shows login when unauthenticated
+00:00 +11: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/auth/auth_gate_widget_test.dart: AuthGate shows login when unauthenticated
+00:00 +12: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/auth/auth_gate_widget_test.dart: AuthGate shows login when unauthenticated
+00:00 +13: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/auth/auth_gate_widget_test.dart: AuthGate shows login when unauthenticated
+00:00 +14: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/auth/auth_gate_widget_test.dart: AuthGate shows login when unauthenticated
+00:00 +15: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/auth/auth_gate_widget_test.dart: AuthGate shows login when unauthenticated
+00:00 +16: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/auth/auth_gate_widget_test.dart: AuthGate shows login when unauthenticated
+00:00 +17: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/auth/auth_gate_widget_test.dart: AuthGate shows login when unauthenticated
+00:00 +18: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/auth/auth_gate_widget_test.dart: AuthGate shows login when unauthenticated
+00:00 +19: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/auth/auth_gate_widget_test.dart: AuthGate shows login when unauthenticated
+00:00 +20: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/programme/athlete_runtime_capability_bootstrap_test.dart: capability RPC fail-closed authenticated ok payload loads flags
+00:00 +21: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/auth/auth_gate_widget_test.dart: local onboarding completion cannot open the athlete shell
+00:00 +22: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/auth/auth_gate_widget_test.dart: local onboarding completion cannot open the athlete shell
+00:00 +23: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/programme/athlete_runtime_capability_bootstrap_test.dart: AuthGate bootstrap does not wait on capabilities cold start with no session shows sign-in
+00:00 +24: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/programme/athlete_runtime_capability_bootstrap_test.dart: AuthGate bootstrap does not wait on capabilities cold start with no session shows sign-in
+00:01 +25: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/programme/athlete_runtime_capability_bootstrap_test.dart: AuthGate bootstrap does not wait on capabilities authenticated athlete reaches Home without waiting on RPC
+00:01 +26: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/programme/athlete_runtime_capability_bootstrap_test.dart: AuthGate bootstrap does not wait on capabilities sign-out with no local onboarding returns to login
+00:01 +27: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/programme/athlete_runtime_capability_bootstrap_test.dart: AuthGate bootstrap does not wait on capabilities unconfigured setup backend holds authenticated entry closed
+00:01 +28: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/programme/athlete_runtime_capability_bootstrap_test.dart: AuthGate bootstrap does not wait on capabilities saved setup draft gates entry until confirmation and reopens
+00:01 +29: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/programme/athlete_runtime_capability_bootstrap_test.dart: AuthGate bootstrap does not wait on capabilities setup failure retries without bypass or automatic acquisition
+00:01 +30: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/programme/athlete_runtime_capability_bootstrap_test.dart: AuthGate bootstrap does not wait on capabilities late completed setup cannot admit a different signed-in account
+00:01 +31: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/programme/athlete_runtime_capability_bootstrap_test.dart: AuthGate bootstrap does not wait on capabilities production AthleteAppShell survives missing capability RPC
+00:02 +32: All tests passed!

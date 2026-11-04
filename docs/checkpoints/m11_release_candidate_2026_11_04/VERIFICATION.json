@@ -1,0 +1,119 @@
+{
+  "status": "LOCAL_SOURCE_RELEASE_CANDIDATE_VERIFIED_HOSTED_ENABLEMENT_PROPOSED",
+  "date": "2026-11-04",
+  "timezone": "Asia/Makassar",
+  "base": "8be184ce8d21c36ae080ea41fe132655793b3ecc",
+  "genuine_source": "e676e31af15d9c5a31d573c8215ce008d1980526",
+  "checks": {
+    "candidate": {
+      "command": "COHORT_H10K_REPORT=<task-output>/CANDIDATE_FINAL.json flutter test --no-pub --reporter expanded tool/programmes/hybrid_10k/build_release_candidate_test.dart",
+      "exit": 0,
+      "passed": 1,
+      "regenerated": false,
+      "log": "evidence/CANDIDATE_FINAL_TESTS.txt",
+      "report": "evidence/CANDIDATE_FINAL.json"
+    },
+    "genuine_authenticated_journey": {
+      "command": "COHORT_H10K_CONFIG=<task-only-local-status> COHORT_H10K_REPORT=<task-output>/JOURNEY_FINAL.json flutter test --no-pub --reporter expanded test/session/hybrid_10k_release_authenticated_local_test.dart",
+      "exit": 0,
+      "passed": 1,
+      "real_source_sessions": 5,
+      "local_only": true,
+      "log": "evidence/JOURNEY_FINAL_TESTS.txt",
+      "report": "evidence/JOURNEY_FINAL.json"
+    },
+    "legacy_acquisition_compatibility": {
+      "command": "COHORT_M12_CONFIG=<task-only-local-status> flutter test --no-pub --reporter expanded test/programme_acquisition/authenticated_local_test.dart",
+      "exit": 0,
+      "passed": 1,
+      "log": "evidence/M12_FINAL_COMPATIBILITY_TESTS.txt"
+    },
+    "auth": {
+      "command": "flutter test --no-pub --reporter expanded test/auth/auth_confirmation_redirect_test.dart test/auth/auth_controller_test.dart test/auth/auth_gate_widget_test.dart test/programme/athlete_runtime_capability_bootstrap_test.dart",
+      "exit": 0,
+      "passed": 32,
+      "log": "evidence/AUTH_TESTS.txt"
+    },
+    "quality_copy_rpc": {
+      "command": "flutter test --no-pub --reporter expanded test/session/running_target_start_rpc_test.dart test/session/hybrid_10k_freshness_copy_test.dart test/session/quality_target_admission_test.dart",
+      "exit": 0,
+      "passed": 30,
+      "log": "evidence/FINAL_FOCUSED_TESTS.txt"
+    },
+    "five_file_fresh_replay": {
+      "exit": 0,
+      "production_migrations": 135,
+      "local_only_baseline_and_witnesses": 3,
+      "producer_excluded": true,
+      "report": "evidence/LOCAL_REPLAY.json",
+      "recorded_scripts_are_historical_transcripts_not_hosted_entrypoints": true
+    },
+    "anchor_repeat_drift_and_rollback": {
+      "exit": 0,
+      "exact_repeat_noop": true,
+      "unexpected_body_refused_and_rolled_back": true,
+      "oid_owner_acl_security_preserved": true,
+      "report": "evidence/ANCHOR_NEGATIVE_CHECK.json"
+    },
+    "safety": {
+      "command": "./tool/testing/run_phase2_consolidation_safety_gate.sh",
+      "exit": 0,
+      "groups_passed": 6,
+      "groups_failed": 0,
+      "log": "evidence/SAFETY_FINAL_GATE.txt"
+    },
+    "changed_analysis": {
+      "command": "flutter analyze --no-pub <ten changed Dart files; enumerated by APP_CANDIDATE.json plus new tests/tool>",
+      "exit": 0,
+      "files": 10,
+      "diagnostics": 0,
+      "log": "evidence/CHANGED_FINAL_ANALYSIS.txt"
+    },
+    "repository_analysis": {
+      "command": "flutter analyze --no-pub",
+      "exit": 1,
+      "inherited_issues": 362,
+      "errors": 0,
+      "identical_to_retained_m45_diagnostics": true,
+      "log": "evidence/REPOSITORY_FINAL_ANALYSIS.txt",
+      "comparison": "evidence/ANALYSIS_COMPARISON.json"
+    },
+    "offline_deployment_copy": {
+      "command": "python3 tool/programmes/hybrid_10k/prepare_deployment_copy.py --out /private/tmp/m11_release_20261104/deployment-copy",
+      "exit": 0,
+      "login_link_dry_run_or_apply": false,
+      "report": "evidence/OFFLINE_DEPLOYMENT_COPY.json"
+    }
+  },
+  "reused_immutable_evidence": [
+    "docs/checkpoints/m13_steady_state_restart/HANDOFF.md",
+    "docs/checkpoints/m24_terminal_completion_retry/HANDOFF.md",
+    "docs/checkpoints/m45_auth_bootstrap/HANDOFF.md",
+    "docs/checkpoints/m11_catalogue_operation/live_0431d08_2026_11_04/HANDOFF.md",
+    "docs/programmes/hybrid_10k/d8_approved_integration_2026_11_04/APPROVAL.md"
+  ],
+  "fresh_hosted_scope": "Existing Management capability, exact-target health and read-only SELECT/auth-config inspection only. No operational login or hosted mutation. Dated evidence, not future ledger assumption.",
+  "not_performed": [
+    "full default Flutter suite",
+    "full aggregate database gate",
+    "hosted schema/configuration/data mutation",
+    "operational credential issuance",
+    "real account/eligibility/assignment/athlete writes",
+    "programme publication",
+    "signed build/distribution/install",
+    "browser/device control",
+    "installed OS durability or email callback acceptance",
+    "Garmin round trip"
+  ],
+  "closeout": "evidence/CLOSEOUT.json",
+  "preservation": "evidence/PRESERVATION_PRECOMMIT.json",
+  "git": {
+    "remote_main_fresh_precommit": "8be184ce8d21c36ae080ea41fe132655793b3ecc",
+    "normal_main_only_push": "Freshly verify again immediately before non-force push; final commit/remote receipt retained outside self-referencing commit at /private/tmp/m11_release_git_receipt_20261104.json",
+    "no_old_ref_or_checkout_rewrite": true
+  },
+  "M1.1": "OPEN",
+  "M1.2": "OPEN",
+  "M1.3": "OPEN",
+  "Gate_A": "OPEN"
+}

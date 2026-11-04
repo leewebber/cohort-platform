@@ -6,7 +6,15 @@ This plan controls delivery priorities. It preserves technical authority contrac
 it does not grant implementation, content, hosted, account or release authority.
 [M0 findings and critical path](../checkpoints/m0_alpha_baseline/HANDOFF.md).
 
-## Current single point — M1.1 local candidate/publication-access readiness
+## Current single point — M1.1 exact hosted-enablement decision
+
+One [genuine Hybrid 10K release candidate](../checkpoints/m11_release_candidate_2026_11_04/HANDOFF.md) now combines admitted e676e31 source with the two D8 approvals recorded at 8be184c. All sixty graphs admit; all 105 strength prescriptions and forty running bodies remain exact. Approved athlete copy is carried into local immutable revisions. Authenticated disposable acquisition, representative strength/running starts, save/reopen/paused restore, expiry/renewal, canonical completion/retry/correction and History pass. This is local source/client evidence, not installed acceptance or programme publication.
+
+Fresh SELECT-only Field Manual evidence confirms healthy service, ledger 130 / 20261024130000, unchanged 206 existing function bodies/identities/authorities and unchanged catalogue/consumer guards. The [smallest exact later enablement proposal](../checkpoints/m11_release_candidate_2026_11_04/DEPLOYMENT_PROPOSAL.md) is five pinned migrations (the four held alpha/targets/retry files plus a bounded explicit-acquisition-date correction) and one native auth callback allowlist addition. The deferred HYROX producer is excluded. Lee chose the existing organisation-account email; no SMTP or organisation membership change is proposed. No operational login, hosted mutation, real account/eligibility/assignment/athlete action or device control occurred.
+
+**Next single action: review/authorise that exact schema/native-callback enablement proposal and its separately scoped connection, if needed.** Then compatible signed build, normal registration/onboarding, verified actual app UID binding and separately approved publication/exact recipient access, then installed genuine-programme acquisition/restart acceptance. Proposed client 1.0.0+8 is source only. [Prepared data actions](../checkpoints/m11_release_candidate_2026_11_04/PUBLICATION_AND_ACCESS.md) and [manual device script](../checkpoints/m11_release_candidate_2026_11_04/INSTALLED_ACCEPTANCE.md) retain those gates. Bounded coach UI acceptance and authoring/discretionary-polish freeze stand. **M1.1/M1.2/M1.3 and Gate A OPEN**; father's programme, Garmin and other Gate A outcomes remain separate.
+
+## Retained D8 approval — readiness preparation completed above
 
 Lee has **[approved both D8 integration decisions against e676e31](../programmes/hybrid_10k/d8_approved_integration_2026_11_04/APPROVAL.md)**: the 5K freshness/renewal requirement with explicit conditional unavailability, and the exact proposed athlete-facing freshness, weekly and session explanations. [Recording handoff](../checkpoints/m11_d8_integration_approval/HANDOFF.md). The 0..56 local-day rule, genuine input confirmation/review/acceptance, threshold-only manual alternative and started-session freeze stand. No new test or fallback is introduced.
 

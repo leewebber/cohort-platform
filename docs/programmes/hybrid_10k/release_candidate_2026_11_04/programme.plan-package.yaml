@@ -1,0 +1,1824 @@
+{
+  "adaptation_permissions": [],
+  "assessments": [],
+  "comparison_identities": [],
+  "package_schema_version": 2,
+  "performance_evidence_requirements": [],
+  "phases": [],
+  "programme": {
+    "coaching_intent": "General ten-week 10K PB programme for a fit, competent runner",
+    "description": "Your 5K result must be no more than 56 local calendar days old when you start this workout. If you have a newer qualifying result, update your input and review the targets. Otherwise, this workout remains unavailable. This programme does not add a 5K test. Threshold workouts also support the separately selected manual-threshold option. A workout already started keeps its accepted targets.",
+    "duration_weeks": 10,
+    "library_scope": "coach_private",
+    "lineage_code": "HYBRID10K-GENERAL-DRAFT",
+    "name": "General Hybrid 10K PB — selected performance running and strength",
+    "owner_type": "coach",
+    "sessions_per_week": 6,
+    "version_number": 1
+  },
+  "protected_invariants": [],
+  "sessions": [
+    {
+      "session_key": "session-379bb177-55b7-5535-8527-9047568a5ce9-r6",
+      "protocol_id": "protocol-e9569566-9d98-42f1-9095-ceb4db6612f3",
+      "session_lineage_id": "379bb177-55b7-5535-8527-9047568a5ce9",
+      "revision_number": 6,
+      "title": "Monday selected strength"
+    },
+    {
+      "session_key": "session-baf02122-f283-5521-a3a4-16b1de1fd63d-r3",
+      "protocol_id": "protocol-5334bb2e-c726-4b1f-a5fd-14e0f40fd51c",
+      "session_lineage_id": "baf02122-f283-5521-a3a4-16b1de1fd63d",
+      "revision_number": 3,
+      "title": "Threshold intervals"
+    },
+    {
+      "session_key": "session-43496cc4-773d-54cc-9ef4-db07b3aace5f-r3",
+      "protocol_id": "protocol-3d5413da-ee08-4f8c-aef2-f281fd2009eb",
+      "session_lineage_id": "43496cc4-773d-54cc-9ef4-db07b3aace5f",
+      "revision_number": 3,
+      "title": "Zone 2 run"
+    },
+    {
+      "session_key": "session-21fc299c-06ba-5506-8553-0209780cbfe3-r6",
+      "protocol_id": "protocol-2bf58279-08c7-4498-a4ad-c8256ac589fb",
+      "session_lineage_id": "21fc299c-06ba-5506-8553-0209780cbfe3",
+      "revision_number": 6,
+      "title": "Thursday selected strength"
+    },
+    {
+      "session_key": "session-63a11e44-8efd-57ac-99d2-c7e2b7f44a43-r3",
+      "protocol_id": "protocol-862ee412-7617-4369-946d-9f2cceee8a05",
+      "session_lineage_id": "63a11e44-8efd-57ac-99d2-c7e2b7f44a43",
+      "revision_number": 3,
+      "title": "Zone 2 run"
+    },
+    {
+      "session_key": "session-939762f3-bb11-592e-86e6-bd9a9fb8c153-r3",
+      "protocol_id": "protocol-ae324edb-31ee-47d8-91c2-00bd2c343fa2",
+      "session_lineage_id": "939762f3-bb11-592e-86e6-bd9a9fb8c153",
+      "revision_number": 3,
+      "title": "Long Zone 2 run"
+    },
+    {
+      "session_key": "session-6aec11af-45d5-5fb9-9e4d-fbcc49d9e767-r6",
+      "protocol_id": "protocol-b631fe87-d2df-4b70-bfb9-10d3cacf4ec2",
+      "session_lineage_id": "6aec11af-45d5-5fb9-9e4d-fbcc49d9e767",
+      "revision_number": 6,
+      "title": "Monday selected strength"
+    },
+    {
+      "session_key": "session-fcb86f6f-07ac-5f1b-b9b9-5fa7d4544827-r3",
+      "protocol_id": "protocol-959661eb-1d60-437d-a6dc-21536256a941",
+      "session_lineage_id": "fcb86f6f-07ac-5f1b-b9b9-5fa7d4544827",
+      "revision_number": 3,
+      "title": "Threshold intervals"
+    },
+    {
+      "session_key": "session-4d650387-b504-5c80-9bc2-a6534d88863b-r3",
+      "protocol_id": "protocol-d0203547-d9d6-40f0-9902-6419a855ba16",
+      "session_lineage_id": "4d650387-b504-5c80-9bc2-a6534d88863b",
+      "revision_number": 3,
+      "title": "Zone 2 run"
+    },
+    {
+      "session_key": "session-e7f72978-bb3e-5252-bcbd-ee996d53ac3e-r6",
+      "protocol_id": "protocol-c7056ac8-3384-416a-a67f-95305115bd32",
+      "session_lineage_id": "e7f72978-bb3e-5252-bcbd-ee996d53ac3e",
+      "revision_number": 6,
+      "title": "Thursday selected strength"
+    },
+    {
+      "session_key": "session-57a3b9c7-9da1-52a8-9600-f2d1fbb1e64a-r3",
+      "protocol_id": "protocol-74f09227-7870-4273-89d8-2c34c75fbe96",
+      "session_lineage_id": "57a3b9c7-9da1-52a8-9600-f2d1fbb1e64a",
+      "revision_number": 3,
+      "title": "Zone 2 run"
+    },
+    {
+      "session_key": "session-74717952-b073-5d01-9df1-cfbd40df7c70-r3",
+      "protocol_id": "protocol-69c57d70-6763-4e75-ba99-0bfb3a339e37",
+      "session_lineage_id": "74717952-b073-5d01-9df1-cfbd40df7c70",
+      "revision_number": 3,
+      "title": "Long Zone 2 run"
+    },
+    {
+      "session_key": "session-da3a1810-a65f-5e19-a7dc-e7d276839e44-r6",
+      "protocol_id": "protocol-581c9e6e-fc63-40df-b987-c8c2184a545c",
+      "session_lineage_id": "da3a1810-a65f-5e19-a7dc-e7d276839e44",
+      "revision_number": 6,
+      "title": "Monday selected strength"
+    },
+    {
+      "session_key": "session-3116c98a-5e21-5ce1-8e3b-9b708479454f-r3",
+      "protocol_id": "protocol-c253f398-8b9f-464c-ae49-8721e0af83af",
+      "session_lineage_id": "3116c98a-5e21-5ce1-8e3b-9b708479454f",
+      "revision_number": 3,
+      "title": "Threshold intervals"
+    },
+    {
+      "session_key": "session-b9aa43f7-9dc3-539c-b183-3ab339654758-r3",
+      "protocol_id": "protocol-265c49be-a8cd-4791-875a-e555f7e6e38a",
+      "session_lineage_id": "b9aa43f7-9dc3-539c-b183-3ab339654758",
+      "revision_number": 3,
+      "title": "Zone 2 run"
+    },
+    {
+      "session_key": "session-2052df8e-b4dd-58e0-9c03-17f98f138e24-r6",
+      "protocol_id": "protocol-804684e1-9120-4c86-9253-86b04edbe841",
+      "session_lineage_id": "2052df8e-b4dd-58e0-9c03-17f98f138e24",
+      "revision_number": 6,
+      "title": "Thursday selected strength"
+    },
+    {
+      "session_key": "session-1ea65fa9-b267-51ba-9525-584d6f8e3783-r3",
+      "protocol_id": "protocol-0605b36c-1767-47d7-99e1-3f566d4276f8",
+      "session_lineage_id": "1ea65fa9-b267-51ba-9525-584d6f8e3783",
+      "revision_number": 3,
+      "title": "Easy run with relaxed strides"
+    },
+    {
+      "session_key": "session-9d2ae8c0-e828-5a54-bdba-c2c05d76d364-r3",
+      "protocol_id": "protocol-41459d37-b79a-4136-a958-26ac6b7403e3",
+      "session_lineage_id": "9d2ae8c0-e828-5a54-bdba-c2c05d76d364",
+      "revision_number": 3,
+      "title": "Long Zone 2 run"
+    },
+    {
+      "session_key": "session-2d045c4d-0da3-583f-823c-f6d2fa3c0443-r6",
+      "protocol_id": "protocol-abed94f3-5781-4810-9a39-34d918cea13c",
+      "session_lineage_id": "2d045c4d-0da3-583f-823c-f6d2fa3c0443",
+      "revision_number": 6,
+      "title": "Monday selected strength"
+    },
+    {
+      "session_key": "session-e8afd9a6-7246-598d-b6f9-6fb59096a76e-r3",
+      "protocol_id": "protocol-ca9e0970-7a7a-45e6-9f99-c7970a374585",
+      "session_lineage_id": "e8afd9a6-7246-598d-b6f9-6fb59096a76e",
+      "revision_number": 3,
+      "title": "Consolidation threshold"
+    },
+    {
+      "session_key": "session-f6675795-cabc-5706-b1bf-7c5a08f62528-r3",
+      "protocol_id": "protocol-d030b297-cce8-4025-bb5e-1c57aa14b3c7",
+      "session_lineage_id": "f6675795-cabc-5706-b1bf-7c5a08f62528",
+      "revision_number": 3,
+      "title": "Zone 2 run"
+    },
+    {
+      "session_key": "session-d5f28dd7-25fd-53e3-ba85-b297c17420e4-r6",
+      "protocol_id": "protocol-6fef8e83-2630-40a8-99fe-73b00f13967d",
+      "session_lineage_id": "d5f28dd7-25fd-53e3-ba85-b297c17420e4",
+      "revision_number": 6,
+      "title": "Thursday selected strength"
+    },
+    {
+      "session_key": "session-4a8dee15-c86d-5822-be7d-0241e9a3077f-r3",
+      "protocol_id": "protocol-5baad5d8-71b9-4ec6-b849-99df106c0318",
+      "session_lineage_id": "4a8dee15-c86d-5822-be7d-0241e9a3077f",
+      "revision_number": 3,
+      "title": "Zone 2 run"
+    },
+    {
+      "session_key": "session-c54df464-7cf0-5aad-9c1b-87f1481f40da-r3",
+      "protocol_id": "protocol-179e8ae6-280e-4efa-8880-0dc2b50baa13",
+      "session_lineage_id": "c54df464-7cf0-5aad-9c1b-87f1481f40da",
+      "revision_number": 3,
+      "title": "Long Zone 2 run"
+    },
+    {
+      "session_key": "session-c2b9a2a5-a0fd-5b32-9b5a-db285799c0a3-r6",
+      "protocol_id": "protocol-939cc97b-84a9-4f26-a91c-2f5e36d30907",
+      "session_lineage_id": "c2b9a2a5-a0fd-5b32-9b5a-db285799c0a3",
+      "revision_number": 6,
+      "title": "Monday selected strength"
+    },
+    {
+      "session_key": "session-d65948b6-69b5-570b-8d4a-6e96e5908314-r3",
+      "protocol_id": "protocol-2fe25c53-37c7-47ed-9ffc-9e19c0041168",
+      "session_lineage_id": "d65948b6-69b5-570b-8d4a-6e96e5908314",
+      "revision_number": 3,
+      "title": "Threshold intervals"
+    },
+    {
+      "session_key": "session-31891ea0-b339-5f67-ab8c-deebae40d54c-r3",
+      "protocol_id": "protocol-79d66767-fd9f-4003-ad2a-56fa917d2b8f",
+      "session_lineage_id": "31891ea0-b339-5f67-ab8c-deebae40d54c",
+      "revision_number": 3,
+      "title": "Zone 2 run"
+    },
+    {
+      "session_key": "session-eb3d69ec-b232-5fb8-ba32-c7cf00cc794d-r6",
+      "protocol_id": "protocol-e63ce421-34e7-44f8-8052-320e2477d2c8",
+      "session_lineage_id": "eb3d69ec-b232-5fb8-ba32-c7cf00cc794d",
+      "revision_number": 6,
+      "title": "Thursday selected strength"
+    },
+    {
+      "session_key": "session-9353deb4-1360-59bd-8785-5c88ee68c7d2-r3",
+      "protocol_id": "protocol-66ca2342-83ce-48b6-b7f9-a70ea01b3b63",
+      "session_lineage_id": "9353deb4-1360-59bd-8785-5c88ee68c7d2",
+      "revision_number": 3,
+      "title": "Easy run with relaxed strides"
+    },
+    {
+      "session_key": "session-d9e7a99e-887a-569f-90e0-989c3bd84954-r3",
+      "protocol_id": "protocol-05a822aa-a6a7-4578-bb5e-ab0b6875a596",
+      "session_lineage_id": "d9e7a99e-887a-569f-90e0-989c3bd84954",
+      "revision_number": 3,
+      "title": "Long Zone 2 run"
+    },
+    {
+      "session_key": "session-18d0f55a-76b8-5d60-9fc4-2ea5698fdf7b-r6",
+      "protocol_id": "protocol-ac9fb314-e47f-4466-908b-5fe6c189bb50",
+      "session_lineage_id": "18d0f55a-76b8-5d60-9fc4-2ea5698fdf7b",
+      "revision_number": 6,
+      "title": "Monday selected strength"
+    },
+    {
+      "session_key": "session-44f05b2a-a55a-5766-a9b4-00b2db46ea71-r3",
+      "protocol_id": "protocol-528d595e-bbce-4ff0-9580-a6514295f255",
+      "session_lineage_id": "44f05b2a-a55a-5766-a9b4-00b2db46ea71",
+      "revision_number": 3,
+      "title": "10K intervals"
+    },
+    {
+      "session_key": "session-bf80b11c-5389-5268-8659-1655e36410e3-r3",
+      "protocol_id": "protocol-ed3833b8-6971-419c-857d-e4d5b9d9a1bd",
+      "session_lineage_id": "bf80b11c-5389-5268-8659-1655e36410e3",
+      "revision_number": 3,
+      "title": "Zone 2 run"
+    },
+    {
+      "session_key": "session-661a1086-1435-5e43-8dea-845528a38643-r6",
+      "protocol_id": "protocol-0fb98842-4638-4b31-afb8-c795808aac7c",
+      "session_lineage_id": "661a1086-1435-5e43-8dea-845528a38643",
+      "revision_number": 6,
+      "title": "Thursday selected strength"
+    },
+    {
+      "session_key": "session-f010db80-69f7-502f-90f7-d6fb577ad005-r3",
+      "protocol_id": "protocol-fbb11a8d-b33c-4922-a452-cdd5af6e57ff",
+      "session_lineage_id": "f010db80-69f7-502f-90f7-d6fb577ad005",
+      "revision_number": 3,
+      "title": "Short-5K intervals"
+    },
+    {
+      "session_key": "session-09fc43aa-02be-52c9-9210-0fe46d68bb6d-r3",
+      "protocol_id": "protocol-3bbb7f66-4bb0-43e6-86b3-1014e79ed6e8",
+      "session_lineage_id": "09fc43aa-02be-52c9-9210-0fe46d68bb6d",
+      "revision_number": 3,
+      "title": "Long Zone 2 run"
+    },
+    {
+      "session_key": "session-e1978da3-e34b-5d08-a740-350a80d1926c-r6",
+      "protocol_id": "protocol-a049b1f4-94bb-439b-ab08-00807870434e",
+      "session_lineage_id": "e1978da3-e34b-5d08-a740-350a80d1926c",
+      "revision_number": 6,
+      "title": "Monday selected strength"
+    },
+    {
+      "session_key": "session-4b710afd-00c5-55b9-b9bb-11ce51daa47f-r3",
+      "protocol_id": "protocol-a0978a1d-11fd-4029-be03-7cef113658e0",
+      "session_lineage_id": "4b710afd-00c5-55b9-b9bb-11ce51daa47f",
+      "revision_number": 3,
+      "title": "10K intervals"
+    },
+    {
+      "session_key": "session-d4ecea05-5ec7-58a9-b534-0cec24e53164-r3",
+      "protocol_id": "protocol-4c9cc707-0d0b-44cf-be56-c21cb005d4bb",
+      "session_lineage_id": "d4ecea05-5ec7-58a9-b534-0cec24e53164",
+      "revision_number": 3,
+      "title": "Zone 2 run"
+    },
+    {
+      "session_key": "session-696dede4-268c-5a31-8e3a-0e555a8f8b0c-r6",
+      "protocol_id": "protocol-8d2df840-6224-4e22-b23f-de34f507a86f",
+      "session_lineage_id": "696dede4-268c-5a31-8e3a-0e555a8f8b0c",
+      "revision_number": 6,
+      "title": "Thursday selected strength"
+    },
+    {
+      "session_key": "session-54f39e5d-e386-5e07-a677-9a24eb15e3e6-r3",
+      "protocol_id": "protocol-fab11372-e437-47e5-b350-2e75ed6ac8b3",
+      "session_lineage_id": "54f39e5d-e386-5e07-a677-9a24eb15e3e6",
+      "revision_number": 3,
+      "title": "Short-5K intervals"
+    },
+    {
+      "session_key": "session-a95f0a65-4152-50c7-80b1-675746aa3cfa-r3",
+      "protocol_id": "protocol-5b582a0c-efe3-455d-8395-987976ae0b3c",
+      "session_lineage_id": "a95f0a65-4152-50c7-80b1-675746aa3cfa",
+      "revision_number": 3,
+      "title": "Long Zone 2 run"
+    },
+    {
+      "session_key": "session-308b82a9-d6b7-5c6d-a94b-b83c0b0d349a-r6",
+      "protocol_id": "protocol-b9ac91a0-6901-441f-a5b7-12267f366568",
+      "session_lineage_id": "308b82a9-d6b7-5c6d-a94b-b83c0b0d349a",
+      "revision_number": 6,
+      "title": "Monday selected strength"
+    },
+    {
+      "session_key": "session-c82ec1f8-e007-5f52-8d2b-a91f46df370c-r3",
+      "protocol_id": "protocol-6857cef7-16a7-4ef1-b7fd-a10a63a6e574",
+      "session_lineage_id": "c82ec1f8-e007-5f52-8d2b-a91f46df370c",
+      "revision_number": 3,
+      "title": "Peak 10K specificity"
+    },
+    {
+      "session_key": "session-2d770815-cd17-5501-9e01-9aa555a95bb0-r3",
+      "protocol_id": "protocol-d322bf24-958e-4dbc-b938-ec7d8d1264cc",
+      "session_lineage_id": "2d770815-cd17-5501-9e01-9aa555a95bb0",
+      "revision_number": 3,
+      "title": "Zone 2 run"
+    },
+    {
+      "session_key": "session-d44b2d25-63fb-5508-97a8-172f611fd422-r6",
+      "protocol_id": "protocol-064cd025-603b-4ab8-8913-993972abb8db",
+      "session_lineage_id": "d44b2d25-63fb-5508-97a8-172f611fd422",
+      "revision_number": 6,
+      "title": "Thursday selected strength"
+    },
+    {
+      "session_key": "session-37c5ad17-bc27-56f6-812c-c99929b5832e-r3",
+      "protocol_id": "protocol-08ce5fad-3094-4a0c-bb42-8f959568ed66",
+      "session_lineage_id": "37c5ad17-bc27-56f6-812c-c99929b5832e",
+      "revision_number": 3,
+      "title": "Short-5K intervals — lighter Friday"
+    },
+    {
+      "session_key": "session-f8c3ee75-dd3c-5fbc-808d-07ea66c6b7bb-r3",
+      "protocol_id": "protocol-b497d567-a7a8-46a0-a903-ae4babe5d4f7",
+      "session_lineage_id": "f8c3ee75-dd3c-5fbc-808d-07ea66c6b7bb",
+      "revision_number": 3,
+      "title": "Long Zone 2 run"
+    },
+    {
+      "session_key": "session-2a69637d-75c7-557d-b5dc-ba5e49b257d0-r6",
+      "protocol_id": "protocol-45c417ca-1395-4ae6-8259-66fe60b6614d",
+      "session_lineage_id": "2a69637d-75c7-557d-b5dc-ba5e49b257d0",
+      "revision_number": 6,
+      "title": "Monday selected strength"
+    },
+    {
+      "session_key": "session-cde0bbe4-0af4-5d4a-a0cb-fd17398eb7d3-r3",
+      "protocol_id": "protocol-852f8c3a-a9e1-460c-bc14-e1c300177e57",
+      "session_lineage_id": "cde0bbe4-0af4-5d4a-a0cb-fd17398eb7d3",
+      "revision_number": 3,
+      "title": "10K intervals"
+    },
+    {
+      "session_key": "session-029597e8-d816-5e64-b9a0-e47e81c4c108-r3",
+      "protocol_id": "protocol-c1494989-30d6-426e-8dea-5f832f132144",
+      "session_lineage_id": "029597e8-d816-5e64-b9a0-e47e81c4c108",
+      "revision_number": 3,
+      "title": "Zone 2 run"
+    },
+    {
+      "session_key": "session-0a6de07f-0ee6-5850-b903-acee407ca491-r6",
+      "protocol_id": "protocol-be52d09c-332c-44e2-9d23-f2d40b2a0067",
+      "session_lineage_id": "0a6de07f-0ee6-5850-b903-acee407ca491",
+      "revision_number": 6,
+      "title": "Thursday selected strength"
+    },
+    {
+      "session_key": "session-924f3647-cd34-5bf1-88ec-7bb0e1f9ae6a-r3",
+      "protocol_id": "protocol-b36cd1f7-4ae9-48f8-b82e-9aba0cddc4c3",
+      "session_lineage_id": "924f3647-cd34-5bf1-88ec-7bb0e1f9ae6a",
+      "revision_number": 3,
+      "title": "Short-5K intervals"
+    },
+    {
+      "session_key": "session-370218c5-441d-570c-bd36-ae08b3380ee4-r3",
+      "protocol_id": "protocol-a71208fc-6628-485e-b68d-23960225bd9b",
+      "session_lineage_id": "370218c5-441d-570c-bd36-ae08b3380ee4",
+      "revision_number": 3,
+      "title": "Long Zone 2 run"
+    },
+    {
+      "session_key": "session-13a6135f-439c-5e10-ac06-bc3e506596f9-r6",
+      "protocol_id": "protocol-3dffa457-3799-4199-b330-dc5c66e17d8d",
+      "session_lineage_id": "13a6135f-439c-5e10-ac06-bc3e506596f9",
+      "revision_number": 6,
+      "title": "Monday selected strength"
+    },
+    {
+      "session_key": "session-cbd90fb8-37ff-5458-b991-6c41b6fcd63e-r3",
+      "protocol_id": "protocol-301cc664-36c4-4af5-8984-64af2a6b6acb",
+      "session_lineage_id": "cbd90fb8-37ff-5458-b991-6c41b6fcd63e",
+      "revision_number": 3,
+      "title": "Taper sharpening"
+    },
+    {
+      "session_key": "session-e97108b8-57d9-5eae-8809-33a3699939b6-r3",
+      "protocol_id": "protocol-31b0a1de-0214-49c0-b669-d926b583c767",
+      "session_lineage_id": "e97108b8-57d9-5eae-8809-33a3699939b6",
+      "revision_number": 3,
+      "title": "Zone 2 run"
+    },
+    {
+      "session_key": "session-fe801431-6348-5b56-8081-396a810e7fd4-r3",
+      "protocol_id": "protocol-528d6945-89e5-4a94-bfc3-276a5e4d4578",
+      "session_lineage_id": "fe801431-6348-5b56-8081-396a810e7fd4",
+      "revision_number": 3,
+      "title": "Easy run with relaxed strides"
+    },
+    {
+      "session_key": "session-d1f03e44-ae64-5a40-a52e-675881e8f077-r3",
+      "protocol_id": "protocol-99fee9f3-cedd-4aa6-85ff-ad726419ede5",
+      "session_lineage_id": "d1f03e44-ae64-5a40-a52e-675881e8f077",
+      "revision_number": 3,
+      "title": "10K final assessment"
+    },
+    {
+      "session_key": "session-02346200-732e-56d4-a637-f20e7d75b7b4-r6",
+      "protocol_id": "protocol-0d8f637f-72b6-45bd-a7e0-9f7e16393466",
+      "session_lineage_id": "02346200-732e-56d4-a637-f20e7d75b7b4",
+      "revision_number": 6,
+      "title": "Upper-body taper exception"
+    }
+  ],
+  "weeks": [
+    {
+      "days": [
+        {
+          "day_key": "day_1",
+          "day_order": 1,
+          "day_type": "training",
+          "slots": [
+            {
+              "completion_expectation": "required",
+              "display_title": "Monday selected strength",
+              "is_optional": false,
+              "progression": {
+                "prescription_summary": "D1–D7 plus exact founder-selected week doses; D8 full-programme review in TEN_WEEK_REVIEW.md. No automatic progression."
+              },
+              "session_key": "session-379bb177-55b7-5535-8527-9047568a5ce9-r6",
+              "session_order": 1,
+              "slot_key": "LW10K-W01-D01",
+              "time_of_day": "any",
+              "coach_note": "Use this week’s exact sets, rests and repetitions in reserve. The selected consolidation, lower-body control and taper instructions manage strength workload alongside the running."
+            }
+          ],
+          "title": "Monday selected strength"
+        },
+        {
+          "day_key": "day_2",
+          "day_order": 2,
+          "day_type": "training",
+          "slots": [
+            {
+              "completion_expectation": "required",
+              "display_title": "Threshold intervals",
+              "is_optional": false,
+              "progression": {
+                "prescription_summary": "42:30; exact selected performance reference; no automatic progression."
+              },
+              "session_key": "session-baf02122-f283-5521-a3a4-16b1de1fd63d-r3",
+              "session_order": 1,
+              "slot_key": "LW10K-W01-D02",
+              "time_of_day": "any",
+              "coach_note": "This is the week’s main quality run. Follow the selected target and complete the work and recoveries exactly as written."
+            }
+          ],
+          "title": "Threshold intervals"
+        },
+        {
+          "day_key": "day_3",
+          "day_order": 3,
+          "day_type": "training",
+          "slots": [
+            {
+              "completion_expectation": "required",
+              "display_title": "Zone 2 run",
+              "is_optional": false,
+              "progression": {
+                "prescription_summary": "45:00; exact selected performance reference; no automatic progression."
+              },
+              "session_key": "session-43496cc4-773d-54cc-9ef4-db07b3aace5f-r3",
+              "session_order": 1,
+              "slot_key": "LW10K-W01-D03",
+              "time_of_day": "any"
+            }
+          ],
+          "title": "Zone 2 run"
+        },
+        {
+          "day_key": "day_4",
+          "day_order": 4,
+          "day_type": "training",
+          "slots": [
+            {
+              "completion_expectation": "required",
+              "display_title": "Thursday selected strength",
+              "is_optional": false,
+              "progression": {
+                "prescription_summary": "D1–D7 plus exact founder-selected week doses; D8 full-programme review in TEN_WEEK_REVIEW.md. No automatic progression."
+              },
+              "session_key": "session-21fc299c-06ba-5506-8553-0209780cbfe3-r6",
+              "session_order": 1,
+              "slot_key": "LW10K-W01-D04",
+              "time_of_day": "any",
+              "coach_note": "Use this week’s exact sets, rests and repetitions in reserve. The selected consolidation, lower-body control and taper instructions manage strength workload alongside the running."
+            }
+          ],
+          "title": "Thursday selected strength"
+        },
+        {
+          "day_key": "day_5",
+          "day_order": 5,
+          "day_type": "training",
+          "slots": [
+            {
+              "completion_expectation": "required",
+              "display_title": "Zone 2 run",
+              "is_optional": false,
+              "progression": {
+                "prescription_summary": "40:00; exact selected performance reference; no automatic progression."
+              },
+              "session_key": "session-63a11e44-8efd-57ac-99d2-c7e2b7f44a43-r3",
+              "session_order": 1,
+              "slot_key": "LW10K-W01-D05",
+              "time_of_day": "any",
+              "coach_note": "Today supports Tuesday’s quality work and the weekend’s run. Follow the easy prescription, adding relaxed strides only where listed."
+            }
+          ],
+          "title": "Zone 2 run"
+        },
+        {
+          "day_key": "day_6",
+          "day_order": 6,
+          "day_type": "rest",
+          "slots": [],
+          "title": "Rest"
+        },
+        {
+          "day_key": "day_7",
+          "day_order": 7,
+          "day_type": "training",
+          "slots": [
+            {
+              "completion_expectation": "required",
+              "display_title": "Long Zone 2 run",
+              "is_optional": false,
+              "progression": {
+                "prescription_summary": "65:00; exact selected performance reference; no automatic progression."
+              },
+              "session_key": "session-939762f3-bb11-592e-86e6-bd9a9fb8c153-r3",
+              "session_order": 1,
+              "slot_key": "LW10K-W01-D07",
+              "time_of_day": "any"
+            }
+          ],
+          "title": "Long Zone 2 run"
+        }
+      ],
+      "title": "Performance foundation",
+      "week_number": 1,
+      "coach_note": "Tuesday introduces threshold intervals; Friday stays easy alongside Sunday’s long run. Strength uses the selected standard doses and prescribed repetitions in reserve."
+    },
+    {
+      "days": [
+        {
+          "day_key": "day_1",
+          "day_order": 1,
+          "day_type": "training",
+          "slots": [
+            {
+              "completion_expectation": "required",
+              "display_title": "Monday selected strength",
+              "is_optional": false,
+              "progression": {
+                "prescription_summary": "D1–D7 plus exact founder-selected week doses; D8 full-programme review in TEN_WEEK_REVIEW.md. No automatic progression."
+              },
+              "session_key": "session-6aec11af-45d5-5fb9-9e4d-fbcc49d9e767-r6",
+              "session_order": 1,
+              "slot_key": "LW10K-W02-D01",
+              "time_of_day": "any",
+              "coach_note": "Use this week’s exact sets, rests and repetitions in reserve. The selected consolidation, lower-body control and taper instructions manage strength workload alongside the running."
+            }
+          ],
+          "title": "Monday selected strength"
+        },
+        {
+          "day_key": "day_2",
+          "day_order": 2,
+          "day_type": "training",
+          "slots": [
+            {
+              "completion_expectation": "required",
+              "display_title": "Threshold intervals",
+              "is_optional": false,
+              "progression": {
+                "prescription_summary": "46:00; exact selected performance reference; no automatic progression."
+              },
+              "session_key": "session-fcb86f6f-07ac-5f1b-b9b9-5fa7d4544827-r3",
+              "session_order": 1,
+              "slot_key": "LW10K-W02-D02",
+              "time_of_day": "any",
+              "coach_note": "This is the week’s main quality run. Follow the selected target and complete the work and recoveries exactly as written."
+            }
+          ],
+          "title": "Threshold intervals"
+        },
+        {
+          "day_key": "day_3",
+          "day_order": 3,
+          "day_type": "training",
+          "slots": [
+            {
+              "completion_expectation": "required",
+              "display_title": "Zone 2 run",
+              "is_optional": false,
+              "progression": {
+                "prescription_summary": "45:00; exact selected performance reference; no automatic progression."
+              },
+              "session_key": "session-4d650387-b504-5c80-9bc2-a6534d88863b-r3",
+              "session_order": 1,
+              "slot_key": "LW10K-W02-D03",
+              "time_of_day": "any"
+            }
+          ],
+          "title": "Zone 2 run"
+        },
+        {
+          "day_key": "day_4",
+          "day_order": 4,
+          "day_type": "training",
+          "slots": [
+            {
+              "completion_expectation": "required",
+              "display_title": "Thursday selected strength",
+              "is_optional": false,
+              "progression": {
+                "prescription_summary": "D1–D7 plus exact founder-selected week doses; D8 full-programme review in TEN_WEEK_REVIEW.md. No automatic progression."
+              },
+              "session_key": "session-e7f72978-bb3e-5252-bcbd-ee996d53ac3e-r6",
+              "session_order": 1,
+              "slot_key": "LW10K-W02-D04",
+              "time_of_day": "any",
+              "coach_note": "Use this week’s exact sets, rests and repetitions in reserve. The selected consolidation, lower-body control and taper instructions manage strength workload alongside the running."
+            }
+          ],
+          "title": "Thursday selected strength"
+        },
+        {
+          "day_key": "day_5",
+          "day_order": 5,
+          "day_type": "training",
+          "slots": [
+            {
+              "completion_expectation": "required",
+              "display_title": "Zone 2 run",
+              "is_optional": false,
+              "progression": {
+                "prescription_summary": "45:00; exact selected performance reference; no automatic progression."
+              },
+              "session_key": "session-57a3b9c7-9da1-52a8-9600-f2d1fbb1e64a-r3",
+              "session_order": 1,
+              "slot_key": "LW10K-W02-D05",
+              "time_of_day": "any",
+              "coach_note": "Today supports Tuesday’s quality work and the weekend’s run. Follow the easy prescription, adding relaxed strides only where listed."
+            }
+          ],
+          "title": "Zone 2 run"
+        },
+        {
+          "day_key": "day_6",
+          "day_order": 6,
+          "day_type": "rest",
+          "slots": [],
+          "title": "Rest"
+        },
+        {
+          "day_key": "day_7",
+          "day_order": 7,
+          "day_type": "training",
+          "slots": [
+            {
+              "completion_expectation": "required",
+              "display_title": "Long Zone 2 run",
+              "is_optional": false,
+              "progression": {
+                "prescription_summary": "70:00; exact selected performance reference; no automatic progression."
+              },
+              "session_key": "session-74717952-b073-5d01-9df1-cfbd40df7c70-r3",
+              "session_order": 1,
+              "slot_key": "LW10K-W02-D07",
+              "time_of_day": "any"
+            }
+          ],
+          "title": "Long Zone 2 run"
+        }
+      ],
+      "title": "Threshold build",
+      "week_number": 2,
+      "coach_note": "Tuesday lengthens the threshold repetitions while Friday remains easy. Strength stays at standard doses, with the written effort margins retained."
+    },
+    {
+      "days": [
+        {
+          "day_key": "day_1",
+          "day_order": 1,
+          "day_type": "training",
+          "slots": [
+            {
+              "completion_expectation": "required",
+              "display_title": "Monday selected strength",
+              "is_optional": false,
+              "progression": {
+                "prescription_summary": "D1–D7 plus exact founder-selected week doses; D8 full-programme review in TEN_WEEK_REVIEW.md. No automatic progression."
+              },
+              "session_key": "session-da3a1810-a65f-5e19-a7dc-e7d276839e44-r6",
+              "session_order": 1,
+              "slot_key": "LW10K-W03-D01",
+              "time_of_day": "any",
+              "coach_note": "Use this week’s exact sets, rests and repetitions in reserve. The selected consolidation, lower-body control and taper instructions manage strength workload alongside the running."
+            }
+          ],
+          "title": "Monday selected strength"
+        },
+        {
+          "day_key": "day_2",
+          "day_order": 2,
+          "day_type": "training",
+          "slots": [
+            {
+              "completion_expectation": "required",
+              "display_title": "Threshold intervals",
+              "is_optional": false,
+              "progression": {
+                "prescription_summary": "49:00; exact selected performance reference; no automatic progression."
+              },
+              "session_key": "session-3116c98a-5e21-5ce1-8e3b-9b708479454f-r3",
+              "session_order": 1,
+              "slot_key": "LW10K-W03-D02",
+              "time_of_day": "any",
+              "coach_note": "This is the week’s main quality run. Follow the selected target and complete the work and recoveries exactly as written."
+            }
+          ],
+          "title": "Threshold intervals"
+        },
+        {
+          "day_key": "day_3",
+          "day_order": 3,
+          "day_type": "training",
+          "slots": [
+            {
+              "completion_expectation": "required",
+              "display_title": "Zone 2 run",
+              "is_optional": false,
+              "progression": {
+                "prescription_summary": "50:00; exact selected performance reference; no automatic progression."
+              },
+              "session_key": "session-b9aa43f7-9dc3-539c-b183-3ab339654758-r3",
+              "session_order": 1,
+              "slot_key": "LW10K-W03-D03",
+              "time_of_day": "any"
+            }
+          ],
+          "title": "Zone 2 run"
+        },
+        {
+          "day_key": "day_4",
+          "day_order": 4,
+          "day_type": "training",
+          "slots": [
+            {
+              "completion_expectation": "required",
+              "display_title": "Thursday selected strength",
+              "is_optional": false,
+              "progression": {
+                "prescription_summary": "D1–D7 plus exact founder-selected week doses; D8 full-programme review in TEN_WEEK_REVIEW.md. No automatic progression."
+              },
+              "session_key": "session-2052df8e-b4dd-58e0-9c03-17f98f138e24-r6",
+              "session_order": 1,
+              "slot_key": "LW10K-W03-D04",
+              "time_of_day": "any",
+              "coach_note": "Use this week’s exact sets, rests and repetitions in reserve. The selected consolidation, lower-body control and taper instructions manage strength workload alongside the running."
+            }
+          ],
+          "title": "Thursday selected strength"
+        },
+        {
+          "day_key": "day_5",
+          "day_order": 5,
+          "day_type": "training",
+          "slots": [
+            {
+              "completion_expectation": "required",
+              "display_title": "Easy run with relaxed strides",
+              "is_optional": false,
+              "progression": {
+                "prescription_summary": "45:00; exact selected performance reference; no automatic progression."
+              },
+              "session_key": "session-1ea65fa9-b267-51ba-9525-584d6f8e3783-r3",
+              "session_order": 1,
+              "slot_key": "LW10K-W03-D05",
+              "time_of_day": "any",
+              "coach_note": "Today supports Tuesday’s quality work and the weekend’s run. Follow the easy prescription, adding relaxed strides only where listed."
+            }
+          ],
+          "title": "Easy run with relaxed strides"
+        },
+        {
+          "day_key": "day_6",
+          "day_order": 6,
+          "day_type": "rest",
+          "slots": [],
+          "title": "Rest"
+        },
+        {
+          "day_key": "day_7",
+          "day_order": 7,
+          "day_type": "training",
+          "slots": [
+            {
+              "completion_expectation": "required",
+              "display_title": "Long Zone 2 run",
+              "is_optional": false,
+              "progression": {
+                "prescription_summary": "75:00; exact selected performance reference; no automatic progression."
+              },
+              "session_key": "session-9d2ae8c0-e828-5a54-bdba-c2c05d76d364-r3",
+              "session_order": 1,
+              "slot_key": "LW10K-W03-D07",
+              "time_of_day": "any"
+            }
+          ],
+          "title": "Long Zone 2 run"
+        }
+      ],
+      "title": "Threshold build",
+      "week_number": 3,
+      "coach_note": "Tuesday extends the threshold repetitions. Friday combines easy running with relaxed strides; strength remains standard, with controlled execution throughout."
+    },
+    {
+      "days": [
+        {
+          "day_key": "day_1",
+          "day_order": 1,
+          "day_type": "training",
+          "slots": [
+            {
+              "completion_expectation": "required",
+              "display_title": "Monday selected strength",
+              "is_optional": false,
+              "progression": {
+                "prescription_summary": "D1–D7 plus exact founder-selected week doses; D8 full-programme review in TEN_WEEK_REVIEW.md. No automatic progression."
+              },
+              "session_key": "session-2d045c4d-0da3-583f-823c-f6d2fa3c0443-r6",
+              "session_order": 1,
+              "slot_key": "LW10K-W04-D01",
+              "time_of_day": "any",
+              "coach_note": "Use this week’s exact sets, rests and repetitions in reserve. The selected consolidation, lower-body control and taper instructions manage strength workload alongside the running."
+            }
+          ],
+          "title": "Monday selected strength"
+        },
+        {
+          "day_key": "day_2",
+          "day_order": 2,
+          "day_type": "training",
+          "slots": [
+            {
+              "completion_expectation": "required",
+              "display_title": "Consolidation threshold",
+              "is_optional": false,
+              "progression": {
+                "prescription_summary": "42:30; exact selected performance reference; no automatic progression."
+              },
+              "session_key": "session-e8afd9a6-7246-598d-b6f9-6fb59096a76e-r3",
+              "session_order": 1,
+              "slot_key": "LW10K-W04-D02",
+              "time_of_day": "any",
+              "coach_note": "This is the week’s main quality run. Follow the selected target and complete the work and recoveries exactly as written."
+            }
+          ],
+          "title": "Consolidation threshold"
+        },
+        {
+          "day_key": "day_3",
+          "day_order": 3,
+          "day_type": "training",
+          "slots": [
+            {
+              "completion_expectation": "required",
+              "display_title": "Zone 2 run",
+              "is_optional": false,
+              "progression": {
+                "prescription_summary": "40:00; exact selected performance reference; no automatic progression."
+              },
+              "session_key": "session-f6675795-cabc-5706-b1bf-7c5a08f62528-r3",
+              "session_order": 1,
+              "slot_key": "LW10K-W04-D03",
+              "time_of_day": "any"
+            }
+          ],
+          "title": "Zone 2 run"
+        },
+        {
+          "day_key": "day_4",
+          "day_order": 4,
+          "day_type": "training",
+          "slots": [
+            {
+              "completion_expectation": "required",
+              "display_title": "Thursday selected strength",
+              "is_optional": false,
+              "progression": {
+                "prescription_summary": "D1–D7 plus exact founder-selected week doses; D8 full-programme review in TEN_WEEK_REVIEW.md. No automatic progression."
+              },
+              "session_key": "session-d5f28dd7-25fd-53e3-ba85-b297c17420e4-r6",
+              "session_order": 1,
+              "slot_key": "LW10K-W04-D04",
+              "time_of_day": "any",
+              "coach_note": "Use this week’s exact sets, rests and repetitions in reserve. The selected consolidation, lower-body control and taper instructions manage strength workload alongside the running."
+            }
+          ],
+          "title": "Thursday selected strength"
+        },
+        {
+          "day_key": "day_5",
+          "day_order": 5,
+          "day_type": "training",
+          "slots": [
+            {
+              "completion_expectation": "required",
+              "display_title": "Zone 2 run",
+              "is_optional": false,
+              "progression": {
+                "prescription_summary": "40:00; exact selected performance reference; no automatic progression."
+              },
+              "session_key": "session-4a8dee15-c86d-5822-be7d-0241e9a3077f-r3",
+              "session_order": 1,
+              "slot_key": "LW10K-W04-D05",
+              "time_of_day": "any",
+              "coach_note": "Today supports Tuesday’s quality work and the weekend’s run. Follow the easy prescription, adding relaxed strides only where listed."
+            }
+          ],
+          "title": "Zone 2 run"
+        },
+        {
+          "day_key": "day_6",
+          "day_order": 6,
+          "day_type": "rest",
+          "slots": [],
+          "title": "Rest"
+        },
+        {
+          "day_key": "day_7",
+          "day_order": 7,
+          "day_type": "training",
+          "slots": [
+            {
+              "completion_expectation": "required",
+              "display_title": "Long Zone 2 run",
+              "is_optional": false,
+              "progression": {
+                "prescription_summary": "65:00; exact selected performance reference; no automatic progression."
+              },
+              "session_key": "session-c54df464-7cf0-5aad-9c1b-87f1481f40da-r3",
+              "session_order": 1,
+              "slot_key": "LW10K-W04-D07",
+              "time_of_day": "any"
+            }
+          ],
+          "title": "Long Zone 2 run"
+        }
+      ],
+      "title": "Consolidation",
+      "week_number": 4,
+      "coach_note": "Tuesday and Friday reduce running workload for consolidation. Strength reduces the specified upper-body sets, while RDL work retains its prescribed dose without a planned load increase."
+    },
+    {
+      "days": [
+        {
+          "day_key": "day_1",
+          "day_order": 1,
+          "day_type": "training",
+          "slots": [
+            {
+              "completion_expectation": "required",
+              "display_title": "Monday selected strength",
+              "is_optional": false,
+              "progression": {
+                "prescription_summary": "D1–D7 plus exact founder-selected week doses; D8 full-programme review in TEN_WEEK_REVIEW.md. No automatic progression."
+              },
+              "session_key": "session-c2b9a2a5-a0fd-5b32-9b5a-db285799c0a3-r6",
+              "session_order": 1,
+              "slot_key": "LW10K-W05-D01",
+              "time_of_day": "any",
+              "coach_note": "Use this week’s exact sets, rests and repetitions in reserve. The selected consolidation, lower-body control and taper instructions manage strength workload alongside the running."
+            }
+          ],
+          "title": "Monday selected strength"
+        },
+        {
+          "day_key": "day_2",
+          "day_order": 2,
+          "day_type": "training",
+          "slots": [
+            {
+              "completion_expectation": "required",
+              "display_title": "Threshold intervals",
+              "is_optional": false,
+              "progression": {
+                "prescription_summary": "52:00; exact selected performance reference; no automatic progression."
+              },
+              "session_key": "session-d65948b6-69b5-570b-8d4a-6e96e5908314-r3",
+              "session_order": 1,
+              "slot_key": "LW10K-W05-D02",
+              "time_of_day": "any",
+              "coach_note": "This is the week’s main quality run. Follow the selected target and complete the work and recoveries exactly as written."
+            }
+          ],
+          "title": "Threshold intervals"
+        },
+        {
+          "day_key": "day_3",
+          "day_order": 3,
+          "day_type": "training",
+          "slots": [
+            {
+              "completion_expectation": "required",
+              "display_title": "Zone 2 run",
+              "is_optional": false,
+              "progression": {
+                "prescription_summary": "50:00; exact selected performance reference; no automatic progression."
+              },
+              "session_key": "session-31891ea0-b339-5f67-ab8c-deebae40d54c-r3",
+              "session_order": 1,
+              "slot_key": "LW10K-W05-D03",
+              "time_of_day": "any"
+            }
+          ],
+          "title": "Zone 2 run"
+        },
+        {
+          "day_key": "day_4",
+          "day_order": 4,
+          "day_type": "training",
+          "slots": [
+            {
+              "completion_expectation": "required",
+              "display_title": "Thursday selected strength",
+              "is_optional": false,
+              "progression": {
+                "prescription_summary": "D1–D7 plus exact founder-selected week doses; D8 full-programme review in TEN_WEEK_REVIEW.md. No automatic progression."
+              },
+              "session_key": "session-eb3d69ec-b232-5fb8-ba32-c7cf00cc794d-r6",
+              "session_order": 1,
+              "slot_key": "LW10K-W05-D04",
+              "time_of_day": "any",
+              "coach_note": "Use this week’s exact sets, rests and repetitions in reserve. The selected consolidation, lower-body control and taper instructions manage strength workload alongside the running."
+            }
+          ],
+          "title": "Thursday selected strength"
+        },
+        {
+          "day_key": "day_5",
+          "day_order": 5,
+          "day_type": "training",
+          "slots": [
+            {
+              "completion_expectation": "required",
+              "display_title": "Easy run with relaxed strides",
+              "is_optional": false,
+              "progression": {
+                "prescription_summary": "45:00; exact selected performance reference; no automatic progression."
+              },
+              "session_key": "session-9353deb4-1360-59bd-8785-5c88ee68c7d2-r3",
+              "session_order": 1,
+              "slot_key": "LW10K-W05-D05",
+              "time_of_day": "any",
+              "coach_note": "Today supports Tuesday’s quality work and the weekend’s run. Follow the easy prescription, adding relaxed strides only where listed."
+            }
+          ],
+          "title": "Easy run with relaxed strides"
+        },
+        {
+          "day_key": "day_6",
+          "day_order": 6,
+          "day_type": "rest",
+          "slots": [],
+          "title": "Rest"
+        },
+        {
+          "day_key": "day_7",
+          "day_order": 7,
+          "day_type": "training",
+          "slots": [
+            {
+              "completion_expectation": "required",
+              "display_title": "Long Zone 2 run",
+              "is_optional": false,
+              "progression": {
+                "prescription_summary": "75:00; exact selected performance reference; no automatic progression."
+              },
+              "session_key": "session-d9e7a99e-887a-569f-90e0-989c3bd84954-r3",
+              "session_order": 1,
+              "slot_key": "LW10K-W05-D07",
+              "time_of_day": "any"
+            }
+          ],
+          "title": "Long Zone 2 run"
+        }
+      ],
+      "title": "Threshold development",
+      "week_number": 5,
+      "coach_note": "Tuesday builds to longer threshold repetitions; Friday supports the week with easy running and relaxed strides. Standard strength doses resume with the prescribed effort margins."
+    },
+    {
+      "days": [
+        {
+          "day_key": "day_1",
+          "day_order": 1,
+          "day_type": "training",
+          "slots": [
+            {
+              "completion_expectation": "required",
+              "display_title": "Monday selected strength",
+              "is_optional": false,
+              "progression": {
+                "prescription_summary": "D1–D7 plus exact founder-selected week doses; D8 full-programme review in TEN_WEEK_REVIEW.md. No automatic progression."
+              },
+              "session_key": "session-18d0f55a-76b8-5d60-9fc4-2ea5698fdf7b-r6",
+              "session_order": 1,
+              "slot_key": "LW10K-W06-D01",
+              "time_of_day": "any",
+              "coach_note": "Use this week’s exact sets, rests and repetitions in reserve. The selected consolidation, lower-body control and taper instructions manage strength workload alongside the running."
+            }
+          ],
+          "title": "Monday selected strength"
+        },
+        {
+          "day_key": "day_2",
+          "day_order": 2,
+          "day_type": "training",
+          "slots": [
+            {
+              "completion_expectation": "required",
+              "display_title": "10K intervals",
+              "is_optional": false,
+              "progression": {
+                "prescription_summary": "48:00; exact selected performance reference; no automatic progression."
+              },
+              "session_key": "session-44f05b2a-a55a-5766-a9b4-00b2db46ea71-r3",
+              "session_order": 1,
+              "slot_key": "LW10K-W06-D02",
+              "time_of_day": "any",
+              "coach_note": "This is the week’s main quality run. Follow the selected target and complete the work and recoveries exactly as written."
+            }
+          ],
+          "title": "10K intervals"
+        },
+        {
+          "day_key": "day_3",
+          "day_order": 3,
+          "day_type": "training",
+          "slots": [
+            {
+              "completion_expectation": "required",
+              "display_title": "Zone 2 run",
+              "is_optional": false,
+              "progression": {
+                "prescription_summary": "50:00; exact selected performance reference; no automatic progression."
+              },
+              "session_key": "session-bf80b11c-5389-5268-8659-1655e36410e3-r3",
+              "session_order": 1,
+              "slot_key": "LW10K-W06-D03",
+              "time_of_day": "any"
+            }
+          ],
+          "title": "Zone 2 run"
+        },
+        {
+          "day_key": "day_4",
+          "day_order": 4,
+          "day_type": "training",
+          "slots": [
+            {
+              "completion_expectation": "required",
+              "display_title": "Thursday selected strength",
+              "is_optional": false,
+              "progression": {
+                "prescription_summary": "D1–D7 plus exact founder-selected week doses; D8 full-programme review in TEN_WEEK_REVIEW.md. No automatic progression."
+              },
+              "session_key": "session-661a1086-1435-5e43-8dea-845528a38643-r6",
+              "session_order": 1,
+              "slot_key": "LW10K-W06-D04",
+              "time_of_day": "any",
+              "coach_note": "Use this week’s exact sets, rests and repetitions in reserve. The selected consolidation, lower-body control and taper instructions manage strength workload alongside the running."
+            }
+          ],
+          "title": "Thursday selected strength"
+        },
+        {
+          "day_key": "day_5",
+          "day_order": 5,
+          "day_type": "training",
+          "slots": [
+            {
+              "completion_expectation": "required",
+              "display_title": "Short-5K intervals",
+              "is_optional": false,
+              "progression": {
+                "prescription_summary": "28:30; exact selected performance reference; no automatic progression."
+              },
+              "session_key": "session-f010db80-69f7-502f-90f7-d6fb577ad005-r3",
+              "session_order": 1,
+              "slot_key": "LW10K-W06-D05",
+              "time_of_day": "any",
+              "coach_note": "This shorter 5K-paced session complements Tuesday’s 10K-specific work. Keep its prescribed repetitions and recoveries unchanged."
+            }
+          ],
+          "title": "Short-5K intervals"
+        },
+        {
+          "day_key": "day_6",
+          "day_order": 6,
+          "day_type": "rest",
+          "slots": [],
+          "title": "Rest"
+        },
+        {
+          "day_key": "day_7",
+          "day_order": 7,
+          "day_type": "training",
+          "slots": [
+            {
+              "completion_expectation": "required",
+              "display_title": "Long Zone 2 run",
+              "is_optional": false,
+              "progression": {
+                "prescription_summary": "75:00; exact selected performance reference; no automatic progression."
+              },
+              "session_key": "session-09fc43aa-02be-52c9-9210-0fe46d68bb6d-r3",
+              "session_order": 1,
+              "slot_key": "LW10K-W06-D07",
+              "time_of_day": "any"
+            }
+          ],
+          "title": "Long Zone 2 run"
+        }
+      ],
+      "title": "10K specificity plus short-5K Friday",
+      "week_number": 6,
+      "coach_note": "Tuesday becomes the main 10K-paced session. Friday adds shorter 5K-paced support work; strength continues at its selected standard doses and effort margins."
+    },
+    {
+      "days": [
+        {
+          "day_key": "day_1",
+          "day_order": 1,
+          "day_type": "training",
+          "slots": [
+            {
+              "completion_expectation": "required",
+              "display_title": "Monday selected strength",
+              "is_optional": false,
+              "progression": {
+                "prescription_summary": "D1–D7 plus exact founder-selected week doses; D8 full-programme review in TEN_WEEK_REVIEW.md. No automatic progression."
+              },
+              "session_key": "session-e1978da3-e34b-5d08-a740-350a80d1926c-r6",
+              "session_order": 1,
+              "slot_key": "LW10K-W07-D01",
+              "time_of_day": "any",
+              "coach_note": "Use this week’s exact sets, rests and repetitions in reserve. The selected consolidation, lower-body control and taper instructions manage strength workload alongside the running."
+            }
+          ],
+          "title": "Monday selected strength"
+        },
+        {
+          "day_key": "day_2",
+          "day_order": 2,
+          "day_type": "training",
+          "slots": [
+            {
+              "completion_expectation": "required",
+              "display_title": "10K intervals",
+              "is_optional": false,
+              "progression": {
+                "prescription_summary": "46:00; exact selected performance reference; no automatic progression."
+              },
+              "session_key": "session-4b710afd-00c5-55b9-b9bb-11ce51daa47f-r3",
+              "session_order": 1,
+              "slot_key": "LW10K-W07-D02",
+              "time_of_day": "any",
+              "coach_note": "This is the week’s main quality run. Follow the selected target and complete the work and recoveries exactly as written."
+            }
+          ],
+          "title": "10K intervals"
+        },
+        {
+          "day_key": "day_3",
+          "day_order": 3,
+          "day_type": "training",
+          "slots": [
+            {
+              "completion_expectation": "required",
+              "display_title": "Zone 2 run",
+              "is_optional": false,
+              "progression": {
+                "prescription_summary": "50:00; exact selected performance reference; no automatic progression."
+              },
+              "session_key": "session-d4ecea05-5ec7-58a9-b534-0cec24e53164-r3",
+              "session_order": 1,
+              "slot_key": "LW10K-W07-D03",
+              "time_of_day": "any"
+            }
+          ],
+          "title": "Zone 2 run"
+        },
+        {
+          "day_key": "day_4",
+          "day_order": 4,
+          "day_type": "training",
+          "slots": [
+            {
+              "completion_expectation": "required",
+              "display_title": "Thursday selected strength",
+              "is_optional": false,
+              "progression": {
+                "prescription_summary": "D1–D7 plus exact founder-selected week doses; D8 full-programme review in TEN_WEEK_REVIEW.md. No automatic progression."
+              },
+              "session_key": "session-696dede4-268c-5a31-8e3a-0e555a8f8b0c-r6",
+              "session_order": 1,
+              "slot_key": "LW10K-W07-D04",
+              "time_of_day": "any",
+              "coach_note": "Use this week’s exact sets, rests and repetitions in reserve. The selected consolidation, lower-body control and taper instructions manage strength workload alongside the running."
+            }
+          ],
+          "title": "Thursday selected strength"
+        },
+        {
+          "day_key": "day_5",
+          "day_order": 5,
+          "day_type": "training",
+          "slots": [
+            {
+              "completion_expectation": "required",
+              "display_title": "Short-5K intervals",
+              "is_optional": false,
+              "progression": {
+                "prescription_summary": "33:00; exact selected performance reference; no automatic progression."
+              },
+              "session_key": "session-54f39e5d-e386-5e07-a677-9a24eb15e3e6-r3",
+              "session_order": 1,
+              "slot_key": "LW10K-W07-D05",
+              "time_of_day": "any",
+              "coach_note": "This shorter 5K-paced session complements Tuesday’s 10K-specific work. Keep its prescribed repetitions and recoveries unchanged."
+            }
+          ],
+          "title": "Short-5K intervals"
+        },
+        {
+          "day_key": "day_6",
+          "day_order": 6,
+          "day_type": "rest",
+          "slots": [],
+          "title": "Rest"
+        },
+        {
+          "day_key": "day_7",
+          "day_order": 7,
+          "day_type": "training",
+          "slots": [
+            {
+              "completion_expectation": "required",
+              "display_title": "Long Zone 2 run",
+              "is_optional": false,
+              "progression": {
+                "prescription_summary": "75:00; exact selected performance reference; no automatic progression."
+              },
+              "session_key": "session-a95f0a65-4152-50c7-80b1-675746aa3cfa-r3",
+              "session_order": 1,
+              "slot_key": "LW10K-W07-D07",
+              "time_of_day": "any"
+            }
+          ],
+          "title": "Long Zone 2 run"
+        }
+      ],
+      "title": "Standard build; not consolidation",
+      "week_number": 7,
+      "coach_note": "Tuesday uses longer 10K-paced repetitions, while Friday lengthens its short-5K repetitions. This remains a standard strength week, with the written doses and recovery periods retained."
+    },
+    {
+      "days": [
+        {
+          "day_key": "day_1",
+          "day_order": 1,
+          "day_type": "training",
+          "slots": [
+            {
+              "completion_expectation": "required",
+              "display_title": "Monday selected strength",
+              "is_optional": false,
+              "progression": {
+                "prescription_summary": "D1–D7 plus exact founder-selected week doses; D8 full-programme review in TEN_WEEK_REVIEW.md. No automatic progression."
+              },
+              "session_key": "session-308b82a9-d6b7-5c6d-a94b-b83c0b0d349a-r6",
+              "session_order": 1,
+              "slot_key": "LW10K-W08-D01",
+              "time_of_day": "any",
+              "coach_note": "Use this week’s exact sets, rests and repetitions in reserve. The selected consolidation, lower-body control and taper instructions manage strength workload alongside the running."
+            }
+          ],
+          "title": "Monday selected strength"
+        },
+        {
+          "day_key": "day_2",
+          "day_order": 2,
+          "day_type": "training",
+          "slots": [
+            {
+              "completion_expectation": "required",
+              "display_title": "Peak 10K specificity",
+              "is_optional": false,
+              "progression": {
+                "prescription_summary": "49:00; exact selected performance reference; no automatic progression."
+              },
+              "session_key": "session-c82ec1f8-e007-5f52-8d2b-a91f46df370c-r3",
+              "session_order": 1,
+              "slot_key": "LW10K-W08-D02",
+              "time_of_day": "any",
+              "coach_note": "This is the week’s main quality run. Follow the selected target and complete the work and recoveries exactly as written."
+            }
+          ],
+          "title": "Peak 10K specificity"
+        },
+        {
+          "day_key": "day_3",
+          "day_order": 3,
+          "day_type": "training",
+          "slots": [
+            {
+              "completion_expectation": "required",
+              "display_title": "Zone 2 run",
+              "is_optional": false,
+              "progression": {
+                "prescription_summary": "45:00; exact selected performance reference; no automatic progression."
+              },
+              "session_key": "session-2d770815-cd17-5501-9e01-9aa555a95bb0-r3",
+              "session_order": 1,
+              "slot_key": "LW10K-W08-D03",
+              "time_of_day": "any"
+            }
+          ],
+          "title": "Zone 2 run"
+        },
+        {
+          "day_key": "day_4",
+          "day_order": 4,
+          "day_type": "training",
+          "slots": [
+            {
+              "completion_expectation": "required",
+              "display_title": "Thursday selected strength",
+              "is_optional": false,
+              "progression": {
+                "prescription_summary": "D1–D7 plus exact founder-selected week doses; D8 full-programme review in TEN_WEEK_REVIEW.md. No automatic progression."
+              },
+              "session_key": "session-d44b2d25-63fb-5508-97a8-172f611fd422-r6",
+              "session_order": 1,
+              "slot_key": "LW10K-W08-D04",
+              "time_of_day": "any",
+              "coach_note": "Use this week’s exact sets, rests and repetitions in reserve. The selected consolidation, lower-body control and taper instructions manage strength workload alongside the running."
+            }
+          ],
+          "title": "Thursday selected strength"
+        },
+        {
+          "day_key": "day_5",
+          "day_order": 5,
+          "day_type": "training",
+          "slots": [
+            {
+              "completion_expectation": "required",
+              "display_title": "Short-5K intervals — lighter Friday",
+              "is_optional": false,
+              "progression": {
+                "prescription_summary": "23:30; exact selected performance reference; no automatic progression."
+              },
+              "session_key": "session-37c5ad17-bc27-56f6-812c-c99929b5832e-r3",
+              "session_order": 1,
+              "slot_key": "LW10K-W08-D05",
+              "time_of_day": "any",
+              "coach_note": "This shorter 5K-paced session complements Tuesday’s 10K-specific work. Keep its prescribed repetitions and recoveries unchanged."
+            }
+          ],
+          "title": "Short-5K intervals — lighter Friday"
+        },
+        {
+          "day_key": "day_6",
+          "day_order": 6,
+          "day_type": "rest",
+          "slots": [],
+          "title": "Rest"
+        },
+        {
+          "day_key": "day_7",
+          "day_order": 7,
+          "day_type": "training",
+          "slots": [
+            {
+              "completion_expectation": "required",
+              "display_title": "Long Zone 2 run",
+              "is_optional": false,
+              "progression": {
+                "prescription_summary": "75:00; exact selected performance reference; no automatic progression."
+              },
+              "session_key": "session-f8c3ee75-dd3c-5fbc-808d-07ea66c6b7bb-r3",
+              "session_order": 1,
+              "slot_key": "LW10K-W08-D07",
+              "time_of_day": "any"
+            }
+          ],
+          "title": "Long Zone 2 run"
+        }
+      ],
+      "title": "Peak Tuesday specificity; lighter Friday",
+      "week_number": 8,
+      "coach_note": "Tuesday carries the peak 10K-specific work; Friday is deliberately lighter. RDL and lunge work use the selected 3-RIR doses, with no planned lower-body load increase."
+    },
+    {
+      "days": [
+        {
+          "day_key": "day_1",
+          "day_order": 1,
+          "day_type": "training",
+          "slots": [
+            {
+              "completion_expectation": "required",
+              "display_title": "Monday selected strength",
+              "is_optional": false,
+              "progression": {
+                "prescription_summary": "D1–D7 plus exact founder-selected week doses; D8 full-programme review in TEN_WEEK_REVIEW.md. No automatic progression."
+              },
+              "session_key": "session-2a69637d-75c7-557d-b5dc-ba5e49b257d0-r6",
+              "session_order": 1,
+              "slot_key": "LW10K-W09-D01",
+              "time_of_day": "any",
+              "coach_note": "Use this week’s exact sets, rests and repetitions in reserve. The selected consolidation, lower-body control and taper instructions manage strength workload alongside the running."
+            }
+          ],
+          "title": "Monday selected strength"
+        },
+        {
+          "day_key": "day_2",
+          "day_order": 2,
+          "day_type": "training",
+          "slots": [
+            {
+              "completion_expectation": "required",
+              "display_title": "10K intervals",
+              "is_optional": false,
+              "progression": {
+                "prescription_summary": "40:00; exact selected performance reference; no automatic progression."
+              },
+              "session_key": "session-cde0bbe4-0af4-5d4a-a0cb-fd17398eb7d3-r3",
+              "session_order": 1,
+              "slot_key": "LW10K-W09-D02",
+              "time_of_day": "any",
+              "coach_note": "This is the week’s main quality run. Follow the selected target and complete the work and recoveries exactly as written."
+            }
+          ],
+          "title": "10K intervals"
+        },
+        {
+          "day_key": "day_3",
+          "day_order": 3,
+          "day_type": "training",
+          "slots": [
+            {
+              "completion_expectation": "required",
+              "display_title": "Zone 2 run",
+              "is_optional": false,
+              "progression": {
+                "prescription_summary": "45:00; exact selected performance reference; no automatic progression."
+              },
+              "session_key": "session-029597e8-d816-5e64-b9a0-e47e81c4c108-r3",
+              "session_order": 1,
+              "slot_key": "LW10K-W09-D03",
+              "time_of_day": "any"
+            }
+          ],
+          "title": "Zone 2 run"
+        },
+        {
+          "day_key": "day_4",
+          "day_order": 4,
+          "day_type": "training",
+          "slots": [
+            {
+              "completion_expectation": "required",
+              "display_title": "Thursday selected strength",
+              "is_optional": false,
+              "progression": {
+                "prescription_summary": "D1–D7 plus exact founder-selected week doses; D8 full-programme review in TEN_WEEK_REVIEW.md. No automatic progression."
+              },
+              "session_key": "session-0a6de07f-0ee6-5850-b903-acee407ca491-r6",
+              "session_order": 1,
+              "slot_key": "LW10K-W09-D04",
+              "time_of_day": "any",
+              "coach_note": "Use this week’s exact sets, rests and repetitions in reserve. The selected consolidation, lower-body control and taper instructions manage strength workload alongside the running."
+            }
+          ],
+          "title": "Thursday selected strength"
+        },
+        {
+          "day_key": "day_5",
+          "day_order": 5,
+          "day_type": "training",
+          "slots": [
+            {
+              "completion_expectation": "required",
+              "display_title": "Short-5K intervals",
+              "is_optional": false,
+              "progression": {
+                "prescription_summary": "23:30; exact selected performance reference; no automatic progression."
+              },
+              "session_key": "session-924f3647-cd34-5bf1-88ec-7bb0e1f9ae6a-r3",
+              "session_order": 1,
+              "slot_key": "LW10K-W09-D05",
+              "time_of_day": "any",
+              "coach_note": "This shorter 5K-paced session complements Tuesday’s 10K-specific work. Keep its prescribed repetitions and recoveries unchanged."
+            }
+          ],
+          "title": "Short-5K intervals"
+        },
+        {
+          "day_key": "day_6",
+          "day_order": 6,
+          "day_type": "rest",
+          "slots": [],
+          "title": "Rest"
+        },
+        {
+          "day_key": "day_7",
+          "day_order": 7,
+          "day_type": "training",
+          "slots": [
+            {
+              "completion_expectation": "required",
+              "display_title": "Long Zone 2 run",
+              "is_optional": false,
+              "progression": {
+                "prescription_summary": "60:00; exact selected performance reference; no automatic progression."
+              },
+              "session_key": "session-370218c5-441d-570c-bd36-ae08b3380ee4-r3",
+              "session_order": 1,
+              "slot_key": "LW10K-W09-D07",
+              "time_of_day": "any"
+            }
+          ],
+          "title": "Long Zone 2 run"
+        }
+      ],
+      "title": "Reduce fatigue",
+      "week_number": 9,
+      "coach_note": "Tuesday retains 10K-specific work and Friday remains brief. Strength volume reduces, including the selected RDL reduction and omission of lunges, as the programme reduces fatigue."
+    },
+    {
+      "days": [
+        {
+          "day_key": "day_1",
+          "day_order": 1,
+          "day_type": "training",
+          "slots": [
+            {
+              "completion_expectation": "required",
+              "display_title": "Monday selected strength",
+              "is_optional": false,
+              "progression": {
+                "prescription_summary": "D1–D7 plus exact founder-selected week doses; D8 full-programme review in TEN_WEEK_REVIEW.md. No automatic progression."
+              },
+              "session_key": "session-13a6135f-439c-5e10-ac06-bc3e506596f9-r6",
+              "session_order": 1,
+              "slot_key": "LW10K-W10-D01",
+              "time_of_day": "any",
+              "coach_note": "Use this week’s exact sets, rests and repetitions in reserve. The selected consolidation, lower-body control and taper instructions manage strength workload alongside the running."
+            }
+          ],
+          "title": "Monday selected strength"
+        },
+        {
+          "day_key": "day_2",
+          "day_order": 2,
+          "day_type": "training",
+          "slots": [
+            {
+              "completion_expectation": "required",
+              "display_title": "Taper sharpening",
+              "is_optional": false,
+              "progression": {
+                "prescription_summary": "28:00; exact selected performance reference; no automatic progression."
+              },
+              "session_key": "session-cbd90fb8-37ff-5458-b991-6c41b6fcd63e-r3",
+              "session_order": 1,
+              "slot_key": "LW10K-W10-D02",
+              "time_of_day": "any",
+              "coach_note": "This is the week’s main quality run. Follow the selected target and complete the work and recoveries exactly as written."
+            }
+          ],
+          "title": "Taper sharpening"
+        },
+        {
+          "day_key": "day_3",
+          "day_order": 3,
+          "day_type": "training",
+          "slots": [
+            {
+              "completion_expectation": "required",
+              "display_title": "Zone 2 run",
+              "is_optional": false,
+              "progression": {
+                "prescription_summary": "35:00; exact selected performance reference; no automatic progression."
+              },
+              "session_key": "session-e97108b8-57d9-5eae-8809-33a3699939b6-r3",
+              "session_order": 1,
+              "slot_key": "LW10K-W10-D03",
+              "time_of_day": "any"
+            }
+          ],
+          "title": "Zone 2 run"
+        },
+        {
+          "day_key": "day_4",
+          "day_order": 4,
+          "day_type": "training",
+          "slots": [
+            {
+              "completion_expectation": "required",
+              "display_title": "Upper-body taper exception",
+              "is_optional": false,
+              "progression": {
+                "prescription_summary": "D1–D7 plus exact founder-selected week doses; D8 full-programme review in TEN_WEEK_REVIEW.md. No automatic progression."
+              },
+              "session_key": "session-02346200-732e-56d4-a637-f20e7d75b7b4-r6",
+              "session_order": 1,
+              "slot_key": "LW10K-W10-D04",
+              "time_of_day": "any",
+              "coach_note": "Use this week’s exact sets, rests and repetitions in reserve. The selected consolidation, lower-body control and taper instructions manage strength workload alongside the running."
+            }
+          ],
+          "title": "Upper-body taper exception"
+        },
+        {
+          "day_key": "day_5",
+          "day_order": 5,
+          "day_type": "training",
+          "slots": [
+            {
+              "completion_expectation": "required",
+              "display_title": "Easy run with relaxed strides",
+              "is_optional": false,
+              "progression": {
+                "prescription_summary": "20:00; exact selected performance reference; no automatic progression."
+              },
+              "session_key": "session-fe801431-6348-5b56-8081-396a810e7fd4-r3",
+              "session_order": 1,
+              "slot_key": "LW10K-W10-D05",
+              "time_of_day": "any",
+              "coach_note": "Today supports Tuesday’s quality work and the weekend’s run. Follow the easy prescription, adding relaxed strides only where listed."
+            }
+          ],
+          "title": "Easy run with relaxed strides"
+        },
+        {
+          "day_key": "day_6",
+          "day_order": 6,
+          "day_type": "rest",
+          "slots": [],
+          "title": "Rest"
+        },
+        {
+          "day_key": "day_7",
+          "day_order": 7,
+          "day_type": "training",
+          "slots": [
+            {
+              "completion_expectation": "required",
+              "display_title": "10K final assessment",
+              "is_optional": false,
+              "progression": {
+                "prescription_summary": "20:00 + actual 10K time; exact selected performance reference; no automatic progression."
+              },
+              "session_key": "session-d1f03e44-ae64-5a40-a52e-675881e8f077-r3",
+              "session_order": 1,
+              "slot_key": "LW10K-W10-D07",
+              "time_of_day": "any"
+            }
+          ],
+          "title": "10K final assessment"
+        }
+      ],
+      "title": "Taper and distance-ended 10K test",
+      "week_number": 10,
+      "coach_note": "Tuesday’s short 10K-paced repetitions and Friday’s easy running with relaxed strides lead into Sunday’s measured test. Strength tapers; Thursday contains only the selected upper-body work at at least 3 RIR."
+    }
+  ]
+}

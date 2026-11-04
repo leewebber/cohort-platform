@@ -1,0 +1,18 @@
+{
+  "flags": {
+    "template_field_present": true,
+    "custom_confirmation_template_present": true,
+    "uses_confirmation_url": true,
+    "uses_redirect_to": false,
+    "uses_site_url": false,
+    "template_sha256": "c495b24123d38e4bc4295f06afe92a3c11e6ce00df09d81e2cb0706e3d7c79d8"
+  },
+  "metadata": {
+    "target_ref": "otnhhdxstdnwccehacku",
+    "method": "GET",
+    "path": "/config/auth",
+    "http_status": 200,
+    "captured_at": "2026-11-04T12:50:58.448413+00:00",
+    "cf_ray": "a553bf5a3ea8b5c4-CGK"
+  }
+}

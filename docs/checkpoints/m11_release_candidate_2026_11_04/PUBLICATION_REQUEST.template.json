@@ -1,0 +1,29 @@
+{
+  "status": "PREPARED_UNBOUND_REQUEST_NOT_SENT",
+  "target_ref": "otnhhdxstdnwccehacku",
+  "rpc": "publish_private_exact_programme_version_retained_v1",
+  "proposed_programme_version_id": "b0290b33-2764-4e5b-ad78-3d4beafbb375",
+  "publication_kind": "private_exact_version",
+  "library_scope": "coach_private",
+  "owner_id": null,
+  "owner_binding_required": "Actual verified authorised application owner UID; do not substitute a Management organisation-member ID or invent a profile",
+  "core_payload_path": "docs/programmes/hybrid_10k/release_candidate_2026_11_04/publication-core.json",
+  "core_payload_sha256": "e2164e65457bceded9ee1484d13f34d2099d05fef580c0e5c0e0ebb7e3d02c89",
+  "package_sha256": "9094bb34809723425dcac4b5936e3f6093a51961961f574e63ff5b5f0afec1b0",
+  "graphs_sha256": "4962c590199cf117f155cdbd853b3436b5a252ba4df3a403f208d5308d0e5764",
+  "preconditions": [
+    "Successful exact schema/auth enablement and compatible client",
+    "Fresh absence/collision, authorised owner identity and source approval/integrity verification",
+    "Separate approval of bound final payload/digest and publisher service capability"
+  ],
+  "expected_mutations": {
+    "programme_lineages": 1,
+    "programme_versions": 1,
+    "new_protocol_revisions": 60,
+    "session_blocks": 100,
+    "session_block_exercises": 105,
+    "catalogue_rows": 0,
+    "accounts_eligibility_assignments_athlete_data": 0
+  },
+  "no_publication_event_or_actual_published_at_created_in_preparation": true
+}

@@ -1,0 +1,2 @@
+ERROR:  private_alpha_start_anchor_unexpected_materialiser
+CONTEXT:  PL/pgSQL function inline_code_block line 8 at RAISE

@@ -1,0 +1,32 @@
+00:00 +0: loading /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/session/running_target_start_rpc_test.dart
+00:00 +0: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/session/running_target_start_rpc_test.dart: fixed-start named arguments remain exact: occurrence_id,target_source
+00:00 +1: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/session/running_target_start_rpc_test.dart: fixed-start named arguments remain exact: occurrence_id,target_source
+00:00 +2: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/session/running_target_start_rpc_test.dart: fixed-start named arguments remain exact: occurrence_id,target_source
+00:00 +3: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/session/running_target_start_rpc_test.dart: fixed-start named arguments remain exact: occurrence_id,target_source
+00:00 +4: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/session/running_target_start_rpc_test.dart: fixed-start named arguments remain exact: occurrence_id,target_source
+00:00 +5: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/session/running_target_start_rpc_test.dart: fixed-start named arguments remain exact: occurrence_id,target_source
+00:00 +6: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/session/running_target_start_rpc_test.dart: fixed-start named arguments remain exact: occurrence_id,target_source
+00:00 +7: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/session/quality_target_admission_test.dart: five_k is explicitly bound to exact step/source/rule and stays immutable
+00:00 +8: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/session/quality_target_admission_test.dart: five_k is explicitly bound to exact step/source/rule and stays immutable
+00:00 +9: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/session/quality_target_admission_test.dart: five_k is explicitly bound to exact step/source/rule and stays immutable
+00:00 +10: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/session/hybrid_10k_freshness_copy_test.dart: expired input remains unavailable with scoped Hybrid copy: true
+00:00 +11: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/session/hybrid_10k_freshness_copy_test.dart: expired input remains unavailable with scoped Hybrid copy: true
+00:00 +12: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/session/hybrid_10k_freshness_copy_test.dart: expired input remains unavailable with scoped Hybrid copy: true
+00:00 +13: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/session/hybrid_10k_freshness_copy_test.dart: expired input remains unavailable with scoped Hybrid copy: true
+00:00 +14: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/session/hybrid_10k_freshness_copy_test.dart: expired input remains unavailable with scoped Hybrid copy: true
+00:00 +15: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/session/hybrid_10k_freshness_copy_test.dart: expired input remains unavailable with scoped Hybrid copy: true
+00:00 +16: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/session/hybrid_10k_freshness_copy_test.dart: expired input remains unavailable with scoped Hybrid copy: true
+00:00 +17: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/session/hybrid_10k_freshness_copy_test.dart: expired input remains unavailable with scoped Hybrid copy: true
+00:00 +18: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/session/hybrid_10k_freshness_copy_test.dart: expired input remains unavailable with scoped Hybrid copy: true
+00:00 +19: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/session/hybrid_10k_freshness_copy_test.dart: expired input remains unavailable with scoped Hybrid copy: true
+00:00 +20: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/session/hybrid_10k_freshness_copy_test.dart: expired input remains unavailable with scoped Hybrid copy: true
+00:00 +21: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/session/hybrid_10k_freshness_copy_test.dart: expired input remains unavailable with scoped Hybrid copy: true
+00:00 +22: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/session/hybrid_10k_freshness_copy_test.dart: expired input remains unavailable with scoped Hybrid copy: true
+00:00 +23: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/session/hybrid_10k_freshness_copy_test.dart: expired input remains unavailable with scoped Hybrid copy: true
+00:00 +24: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/session/hybrid_10k_freshness_copy_test.dart: expired input remains unavailable with scoped Hybrid copy: true
+00:00 +25: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/session/quality_target_admission_test.dart: input confirmation, manual source selection and acceptance are deliberate
+00:01 +26: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/session/quality_target_admission_test.dart: input confirmation, manual source selection and acceptance are deliberate
+00:01 +27: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/session/quality_target_admission_test.dart: manual_threshold must be selected and accepted explicitly
+00:01 +28: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/session/quality_target_admission_test.dart: authored_rpe must be selected and accepted explicitly
+00:01 +29: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/session/quality_target_admission_test.dart: frozen numerical targets display on work and no downtime is counted
+00:01 +30: All tests passed!

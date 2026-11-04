@@ -1,3 +1,4 @@
+import '../../programme/content/hybrid_10k_release_copy.dart';
 import 'package:flutter/material.dart';
 import '../models/session_execution_plan.dart';
 import '../models/running_target_admission.dart';
@@ -205,11 +206,13 @@ class _QualityTargetReviewScreenState extends State<QualityTargetReviewScreen> {
   static String _approx(Object? value) =>
       num.tryParse(value?.toString() ?? '')?.toStringAsFixed(2) ??
       'not available';
-  static String _unavailableMessage(Object? reason) => switch (reason) {
+  String _unavailableMessage(Object? reason) => switch (reason) {
     'missing_5k' =>
       'Confirm a representative sustained 5K result, or explicitly choose an available authored alternative.',
     'stale_5k' =>
-      'Your 5K result is older than 56 local calendar days. Enter a recent result or explicitly choose an available authored alternative.',
+      widget.programmeContext.lineageCode == hybrid10kLineageCode
+          ? hybrid10kFreshnessRenewalMessage
+          : 'Your 5K result is older than 56 local calendar days. Enter a recent result or explicitly choose an available authored alternative.',
     'withdrawn_5k' =>
       'Your 5K input was withdrawn. Confirm a result or explicitly choose an available authored alternative.',
     'future_5k' =>

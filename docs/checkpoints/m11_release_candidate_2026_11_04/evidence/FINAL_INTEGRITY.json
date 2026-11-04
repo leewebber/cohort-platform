@@ -1,0 +1,10 @@
+{
+  "exact_135_migration_copy_hashes": true,
+  "client_manifest_hashes": true,
+  "candidate_graph_archive_and_core_payload_integrity": true,
+  "native_xml_plists_valid": true,
+  "original_untracked_full_review_unchanged": true,
+  "analysis_identical_362_findings_zero_errors": true,
+  "secret_pattern_matches": [],
+  "broken_new_document_links": []
+}

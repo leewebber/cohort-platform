@@ -21,7 +21,10 @@ class ProgrammeTrainingSessionStartSupabaseStore
           'p_occurrence_id': occurrenceId,
           if (payload.containsKey('target_source'))
             'p_running_target_source': payload['target_source'],
-          if (payload.containsKey('target_review_hash'))
+          // The source-selecting SQL overload requires all three named args.
+          // Null still lets the server refuse a missing/stale review normally.
+          if (payload.containsKey('target_review_hash') ||
+              payload.containsKey('target_source'))
             'p_target_review_hash': payload['target_review_hash'],
           if (payload.containsKey('duration_choices'))
             'p_duration_choices': payload['duration_choices'],

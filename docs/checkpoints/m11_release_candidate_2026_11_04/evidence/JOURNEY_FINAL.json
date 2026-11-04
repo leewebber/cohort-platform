@@ -1,0 +1,52 @@
+{
+  "classification": "GENUINE_CANDIDATE_LOCAL_GOTRUE_POSTGREST_SYNTHETIC_ACTOR_PROOF",
+  "package_sha256": "9094bb34809723425dcac4b5936e3f6093a51961961f574e63ff5b5f0afec1b0",
+  "local_signup_onboarding_draft_restart": true,
+  "get_programme_free_exact_acquisition_retry": true,
+  "expiry_57_refused_56_eligible_and_renewal_review_required": true,
+  "no_real_or_hosted_account_assignment_athlete_writes": true,
+  "sessions": [
+    {
+      "source_session_id": "LW10K-W01-D01",
+      "authenticated_start": true,
+      "draft_save_reopen": true,
+      "paused_json_restart": false,
+      "frozen_inputs_preserved": false,
+      "completion_retry_correction_history": true
+    },
+    {
+      "source_session_id": "LW10K-W01-D02",
+      "authenticated_start": true,
+      "draft_save_reopen": true,
+      "paused_json_restart": true,
+      "frozen_inputs_preserved": true,
+      "completion_retry_correction_history": true
+    },
+    {
+      "source_session_id": "LW10K-W01-D03",
+      "authenticated_start": true,
+      "draft_save_reopen": true,
+      "paused_json_restart": true,
+      "frozen_inputs_preserved": true,
+      "completion_retry_correction_history": true
+    },
+    {
+      "source_session_id": "LW10K-W06-D05",
+      "authenticated_start": true,
+      "draft_save_reopen": true,
+      "paused_json_restart": true,
+      "frozen_inputs_preserved": true,
+      "completion_retry_correction_history": true
+    },
+    {
+      "source_session_id": "LW10K-W10-D07",
+      "authenticated_start": true,
+      "draft_save_reopen": true,
+      "paused_json_restart": true,
+      "frozen_inputs_preserved": false,
+      "completion_retry_correction_history": true
+    }
+  ],
+  "installed_device_acceptance": "NOT_PERFORMED",
+  "Gate_A": "OPEN"
+}

@@ -1,0 +1,23 @@
+from pathlib import Path
+import json,subprocess,re
+ROOT=Path.cwd();OUT=Path('/private/tmp/m11_release_20261104');container=json.loads((OUT/'local-info.json').read_text())['container'];fix=json.loads((OUT/'ANCHOR_FIX.json').read_text());migration=ROOT/'supabase/migrations/20261104120000_private_alpha_explicit_start_anchor.sql'
+def sql(query,check=True):
+ r=subprocess.run(['docker','exec','-i',container,'psql','-X','-U','postgres','-d','postgres','-At','-v','ON_ERROR_STOP=1'],input=query.encode(),stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+ if check and r.returncode:raise RuntimeError(r.stderr.decode())
+ return r
+witness="SELECT jsonb_build_object('oid',p.oid,'owner_same',p.proowner=b.proowner,'acl_same',p.proacl IS NOT DISTINCT FROM b.proacl,'security_same',p.prosecdef=b.prosecdef AND p.proconfig IS NOT DISTINCT FROM b.proconfig,'old_source',b.source_sha256,'new_source',encode(extensions.digest(convert_to(p.prosrc,'UTF8'),'sha256'),'hex')) FROM pg_proc p CROSS JOIN public.m11_anchor_before b WHERE p.oid='public.materialise_athlete_plan_from_enrolment(uuid,text)'::regprocedure;"
+identity=json.loads(sql(witness).stdout);assert all(identity[k] for k in ['owner_same','acl_same','security_same']),'authority preservation';assert identity['old_source']==fix['before_source_sha256'] and identity['new_source']==fix['after_source_sha256'],'hash witness'
+assert sql(migration.read_text()).returncode==0,'exact repeat'
+definition=sql("SELECT pg_get_functiondef('public.materialise_athlete_plan_from_enrolment(uuid,text)'::regprocedure);").stdout.decode();assert '-- M11_PRIVATE_ALPHA_EXPLICIT_START_ANCHOR_V1' in definition,'marker in definition'
+# A real function-body drift exists only inside this task-owned transaction.
+drift=definition.replace('-- M11_PRIVATE_ALPHA_EXPLICIT_START_ANCHOR_V1','-- LOCAL_NEGATIVE_BODY_DRIFT');body=re.sub(r'(?m)^BEGIN;\n','',migration.read_text(),count=1);body=re.sub(r'(?m)^COMMIT;\n?','',body,count=1)
+negative=sql('BEGIN;\n'+drift+'\n;\n'+body,check=False);(OUT/'ANCHOR_NEGATIVE_DIAGNOSTIC.txt').write_bytes(negative.stderr)
+assert negative.returncode!=0 and b'private_alpha_start_anchor_unexpected_materialiser' in negative.stderr,negative.stderr.decode()[:1000]
+assert json.loads(sql(witness).stdout)==identity,'negative transaction rollback'
+names=set()
+for name in ['20261026110000_training_setup_private_alpha_acquisition.sql','20261027120000_confirmed_running_zone_targets.sql','20261027130000_alpha_quality_running_targets.sql','20261028120000_terminal_completion_retry.sql']:
+ names.update(re.findall(r'CREATE(?: OR REPLACE)? FUNCTION public\.([a-zA-Z0-9_]+)',(ROOT/'supabase/migrations'/name).read_text()))
+names.add('materialise_athlete_plan_from_enrolment')
+query="SELECT jsonb_agg(jsonb_build_object('signature',p.oid::regprocedure::text,'body_sha256',encode(extensions.digest(convert_to(p.prosrc,'UTF8'),'sha256'),'hex'),'owner',pg_get_userbyid(p.proowner),'security_definer',p.prosecdef,'config',p.proconfig,'acl',p.proacl,'authenticated_execute',has_function_privilege('authenticated',p.oid,'EXECUTE'),'anon_execute',has_function_privilege('anon',p.oid,'EXECUTE'),'service_execute',has_function_privilege('service_role',p.oid,'EXECUTE')) ORDER BY p.oid::regprocedure::text) FROM pg_proc p WHERE p.pronamespace='public'::regnamespace AND p.proname=ANY(ARRAY["+','.join("'"+n+"'" for n in sorted(names))+"]);"
+expected=json.loads(sql(query).stdout);(ROOT/'docs/checkpoints/m11_release_candidate_2026_11_04/POSTCHECK_EXPECTED_FUNCTIONS.json').write_text(json.dumps({'classification':'PROSPECTIVE_EXPECTED_FROM_EXACT_LOCAL_REPLAY_NOT_HOSTED_RESULT','functions':expected},indent=2)+'\n')
+(OUT/'ANCHOR_NEGATIVE_CHECK.json').write_text(json.dumps({'classification':'DISPOSABLE_LOCAL_ONLY','function_identity_and_authority':identity,'exact_repeat_noop':True,'unexpected_body_refused':True,'negative_transaction_rolled_back':True},indent=2)+'\n');print('PASS: exact repeat, body drift refusal, rollback and OID/owner/ACL/security preservation; scoped expected postcheck functions',len(expected))

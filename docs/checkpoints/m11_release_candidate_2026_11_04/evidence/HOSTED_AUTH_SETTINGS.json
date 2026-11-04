@@ -1,0 +1,27 @@
+{
+  "settings": {
+    "site_url": "http://localhost:55425",
+    "uri_allow_list": "http://localhost:55425/**",
+    "disable_signup": false,
+    "external_email_enabled": true,
+    "mailer_autoconfirm": false,
+    "security_captcha_enabled": false,
+    "external_anonymous_users_enabled": false,
+    "jwt_exp": 3600,
+    "password_min_length": 6,
+    "mailer_otp_exp": 3600,
+    "smtp_host": null,
+    "smtp_port": null,
+    "rate_limit_email_sent": 2
+  },
+  "metadata": {
+    "target_ref": "otnhhdxstdnwccehacku",
+    "method": "GET",
+    "path": "/config/auth",
+    "http_status": 200,
+    "captured_at": "2026-11-04T12:42:40.796242+00:00",
+    "cf_ray": "a553b334fbaf9185-DPS",
+    "whitelisted_data_sha256": "8ec571fc17f27afb85a966b69f78f86dcc6a802931eeca009a00488c9af3a88d",
+    "credential_fields_never_retained": true
+  }
+}

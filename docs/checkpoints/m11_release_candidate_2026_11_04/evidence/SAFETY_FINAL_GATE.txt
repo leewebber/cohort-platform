@@ -1,0 +1,479 @@
+PHASE2_CONSOLIDATION_SAFETY_GATE=start
+ROOT=/Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform
+MANIFEST=/Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/docs/architecture/Phase_2_Consolidation_Safety_Gate_v1.md
+REQUIRED_EVIDENCE=present count=16
+
+======== SAFETY_GATE_GROUP=architectural_boundaries ========
+CMD: flutter test test/architecture/architecture_dependency_test.dart test/architecture/architecture_ownership_test.dart test/architecture/programme_scheduling_ownership_dependency_test.dart test/architecture/phase2_consolidation_safety_tripwires_test.dart test/features/home/athlete_home_runtime_authority_test.dart test/features/app_shell/athlete_shell_catalogue_entry_test.dart test/features/workout_player/workout_complete_authority_test.dart test/features/progress/athlete_progress_authority_test.dart
+Resolving dependencies...
+Downloading packages...
+  app_links 7.2.0 (7.2.2 available)
+  app_links_linux 1.0.3 (1.0.4 available)
+  app_links_platform_interface 2.0.3 (2.0.4 available)
+  app_links_web 1.0.4 (1.0.5 available)
+  clock 1.1.2 (1.1.3 available)
+  crypto 3.0.7 (3.0.8 available)
+  cupertino_icons 1.0.9 (2.0.0 available)
+  flutter_timezone 4.1.1 (5.1.1 available)
+  functions_client 2.6.4 (2.7.1 available)
+  gotrue 2.25.0 (2.27.3 available)
+  matcher 0.12.19 (0.12.20 available)
+  material_color_utilities 0.13.0 (0.13.1 available)
+  meta 1.18.0 (1.19.0 available)
+  mime 2.0.0 (2.1.0 available)
+  passkeys_platform_interface 2.8.0 (2.10.0 available)
+  platform 3.1.6 (3.2.0 available)
+  postgrest 2.8.0 (2.9.1 available)
+  process 5.0.5 (5.0.6 available)
+  realtime_client 2.10.0 (2.13.2 available)
+  shared_preferences 2.5.5 (2.5.6 available)
+  shared_preferences_android 2.4.26 (2.5.4 available)
+  shared_preferences_foundation 2.5.6 (2.6.1 available)
+  stack_trace 1.12.1 (1.12.2 available)
+  storage_client 2.6.0 (2.8.1 available)
+  supabase 2.13.4 (2.16.5 available)
+  supabase_flutter 2.15.4 (2.18.3 available)
+  test_api 0.7.11 (0.7.15 available)
+  url_launcher 6.3.2 (6.3.3 available)
+  url_launcher_android 6.3.32 (6.3.33 available)
+  url_launcher_ios 6.4.1 (6.4.2 available)
+  url_launcher_linux 3.2.2 (3.2.3 available)
+  url_launcher_macos 3.2.5 (3.2.6 available)
+  url_launcher_windows 3.1.5 (3.1.6 available)
+  vector_math 2.2.0 (2.4.4 available)
+  vm_service 15.2.0 (15.4.0 available)
+  web 1.1.1 (1.1.2 available)
+  webdriver 3.1.0 (3.2.0 available)
+  yaml 3.1.3 (3.1.4 available)
+Got dependencies!
+38 packages have newer versions incompatible with dependency constraints.
+Try `flutter pub outdated` for more information.
+00:00 +0: loading /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/architecture/architecture_dependency_test.dart
+00:00 +0: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/architecture/phase2_consolidation_safety_tripwires_test.dart: Home dual-path authority freeze Home consumes canonical runtime authority; legacy Home entry retired
+00:00 +1: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/architecture/phase2_consolidation_safety_tripwires_test.dart: Home dual-path authority freeze Home consumes canonical runtime authority; legacy Home entry retired
+00:00 +2: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/architecture/programme_scheduling_ownership_dependency_test.dart: programme adaptation owners still forbid scheduling mutate APIs
+00:00 +3: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/architecture/phase2_consolidation_safety_tripwires_test.dart: staging harness isolation product features/application must not import staging_tooling
+00:00 +4: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/architecture/phase2_consolidation_safety_tripwires_test.dart: staging harness isolation product features/application must not import staging_tooling
+00:00 +5: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/architecture/phase2_consolidation_safety_tripwires_test.dart: staging harness isolation product features/application must not import staging_tooling
+00:00 +6: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/architecture/phase2_consolidation_safety_tripwires_test.dart: staging harness isolation product features/application must not import staging_tooling
+00:00 +7: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/architecture/phase2_consolidation_safety_tripwires_test.dart: staging harness isolation product features/application must not import staging_tooling
+00:00 +8: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/architecture/phase2_consolidation_safety_tripwires_test.dart: staging harness isolation product features/application must not import staging_tooling
+00:00 +9: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/architecture/phase2_consolidation_safety_tripwires_test.dart: staging harness isolation product features/application must not import staging_tooling
+00:00 +10: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/architecture/phase2_consolidation_safety_tripwires_test.dart: staging harness isolation product features/application must not import staging_tooling
+00:00 +11: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/architecture/phase2_consolidation_safety_tripwires_test.dart: staging harness isolation product features/application must not import staging_tooling
+00:00 +12: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/architecture/phase2_consolidation_safety_tripwires_test.dart: staging harness isolation product features/application must not import staging_tooling
+00:00 +13: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/architecture/phase2_consolidation_safety_tripwires_test.dart: staging harness isolation product features/application must not import staging_tooling
+00:00 +14: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/architecture/phase2_consolidation_safety_tripwires_test.dart: staging harness isolation product features/application must not import staging_tooling
+00:00 +15: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/architecture/phase2_consolidation_safety_tripwires_test.dart: staging harness isolation product features/application must not import staging_tooling
+00:00 +16: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/architecture/phase2_consolidation_safety_tripwires_test.dart: staging harness isolation product features/application must not import staging_tooling
+00:00 +17: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/architecture/phase2_consolidation_safety_tripwires_test.dart: staging harness isolation product features/application must not import staging_tooling
+00:00 +18: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/architecture/phase2_consolidation_safety_tripwires_test.dart: staging harness isolation product features/application must not import staging_tooling
+00:00 +19: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/architecture/phase2_consolidation_safety_tripwires_test.dart: staging harness isolation product features/application must not import staging_tooling
+00:00 +20: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/architecture/phase2_consolidation_safety_tripwires_test.dart: staging harness isolation product features/application must not import staging_tooling
+00:00 +21: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/architecture/phase2_consolidation_safety_tripwires_test.dart: staging harness isolation product features/application must not import staging_tooling
+00:00 +22: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/architecture/phase2_consolidation_safety_tripwires_test.dart: staging harness isolation product features/application must not import staging_tooling
+00:00 +23: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/architecture/phase2_consolidation_safety_tripwires_test.dart: staging harness isolation product features/application must not import staging_tooling
+00:00 +24: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/architecture/phase2_consolidation_safety_tripwires_test.dart: staging harness isolation product features/application must not import staging_tooling
+00:00 +25: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/architecture/phase2_consolidation_safety_tripwires_test.dart: staging harness isolation product features/application must not import staging_tooling
+00:00 +26: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/architecture/phase2_consolidation_safety_tripwires_test.dart: staging harness isolation product features/application must not import staging_tooling
+00:00 +27: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/architecture/phase2_consolidation_safety_tripwires_test.dart: staging harness isolation product features/application must not import staging_tooling
+00:00 +28: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/architecture/phase2_consolidation_safety_tripwires_test.dart: staging harness isolation Journey D staging entrypoints remain under lib/staging_tooling
+00:00 +29: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/architecture/phase2_consolidation_safety_tripwires_test.dart: connected-data privacy source freeze connected_data_contracts forbids location/travel categories
+00:00 +30: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/architecture/phase2_consolidation_safety_tripwires_test.dart: completion / previous-performance authority freeze previous performance resolver reads athlete results, not prescription load
+00:00 +31: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/architecture/phase2_consolidation_safety_tripwires_test.dart: completion / previous-performance authority freeze programme strength accordion loads hosted previous strength history
+00:00 +32: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/architecture/phase2_consolidation_safety_tripwires_test.dart: completion / previous-performance authority freeze Phase 2.9 AdaptiveProgression deleted from WorkoutCompleteScreen
+00:00 +33: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/architecture/phase2_consolidation_safety_tripwires_test.dart: Phase 2.9 legacy runtime deletion freeze Progress tab uses AthleteProgressSummaryBuilder authority
+00:00 +34: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/architecture/phase2_consolidation_safety_tripwires_test.dart: Phase 2.9 legacy runtime deletion freeze DailyBriefing, HomeAdaptFlow, Plan Library start deleted
+00:00 +35: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/architecture/phase2_consolidation_safety_tripwires_test.dart: Phase 2.10 consolidation closure freeze Home resolver never takes hasActivePlan or PlanAssignment inputs
+00:00 +36: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/architecture/phase2_consolidation_safety_tripwires_test.dart: Phase 2.10 consolidation closure freeze AthleteGeneratedTodaySection orphan deleted; ChoosePlan retained
+00:00 +37: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/architecture/phase2_consolidation_safety_tripwires_test.dart: Phase 2.10 consolidation closure freeze canonical freeze and Phase 2 closure documents exist
+00:00 +38: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/features/home/athlete_home_runtime_authority_test.dart: AthleteHomeRuntimeAuthorityResolver matrix (Phase 2.8) valid materialised programme only → programme
+00:00 +39: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/features/home/athlete_home_runtime_authority_test.dart: AthleteHomeRuntimeAuthorityResolver matrix (Phase 2.8) legacy active plan only → none (legacy Home retired)
+00:01 +40: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/features/home/athlete_home_runtime_authority_test.dart: AthleteHomeRuntimeAuthorityResolver matrix (Phase 2.8) both present → programme exclusively
+00:01 +41: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/features/home/athlete_home_runtime_authority_test.dart: AthleteHomeRuntimeAuthorityResolver matrix (Phase 2.8) neither present → none
+00:01 +42: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/features/home/athlete_home_runtime_authority_test.dart: AthleteHomeRuntimeAuthorityResolver matrix (Phase 2.8) loading/unknown never activates programme or legacy
+00:01 +43: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/features/home/athlete_home_runtime_authority_test.dart: AthleteHomeRuntimeAuthorityResolver matrix (Phase 2.8) invalid programme evidence fails closed regardless of legacy state
+00:01 +44: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/features/home/athlete_home_runtime_authority_test.dart: AthleteHomeRuntimeAuthorityResolver matrix (Phase 2.8) decision is deterministic and mutually exclusive
+00:01 +45: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/features/home/athlete_home_runtime_authority_test.dart: AthleteHomeRuntimeAuthorityResolver matrix (Phase 2.8) legacyPlanCompatibility enum case is retired
+00:01 +46: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/features/home/athlete_home_runtime_authority_test.dart: HomeScreen authority routing (Phase 2.8) programme authority exposes programme today only
+00:01 +47: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/features/app_shell/athlete_shell_catalogue_entry_test.dart: Phase 2.6 athlete shell catalogue entry Programmes tab opens canonical AthleteProgrammeScreen
+00:02 +48: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/features/home/athlete_home_runtime_authority_test.dart: HomeScreen authority routing (Phase 2.8) legacy-only → established no-programme Home; zero legacy runtime
+00:02 +49: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/features/app_shell/athlete_shell_catalogue_entry_test.dart: Phase 2.6 athlete shell catalogue entry shell Programmes entry cannot mount Plan Library or create hasActivePlan
+00:02 +50: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/features/app_shell/athlete_shell_catalogue_entry_test.dart: Phase 2.6 athlete shell catalogue entry shell Programmes entry cannot mount Plan Library or create hasActivePlan
+00:03 +51: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/features/app_shell/athlete_shell_catalogue_entry_test.dart: Phase 2.6 athlete shell catalogue entry shell Programmes entry cannot mount Plan Library or create hasActivePlan
+00:03 +52: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/features/workout_player/workout_complete_authority_test.dart: Phase 2.9 WorkoutCompleteScreen AdaptiveProgression retired programme-backed completion records shared completion without legacy mutation
+00:03 +53: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/features/workout_player/workout_complete_authority_test.dart: Phase 2.9 WorkoutCompleteScreen AdaptiveProgression retired programme-backed completion records shared completion without legacy mutation
+00:03 +54: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/features/workout_player/workout_complete_authority_test.dart: Phase 2.9 WorkoutCompleteScreen AdaptiveProgression retired programme-backed completion records shared completion without legacy mutation
+00:03 +55: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/features/workout_player/workout_complete_authority_test.dart: Phase 2.9 WorkoutCompleteScreen AdaptiveProgression retired programme-backed completion records shared completion without legacy mutation
+00:03 +56: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/features/workout_player/workout_complete_authority_test.dart: Phase 2.9 WorkoutCompleteScreen AdaptiveProgression retired programme-backed completion records shared completion without legacy mutation
+00:03 +57: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/features/workout_player/workout_complete_authority_test.dart: Phase 2.9 WorkoutCompleteScreen AdaptiveProgression retired programme-backed completion records shared completion without legacy mutation
+00:03 +58: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/features/workout_player/workout_complete_authority_test.dart: Phase 2.9 WorkoutCompleteScreen AdaptiveProgression retired programme-backed completion records shared completion without legacy mutation
+00:04 +59: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/features/workout_player/workout_complete_authority_test.dart: Phase 2.9 WorkoutCompleteScreen AdaptiveProgression retired programme-backed completion records shared completion without legacy mutation
+00:04 +60: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/features/workout_player/workout_complete_authority_test.dart: Phase 2.9 WorkoutCompleteScreen AdaptiveProgression retired programme-backed completion records shared completion without legacy mutation
+00:04 +61: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/features/workout_player/workout_complete_authority_test.dart: Phase 2.9 WorkoutCompleteScreen AdaptiveProgression retired programme-backed completion records shared completion without legacy mutation
+00:04 +62: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/features/workout_player/workout_complete_authority_test.dart: Phase 2.9 WorkoutCompleteScreen AdaptiveProgression retired programme-backed completion records shared completion without legacy mutation
+00:04 +63: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/features/workout_player/workout_complete_authority_test.dart: Phase 2.9 WorkoutCompleteScreen AdaptiveProgression retired programme-backed completion records shared completion without legacy mutation
+00:04 +64: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/features/workout_player/workout_complete_authority_test.dart: Phase 2.9 WorkoutCompleteScreen AdaptiveProgression retired programme-backed completion records shared completion without legacy mutation
+00:04 +65: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/features/workout_player/workout_complete_authority_test.dart: Phase 2.9 WorkoutCompleteScreen AdaptiveProgression retired programme-backed completion records shared completion without legacy mutation
+00:04 +65: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/features/app_shell/athlete_shell_catalogue_entry_test.dart: Phase 2.6 athlete shell catalogue entry opening catalogue does not mutate existing legacy hasActivePlan
+[HomeRefresh] authoritative reload source=shell_home_tab surfaces=4 todayAttached=false
+00:04 +66: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/features/workout_player/workout_complete_authority_test.dart: Phase 2.9 WorkoutCompleteScreen AdaptiveProgression retired programme-backed completion records shared completion without legacy mutation
+00:04 +67: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/features/workout_player/workout_complete_authority_test.dart: Phase 2.9 WorkoutCompleteScreen AdaptiveProgression retired programme-backed completion records shared completion without legacy mutation
+00:04 +68: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/features/workout_player/workout_complete_authority_test.dart: Phase 2.9 WorkoutCompleteScreen AdaptiveProgression retired programme-backed completion records shared completion without legacy mutation
+00:04 +69: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/features/progress/athlete_progress_authority_test.dart: ProgressScreen programme authority UI programme summary shows lineage and session counts
+00:04 +70: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/features/progress/athlete_progress_authority_test.dart: ProgressScreen programme authority UI programme summary shows lineage and session counts
+00:04 +71: All tests passed!
+SAFETY_GATE_GROUP=architectural_boundaries RESULT=PASS
+
+======== SAFETY_GATE_GROUP=coaching_integrity ========
+CMD: flutter test test/phase6/coaching_integrity_test.dart
+Resolving dependencies...
+Downloading packages...
+  app_links 7.2.0 (7.2.2 available)
+  app_links_linux 1.0.3 (1.0.4 available)
+  app_links_platform_interface 2.0.3 (2.0.4 available)
+  app_links_web 1.0.4 (1.0.5 available)
+  clock 1.1.2 (1.1.3 available)
+  crypto 3.0.7 (3.0.8 available)
+  cupertino_icons 1.0.9 (2.0.0 available)
+  flutter_timezone 4.1.1 (5.1.1 available)
+  functions_client 2.6.4 (2.7.1 available)
+  gotrue 2.25.0 (2.27.3 available)
+  matcher 0.12.19 (0.12.20 available)
+  material_color_utilities 0.13.0 (0.13.1 available)
+  meta 1.18.0 (1.19.0 available)
+  mime 2.0.0 (2.1.0 available)
+  passkeys_platform_interface 2.8.0 (2.10.0 available)
+  platform 3.1.6 (3.2.0 available)
+  postgrest 2.8.0 (2.9.1 available)
+  process 5.0.5 (5.0.6 available)
+  realtime_client 2.10.0 (2.13.2 available)
+  shared_preferences 2.5.5 (2.5.6 available)
+  shared_preferences_android 2.4.26 (2.5.4 available)
+  shared_preferences_foundation 2.5.6 (2.6.1 available)
+  stack_trace 1.12.1 (1.12.2 available)
+  storage_client 2.6.0 (2.8.1 available)
+  supabase 2.13.4 (2.16.5 available)
+  supabase_flutter 2.15.4 (2.18.3 available)
+  test_api 0.7.11 (0.7.15 available)
+  url_launcher 6.3.2 (6.3.3 available)
+  url_launcher_android 6.3.32 (6.3.33 available)
+  url_launcher_ios 6.4.1 (6.4.2 available)
+  url_launcher_linux 3.2.2 (3.2.3 available)
+  url_launcher_macos 3.2.5 (3.2.6 available)
+  url_launcher_windows 3.1.5 (3.1.6 available)
+  vector_math 2.2.0 (2.4.4 available)
+  vm_service 15.2.0 (15.4.0 available)
+  web 1.1.1 (1.1.2 available)
+  webdriver 3.1.0 (3.2.0 available)
+  yaml 3.1.3 (3.1.4 available)
+Got dependencies!
+38 packages have newer versions incompatible with dependency constraints.
+Try `flutter pub outdated` for more information.
+00:00 +0: loading /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/phase6/coaching_integrity_test.dart
+00:00 +0: programmed session integrity two athletes on same Plan version resolve same structure
+00:00 +1: programmed session integrity different previous-performance history does not alter programmed prescription
+00:00 +2: load selection previous load does not become today load / no next-load recommendation
+00:00 +3: adaptation authority recommendation does not mutate before acceptance
+00:00 +4: adaptation authority dismissing recommendation leaves original unchanged
+00:00 +5: adaptation authority accepting adaptation is a derived decision, not programme rewrite
+00:00 +6: adaptation authority unsupported adaptation changes are rejected
+00:00 +7: reconstruction after restart restart restores accepted adaptation on prepared record
+00:00 +8: reconstruction after restart restart without adaptation reconstructs original programmed session
+00:00 +9: completed session linkage completion retains programmed session and plan version
+00:00 +10: previous performance descriptive does not invent load from prescription-only capture fields
+00:00 +11: previous performance descriptive uses athlete-entered completed load only
+00:00 +12: privacy contracts connected data kinds exclude location / travel fields
+00:00 +13: adversarial constitution guards post-completion coordinator never auto-mutates without accept
+00:00 +14: adversarial constitution guards post-completion kinds are prohibited by policy gate
+00:00 +15: adversarial constitution guards athlete can revert accepted adaptation to original programmed session
+00:00 +16: adversarial constitution guards completion links programmed session, plan version, and adaptation
+00:00 +17: All tests passed!
+SAFETY_GATE_GROUP=coaching_integrity RESULT=PASS
+
+======== SAFETY_GATE_GROUP=adaptation_contracts ========
+CMD: flutter test test/application/adaptation/programme_adaptation_proposal_service_test.dart test/application/adaptation/programme_adaptation_acceptance_service_test.dart test/application/adaptation/programme_adaptation_reversion_service_test.dart test/application/adaptation/programme_adaptation_hardening_1_6e_test.dart test/application/adaptation/equipment_adaptation_b4d19_test.dart
+Resolving dependencies...
+Downloading packages...
+  app_links 7.2.0 (7.2.2 available)
+  app_links_linux 1.0.3 (1.0.4 available)
+  app_links_platform_interface 2.0.3 (2.0.4 available)
+  app_links_web 1.0.4 (1.0.5 available)
+  clock 1.1.2 (1.1.3 available)
+  crypto 3.0.7 (3.0.8 available)
+  cupertino_icons 1.0.9 (2.0.0 available)
+  flutter_timezone 4.1.1 (5.1.1 available)
+  functions_client 2.6.4 (2.7.1 available)
+  gotrue 2.25.0 (2.27.3 available)
+  matcher 0.12.19 (0.12.20 available)
+  material_color_utilities 0.13.0 (0.13.1 available)
+  meta 1.18.0 (1.19.0 available)
+  mime 2.0.0 (2.1.0 available)
+  passkeys_platform_interface 2.8.0 (2.10.0 available)
+  platform 3.1.6 (3.2.0 available)
+  postgrest 2.8.0 (2.9.1 available)
+  process 5.0.5 (5.0.6 available)
+  realtime_client 2.10.0 (2.13.2 available)
+  shared_preferences 2.5.5 (2.5.6 available)
+  shared_preferences_android 2.4.26 (2.5.4 available)
+  shared_preferences_foundation 2.5.6 (2.6.1 available)
+  stack_trace 1.12.1 (1.12.2 available)
+  storage_client 2.6.0 (2.8.1 available)
+  supabase 2.13.4 (2.16.5 available)
+  supabase_flutter 2.15.4 (2.18.3 available)
+  test_api 0.7.11 (0.7.15 available)
+  url_launcher 6.3.2 (6.3.3 available)
+  url_launcher_android 6.3.32 (6.3.33 available)
+  url_launcher_ios 6.4.1 (6.4.2 available)
+  url_launcher_linux 3.2.2 (3.2.3 available)
+  url_launcher_macos 3.2.5 (3.2.6 available)
+  url_launcher_windows 3.1.5 (3.1.6 available)
+  vector_math 2.2.0 (2.4.4 available)
+  vm_service 15.2.0 (15.4.0 available)
+  web 1.1.1 (1.1.2 available)
+  webdriver 3.1.0 (3.2.0 available)
+  yaml 3.1.3 (3.1.4 available)
+Got dependencies!
+38 packages have newer versions incompatible with dependency constraints.
+Try `flutter pub outdated` for more information.
+00:00 +0: loading /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/application/adaptation/programme_adaptation_proposal_service_test.dart
+00:00 +0: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/application/adaptation/programme_adaptation_proposal_service_test.dart: ProgrammeAdaptationProposalService time constraint can produce a reviewable proposal with material changes
+00:00 +1: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/application/adaptation/programme_adaptation_acceptance_service_test.dart: ProgrammeAdaptationAcceptanceService accepts reviewable proposal and replaces only executable plan
+00:00 +2: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/application/adaptation/programme_adaptation_acceptance_service_test.dart: ProgrammeAdaptationAcceptanceService accepts reviewable proposal and replaces only executable plan
+00:00 +3: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/application/adaptation/programme_adaptation_acceptance_service_test.dart: ProgrammeAdaptationAcceptanceService accepts reviewable proposal and replaces only executable plan
+00:00 +4: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/application/adaptation/programme_adaptation_acceptance_service_test.dart: ProgrammeAdaptationAcceptanceService accepts reviewable proposal and replaces only executable plan
+00:00 +5: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/application/adaptation/programme_adaptation_acceptance_service_test.dart: ProgrammeAdaptationAcceptanceService accepts reviewable proposal and replaces only executable plan
+00:00 +6: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/application/adaptation/programme_adaptation_acceptance_service_test.dart: ProgrammeAdaptationAcceptanceService accepts reviewable proposal and replaces only executable plan
+00:00 +7: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/application/adaptation/programme_adaptation_acceptance_service_test.dart: ProgrammeAdaptationAcceptanceService accepts reviewable proposal and replaces only executable plan
+00:00 +8: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/application/adaptation/programme_adaptation_acceptance_service_test.dart: ProgrammeAdaptationAcceptanceService accepts reviewable proposal and replaces only executable plan
+00:00 +9: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/application/adaptation/programme_adaptation_acceptance_service_test.dart: ProgrammeAdaptationAcceptanceService accepts reviewable proposal and replaces only executable plan
+00:00 +10: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/application/adaptation/programme_adaptation_reversion_service_test.dart: ProgrammeAdaptationReversionService reverts adapted package to authoritative original plan
+00:00 +11: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/application/adaptation/programme_adaptation_reversion_service_test.dart: ProgrammeAdaptationReversionService reverts adapted package to authoritative original plan
+00:00 +12: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/application/adaptation/programme_adaptation_reversion_service_test.dart: ProgrammeAdaptationReversionService reverts adapted package to authoritative original plan
+00:00 +13: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/application/adaptation/programme_adaptation_reversion_service_test.dart: ProgrammeAdaptationReversionService reverts adapted package to authoritative original plan
+00:00 +14: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/application/adaptation/programme_adaptation_reversion_service_test.dart: ProgrammeAdaptationReversionService reverts adapted package to authoritative original plan
+00:00 +15: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/application/adaptation/programme_adaptation_reversion_service_test.dart: ProgrammeAdaptationReversionService reverts adapted package to authoritative original plan
+00:00 +16: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/application/adaptation/programme_adaptation_reversion_service_test.dart: ProgrammeAdaptationReversionService reverts adapted package to authoritative original plan
+00:00 +17: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/application/adaptation/programme_adaptation_reversion_service_test.dart: ProgrammeAdaptationReversionService reverts adapted package to authoritative original plan
+00:00 +18: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/application/adaptation/programme_adaptation_reversion_service_test.dart: ProgrammeAdaptationReversionService reverts adapted package to authoritative original plan
+00:00 +19: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/application/adaptation/programme_adaptation_reversion_service_test.dart: ProgrammeAdaptationReversionService non-adapted package cannot be reverted
+00:00 +20: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/application/adaptation/programme_adaptation_reversion_service_test.dart: ProgrammeAdaptationReversionService mismatched assignment fails closed
+00:00 +21: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/application/adaptation/programme_adaptation_reversion_service_test.dart: ProgrammeAdaptationReversionService mismatched package hash fails closed
+00:00 +22: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/application/adaptation/programme_adaptation_reversion_service_test.dart: ProgrammeAdaptationReversionService reconstruction fingerprint mismatch fails closed
+00:00 +23: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/application/adaptation/programme_adaptation_reversion_service_test.dart: ProgrammeAdaptationReversionService repeated revert after success is ineligible
+00:00 +24: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/application/adaptation/programme_adaptation_reversion_service_test.dart: ProgrammeAdaptationReversionService persisted revert restores original without active acceptance
+00:00 +25: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/application/adaptation/programme_adaptation_reversion_service_test.dart: ProgrammeAdaptationReversionService old accepted proposal cannot be replayed after reversion
+00:00 +26: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/application/adaptation/programme_adaptation_reversion_service_test.dart: ProgrammeAdaptationReversionService fresh proposal can be accepted after reversion
+00:00 +27: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/application/adaptation/programme_adaptation_reversion_service_test.dart: ProgrammeAdaptationReversionService reversion source does not invoke adaptation pipeline
+00:00 +28: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/application/adaptation/programme_adaptation_reversion_service_test.dart: ProgrammeAdaptationReversionService missing original fingerprint fails closed
+00:00 +29: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/application/adaptation/programme_adaptation_hardening_1_6e_test.dart: Sprint 1.6E programme adaptation hardening policy / no-safe cases day-of reason kinds never include prohibited programme mutations
+00:00 +30: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/application/adaptation/programme_adaptation_hardening_1_6e_test.dart: Sprint 1.6E programme adaptation hardening policy / no-safe cases post-completion policy kinds remain prohibited for programme path
+00:00 +31: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/application/adaptation/programme_adaptation_hardening_1_6e_test.dart: Sprint 1.6E programme adaptation hardening policy / no-safe cases no-safe outcomes leave prepared state unchanged and are not acceptable
+00:00 +32: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/application/adaptation/programme_adaptation_hardening_1_6e_test.dart: Sprint 1.6E programme adaptation hardening policy / no-safe cases no-adaptation-required is not acceptable and mutates nothing
+00:00 +33: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/application/adaptation/programme_adaptation_hardening_1_6e_test.dart: Sprint 1.6E programme adaptation hardening Coaching Recognition fixtures accepted adaptation remains recognisable as the same programme
+00:00 +34: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/application/adaptation/programme_adaptation_hardening_1_6e_test.dart: Sprint 1.6E programme adaptation hardening Coaching Recognition fixtures reversion restores the recognisable original prepared session
+00:00 +35: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/application/adaptation/programme_adaptation_hardening_1_6e_test.dart: Sprint 1.6E programme adaptation hardening Coaching Recognition fixtures local persistence preserves Coaching Recognition provenance
+00:00 +36: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/application/adaptation/programme_adaptation_hardening_1_6e_test.dart: Sprint 1.6E programme adaptation hardening chain regression without post-completion or rescheduling propose → accept → revert → fresh propose remains compute-then-accept
+00:00 +37: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/application/adaptation/programme_adaptation_hardening_1_6e_test.dart: Sprint 1.6E programme adaptation hardening chain regression without post-completion or rescheduling programme adaptation owners do not open rescheduling or post-completion
+00:00 +38: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/application/adaptation/equipment_adaptation_b4d19_test.dart: (setUpAll)
+00:01 +38: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/application/adaptation/equipment_adaptation_b4d19_test.dart: B4d.19 equipment request validation missing availableEquipment fails closed
+00:01 +39: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/application/adaptation/equipment_adaptation_b4d19_test.dart: B4d.19 equipment request validation empty availableEquipment fails closed
+00:01 +40: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/application/adaptation/equipment_adaptation_b4d19_test.dart: B4d.19 equipment request validation unknown equipment token fails closed
+00:01 +41: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/application/adaptation/equipment_adaptation_b4d19_test.dart: B4d.19 equipment permission gate empty package permissions prohibit adaptation
+00:01 +42: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/application/adaptation/equipment_adaptation_b4d19_test.dart: B4d.19 equipment permission gate athlete_agreement_required=false is rejected
+00:01 +43: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/application/adaptation/equipment_adaptation_b4d19_test.dart: B4d.19 equipment permission gate disallowed change kind is outside AdaptationPolicyGate.allowed
+00:01 +44: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/application/adaptation/equipment_adaptation_b4d19_test.dart: B4d.19 equipment conflict and substitution no session conflict produces no unnecessary plan
+00:01 +45: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/application/adaptation/equipment_adaptation_b4d19_test.dart: B4d.19 equipment conflict and substitution conflict with no approved substitution fails closed
+00:01 +46: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/application/adaptation/equipment_adaptation_b4d19_test.dart: B4d.19 equipment conflict and substitution valid conflict + approved substitution produces acceptable proposal
+00:01 +47: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/application/adaptation/equipment_adaptation_b4d19_test.dart: B4d.19 equipment conflict and substitution proposal is deterministic across repeated evaluation
+00:01 +48: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/application/adaptation/equipment_adaptation_b4d19_test.dart: B4d.19 equipment conflict and substitution proposal generation does not mutate prepared execution
+00:01 +49: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/application/adaptation/equipment_adaptation_b4d19_test.dart: B4d.19 accept / reject / reload boundaries reject leaves all state unchanged
+00:01 +50: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/application/adaptation/equipment_adaptation_b4d19_test.dart: B4d.19 accept / reject / reload boundaries accept changes only current prepared execution
+00:01 +51: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/application/adaptation/equipment_adaptation_b4d19_test.dart: B4d.19 accept / reject / reload boundaries consumed and already-adapted proposals fail closed
+00:01 +52: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/application/adaptation/equipment_adaptation_b4d19_test.dart: B4d.19 accept / reject / reload boundaries reload restores accepted adaptation for same programmed key
+00:01 +53: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/application/adaptation/equipment_adaptation_b4d19_test.dart: B4d.19 regressions and Journey D harness contract time adaptation still produces acceptable proposal
+00:01 +54: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/application/adaptation/equipment_adaptation_b4d19_test.dart: B4d.19 regressions and Journey D harness contract environment still fails closed
+00:01 +55: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/application/adaptation/equipment_adaptation_b4d19_test.dart: B4d.19 regressions and Journey D harness contract Journey D harness constructs expected equipment request
+00:01 +56: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/application/adaptation/equipment_adaptation_b4d19_test.dart: B4d.19 regressions and Journey D harness contract Journey D local contract fixture reaches isAcceptable=true
+00:01 +57: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/application/adaptation/equipment_adaptation_b4d19_test.dart: B4d.19 regressions and Journey D harness contract non-acceptable proposal cannot be treated as PASS
+00:01 +58: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/application/adaptation/equipment_adaptation_b4d19_test.dart: B4d.19 regressions and Journey D harness contract no auto-apply path on proposal service
+00:01 +59: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/application/adaptation/equipment_adaptation_b4d19_test.dart: B4d.19 freshness knowledge parity (Journey D staging defect) knowledge-less accept freshness reproduces freshness_invalid
+00:01 +60: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/application/adaptation/equipment_adaptation_b4d19_test.dart: B4d.19 freshness knowledge parity (Journey D staging defect) knowledge-backed accept freshness accepts the same recommendation
+00:01 +61: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/application/adaptation/equipment_adaptation_b4d19_test.dart: B4d.19 freshness knowledge parity (Journey D staging defect) knowledge-less mismatch path still fails closed
+00:01 +62: /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/application/adaptation/equipment_adaptation_b4d19_test.dart: (tearDownAll)
+00:01 +62: All tests passed!
+SAFETY_GATE_GROUP=adaptation_contracts RESULT=PASS
+
+======== SAFETY_GATE_GROUP=programme_adapt_ui_contract ========
+CMD: flutter test test/features/home/programme_adapt_flow_widget_test.dart
+Resolving dependencies...
+Downloading packages...
+  app_links 7.2.0 (7.2.2 available)
+  app_links_linux 1.0.3 (1.0.4 available)
+  app_links_platform_interface 2.0.3 (2.0.4 available)
+  app_links_web 1.0.4 (1.0.5 available)
+  clock 1.1.2 (1.1.3 available)
+  crypto 3.0.7 (3.0.8 available)
+  cupertino_icons 1.0.9 (2.0.0 available)
+  flutter_timezone 4.1.1 (5.1.1 available)
+  functions_client 2.6.4 (2.7.1 available)
+  gotrue 2.25.0 (2.27.3 available)
+  matcher 0.12.19 (0.12.20 available)
+  material_color_utilities 0.13.0 (0.13.1 available)
+  meta 1.18.0 (1.19.0 available)
+  mime 2.0.0 (2.1.0 available)
+  passkeys_platform_interface 2.8.0 (2.10.0 available)
+  platform 3.1.6 (3.2.0 available)
+  postgrest 2.8.0 (2.9.1 available)
+  process 5.0.5 (5.0.6 available)
+  realtime_client 2.10.0 (2.13.2 available)
+  shared_preferences 2.5.5 (2.5.6 available)
+  shared_preferences_android 2.4.26 (2.5.4 available)
+  shared_preferences_foundation 2.5.6 (2.6.1 available)
+  stack_trace 1.12.1 (1.12.2 available)
+  storage_client 2.6.0 (2.8.1 available)
+  supabase 2.13.4 (2.16.5 available)
+  supabase_flutter 2.15.4 (2.18.3 available)
+  test_api 0.7.11 (0.7.15 available)
+  url_launcher 6.3.2 (6.3.3 available)
+  url_launcher_android 6.3.32 (6.3.33 available)
+  url_launcher_ios 6.4.1 (6.4.2 available)
+  url_launcher_linux 3.2.2 (3.2.3 available)
+  url_launcher_macos 3.2.5 (3.2.6 available)
+  url_launcher_windows 3.1.5 (3.1.6 available)
+  vector_math 2.2.0 (2.4.4 available)
+  vm_service 15.2.0 (15.4.0 available)
+  web 1.1.1 (1.1.2 available)
+  webdriver 3.1.0 (3.2.0 available)
+  yaml 3.1.3 (3.1.4 available)
+Got dependencies!
+38 packages have newer versions incompatible with dependency constraints.
+Try `flutter pub outdated` for more information.
+00:00 +0: loading /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/features/home/programme_adapt_flow_widget_test.dart
+00:00 +0: Adapt Session appears only for eligible prepared programme session
+00:00 +1: Adapt Session does not appear when prepare is not ready
+00:00 +2: Accept Adaptation appears only for acceptable reviewable proposal
+00:00 +3: no-safe sheet has no Accept Adaptation control
+00:00 +4: Accept Adaptation returns true from sheet
+00:00 +5: Revert to Original appears only for adapted prepared session
+00:00 +6: Revert confirmation cancel is a no-op result
+00:00 +7: Confirm Revert to Original returns true
+00:00 +8: All tests passed!
+SAFETY_GATE_GROUP=programme_adapt_ui_contract RESULT=PASS
+
+======== SAFETY_GATE_GROUP=completion_identity ========
+CMD: flutter test test/programme/athlete_programme_completion_self_test_2_test.dart
+Resolving dependencies...
+Downloading packages...
+  app_links 7.2.0 (7.2.2 available)
+  app_links_linux 1.0.3 (1.0.4 available)
+  app_links_platform_interface 2.0.3 (2.0.4 available)
+  app_links_web 1.0.4 (1.0.5 available)
+  clock 1.1.2 (1.1.3 available)
+  crypto 3.0.7 (3.0.8 available)
+  cupertino_icons 1.0.9 (2.0.0 available)
+  flutter_timezone 4.1.1 (5.1.1 available)
+  functions_client 2.6.4 (2.7.1 available)
+  gotrue 2.25.0 (2.27.3 available)
+  matcher 0.12.19 (0.12.20 available)
+  material_color_utilities 0.13.0 (0.13.1 available)
+  meta 1.18.0 (1.19.0 available)
+  mime 2.0.0 (2.1.0 available)
+  passkeys_platform_interface 2.8.0 (2.10.0 available)
+  platform 3.1.6 (3.2.0 available)
+  postgrest 2.8.0 (2.9.1 available)
+  process 5.0.5 (5.0.6 available)
+  realtime_client 2.10.0 (2.13.2 available)
+  shared_preferences 2.5.5 (2.5.6 available)
+  shared_preferences_android 2.4.26 (2.5.4 available)
+  shared_preferences_foundation 2.5.6 (2.6.1 available)
+  stack_trace 1.12.1 (1.12.2 available)
+  storage_client 2.6.0 (2.8.1 available)
+  supabase 2.13.4 (2.16.5 available)
+  supabase_flutter 2.15.4 (2.18.3 available)
+  test_api 0.7.11 (0.7.15 available)
+  url_launcher 6.3.2 (6.3.3 available)
+  url_launcher_android 6.3.32 (6.3.33 available)
+  url_launcher_ios 6.4.1 (6.4.2 available)
+  url_launcher_linux 3.2.2 (3.2.3 available)
+  url_launcher_macos 3.2.5 (3.2.6 available)
+  url_launcher_windows 3.1.5 (3.1.6 available)
+  vector_math 2.2.0 (2.4.4 available)
+  vm_service 15.2.0 (15.4.0 available)
+  web 1.1.1 (1.1.2 available)
+  webdriver 3.1.0 (3.2.0 available)
+  yaml 3.1.3 (3.1.4 available)
+Got dependencies!
+38 packages have newer versions incompatible with dependency constraints.
+Try `flutter pub outdated` for more information.
+00:00 +0: loading /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/programme/athlete_programme_completion_self_test_2_test.dart
+00:00 +0: Self-Test 2 completion journey preserves atomic advancement boundary
+00:00 +1: All tests passed!
+SAFETY_GATE_GROUP=completion_identity RESULT=PASS
+
+======== SAFETY_GATE_GROUP=staging_production_isolation ========
+CMD: flutter test test/staging/s17_staging_guard_test.dart
+Resolving dependencies...
+Downloading packages...
+  app_links 7.2.0 (7.2.2 available)
+  app_links_linux 1.0.3 (1.0.4 available)
+  app_links_platform_interface 2.0.3 (2.0.4 available)
+  app_links_web 1.0.4 (1.0.5 available)
+  clock 1.1.2 (1.1.3 available)
+  crypto 3.0.7 (3.0.8 available)
+  cupertino_icons 1.0.9 (2.0.0 available)
+  flutter_timezone 4.1.1 (5.1.1 available)
+  functions_client 2.6.4 (2.7.1 available)
+  gotrue 2.25.0 (2.27.3 available)
+  matcher 0.12.19 (0.12.20 available)
+  material_color_utilities 0.13.0 (0.13.1 available)
+  meta 1.18.0 (1.19.0 available)
+  mime 2.0.0 (2.1.0 available)
+  passkeys_platform_interface 2.8.0 (2.10.0 available)
+  platform 3.1.6 (3.2.0 available)
+  postgrest 2.8.0 (2.9.1 available)
+  process 5.0.5 (5.0.6 available)
+  realtime_client 2.10.0 (2.13.2 available)
+  shared_preferences 2.5.5 (2.5.6 available)
+  shared_preferences_android 2.4.26 (2.5.4 available)
+  shared_preferences_foundation 2.5.6 (2.6.1 available)
+  stack_trace 1.12.1 (1.12.2 available)
+  storage_client 2.6.0 (2.8.1 available)
+  supabase 2.13.4 (2.16.5 available)
+  supabase_flutter 2.15.4 (2.18.3 available)
+  test_api 0.7.11 (0.7.15 available)
+  url_launcher 6.3.2 (6.3.3 available)
+  url_launcher_android 6.3.32 (6.3.33 available)
+  url_launcher_ios 6.4.1 (6.4.2 available)
+  url_launcher_linux 3.2.2 (3.2.3 available)
+  url_launcher_macos 3.2.5 (3.2.6 available)
+  url_launcher_windows 3.1.5 (3.1.6 available)
+  vector_math 2.2.0 (2.4.4 available)
+  vm_service 15.2.0 (15.4.0 available)
+  web 1.1.1 (1.1.2 available)
+  webdriver 3.1.0 (3.2.0 available)
+  yaml 3.1.3 (3.1.4 available)
+Got dependencies!
+38 packages have newer versions incompatible with dependency constraints.
+Try `flutter pub outdated` for more information.
+00:00 +0: loading /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/test/staging/s17_staging_guard_test.dart
+00:00 +0: missing confirmation fails closed
+00:00 +1: production project is rejected
+00:00 +2: unknown project is rejected
+00:00 +3: dry-run with fixture performs no write and creates plan only
+00:00 +4: run markers are unique and non-personal
+00:00 +5: forbidden athlete lookup detector catches Athlete C references
+00:00 +6: new tooling sources do not contain Athlete C identifiers
+00:00 +7: private path inside git worktree is rejected
+00:00 +8: service_role material rejected for Flutter config
+00:00 +9: redaction helpers hide emails and uuids
+00:00 +10: runner rejects defines file inside git worktree
+00:00 +11: runner dry-run validates private staging config without secrets
+00:00 +12: All tests passed!
+SAFETY_GATE_GROUP=staging_production_isolation RESULT=PASS
+
+======== SAFETY_GATE_SUMMARY ========
+groups_passed=6
+groups_failed=0
+PHASE2_CONSOLIDATION_SAFETY_GATE=PASS
+Protected invariants: INV-01..INV-20 (see /Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform/docs/architecture/Phase_2_Consolidation_Safety_Gate_v1.md)

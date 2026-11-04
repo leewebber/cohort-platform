@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+import 'auth_confirmation_redirect.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../core/services/supabase_service.dart';
@@ -8,6 +10,9 @@ class AuthService implements AuthSessionPort {
     : _client = client ?? SupabaseService.client;
 
   final SupabaseClient _client;
+
+  String? get _confirmationRedirect =>
+      authConfirmationRedirect(isWeb: kIsWeb, platform: defaultTargetPlatform);
 
   @override
   Session? get currentSession => _client.auth.currentSession;
@@ -39,6 +44,7 @@ class AuthService implements AuthSessionPort {
     return _client.auth.signUp(
       email: email.trim(),
       password: password,
+      emailRedirectTo: _confirmationRedirect,
       data: {
         if (displayName != null && displayName.trim().isNotEmpty)
           'display_name': displayName.trim(),
@@ -50,7 +56,11 @@ class AuthService implements AuthSessionPort {
 
   @override
   Future<void> resendSignupVerification({required String email}) {
-    return _client.auth.resend(type: OtpType.signup, email: email.trim());
+    return _client.auth.resend(
+      type: OtpType.signup,
+      email: email.trim(),
+      emailRedirectTo: _confirmationRedirect,
+    );
   }
 
   @override

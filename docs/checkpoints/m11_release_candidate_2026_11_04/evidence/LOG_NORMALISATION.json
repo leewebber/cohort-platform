@@ -1,0 +1,12 @@
+{
+  "CHANGED_FINAL_ANALYSIS.txt": {
+    "raw_log_sha256": "ed7100af85b75e626449ad9531c32147ef0259a085bd5445d589496a3144d1be",
+    "retained_log_sha256": "525f197f55d467e4624f3cded9826d12c0a0390bb35daaf1982ae640d271e8b0",
+    "normalisation": "Strip trailing spaces only; raw task output remains in /private/tmp/m11_release_20261104; diagnostics unaltered"
+  },
+  "REPOSITORY_FINAL_ANALYSIS.txt": {
+    "raw_log_sha256": "fd36f87f1b8d89d93b8858c366d2ec358980b66db3c723824e1d39c56094b53e",
+    "retained_log_sha256": "a93d123c92eabc7e23cc30f5da15d6e7a1829b5b07bf36f3be8c20f0b9525045",
+    "normalisation": "Strip trailing spaces only; raw task output remains in /private/tmp/m11_release_20261104; diagnostics unaltered"
+  }
+}

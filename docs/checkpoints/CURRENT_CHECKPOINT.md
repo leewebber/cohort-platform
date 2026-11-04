@@ -1,5 +1,26 @@
 # Current repository checkpoint
 
+> **M1.1 genuine Hybrid 10K release candidate — 2026-11-04:**
+> [Candidate, bounded fixes and evidence](./m11_release_candidate_2026_11_04/HANDOFF.md)
+> retain one genuine e676e31 + approved 8be184c wording candidate; all 60 graphs
+> admit and all 105 strength prescriptions / 40 running bodies remain exact.
+> Authenticated disposable local acquisition/start/save/reopen/paused restart/
+> completion/retry/correction/History and 56/57-day renewal checks pass.
+> Fresh READ-ONLY Field Manual ledger 130 / 20261024130000 and all 206 existing
+> function identities/authorities match retained evidence; 172 catalogue rows and
+> five consumer guards are unchanged. No operational login or hosted mutation.
+> [Exact proposal](./m11_release_candidate_2026_11_04/DEPLOYMENT_PROPOSAL.md):
+> five held/local migrations (including chosen-date correction), excluding HYROX
+> producer, plus one native callback allowlist addition. Lee chose existing
+> organisation-account email; no SMTP/membership change proposed. Client source
+> 1.0.0+8 is not signed/installed. Publication/access templates await actual app
+> owner/athlete UIDs and separate approval. Six safety groups pass, ten changed
+> Dart files zero issues; repository retains 362 inherited findings / zero errors.
+> Task-owned disposable stack/secrets removed; older checkouts/dirty work/refs/
+> .temp/backups and untracked full review preserved. UI acceptance/polish freeze stand.
+> **Next single action: approve exact schema/native-callback enablement proposal.**
+> **M1.1/M1.2/M1.3 and Gate A OPEN; no publication or installed acceptance.**
+
 > **M1.1 two D8 integration decisions approved — 2026-11-04:**
 > [Actual founder approval and added wording](../programmes/hybrid_10k/d8_approved_integration_2026_11_04/APPROVAL.md)
 > record both decisions explicitly approved against e676e31: unchanged 0..56-day

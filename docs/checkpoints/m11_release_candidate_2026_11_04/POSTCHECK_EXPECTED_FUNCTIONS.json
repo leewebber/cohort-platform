@@ -1,0 +1,481 @@
+{
+  "classification": "PROSPECTIVE_EXPECTED_FROM_EXACT_LOCAL_REPLAY_NOT_HOSTED_RESULT",
+  "functions": [
+    {
+      "acl": [
+        "postgres=X/postgres",
+        "authenticated=X/postgres"
+      ],
+      "owner": "postgres",
+      "config": [
+        "search_path=pg_catalog, pg_temp"
+      ],
+      "signature": "acquire_my_private_programme(uuid,uuid,date)",
+      "body_sha256": "20068c6bca04bdce1b5b8e7984927edfd837a1ff7f9f96e5188ba30c98cc117e",
+      "anon_execute": false,
+      "service_execute": false,
+      "security_definer": true,
+      "authenticated_execute": true
+    },
+    {
+      "acl": [
+        "postgres=X/postgres"
+      ],
+      "owner": "postgres",
+      "config": [
+        "search_path=pg_catalog, pg_temp"
+      ],
+      "signature": "cohort_alpha_5k_date_eligible_v1(date,text,text,timestamp with time zone)",
+      "body_sha256": "ece4941d3cc474c5ba75e55cc051c79398ef6639107d9049f79985a3edf4a237",
+      "anon_execute": false,
+      "service_execute": false,
+      "security_definer": true,
+      "authenticated_execute": false
+    },
+    {
+      "acl": [
+        "postgres=X/postgres"
+      ],
+      "owner": "postgres",
+      "config": [
+        "search_path=pg_catalog, pg_temp"
+      ],
+      "signature": "cohort_alpha_quality_window_v1(integer,text,text)",
+      "body_sha256": "b094b96dc657aff3b01a60a9da9712cdcc9d5bc34fd6a6794338dee47a0d8272",
+      "anon_execute": false,
+      "service_execute": false,
+      "security_definer": true,
+      "authenticated_execute": false
+    },
+    {
+      "acl": [
+        "postgres=X/postgres",
+        "authenticated=X/postgres",
+        "service_role=X/postgres"
+      ],
+      "owner": "postgres",
+      "config": [
+        "search_path=public, pg_temp"
+      ],
+      "signature": "cohort_athlete_may_enrol_private_programme_version(uuid)",
+      "body_sha256": "41a660d9c0a0ab53c2569bd58d9307e93b24c121e2866e3fd3492bd190141fcc",
+      "anon_execute": false,
+      "service_execute": true,
+      "security_definer": true,
+      "authenticated_execute": true
+    },
+    {
+      "acl": [
+        "postgres=X/postgres"
+      ],
+      "owner": "postgres",
+      "config": [
+        "search_path=pg_catalog, public, extensions, pg_temp"
+      ],
+      "signature": "cohort_completion_request_sha256_v1(jsonb)",
+      "body_sha256": "ef52dd926300ef36c489cb9a1d9af251a5e3c56a872e12aa726f9abd816e19ac",
+      "anon_execute": false,
+      "service_execute": false,
+      "security_definer": true,
+      "authenticated_execute": false
+    },
+    {
+      "acl": [
+        "postgres=X/postgres"
+      ],
+      "owner": "postgres",
+      "config": [
+        "search_path=pg_catalog, pg_temp"
+      ],
+      "signature": "cohort_create_or_resume_fixed_occurrence_at(uuid,timestamp with time zone)",
+      "body_sha256": "b03a057e4d43cef026256c535998060a41f7c6cbcab7bceeb6729c471215170c",
+      "anon_execute": false,
+      "service_execute": false,
+      "security_definer": true,
+      "authenticated_execute": false
+    },
+    {
+      "acl": [
+        "postgres=X/postgres"
+      ],
+      "owner": "postgres",
+      "config": [
+        "search_path=pg_catalog, pg_temp"
+      ],
+      "signature": "cohort_fixed_with_running_targets(uuid,timestamp with time zone,text,text)",
+      "body_sha256": "7df7c051d1dcc7ae1a739d3107654304cb042a33152c770ec5025ff1973f2ed0",
+      "anon_execute": false,
+      "service_execute": false,
+      "security_definer": true,
+      "authenticated_execute": false
+    },
+    {
+      "acl": [
+        "postgres=X/postgres"
+      ],
+      "owner": "postgres",
+      "config": [
+        "search_path=pg_catalog, pg_temp"
+      ],
+      "signature": "cohort_fixed_with_zone2(uuid,timestamp with time zone,text)",
+      "body_sha256": "562dad1c1e21d340f201bab2bcc653e26ac69c385dcd072726f496cc77f1db00",
+      "anon_execute": false,
+      "service_execute": false,
+      "security_definer": true,
+      "authenticated_execute": false
+    },
+    {
+      "acl": [
+        "postgres=X/postgres"
+      ],
+      "owner": "postgres",
+      "config": [
+        "search_path=pg_catalog, public, pg_temp"
+      ],
+      "signature": "cohort_guard_completion_receipt_v1()",
+      "body_sha256": "ddb3ac7d472272674986073673d9435af395c4c2b97aed0b78e9b0e7ca7df1af",
+      "anon_execute": false,
+      "service_execute": false,
+      "security_definer": false,
+      "authenticated_execute": false
+    },
+    {
+      "acl": [
+        "postgres=X/postgres"
+      ],
+      "owner": "postgres",
+      "config": [
+        "search_path=pg_catalog, pg_temp"
+      ],
+      "signature": "cohort_private_alpha_eligible(uuid)",
+      "body_sha256": "de5b50f2e308328fabbe3054549cbf2fa4c9d904df78896e3be46e7314e6e58f",
+      "anon_execute": false,
+      "service_execute": false,
+      "security_definer": true,
+      "authenticated_execute": false
+    },
+    {
+      "acl": [
+        "postgres=X/postgres"
+      ],
+      "owner": "postgres",
+      "config": [
+        "search_path=pg_catalog, pg_temp"
+      ],
+      "signature": "cohort_private_alpha_ready(uuid)",
+      "body_sha256": "b724f1a43d41e656edc5dbceb0c29324041781e68318489d6da96de83bb6b757",
+      "anon_execute": false,
+      "service_execute": false,
+      "security_definer": true,
+      "authenticated_execute": false
+    },
+    {
+      "acl": [
+        "postgres=X/postgres",
+        "authenticated=X/postgres",
+        "service_role=X/postgres"
+      ],
+      "owner": "postgres",
+      "config": [
+        "search_path=public, pg_temp"
+      ],
+      "signature": "cohort_private_programme_visible_to_caller(uuid)",
+      "body_sha256": "6487809f7c732419cbb07f4a6b25bcd0f191703be2be162f9a042f51d50a7072",
+      "anon_execute": false,
+      "service_execute": true,
+      "security_definer": true,
+      "authenticated_execute": true
+    },
+    {
+      "acl": [
+        "postgres=X/postgres"
+      ],
+      "owner": "postgres",
+      "config": [
+        "search_path=pg_catalog, public, pg_temp"
+      ],
+      "signature": "cohort_replay_programme_completion_v1(jsonb,boolean)",
+      "body_sha256": "1ba2fbcdc238d51e9a2007bbf4a99f7b8de7f4fd68a4111b5b1739f2596fac41",
+      "anon_execute": false,
+      "service_execute": false,
+      "security_definer": true,
+      "authenticated_execute": false
+    },
+    {
+      "acl": [
+        "postgres=X/postgres"
+      ],
+      "owner": "postgres",
+      "config": [
+        "search_path=pg_catalog, pg_temp"
+      ],
+      "signature": "cohort_zone2_record_guard()",
+      "body_sha256": "02b5646c923ba618b44f223c00829af400fdc2213515b8265f3a8781691119c7",
+      "anon_execute": false,
+      "service_execute": false,
+      "security_definer": true,
+      "authenticated_execute": false
+    },
+    {
+      "acl": [
+        "postgres=X/postgres",
+        "authenticated=X/postgres",
+        "service_role=X/postgres"
+      ],
+      "owner": "postgres",
+      "config": [
+        "search_path=pg_catalog, public, pg_temp"
+      ],
+      "signature": "complete_fixed_programme_occurrence_and_advance(jsonb)",
+      "body_sha256": "2b197a8642b44ee6d580b80927fd34d73ddd3a5355a6eb922b763da282b68cb6",
+      "anon_execute": false,
+      "service_execute": true,
+      "security_definer": true,
+      "authenticated_execute": true
+    },
+    {
+      "acl": [
+        "postgres=X/postgres",
+        "authenticated=X/postgres",
+        "service_role=X/postgres"
+      ],
+      "owner": "postgres",
+      "config": [
+        "search_path=pg_catalog, public, pg_temp"
+      ],
+      "signature": "complete_programme_session_and_advance(jsonb)",
+      "body_sha256": "9cc3ef35e39603abcfbbadfe8d80270cc7ad0d91f9bb77b9f63a5b40fd9f3719",
+      "anon_execute": false,
+      "service_execute": true,
+      "security_definer": true,
+      "authenticated_execute": true
+    },
+    {
+      "acl": [
+        "postgres=X/postgres",
+        "authenticated=X/postgres"
+      ],
+      "owner": "postgres",
+      "config": [
+        "search_path=pg_catalog, pg_temp"
+      ],
+      "signature": "confirm_running_quality_input(uuid,text,integer,date,boolean,boolean,text)",
+      "body_sha256": "1201083ac62b92d266c4353e92adff145aed23dff131ba9bfef7a13ded7a5828",
+      "anon_execute": false,
+      "service_execute": false,
+      "security_definer": true,
+      "authenticated_execute": true
+    },
+    {
+      "acl": [
+        "postgres=X/postgres",
+        "authenticated=X/postgres"
+      ],
+      "owner": "postgres",
+      "config": [
+        "search_path=pg_catalog, pg_temp"
+      ],
+      "signature": "confirm_running_zone2(uuid,integer,integer,boolean)",
+      "body_sha256": "8ef9551046d6941920fbc52c49d50c28a3ec2c87e86f052beb8e55f5ad27931b",
+      "anon_execute": false,
+      "service_execute": false,
+      "security_definer": true,
+      "authenticated_execute": true
+    },
+    {
+      "acl": [
+        "postgres=X/postgres",
+        "authenticated=X/postgres"
+      ],
+      "owner": "postgres",
+      "config": [
+        "search_path=pg_catalog, pg_temp"
+      ],
+      "signature": "create_or_resume_fixed_programme_occurrence_session(uuid,text,text)",
+      "body_sha256": "dc95f0cad74330c4ac4ca4580c7488dce9d177e8adc1c73bcd9a7f87d07ae8d2",
+      "anon_execute": false,
+      "service_execute": false,
+      "security_definer": true,
+      "authenticated_execute": true
+    },
+    {
+      "acl": [
+        "postgres=X/postgres",
+        "authenticated=X/postgres"
+      ],
+      "owner": "postgres",
+      "config": [
+        "search_path=pg_catalog, pg_temp"
+      ],
+      "signature": "create_or_resume_fixed_programme_occurrence_session(uuid,text)",
+      "body_sha256": "7532976e98ceab48282d489c50095830ad84d6129e99d9f9449e654e154d7333",
+      "anon_execute": false,
+      "service_execute": false,
+      "security_definer": true,
+      "authenticated_execute": true
+    },
+    {
+      "acl": [
+        "postgres=X/postgres",
+        "authenticated=X/postgres"
+      ],
+      "owner": "postgres",
+      "config": [
+        "search_path=pg_catalog, pg_temp"
+      ],
+      "signature": "create_or_resume_fixed_programme_occurrence_session(uuid,uuid,jsonb)",
+      "body_sha256": "49f852b9448f247c4599cfcc8e1006e47925974f55c692ccb9ee49580f8a80ab",
+      "anon_execute": false,
+      "service_execute": false,
+      "security_definer": true,
+      "authenticated_execute": true
+    },
+    {
+      "acl": [
+        "postgres=X/postgres",
+        "authenticated=X/postgres"
+      ],
+      "owner": "postgres",
+      "config": [
+        "search_path=pg_catalog, pg_temp"
+      ],
+      "signature": "create_or_resume_fixed_programme_occurrence_session(uuid,uuid)",
+      "body_sha256": "57ab3abf68a8b95a3260e98ac1dd8bf531f3e393b71feee5842025ba85871b57",
+      "anon_execute": false,
+      "service_execute": false,
+      "security_definer": true,
+      "authenticated_execute": true
+    },
+    {
+      "acl": [
+        "postgres=X/postgres",
+        "authenticated=X/postgres",
+        "service_role=X/postgres"
+      ],
+      "owner": "postgres",
+      "config": [
+        "search_path=public, pg_temp"
+      ],
+      "signature": "create_or_resume_fixed_programme_occurrence_session(uuid)",
+      "body_sha256": "541cf3678a1d5b34bc33734eccc105adc8b10a90f7328db8f648aee70ff72efa",
+      "anon_execute": false,
+      "service_execute": true,
+      "security_definer": true,
+      "authenticated_execute": true
+    },
+    {
+      "acl": [
+        "postgres=X/postgres",
+        "authenticated=X/postgres",
+        "service_role=X/postgres"
+      ],
+      "owner": "postgres",
+      "config": [
+        "search_path=pg_catalog, pg_temp"
+      ],
+      "signature": "create_or_resume_programme_training_session(jsonb)",
+      "body_sha256": "399462c63e3b915b98191ed0fa9ce68a1939341fa6c49313151a6aa9646c6f0a",
+      "anon_execute": false,
+      "service_execute": true,
+      "security_definer": true,
+      "authenticated_execute": true
+    },
+    {
+      "acl": [
+        "postgres=X/postgres",
+        "authenticated=X/postgres",
+        "service_role=X/postgres"
+      ],
+      "owner": "postgres",
+      "config": [
+        "search_path=public, pg_temp"
+      ],
+      "signature": "materialise_athlete_plan_from_enrolment(uuid,text)",
+      "body_sha256": "ab6cfa3822b0ae4499ae58e2844a0e1dc26ac94952e8adb59b80d2eeb42c2c59",
+      "anon_execute": false,
+      "service_execute": true,
+      "security_definer": true,
+      "authenticated_execute": true
+    },
+    {
+      "acl": [
+        "postgres=X/postgres",
+        "authenticated=X/postgres"
+      ],
+      "owner": "postgres",
+      "config": [
+        "search_path=pg_catalog, pg_temp"
+      ],
+      "signature": "read_my_private_programme_catalogue(uuid,uuid)",
+      "body_sha256": "c683b8454700f7f0080495424b345de6522e4f64c75c9e449fafaa0c344d4300",
+      "anon_execute": false,
+      "service_execute": false,
+      "security_definer": true,
+      "authenticated_execute": true
+    },
+    {
+      "acl": [
+        "postgres=X/postgres",
+        "authenticated=X/postgres"
+      ],
+      "owner": "postgres",
+      "config": [
+        "search_path=pg_catalog, pg_temp"
+      ],
+      "signature": "read_my_training_setup(uuid)",
+      "body_sha256": "b4e730f41f872979963418207985a8b7262a047f890ab4df386caae44abbcda9",
+      "anon_execute": false,
+      "service_execute": false,
+      "security_definer": true,
+      "authenticated_execute": true
+    },
+    {
+      "acl": [
+        "postgres=X/postgres",
+        "authenticated=X/postgres"
+      ],
+      "owner": "postgres",
+      "config": [
+        "search_path=pg_catalog, pg_temp"
+      ],
+      "signature": "review_running_quality_targets(uuid,text)",
+      "body_sha256": "a28776713942ceb2c0f5d901f4615770ebcc28a0f90abf01800fc173d986c8b9",
+      "anon_execute": false,
+      "service_execute": false,
+      "security_definer": true,
+      "authenticated_execute": true
+    },
+    {
+      "acl": [
+        "postgres=X/postgres",
+        "authenticated=X/postgres"
+      ],
+      "owner": "postgres",
+      "config": [
+        "search_path=pg_catalog, pg_temp"
+      ],
+      "signature": "review_running_zone2_targets(uuid)",
+      "body_sha256": "ca1ab898d8fd1ec360bbe5e592b576018230aedb1a9b22bf6f2efbea8ea52e4b",
+      "anon_execute": false,
+      "service_execute": false,
+      "security_definer": true,
+      "authenticated_execute": true
+    },
+    {
+      "acl": [
+        "postgres=X/postgres",
+        "authenticated=X/postgres"
+      ],
+      "owner": "postgres",
+      "config": [
+        "search_path=pg_catalog, pg_temp"
+      ],
+      "signature": "save_my_training_setup(uuid,text,boolean)",
+      "body_sha256": "a221fb90e32b5673a874bb59ac19cce03b312c90eb17ad3a1590d04f366540c8",
+      "anon_execute": false,
+      "service_execute": false,
+      "security_definer": true,
+      "authenticated_execute": true
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "data": [
+    {
+      "prerequisites": {
+        "extensions_digest": true,
+        "training_timezone": true,
+        "completion_receipt_column": false
+      }
+    }
+  ],
+  "metadata": {
+    "target_ref": "otnhhdxstdnwccehacku",
+    "method": "POST",
+    "path": "/database/query/read-only",
+    "http_status": 201,
+    "captured_at": "2026-11-04T12:29:01.312052+00:00",
+    "cf_ray": "a5539f2528ee9d72-CGK",
+    "raw_sha256": "911db19b66d9f1448f684e1fc8df7ebd081f1a3ed0a8a36b43499ca9cda7878b"
+  }
+}

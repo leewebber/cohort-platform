@@ -1,0 +1,18 @@
+{
+  "before_source_sha256": "c9c4c61622f8d3a22147b32e1e469548b07e293ec2078c4ed68f4399a16d8449",
+  "after_source_sha256": "ab6cfa3822b0ae4499ae58e2844a0e1dc26ac94952e8adb59b80d2eeb42c2c59",
+  "migration_sha256": "5b914514273c864907d6fefd9cdc3e49c940610a7fe8fe0a26f7265f7d2db3aa",
+  "local_before_identity": {
+    "acl": [
+      "postgres=X/postgres",
+      "authenticated=X/postgres",
+      "service_role=X/postgres"
+    ],
+    "oid": "18231",
+    "owner": "16384",
+    "config": [
+      "search_path=public, pg_temp"
+    ],
+    "security_definer": true
+  }
+}
