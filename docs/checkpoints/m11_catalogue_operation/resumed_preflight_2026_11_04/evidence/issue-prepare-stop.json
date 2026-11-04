@@ -1,0 +1,6 @@
+{
+  "status": "STOP",
+  "reason": "REFUSED_OR_UNKNOWN: operator SQL failed. No retention claimed; preserve the operation and reconcile readback/audit",
+  "captured_at": "2026-11-04T03:38:05.221074+00:00",
+  "no_automatic_replacement": true
+}

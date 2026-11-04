@@ -1,0 +1,186 @@
+{
+  "classification": "GENUINE_LOCAL_ADMISSION_ATTEMPT_AFTER_HOSTED_NO_WRITE_STOP",
+  "complete_strength_admitted": 0,
+  "complete_strength_attempted": 20,
+  "missing_occurrences": {
+    "chest_supported_db_row": 10,
+    "reverse_lunge_db": 8,
+    "seated_supported_db_press": 10
+  },
+  "whole_programme_review": false,
+  "complete_export_refused": true,
+  "new_catalogue_rows_installed": 0,
+  "old_revisions_unchanged": true,
+  "D8": "PENDING",
+  "Gate_A": "OPEN",
+  "sessions": [
+    {
+      "session_id": "LW10K-W01-D01",
+      "admitted": false,
+      "issues": [
+        "Bilateral chest-supported DB row: Unresolved exercise setup — cannot prepare for publication."
+      ],
+      "source_unchanged": true
+    },
+    {
+      "session_id": "LW10K-W01-D04",
+      "admitted": false,
+      "issues": [
+        "DB reverse lunge: Unresolved exercise setup — cannot prepare for publication.",
+        "Seated back-supported neutral-grip DB press: Unresolved exercise setup — cannot prepare for publication."
+      ],
+      "source_unchanged": true
+    },
+    {
+      "session_id": "LW10K-W02-D01",
+      "admitted": false,
+      "issues": [
+        "Bilateral chest-supported DB row: Unresolved exercise setup — cannot prepare for publication."
+      ],
+      "source_unchanged": true
+    },
+    {
+      "session_id": "LW10K-W02-D04",
+      "admitted": false,
+      "issues": [
+        "DB reverse lunge: Unresolved exercise setup — cannot prepare for publication.",
+        "Seated back-supported neutral-grip DB press: Unresolved exercise setup — cannot prepare for publication."
+      ],
+      "source_unchanged": true
+    },
+    {
+      "session_id": "LW10K-W03-D01",
+      "admitted": false,
+      "issues": [
+        "Bilateral chest-supported DB row: Unresolved exercise setup — cannot prepare for publication."
+      ],
+      "source_unchanged": true
+    },
+    {
+      "session_id": "LW10K-W03-D04",
+      "admitted": false,
+      "issues": [
+        "DB reverse lunge: Unresolved exercise setup — cannot prepare for publication.",
+        "Seated back-supported neutral-grip DB press: Unresolved exercise setup — cannot prepare for publication."
+      ],
+      "source_unchanged": true
+    },
+    {
+      "session_id": "LW10K-W04-D01",
+      "admitted": false,
+      "issues": [
+        "Bilateral chest-supported DB row: Unresolved exercise setup — cannot prepare for publication."
+      ],
+      "source_unchanged": true
+    },
+    {
+      "session_id": "LW10K-W04-D04",
+      "admitted": false,
+      "issues": [
+        "DB reverse lunge: Unresolved exercise setup — cannot prepare for publication.",
+        "Seated back-supported neutral-grip DB press: Unresolved exercise setup — cannot prepare for publication."
+      ],
+      "source_unchanged": true
+    },
+    {
+      "session_id": "LW10K-W05-D01",
+      "admitted": false,
+      "issues": [
+        "Bilateral chest-supported DB row: Unresolved exercise setup — cannot prepare for publication."
+      ],
+      "source_unchanged": true
+    },
+    {
+      "session_id": "LW10K-W05-D04",
+      "admitted": false,
+      "issues": [
+        "DB reverse lunge: Unresolved exercise setup — cannot prepare for publication.",
+        "Seated back-supported neutral-grip DB press: Unresolved exercise setup — cannot prepare for publication."
+      ],
+      "source_unchanged": true
+    },
+    {
+      "session_id": "LW10K-W06-D01",
+      "admitted": false,
+      "issues": [
+        "Bilateral chest-supported DB row: Unresolved exercise setup — cannot prepare for publication."
+      ],
+      "source_unchanged": true
+    },
+    {
+      "session_id": "LW10K-W06-D04",
+      "admitted": false,
+      "issues": [
+        "DB reverse lunge: Unresolved exercise setup — cannot prepare for publication.",
+        "Seated back-supported neutral-grip DB press: Unresolved exercise setup — cannot prepare for publication."
+      ],
+      "source_unchanged": true
+    },
+    {
+      "session_id": "LW10K-W07-D01",
+      "admitted": false,
+      "issues": [
+        "Bilateral chest-supported DB row: Unresolved exercise setup — cannot prepare for publication."
+      ],
+      "source_unchanged": true
+    },
+    {
+      "session_id": "LW10K-W07-D04",
+      "admitted": false,
+      "issues": [
+        "DB reverse lunge: Unresolved exercise setup — cannot prepare for publication.",
+        "Seated back-supported neutral-grip DB press: Unresolved exercise setup — cannot prepare for publication."
+      ],
+      "source_unchanged": true
+    },
+    {
+      "session_id": "LW10K-W08-D01",
+      "admitted": false,
+      "issues": [
+        "Bilateral chest-supported DB row: Unresolved exercise setup — cannot prepare for publication."
+      ],
+      "source_unchanged": true
+    },
+    {
+      "session_id": "LW10K-W08-D04",
+      "admitted": false,
+      "issues": [
+        "DB reverse lunge: Unresolved exercise setup — cannot prepare for publication.",
+        "Seated back-supported neutral-grip DB press: Unresolved exercise setup — cannot prepare for publication."
+      ],
+      "source_unchanged": true
+    },
+    {
+      "session_id": "LW10K-W09-D01",
+      "admitted": false,
+      "issues": [
+        "Bilateral chest-supported DB row: Unresolved exercise setup — cannot prepare for publication."
+      ],
+      "source_unchanged": true
+    },
+    {
+      "session_id": "LW10K-W09-D04",
+      "admitted": false,
+      "issues": [
+        "Seated back-supported neutral-grip DB press: Unresolved exercise setup — cannot prepare for publication."
+      ],
+      "source_unchanged": true
+    },
+    {
+      "session_id": "LW10K-W10-D01",
+      "admitted": false,
+      "issues": [
+        "Bilateral chest-supported DB row: Unresolved exercise setup — cannot prepare for publication."
+      ],
+      "source_unchanged": true
+    },
+    {
+      "session_id": "LW10K-W10-D04",
+      "admitted": false,
+      "issues": [
+        "Seated back-supported neutral-grip DB press: Unresolved exercise setup — cannot prepare for publication."
+      ],
+      "source_unchanged": true
+    }
+  ]
+}

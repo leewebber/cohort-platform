@@ -1,0 +1,13 @@
+{
+  "unchanged": {
+    "columns": true,
+    "constraints": true,
+    "indexes": true,
+    "rows": true,
+    "consumer_guard": true
+  },
+  "catalogue_before": 169,
+  "catalogue_after": 169,
+  "executed_write_set": [],
+  "all_five_services_healthy": true
+}

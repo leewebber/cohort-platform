@@ -6,6 +6,30 @@ This plan controls delivery priorities. It preserves technical authority contrac
 it does not grant implementation, content, hosted, account or release authority.
 [M0 findings and critical path](../checkpoints/m0_alpha_baseline/HANDOFF.md).
 
+## Current single point — M1.1 duplicate-slug guard compatibility (2026-11-04)
+
+The authorised existing Field Manual project was resumed; all five services are
+healthy. The legitimate single-login cli_login_postgres / postgres route is proved
+with verified TLS and existing membership. Fresh full 169-row preflight stopped
+at the unchanged global slug-uniqueness guard: EX-029 and EX-141 both carry
+bulgarian-split-squat. None of the three proposed slugs collides; the existing
+duplicate violates the current operation safeguard. No guard/identity changed,
+and no seed/allocation/apply occurred.
+[Genuine evidence and closeout](../checkpoints/m11_catalogue_operation/resumed_preflight_2026_11_04/HANDOFF.md).
+
+All rows/schema and five consumer guards match independent postflight. The sole
+temporary login was revoked, zero CLI roles/backends verified, and temporary
+credential files removed. No replacement is authorised. Actual complete-strength
+admission is 0/20 (28 missing occurrences); complete programme export refuses.
+
+Next precise decision is the [bounded local compatibility slice](../checkpoints/m11_catalogue_operation/resumed_preflight_2026_11_04/NEXT_DECISION.md)
+for the global uniqueness assumption, preserving both existing records and all
+target dedup/conflict/transaction safeguards. No hosted duplicate repair, guard
+change or new login is implied. UI acceptance/polish freeze stand. D8/publication/
+installed acceptance stay separate; M1.1/Gate A OPEN.
+
+## Retained inactive-target stop (superseded by authorised resumption)
+
 > **2026-11-04 authorised operation stop:** [Fresh target and credential closeout](../checkpoints/m11_catalogue_operation/inactive_target_2026_11_04/HANDOFF.md)
 > confirm Field Manual **INACTIVE**. Single temporary-login authority is granted but
 > unconsumed; no credential or catalogue write occurred. Current prerequisite:
@@ -13,7 +37,7 @@ it does not grant implementation, content, hosted, account or release authority.
 > reviewed operation under the unused login authority. UI acceptance/polish freeze
 > remain; D8, publication, M1.1 and Gate A remain open.
 
-## Current single point — M1.1 operator connection and strength admission (2026-11-04)
+## Retained operator-connection allocation (superseded by actual preflight above)
 
 Lee manually reviewed the current coaching workspace and accepts its lighter
 professional presentation, structured sessions and editing as good enough for this

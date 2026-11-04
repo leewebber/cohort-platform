@@ -1,0 +1,33 @@
+{
+  "classification": "GENUINE_AUTHENTICATED_OPERATOR_PREFLIGHT_CONFLICT",
+  "target_ref": "otnhhdxstdnwccehacku",
+  "captured_at": "2026-11-04 03:39:36.332217+00",
+  "duplicate_slug_groups": {
+    "bulgarian-split-squat": [
+      {
+        "exercise_id": "EX-029",
+        "name": "Bulgarian Split Squat",
+        "slug": "bulgarian-split-squat",
+        "published": true,
+        "equipment": "Bench, One Dumbbell",
+        "setup": null,
+        "execution": null
+      },
+      {
+        "exercise_id": "EX-141",
+        "name": "Bulgarian Split Squat",
+        "slug": "bulgarian-split-squat",
+        "published": true,
+        "equipment": "Bench, Dumbbells",
+        "setup": null,
+        "execution": null
+      }
+    ]
+  },
+  "catalogue_rows": 169,
+  "exact_executed_write_set": [],
+  "manifest_created": false,
+  "seed_created": false,
+  "error": "Ambiguous existing slug inventory; reconcile before allocation",
+  "no_existing_record_changed": true
+}

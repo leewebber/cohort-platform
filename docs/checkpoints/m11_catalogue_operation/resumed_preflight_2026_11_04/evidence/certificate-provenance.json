@@ -1,0 +1,8 @@
+{
+  "source": "https://raw.githubusercontent.com/supabase/supabase/master/apps/studio/hooks/custom-content/custom-content.json",
+  "source_sha256": "28269e08393dbed773846600e7493f0fdf57f9af9112671522653c9b510943e6",
+  "template": "https://supabase-downloads.s3-ap-southeast-1.amazonaws.com/${env}/ssl/${env}-ca-2021.crt",
+  "certificate_url": "https://supabase-downloads.s3-ap-southeast-1.amazonaws.com/prod/ssl/prod-ca-2021.crt",
+  "certificate_sha256": "700723581420dd1ac98fd7e9ac529f0ef210eadcaf87fc868a3ad7d114c2f3b7",
+  "correction": "Prior 403 was a literal unexpanded template path, not the actual CA URL"
+}

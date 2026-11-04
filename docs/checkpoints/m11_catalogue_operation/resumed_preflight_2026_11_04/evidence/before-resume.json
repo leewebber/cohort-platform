@@ -1,0 +1,14 @@
+{
+  "project": {
+    "id": "otnhhdxstdnwccehacku",
+    "name": "Cohort Field Manual",
+    "region": "eu-west-1",
+    "status": "INACTIVE"
+  },
+  "metadata": {
+    "http_status": 200,
+    "captured_at": "2026-11-04T03:26:13.759291+00:00",
+    "request_id": null,
+    "raw_sha256": "68827da06a7f1ebb797b46e4e3b72fd296e2f1674991edab3396082efa25a376"
+  }
+}

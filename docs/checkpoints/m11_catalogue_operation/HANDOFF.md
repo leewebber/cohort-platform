@@ -1,5 +1,14 @@
 # Exact three-setup operation — offline implementation
 
+> **Resumed attempt, 2026-11-04:** [genuine operator result / conflict / closeout](resumed_preflight_2026_11_04/HANDOFF.md).
+> Field Manual is healthy; operator route works. Existing EX-029/EX-141 duplicate
+> slug stops unchanged guard before allocation/seed/apply. Zero new records; 0/20
+> admission. Single login revoked, zero CLI roles/backends verified, temporary files
+> removed. [Next local decision](resumed_preflight_2026_11_04/NEXT_DECISION.md) does
+> not authorise legacy edits, guard changes or another credential. Earlier access
+> and inactive-target blockers below are historical.
+
+
 > **Authorised attempt, 2026-11-04:** [inactive-target stop and credential closeout](inactive_target_2026_11_04/HANDOFF.md)
 > record fresh Field Manual **INACTIVE**. The specific single-login authority is
 > granted but unused: no issuance, database query, apply or new retention/admission.

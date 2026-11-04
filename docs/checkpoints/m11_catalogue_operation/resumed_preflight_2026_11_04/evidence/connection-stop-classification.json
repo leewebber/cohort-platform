@@ -1,0 +1,16 @@
+{
+  "status": "SAME_SERVICE_IDENTITY_SUCCEEDED",
+  "identity": {
+    "role": "cli_login_postgres",
+    "database": "postgres",
+    "session_user": "cli_login_postgres",
+    "native_expiry": "2026-11-04T03:43:01.026665+00:00"
+  },
+  "no_route_or_permission_change": true,
+  "state_query_failure": {
+    "markers": [
+      "permission denied for table"
+    ],
+    "stderr_sha256": "15eb4e2dd86cb704341b6ba21ed5f143056026188ce34c88f06aa3b8be52fd73"
+  }
+}

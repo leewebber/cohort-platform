@@ -1,0 +1,203 @@
+{
+  "date": "2026-11-04",
+  "timezone": "Asia/Makassar",
+  "base": "8b652ce8bf2f72c77c0912681fec0bc4fbd3564e",
+  "status": "RESUMED_HEALTHY_OPERATOR_CONNECTED_STOPPED_ON_PREEXISTING_DUPLICATE_SLUG_NO_APPLY",
+  "resume": {
+    "requests": 1,
+    "prior_status": "INACTIVE",
+    "post_status": "ACTIVE_HEALTHY",
+    "all_five_services_healthy": true,
+    "acknowledgement": "Response JSON decoding failed before HTTP status/body retention. No retry. COMING_UP and healthy independently observed.",
+    "first_healthy_project_observed_utc": "2026-11-04T03:30:15.985674+00:00"
+  },
+  "operator": {
+    "issuance_requests": 1,
+    "issuer_http_status": 201,
+    "principal": "cli_login_postgres",
+    "effective_role": "postgres",
+    "existing_membership_verified": true,
+    "role_selection": "Normal explicit session SET ROLE postgres; startup role option was ignored by pooler",
+    "pooler": "aws-0-eu-west-1.pooler.supabase.com:6543",
+    "sslmode": "verify-full",
+    "public_ca_sha256": "700723581420dd1ac98fd7e9ac529f0ef210eadcaf87fc868a3ad7d114c2f3b7",
+    "request_started_at": "2026-11-04T03:37:59.468597+00:00",
+    "provider_ttl_seconds": 300,
+    "native_expiry": "2026-11-04T03:43:01.026665+00:00",
+    "task_use_deadline": "2026-11-04T03:43:01.026665+00:00",
+    "credential_material_removed_at": "2026-11-04T03:40:12.967867+00:00",
+    "supported_delete_http_status": 200,
+    "revocation_and_zero_backends_verified_at": "2026-11-04T03:41:12.712519+00:00",
+    "remaining_cli_roles": 0,
+    "remaining_cli_backends": 0,
+    "replacement_issued": false,
+    "secret_material_retained": false
+  },
+  "preflight": {
+    "catalogue_rows": 169,
+    "schema_columns": 39,
+    "columns_constraints_indexes_match_reviewed_baseline": true,
+    "user_triggers_and_rules": 0,
+    "old_eight_bindings_unchanged": true,
+    "three_exact_setup_matches": 0,
+    "three_proposed_slug_collisions": 0,
+    "global_duplicate_slug_groups": 1,
+    "duplicate_slug": "bulgarian-split-squat",
+    "duplicate_ids": [
+      "EX-029",
+      "EX-141"
+    ],
+    "guard_error": "Ambiguous existing slug inventory; reconcile before allocation",
+    "guard_changed_or_bypassed": false,
+    "manifest_generated": false,
+    "seed_generated": false,
+    "identities_allocated": 0
+  },
+  "postchecks": {
+    "all_169_rows_unchanged": true,
+    "columns_constraints_indexes_unchanged": true,
+    "five_consumer_counts_digests_unchanged": true,
+    "five_services_healthy": true
+  },
+  "mutations": {
+    "authorised_control_plane": [
+      "one existing-project resume",
+      "one temporary CLI login issuance/refresh",
+      "one supported temporary CLI-role revocation with task idle pooler backend removal"
+    ],
+    "catalogue_write_set": [],
+    "associated_catalogue_writes": [],
+    "new_exact_records_created": 0,
+    "new_exact_records_retained": 0,
+    "schema_migrations_grants_password_reset_publication_accounts_eligibility_assignments_athlete_writes": false
+  },
+  "admission": {
+    "focused_current_flutter_checks_passed": 1,
+    "complete_strength_attempted": 20,
+    "complete_strength_admitted": 0,
+    "unresolved_occurrences": 28,
+    "missing_setups": 3,
+    "old_revision_sources_unchanged": true,
+    "whole_programme_review_and_export_refused": true,
+    "new_trust_pin_installed": false
+  },
+  "verification": {
+    "source_write_set_pins": "PASS",
+    "artifact_inventory": "PASS",
+    "links_json_diff": "PASS",
+    "prior_full_rehearsal_reused": "8b652ce:docs/checkpoints/m11_founder_authoring/implementation/VERIFICATION.json",
+    "broad_safety_or_architecture_suite_rerun": false,
+    "runtime_ui_schema_or_guard_code_changed": false,
+    "preservation": "Final measured comparison retained under /private/tmp/m11_resume_catalogue_preservation_*_20261104.json"
+  },
+  "evidence": {
+    "ADMISSION.json": {
+      "bytes": 6105,
+      "sha256": "5dc544ba63323181b69034e74fb048c5a8ea8d8b2ae89abab184d4b5956401e9"
+    },
+    "actual-login-and-role.json": {
+      "bytes": 403,
+      "sha256": "0108cbca89f4f886631c373252cce825fd22c084a394d7312b9ae2abe04c3e78"
+    },
+    "admission_probe_test.dart": {
+      "bytes": 2615,
+      "sha256": "5de68527a9417b75dd87fa1a93f95de45acfaee52c832f9e3cc5f15922603462"
+    },
+    "api-journal.jsonl": {
+      "bytes": 4245,
+      "sha256": "df69457cffa95758b5a2123041da95daee6a5a9a73efa45343c0839ea1400b79"
+    },
+    "before-resume.json": {
+      "bytes": 353,
+      "sha256": "8e23c104512fdd70e0d3bf884bce176829eddc15953333d98084120410f0ca03"
+    },
+    "certificate-download-failure.json": {
+      "bytes": 563,
+      "sha256": "8ced4221b097dd5c4b9f979bf27a37d063ef2353ccd0f8d1affe84db733953e8"
+    },
+    "certificate-provenance.json": {
+      "bytes": 614,
+      "sha256": "8566bcd23490bb7ec659ed184ccbf6b4aad05a46cf52808c997009e9cf74adc1"
+    },
+    "connection-stop-classification.json": {
+      "bytes": 452,
+      "sha256": "cd5ab35ebe68af8830a3efe39d17ded5083ef8af0f81d57ea50c80e99405d0e4"
+    },
+    "credential-closeout.json": {
+      "bytes": 1377,
+      "sha256": "1a677db17a8d779a763841221742c4eab5f890252765ac07a3441ba7ef803190"
+    },
+    "duplicate-slug-stop.json": {
+      "bytes": 965,
+      "sha256": "3abe08253bd3fc747fd3eab55f3661c93365bc4f9dc9d90aafc5a14b741811b0"
+    },
+    "final-postcheck.raw.json": {
+      "bytes": 174338,
+      "sha256": "ee7321f12e025692b96fe96d99b1cda76b20e49503892bc6fea385d9231ce0a8"
+    },
+    "final-services-health.json": {
+      "bytes": 1310,
+      "sha256": "3df4439e0a87e57f6adff0c695b7a1df68d6b186c44c9b6e2c78b8a19d625709"
+    },
+    "issue-prepare-stop.json": {
+      "bytes": 242,
+      "sha256": "c3982dd030adccae30e0c2d2192ef84115bde58aaffb2597a02fae54eac8cfac"
+    },
+    "login-attempt.json": {
+      "bytes": 190,
+      "sha256": "113e8f2160823930e97963b5690ae40017fbb40d4e0994266119071f8413d34d"
+    },
+    "login-issued.json": {
+      "bytes": 605,
+      "sha256": "c650fff77f033107f61f5bbe0b614024f8b13ed46a53085b3013fb768fd17b54"
+    },
+    "normal-role-preflight-stop.json": {
+      "bytes": 154,
+      "sha256": "7c7ec6e07a5e74d40a778a26590489efd1f30019f692aca3e3a74bee972f4b4a"
+    },
+    "operator-preflight.raw.json": {
+      "bytes": 187857,
+      "sha256": "e50f28f22083c30820165b0356e3780ff6769860a46278b5b40f7d9359f36546"
+    },
+    "poll-2026-11-04T03_26_37.230512+00_00.json": {
+      "bytes": 524,
+      "sha256": "c4016b2997085eeb925212f4cc1507f9455393fec9830f59f73aae98aee9d435"
+    },
+    "pooler.json": {
+      "bytes": 662,
+      "sha256": "04f367bc19193fb8c625ffa38530bddc27a965268e5f2ce0a3dd42d22e414ee1"
+    },
+    "postcheck-comparison.json": {
+      "bytes": 255,
+      "sha256": "acf3dc137230e80e17e2e38962e4b036c14b382c25257707a08b0bce30c12903"
+    },
+    "prior-cli-roles-and-hooks.json": {
+      "bytes": 1341,
+      "sha256": "81b491be7f1c1a5d040762f5dc6df774e2b792cca9bc1f133afd201afccd19fd"
+    },
+    "reviewed-preflight.json": {
+      "bytes": 1563,
+      "sha256": "e1610cb3f69641a9261d47fcea88757c501120008dfe26034b3bc6b83c0a35d4"
+    },
+    "services-health-2026-11-04T03_30_17.716092+00_00.json": {
+      "bytes": 1310,
+      "sha256": "900b1d7064380393fcf2f57a666a0e734750370f345e51515dd5041011735052"
+    },
+    "supported-revocation-closeout.json": {
+      "bytes": 1941,
+      "sha256": "d87702bf50a671b9df6946471ad9b49bbfa8320a1b07280419c3c117545d6846"
+    },
+    "target-2026-11-04T03_30_15.988236+00_00.json": {
+      "bytes": 488,
+      "sha256": "9875ef7f1f172cfca89cb3d84b029ff928e3b87c8b93b3b95398ac831cbc7283"
+    },
+    "task-deadline.json": {
+      "bytes": 225,
+      "sha256": "bc100d1128e862a6002de1cc78ecf9c536d07c8fafa21030bd423fcbd4537861"
+    }
+  },
+  "D8_approved": false,
+  "programme_publication": false,
+  "M1_1_complete": false,
+  "Gate_A_complete": false
+}

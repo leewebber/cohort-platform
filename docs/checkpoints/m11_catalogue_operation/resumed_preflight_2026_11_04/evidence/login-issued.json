@@ -1,0 +1,18 @@
+{
+  "principal": "cli_login_postgres",
+  "ttl_seconds": 300,
+  "request_started_at": "2026-11-04T03:37:59.468597+00:00",
+  "response_received_at": "2026-11-04T03:38:01.133971+00:00",
+  "metadata": {
+    "method": "POST",
+    "path": "/cli/login-role",
+    "http_status": 201,
+    "started_at": "2026-11-04T03:37:59.506978+00:00",
+    "captured_at": "2026-11-04T03:38:01.132907+00:00",
+    "raw_sha256": "b7dd9d2204b91d1ff25630426043094f96c118a3e88f88932ea0ca8b7a9aff88",
+    "request_id": null,
+    "cf_ray": "a5509553d8f5a066-SIN"
+  },
+  "task_use_limit_minutes": 30,
+  "replacement_authorised": false
+}

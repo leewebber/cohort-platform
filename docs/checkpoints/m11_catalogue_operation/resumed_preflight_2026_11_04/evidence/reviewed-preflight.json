@@ -1,0 +1,62 @@
+{
+  "schema_matches_reviewed_baseline": true,
+  "full_catalogue_rows": 169,
+  "exact_matches": [
+    {
+      "variant": "chest_supported_db_row",
+      "matches": []
+    },
+    {
+      "variant": "seated_supported_db_press",
+      "matches": []
+    },
+    {
+      "variant": "reverse_lunge_db",
+      "matches": []
+    }
+  ],
+  "candidate_review": [
+    {
+      "exercise_id": "EX-026",
+      "name": "Reverse Lunge",
+      "slug": "reverse-lunge",
+      "equipment": null,
+      "setup": null,
+      "execution": null,
+      "published": true
+    },
+    {
+      "exercise_id": "EX-090",
+      "name": "Chest Supported Row",
+      "slug": "chest-supported-row",
+      "equipment": "Chest Supported Row Machine or Bench",
+      "setup": null,
+      "execution": null,
+      "published": true
+    },
+    {
+      "exercise_id": "EX-098",
+      "name": "Lateral Lunge",
+      "slug": "lateral-lunge",
+      "equipment": "Dumbbell or Kettlebell (optional)",
+      "setup": null,
+      "execution": null,
+      "published": true
+    }
+  ],
+  "slugs_reviewed": [
+    "bilateral-chest-supported-dumbbell-row",
+    "seated-supported-neutral-grip-dumbbell-shoulder-press",
+    "two-dumbbell-reverse-lunge"
+  ],
+  "old_eight_bindings_unchanged": true,
+  "roles_and_hooks_match": true,
+  "tls": {
+    "host": "aws-0-eu-west-1.pooler.supabase.com",
+    "port": 6543,
+    "verify_full": true,
+    "tls_version": "TLSv1.3",
+    "certificate_sha256": "03709ca44d1b06e4504da0a83b6ca065761edc704cd5634bcc3894fd5c7b3248",
+    "observed_at": "2026-11-04T03:35:40.743763+00:00"
+  }
+}

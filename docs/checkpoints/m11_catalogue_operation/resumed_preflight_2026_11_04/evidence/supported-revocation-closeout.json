@@ -1,0 +1,70 @@
+{
+  "started_at": "2026-11-04T03:41:07.693614+00:00",
+  "temporary_material_already_removed": true,
+  "temporary_login_not_reused": true,
+  "precheck": {
+    "data": [
+      {
+        "state": {
+          "roles": [
+            "cli_login_postgres"
+          ],
+          "backends": [
+            {
+              "user": "cli_login_postgres",
+              "state": "idle",
+              "application_name": "m11_catalogue_20261104"
+            }
+          ]
+        }
+      }
+    ],
+    "metadata": {
+      "method": "POST",
+      "path": "/database/query/read-only",
+      "http_status": 201,
+      "started_at": "2026-11-04T03:41:07.716468+00:00",
+      "captured_at": "2026-11-04T03:41:09.281933+00:00",
+      "raw_sha256": "772f81721c6e0b91369618ae00d1249043ba39274223a8e59344524aa4b6b9af",
+      "request_id": null,
+      "cf_ray": "a55099ec0e1ab5a2-CGK"
+    }
+  },
+  "supported_delete": {
+    "data": {
+      "message": "ok"
+    },
+    "metadata": {
+      "method": "DELETE",
+      "path": "/cli/login-role",
+      "http_status": 200,
+      "started_at": "2026-11-04T03:41:09.325104+00:00",
+      "captured_at": "2026-11-04T03:41:10.879019+00:00",
+      "raw_sha256": "762c2749580c286a68d4528d912a4afa02a17dc2025c6c65b17b0dfab8291408",
+      "request_id": null,
+      "cf_ray": "a55099f5fd395f5c-CGK"
+    }
+  },
+  "postcheck": {
+    "data": [
+      {
+        "state": {
+          "cli_roles": 0,
+          "cli_backends": 0
+        }
+      }
+    ],
+    "metadata": {
+      "method": "POST",
+      "path": "/database/query/read-only",
+      "http_status": 201,
+      "started_at": "2026-11-04T03:41:10.918392+00:00",
+      "captured_at": "2026-11-04T03:41:12.712519+00:00",
+      "raw_sha256": "6bd12ea39e7c42d3821e511dc628dfafaefc1e4e90b626426599c6b972e5b0c3",
+      "request_id": null,
+      "cf_ray": "a5509a01cdeb2f6c-CGK"
+    }
+  },
+  "revoked_and_connections_closed": true,
+  "finished_at": "2026-11-04T03:41:12.713363+00:00"
+}

@@ -1,0 +1,10 @@
+{
+  "official_source": "https://raw.githubusercontent.com/supabase/supabase/master/apps/studio/hooks/custom-content/custom-content.json",
+  "source_sha256": "28269e08393dbed773846600e7493f0fdf57f9af9112671522653c9b510943e6",
+  "template": "https://supabase-downloads.s3-ap-southeast-1.amazonaws.com/${env}/ssl/${env}-ca-2021.crt",
+  "resolved_url_attempted": "https://supabase-downloads.s3-ap-southeast-1.amazonaws.com/${env}/ssl/${env}-ca-2021.crt",
+  "http_status": 403,
+  "certificate_downloaded": false,
+  "tls_bypass": false,
+  "credentials_issued": false
+}

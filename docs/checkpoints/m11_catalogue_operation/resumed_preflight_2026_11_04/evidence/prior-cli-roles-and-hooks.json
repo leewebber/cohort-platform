@@ -1,0 +1,52 @@
+{
+  "data": [
+    {
+      "state": {
+        "roles": [
+          {
+            "name": "cli_login_postgres",
+            "login": true,
+            "super": false,
+            "inherit": false,
+            "create_db": false,
+            "bypass_rls": false,
+            "create_role": false,
+            "valid_until": "2026-10-26T01:41:50.052073+00:00"
+          },
+          {
+            "name": "postgres",
+            "login": true,
+            "super": false,
+            "inherit": true,
+            "create_db": true,
+            "bypass_rls": true,
+            "create_role": true,
+            "valid_until": null
+          }
+        ],
+        "memberships": [
+          {
+            "set": true,
+            "role": "postgres",
+            "admin": false,
+            "member": "cli_login_postgres",
+            "inherit": false
+          }
+        ],
+        "cli_backends": 0,
+        "catalogue_rules": [],
+        "catalogue_triggers": []
+      }
+    }
+  ],
+  "metadata": {
+    "method": "POST",
+    "path": "/database/query/read-only",
+    "http_status": 201,
+    "started_at": "2026-11-04T03:30:20.657330+00:00",
+    "captured_at": "2026-11-04T03:30:22.374896+00:00",
+    "raw_sha256": "3a264007cf282aa7fcc7200657b1c927572ea0b4ff376c68388259c993696347",
+    "request_id": null,
+    "cf_ray": "a5508a1feb1fa6d7-CGK"
+  }
+}

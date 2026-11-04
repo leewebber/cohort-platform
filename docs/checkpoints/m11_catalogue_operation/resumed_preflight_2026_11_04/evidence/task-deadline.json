@@ -1,0 +1,6 @@
+{
+  "issued_principal": "cli_login_postgres",
+  "provider_expiry": "2026-11-04T03:43:01.026665+00:00",
+  "task_use_expires_at": "2026-11-04T03:43:01.026665+00:00",
+  "request_started_at": "2026-11-04T03:37:59.468597+00:00"
+}

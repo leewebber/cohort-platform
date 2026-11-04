@@ -1,5 +1,21 @@
 # Current repository checkpoint
 
+> **M1.1 resumed operator preflight — 2026-11-04:**
+> [Genuine outcome / closeout](./m11_catalogue_operation/resumed_preflight_2026_11_04/HANDOFF.md)
+> record one authorised resume, five healthy services and a verified legitimate
+> cli_login_postgres / postgres route. Fresh 169-row preflight hits the unchanged
+> duplicate-slug guard: EX-029 and EX-141 share bulgarian-split-squat. Stopped before
+> seed/allocation/apply; no existing identity or guard changed. All 169 rows/schema
+> and five consumer guards equal independent postflight. Single five-minute login
+> revoked through supported endpoint; zero CLI roles/backends verified 11:41:12 WITA;
+> temporary credential files removed. Actual admission: 0/20, 28 missing occurrences,
+> complete export refused; one focused Flutter check passes.
+> [Next decision](./m11_catalogue_operation/resumed_preflight_2026_11_04/NEXT_DECISION.md):
+> bounded local compatibility review preserving both legacy rows; no implicit
+> hosted repair or replacement login. UI acceptance/polish freeze stand.
+> **D8/publication separate; M1.1/Gate A OPEN.**
+
+
 > **M1.1 authorised catalogue operation — inactive-target stop, 2026-11-04:**
 > [Actual result and credential closeout](./m11_catalogue_operation/inactive_target_2026_11_04/HANDOFF.md)
 > records the founder's specific single temporary-login authority. Fresh authenticated

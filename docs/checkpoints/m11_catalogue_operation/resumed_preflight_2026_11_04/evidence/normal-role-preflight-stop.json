@@ -1,0 +1,5 @@
+{
+  "status": "STOP",
+  "reason": "Ambiguous existing slug inventory; reconcile before allocation",
+  "captured_at": "2026-11-04T03:39:39.237431+00:00"
+}
