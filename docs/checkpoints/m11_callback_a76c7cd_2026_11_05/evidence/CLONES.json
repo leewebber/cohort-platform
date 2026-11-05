@@ -1,0 +1,49 @@
+{
+  "data": [
+    {
+      "functions": [
+        {
+          "acl": [
+            "postgres=X/postgres"
+          ],
+          "owner": "postgres",
+          "config": [
+            "search_path=pg_catalog, pg_temp"
+          ],
+          "signature": "cohort_fixed_before_zone2(uuid,timestamp with time zone)",
+          "body_sha256": "777c92ea027c4c174bba6ecdc93b256443313f72c40865395b5e19585cdc41bd",
+          "anon_execute": false,
+          "service_execute": false,
+          "security_definer": true,
+          "publisher_execute": false,
+          "authenticated_execute": false
+        },
+        {
+          "acl": [
+            "postgres=X/postgres"
+          ],
+          "owner": "postgres",
+          "config": [
+            "search_path=pg_catalog, pg_temp"
+          ],
+          "signature": "cohort_generic_before_zone2(jsonb)",
+          "body_sha256": "f8dba02c77f0aa0a1b7abed444002ec6ab9cbfccc17ce3bd2cb411d9f156ecc9",
+          "anon_execute": false,
+          "service_execute": false,
+          "security_definer": true,
+          "publisher_execute": false,
+          "authenticated_execute": false
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "target_ref": "otnhhdxstdnwccehacku",
+    "method": "POST",
+    "path": "/database/query/read-only",
+    "http_status": 201,
+    "started_at": "2026-11-05T05:55:06.375856+00:00",
+    "captured_at": "2026-11-05T05:55:08.083377+00:00",
+    "cf_ray": "a5599b8d9c63c02e-DPS"
+  }
+}

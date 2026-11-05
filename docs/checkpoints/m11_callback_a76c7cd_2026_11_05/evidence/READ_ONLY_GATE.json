@@ -1,0 +1,11 @@
+{
+  "passed": true,
+  "ordered_ledger_entries": 135,
+  "scope_function_checks": 32,
+  "protected_public_tables": 67,
+  "protected_auth_tables": 2,
+  "new_tables_empty": 5,
+  "all_historical_receipts_null": true,
+  "pending_migrations_check": "Founder-approved ordered ledger/source proof",
+  "final_cli_dry_run_run": false
+}

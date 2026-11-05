@@ -1,5 +1,15 @@
 # Current repository checkpoint
 
+> **M1.1 hosted enablement verified (2026-11-05)**
+> [Management closeout](./m11_callback_a76c7cd_2026_11_05/HANDOFF.md)
+> records the exact ordered ledger of 135 through 20261104120000 and the
+> callback readback `http://localhost:55425/**,cohortplatform://auth-callback`.
+> The founder accepted the ledger and source comparison. The final CLI dry-run
+> was not run. All unrelated auth fields, reconciled protected checks and five
+> service health checks passed. Zero CLI roles and backends were verified.
+> Hosted hold checks are complete. **Keep clients held until compatible-client
+> readiness is confirmed.** M1.1 and Gate A remain open.
+
 > **M1.1 0e17cee hosted schema applied, callback pending (2026-11-05):**
 > [Hosted apply and reconciliation](./m11_retry_0e17cee_2026_11_05/HANDOFF.md)
 > verify the exact five-file batch on the same session-mode preview/apply connection.

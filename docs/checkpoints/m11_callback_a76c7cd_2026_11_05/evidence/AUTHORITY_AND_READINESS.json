@@ -1,0 +1,12 @@
+{
+  "base_commit": "a76c7cd3d34a08228c11f229ec2f1a7bfcb8f9de",
+  "founder_confirmed_current_client_hold": true,
+  "founder_approved_standalone_management_callback_and_ordered_ledger_closeout": true,
+  "final_cli_dry_run_run": false,
+  "management_callback_patches": 1,
+  "cli_login_role_requests": 0,
+  "client_source_pins_match": true,
+  "client_candidate_version": "1.0.0+8",
+  "compatible_client_readiness_confirmed_by_this_closeout": false,
+  "client_hold_release": "Only for clients with confirmed compatible readiness"
+}

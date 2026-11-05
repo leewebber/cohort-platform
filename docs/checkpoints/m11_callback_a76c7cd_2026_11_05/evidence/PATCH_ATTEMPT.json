@@ -1,0 +1,11 @@
+{
+  "target_ref": "otnhhdxstdnwccehacku",
+  "method": "PATCH",
+  "path": "/config/auth",
+  "payload": {
+    "uri_allow_list": "http://localhost:55425/**,cohortplatform://auth-callback"
+  },
+  "started_at": "2026-11-05T05:56:21.649405+00:00",
+  "management_window_remaining_seconds": 119.999101,
+  "authority": "Founder approved standalone Management-only closeout and exact ledger evidence at a76c7cd with current clients held."
+}

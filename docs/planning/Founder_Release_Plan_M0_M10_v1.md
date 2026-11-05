@@ -6,7 +6,13 @@ This plan controls delivery priorities. It preserves technical authority contrac
 it does not grant implementation, content, hosted, account or release authority.
 [M0 findings and critical path](../checkpoints/m0_alpha_baseline/HANDOFF.md).
 
-## Current single point — M1.1 callback and hold closeout
+## Current single point — M1.1 compatible-client readiness
+
+Field Manual hosted schema and auth verification passed at ledger 135 through 20261104120000. The exact ordered ledger/source comparison closes the pending-migration check by founder approval. The final CLI dry-run was not run. The callback readback contains the original localhost entry and `cohortplatform://auth-callback`. All other returned auth fields, protected data and final health checks match. [Management closeout](../checkpoints/m11_callback_a76c7cd_2026_11_05/HANDOFF.md)
+
+The hold can end for each Cohort or Studio/import client once its compatibility is confirmed. The retained `1.0.0+8` candidate is at the source stage. The next point is compatible-client readiness. Publication and recipient binding, account and athlete operations, and installed acquisition and restart acceptance retain their separate gates. M1.1 and Gate A remain open. [Client source candidate](../checkpoints/m11_release_candidate_2026_11_04/APP_CANDIDATE.json)
+
+## Retained callback reserve stop and reconciliation
 
 The five approved migrations applied on Field Manual using the proved normal session connection, and the exact ledger is now 135 through 20261104120000. The postcheck inventory omitted two approved private copies. Both were verified independently with exact original bodies and owner-only execution, alongside matching protected state. The single login was revoked. The callback is pending because the reconciliation reached the execution reserve gate. Keep the client hold for this enablement window. [Hosted apply and reconciliation](../checkpoints/m11_retry_0e17cee_2026_11_05/HANDOFF.md)
 

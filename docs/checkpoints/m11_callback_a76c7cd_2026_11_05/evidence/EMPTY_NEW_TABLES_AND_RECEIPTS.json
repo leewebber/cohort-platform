@@ -1,0 +1,23 @@
+{
+  "data": [
+    {
+      "expected_empty": {
+        "eligibility": 0,
+        "zone_inputs": 0,
+        "frozen_targets": 0,
+        "quality_inputs": 0,
+        "training_setup": 0,
+        "historical_nonnull_receipts": 0
+      }
+    }
+  ],
+  "metadata": {
+    "target_ref": "otnhhdxstdnwccehacku",
+    "method": "POST",
+    "path": "/database/query/read-only",
+    "http_status": 201,
+    "started_at": "2026-11-05T05:55:08.130427+00:00",
+    "captured_at": "2026-11-05T05:55:09.826779+00:00",
+    "cf_ray": "a5599b98ed1a1564-CGK"
+  }
+}

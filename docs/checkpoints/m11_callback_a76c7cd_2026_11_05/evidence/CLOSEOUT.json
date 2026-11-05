@@ -1,0 +1,14 @@
+{
+  "status": "HOSTED_ENABLEMENT_VERIFIED",
+  "ledger_count": 135,
+  "tip": "20261104120000",
+  "allowlist": "http://localhost:55425/**,cohortplatform://auth-callback",
+  "ordered_ledger_replaced_final_cli_preview_by_founder_approval": true,
+  "final_cli_dry_run_run": false,
+  "cli_logins_issued": 0,
+  "callback_patches_issued": 1,
+  "all_other_auth_fields_equal": true,
+  "all_five_services_healthy": true,
+  "zero_cli_roles_backends": true,
+  "client_hold": "Release only after compatible-client readiness is confirmed"
+}

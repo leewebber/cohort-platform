@@ -1,0 +1,19 @@
+{
+  "READ_02": true,
+  "READ_03": true,
+  "READ_04": true,
+  "READ_05": true,
+  "READ_06": true,
+  "READ_07": true,
+  "READ_08": true,
+  "READ_09": true,
+  "READ_10": true,
+  "catalogue": true,
+  "protected-rows": true,
+  "auth-rows": true,
+  "existing-authority": true,
+  "scoped-functions": true,
+  "table-privileges": true,
+  "column-privileges": true,
+  "CLONES": true
+}

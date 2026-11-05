@@ -1,0 +1,38 @@
+{
+  "metadata": {
+    "target_ref": "otnhhdxstdnwccehacku",
+    "method": "GET",
+    "path": "/config/auth",
+    "http_status": 200,
+    "started_at": "2026-11-05T05:56:21.969481+00:00",
+    "captured_at": "2026-11-05T05:56:22.170962+00:00",
+    "cf_ray": "a5599d6669e81c0e-CGK"
+  },
+  "settings": {
+    "site_url": "http://localhost:55425",
+    "uri_allow_list": "http://localhost:55425/**,cohortplatform://auth-callback",
+    "disable_signup": false,
+    "external_email_enabled": true,
+    "mailer_autoconfirm": false,
+    "security_captcha_enabled": false,
+    "external_anonymous_users_enabled": false,
+    "smtp_host": null,
+    "smtp_port": null,
+    "rate_limit_email_sent": 2,
+    "jwt_exp": 3600,
+    "password_min_length": 6,
+    "mailer_otp_exp": 3600
+  },
+  "template_flags": {
+    "template_field_present": true,
+    "custom_confirmation_template_present": true,
+    "uses_confirmation_url": true,
+    "uses_redirect_to": false,
+    "uses_site_url": false,
+    "template_sha256": "c495b24123d38e4bc4295f06afe92a3c11e6ce00df09d81e2cb0706e3d7c79d8"
+  },
+  "all_other_returned_fields_exact": true,
+  "exact_allowlist_union": true,
+  "template_exact": true,
+  "passed": true
+}

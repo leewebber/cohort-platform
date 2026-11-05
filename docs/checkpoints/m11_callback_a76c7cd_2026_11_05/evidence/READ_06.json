@@ -1,0 +1,810 @@
+{
+  "data": [
+    {
+      "table_authorities": [
+        {
+          "acl": [
+            "postgres=arwdDxtm/postgres",
+            "authenticated=r/postgres"
+          ],
+          "rls": true,
+          "owner": "postgres",
+          "table": "athlete_running_quality_inputs",
+          "force_rls": false
+        },
+        {
+          "acl": [
+            "postgres=arwdDxtm/postgres",
+            "authenticated=r/postgres"
+          ],
+          "rls": true,
+          "owner": "postgres",
+          "table": "athlete_running_zone2_inputs",
+          "force_rls": false
+        },
+        {
+          "acl": [
+            "postgres=arwdDxtm/postgres",
+            "anon=arwdDxtm/postgres",
+            "authenticated=arwdDxtm/postgres",
+            "service_role=arwdDxtm/postgres"
+          ],
+          "rls": false,
+          "owner": "postgres",
+          "table": "athlete_state",
+          "force_rls": false
+        },
+        {
+          "acl": [
+            "postgres=arwdDxtm/postgres"
+          ],
+          "rls": true,
+          "owner": "postgres",
+          "table": "athlete_training_setup",
+          "force_rls": false
+        },
+        {
+          "acl": [
+            "postgres=arwdDxtm/postgres",
+            "anon=arwdDxtm/postgres",
+            "authenticated=arwdDxtm/postgres",
+            "service_role=arwdDxtm/postgres"
+          ],
+          "rls": true,
+          "owner": "postgres",
+          "table": "coach_athlete_invites",
+          "force_rls": false
+        },
+        {
+          "acl": [
+            "postgres=arwdDxtm/postgres",
+            "service_role=arwdDxtm/postgres",
+            "authenticated=r/postgres"
+          ],
+          "rls": true,
+          "owner": "postgres",
+          "table": "coach_athlete_relationships",
+          "force_rls": false
+        },
+        {
+          "acl": [
+            "postgres=arwdDxtm/postgres"
+          ],
+          "rls": true,
+          "owner": "postgres",
+          "table": "cohort_v3_publication_claims",
+          "force_rls": false
+        },
+        {
+          "acl": [
+            "postgres=arwdDxtm/postgres",
+            "authenticated=arwdDxtm/postgres",
+            "service_role=arwdDxtm/postgres"
+          ],
+          "rls": true,
+          "owner": "postgres",
+          "table": "content_graph_manifests",
+          "force_rls": false
+        },
+        {
+          "acl": [
+            "postgres=arwdDxtm/postgres",
+            "authenticated=arwdDxtm/postgres",
+            "service_role=arwdDxtm/postgres"
+          ],
+          "rls": true,
+          "owner": "postgres",
+          "table": "content_graph_reconstruction_jobs",
+          "force_rls": false
+        },
+        {
+          "acl": [
+            "postgres=arwdDxtm/postgres",
+            "authenticated=arwdDxtm/postgres",
+            "service_role=arwdDxtm/postgres"
+          ],
+          "rls": true,
+          "owner": "postgres",
+          "table": "content_publisher_principals",
+          "force_rls": false
+        },
+        {
+          "acl": [
+            "postgres=arwdDxtm/postgres",
+            "authenticated=arwdDxtm/postgres",
+            "service_role=arwdDxtm/postgres"
+          ],
+          "rls": true,
+          "owner": "postgres",
+          "table": "content_publishers",
+          "force_rls": false
+        },
+        {
+          "acl": [
+            "postgres=arwdDxtm/postgres",
+            "anon=arwdDxtm/postgres",
+            "authenticated=arwdDxtm/postgres",
+            "service_role=arwdDxtm/postgres"
+          ],
+          "rls": false,
+          "owner": "postgres",
+          "table": "exercises_v1",
+          "force_rls": false
+        },
+        {
+          "acl": [
+            "postgres=arwdDxtm/postgres",
+            "anon=arwdDxtm/postgres",
+            "authenticated=arwdDxtm/postgres",
+            "service_role=arwdDxtm/postgres"
+          ],
+          "rls": true,
+          "owner": "postgres",
+          "table": "exercises_v2",
+          "force_rls": false
+        },
+        {
+          "acl": [
+            "postgres=arwdDxtm/postgres",
+            "authenticated=r/postgres"
+          ],
+          "rls": true,
+          "owner": "postgres",
+          "table": "hyrox_base_benchmark_revisions",
+          "force_rls": false
+        },
+        {
+          "acl": [
+            "postgres=arwdDxtm/postgres",
+            "authenticated=r/postgres"
+          ],
+          "rls": true,
+          "owner": "postgres",
+          "table": "hyrox_base_benchmark_selections",
+          "force_rls": false
+        },
+        {
+          "acl": [
+            "postgres=arwdDxtm/postgres"
+          ],
+          "rls": true,
+          "owner": "postgres",
+          "table": "hyrox_prescription_dependencies",
+          "force_rls": false
+        },
+        {
+          "acl": [
+            "postgres=arwdDxtm/postgres",
+            "anon=arwdDxtm/postgres",
+            "authenticated=arwdDxtm/postgres",
+            "service_role=arwdDxtm/postgres"
+          ],
+          "rls": false,
+          "owner": "postgres",
+          "table": "knowledge_relationships",
+          "force_rls": false
+        },
+        {
+          "acl": [
+            "postgres=arwdDxtm/postgres",
+            "anon=arwdDxtm/postgres",
+            "authenticated=arwdDxtm/postgres",
+            "service_role=arwdDxtm/postgres"
+          ],
+          "rls": true,
+          "owner": "postgres",
+          "table": "performance_protocols",
+          "force_rls": false
+        },
+        {
+          "acl": [
+            "postgres=arwdDxtm/postgres",
+            "service_role=arwdDxtm/postgres",
+            "authenticated=r/postgres"
+          ],
+          "rls": true,
+          "owner": "postgres",
+          "table": "performance_result_corrections",
+          "force_rls": false
+        },
+        {
+          "acl": [
+            "postgres=arwdDxtm/postgres"
+          ],
+          "rls": true,
+          "owner": "postgres",
+          "table": "private_programme_alpha_eligibility",
+          "force_rls": false
+        },
+        {
+          "acl": [
+            "postgres=arwdDxtm/postgres",
+            "anon=arwdDxtm/postgres",
+            "authenticated=arwdDxtm/postgres",
+            "service_role=arwdDxtm/postgres"
+          ],
+          "rls": false,
+          "owner": "postgres",
+          "table": "private_programme_graph_repair_events",
+          "force_rls": false
+        },
+        {
+          "acl": [
+            "postgres=arwdDxtm/postgres",
+            "service_role=arwdDxtm/postgres",
+            "authenticated=arw/postgres"
+          ],
+          "rls": true,
+          "owner": "postgres",
+          "table": "profiles",
+          "force_rls": false
+        },
+        {
+          "acl": [
+            "postgres=arwdDxtm/postgres",
+            "anon=arwdDxtm/postgres",
+            "authenticated=arwdDxtm/postgres",
+            "service_role=arwdDxtm/postgres"
+          ],
+          "rls": true,
+          "owner": "postgres",
+          "table": "programme_adaptation_events",
+          "force_rls": false
+        },
+        {
+          "acl": [
+            "postgres=arwdDxtm/postgres",
+            "anon=arwdDxtm/postgres",
+            "authenticated=arwdDxtm/postgres",
+            "service_role=arwdDxtm/postgres"
+          ],
+          "rls": true,
+          "owner": "postgres",
+          "table": "programme_assignments",
+          "force_rls": false
+        },
+        {
+          "acl": [
+            "postgres=arwdDxtm/postgres",
+            "anon=awdDxtm/postgres",
+            "authenticated=arwdDxtm/postgres",
+            "service_role=arwdDxtm/postgres"
+          ],
+          "rls": true,
+          "owner": "postgres",
+          "table": "programme_lineages",
+          "force_rls": false
+        },
+        {
+          "acl": [
+            "postgres=arwdDxtm/postgres",
+            "authenticated=r/postgres"
+          ],
+          "rls": true,
+          "owner": "postgres",
+          "table": "programme_occurrence_duration_choices",
+          "force_rls": false
+        },
+        {
+          "acl": [
+            "postgres=arwdDxtm/postgres"
+          ],
+          "rls": true,
+          "owner": "postgres",
+          "table": "programme_occurrence_running_target_snapshots",
+          "force_rls": false
+        },
+        {
+          "acl": [
+            "postgres=arwdDxtm/postgres",
+            "authenticated=r/postgres"
+          ],
+          "rls": true,
+          "owner": "postgres",
+          "table": "programme_occurrence_v3_prescription_snapshots",
+          "force_rls": false
+        },
+        {
+          "acl": [
+            "postgres=arwdDxtm/postgres",
+            "authenticated=r/postgres"
+          ],
+          "rls": true,
+          "owner": "postgres",
+          "table": "programme_occurrence_zone2_targets",
+          "force_rls": false
+        },
+        {
+          "acl": [
+            "postgres=arwdDxtm/postgres"
+          ],
+          "rls": true,
+          "owner": "postgres",
+          "table": "programme_publication_artifacts",
+          "force_rls": false
+        },
+        {
+          "acl": [
+            "postgres=arwdDxtm/postgres",
+            "authenticated=arwdDxtm/postgres",
+            "service_role=arwdDxtm/postgres"
+          ],
+          "rls": true,
+          "owner": "postgres",
+          "table": "programme_schedule_occurrences",
+          "force_rls": false
+        },
+        {
+          "acl": [
+            "postgres=arwdDxtm/postgres",
+            "authenticated=arwdDxtm/postgres",
+            "service_role=arwdDxtm/postgres"
+          ],
+          "rls": true,
+          "owner": "postgres",
+          "table": "programme_schedule_operations",
+          "force_rls": false
+        },
+        {
+          "acl": [
+            "postgres=arwdDxtm/postgres",
+            "authenticated=arwdDxtm/postgres",
+            "service_role=arwdDxtm/postgres"
+          ],
+          "rls": true,
+          "owner": "postgres",
+          "table": "programme_schedule_projections",
+          "force_rls": false
+        },
+        {
+          "acl": [
+            "postgres=arwdDxtm/postgres",
+            "anon=arwdDxtm/postgres",
+            "authenticated=arwdDxtm/postgres",
+            "service_role=arwdDxtm/postgres"
+          ],
+          "rls": false,
+          "owner": "postgres",
+          "table": "programme_sessions",
+          "force_rls": false
+        },
+        {
+          "acl": [
+            "postgres=arwdDxtm/postgres",
+            "authenticated=rDxtm/postgres",
+            "service_role=arwdDxtm/postgres"
+          ],
+          "rls": true,
+          "owner": "postgres",
+          "table": "programme_slot_outcomes",
+          "force_rls": false
+        },
+        {
+          "acl": [
+            "postgres=arwdDxtm/postgres",
+            "authenticated=r/postgres"
+          ],
+          "rls": true,
+          "owner": "postgres",
+          "table": "programme_v3_prescription_consents",
+          "force_rls": false
+        },
+        {
+          "acl": [
+            "postgres=arwdDxtm/postgres",
+            "authenticated=r/postgres"
+          ],
+          "rls": true,
+          "owner": "postgres",
+          "table": "programme_v3_prescription_reviews",
+          "force_rls": false
+        },
+        {
+          "acl": [
+            "postgres=arwdDxtm/postgres"
+          ],
+          "rls": true,
+          "owner": "postgres",
+          "table": "programme_v3_publication_artifacts",
+          "force_rls": false
+        },
+        {
+          "acl": [
+            "postgres=arwdDxtm/postgres",
+            "anon=arwdDxtm/postgres",
+            "authenticated=arwdDxtm/postgres",
+            "service_role=arwdDxtm/postgres"
+          ],
+          "rls": true,
+          "owner": "postgres",
+          "table": "programme_version_adaptation_permissions",
+          "force_rls": false
+        },
+        {
+          "acl": [
+            "postgres=arwdDxtm/postgres",
+            "anon=arwdDxtm/postgres",
+            "authenticated=arwdDxtm/postgres",
+            "service_role=arwdDxtm/postgres"
+          ],
+          "rls": true,
+          "owner": "postgres",
+          "table": "programme_version_assessments",
+          "force_rls": false
+        },
+        {
+          "acl": [
+            "postgres=arwdDxtm/postgres",
+            "anon=arwdDxtm/postgres",
+            "authenticated=arwdDxtm/postgres",
+            "service_role=arwdDxtm/postgres"
+          ],
+          "rls": true,
+          "owner": "postgres",
+          "table": "programme_version_comparison_identities",
+          "force_rls": false
+        },
+        {
+          "acl": [
+            "postgres=arwdDxtm/postgres",
+            "anon=arwdDxtm/postgres",
+            "authenticated=arwdDxtm/postgres",
+            "service_role=arwdDxtm/postgres"
+          ],
+          "rls": true,
+          "owner": "postgres",
+          "table": "programme_version_days",
+          "force_rls": false
+        },
+        {
+          "acl": [
+            "postgres=arwdDxtm/postgres",
+            "anon=arwdDxtm/postgres",
+            "authenticated=arwdDxtm/postgres",
+            "service_role=arwdDxtm/postgres"
+          ],
+          "rls": true,
+          "owner": "postgres",
+          "table": "programme_version_evidence_requirements",
+          "force_rls": false
+        },
+        {
+          "acl": [
+            "postgres=arwdDxtm/postgres",
+            "anon=arwdDxtm/postgres",
+            "authenticated=arwdDxtm/postgres",
+            "service_role=arwdDxtm/postgres"
+          ],
+          "rls": true,
+          "owner": "postgres",
+          "table": "programme_version_phases",
+          "force_rls": false
+        },
+        {
+          "acl": [
+            "postgres=arwdDxtm/postgres",
+            "anon=arwdDxtm/postgres",
+            "authenticated=arwdDxtm/postgres",
+            "service_role=arwdDxtm/postgres"
+          ],
+          "rls": true,
+          "owner": "postgres",
+          "table": "programme_version_protected_invariants",
+          "force_rls": false
+        },
+        {
+          "acl": [
+            "postgres=arwdDxtm/postgres",
+            "anon=arwdDxtm/postgres",
+            "authenticated=arwdDxtm/postgres",
+            "service_role=arwdDxtm/postgres"
+          ],
+          "rls": true,
+          "owner": "postgres",
+          "table": "programme_version_session_slots",
+          "force_rls": false
+        },
+        {
+          "acl": [
+            "postgres=arwdDxtm/postgres",
+            "anon=arwdDxtm/postgres",
+            "authenticated=arwdDxtm/postgres",
+            "service_role=arwdDxtm/postgres"
+          ],
+          "rls": true,
+          "owner": "postgres",
+          "table": "programme_version_weeks",
+          "force_rls": false
+        },
+        {
+          "acl": [
+            "postgres=arwdDxtm/postgres",
+            "anon=awdDxtm/postgres",
+            "authenticated=arwdDxtm/postgres",
+            "service_role=arwdDxtm/postgres"
+          ],
+          "rls": true,
+          "owner": "postgres",
+          "table": "programme_versions",
+          "force_rls": false
+        },
+        {
+          "acl": [
+            "postgres=arwdDxtm/postgres",
+            "anon=arwdDxtm/postgres",
+            "authenticated=arwdDxtm/postgres",
+            "service_role=arwdDxtm/postgres"
+          ],
+          "rls": false,
+          "owner": "postgres",
+          "table": "programme_weeks",
+          "force_rls": false
+        },
+        {
+          "acl": [
+            "postgres=arwdDxtm/postgres",
+            "anon=arwdDxtm/postgres",
+            "authenticated=arwdDxtm/postgres",
+            "service_role=arwdDxtm/postgres"
+          ],
+          "rls": false,
+          "owner": "postgres",
+          "table": "programmes",
+          "force_rls": false
+        },
+        {
+          "acl": [
+            "postgres=arwdDxtm/postgres",
+            "anon=Dxtm/postgres",
+            "authenticated=Dxtm/postgres",
+            "service_role=Dxtm/postgres"
+          ],
+          "rls": false,
+          "owner": "postgres",
+          "table": "protocol_exercises",
+          "force_rls": false
+        },
+        {
+          "acl": [
+            "postgres=arwdDxtm/postgres",
+            "anon=arwdDxtm/postgres",
+            "authenticated=arwdDxtm/postgres",
+            "service_role=arwdDxtm/postgres"
+          ],
+          "rls": true,
+          "owner": "postgres",
+          "table": "protocol_steps",
+          "force_rls": false
+        },
+        {
+          "acl": [
+            "postgres=arwdDxtm/postgres"
+          ],
+          "rls": true,
+          "owner": "postgres",
+          "table": "published_exercise_definition_versions",
+          "force_rls": false
+        },
+        {
+          "acl": [
+            "postgres=arwdDxtm/postgres"
+          ],
+          "rls": true,
+          "owner": "postgres",
+          "table": "published_exercise_version_retirements",
+          "force_rls": false
+        },
+        {
+          "acl": [
+            "postgres=arwdDxtm/postgres",
+            "service_role=arwdDxtm/postgres"
+          ],
+          "rls": true,
+          "owner": "postgres",
+          "table": "publisher_athlete_invitations",
+          "force_rls": false
+        },
+        {
+          "acl": [
+            "postgres=arwdDxtm/postgres",
+            "service_role=ardDxtm/postgres"
+          ],
+          "rls": true,
+          "owner": "postgres",
+          "table": "publisher_athlete_membership_events",
+          "force_rls": false
+        },
+        {
+          "acl": [
+            "postgres=arwdDxtm/postgres",
+            "service_role=arwdDxtm/postgres"
+          ],
+          "rls": true,
+          "owner": "postgres",
+          "table": "publisher_athlete_memberships",
+          "force_rls": false
+        },
+        {
+          "acl": [
+            "postgres=arwdDxtm/postgres",
+            "authenticated=r/postgres"
+          ],
+          "rls": true,
+          "owner": "postgres",
+          "table": "running_5k_benchmark_evidence",
+          "force_rls": false
+        },
+        {
+          "acl": [
+            "postgres=arwdDxtm/postgres",
+            "authenticated=r/postgres"
+          ],
+          "rls": true,
+          "owner": "postgres",
+          "table": "running_5k_benchmark_evidence_revisions",
+          "force_rls": false
+        },
+        {
+          "acl": [
+            "postgres=arwdDxtm/postgres",
+            "anon=arwdDxtm/postgres",
+            "authenticated=arwdDxtm/postgres",
+            "service_role=arwdDxtm/postgres"
+          ],
+          "rls": true,
+          "owner": "postgres",
+          "table": "session_block_exercises",
+          "force_rls": false
+        },
+        {
+          "acl": [
+            "postgres=arwdDxtm/postgres",
+            "anon=arwdDxtm/postgres",
+            "authenticated=arwdDxtm/postgres",
+            "service_role=arwdDxtm/postgres"
+          ],
+          "rls": true,
+          "owner": "postgres",
+          "table": "session_blocks",
+          "force_rls": false
+        },
+        {
+          "acl": [
+            "postgres=arwdDxtm/postgres",
+            "anon=arwdDxtm/postgres",
+            "authenticated=arwdDxtm/postgres",
+            "service_role=arwdDxtm/postgres"
+          ],
+          "rls": false,
+          "owner": "postgres",
+          "table": "session_lineages",
+          "force_rls": false
+        },
+        {
+          "acl": [
+            "postgres=arwdDxtm/postgres",
+            "service_role=arwdDxtm/postgres",
+            "authenticated=arw/postgres"
+          ],
+          "rls": true,
+          "owner": "postgres",
+          "table": "training_block_results",
+          "force_rls": false
+        },
+        {
+          "acl": [
+            "postgres=arwdDxtm/postgres",
+            "service_role=arwdDxtm/postgres",
+            "authenticated=arw/postgres"
+          ],
+          "rls": true,
+          "owner": "postgres",
+          "table": "training_exercise_results",
+          "force_rls": false
+        },
+        {
+          "acl": [
+            "postgres=arwdDxtm/postgres",
+            "anon=arwdDxtm/postgres",
+            "authenticated=arwdDxtm/postgres",
+            "service_role=arwdDxtm/postgres"
+          ],
+          "rls": false,
+          "owner": "postgres",
+          "table": "training_logs",
+          "force_rls": false
+        },
+        {
+          "acl": [
+            "postgres=arwdDxtm/postgres",
+            "anon=arwdDxtm/postgres",
+            "authenticated=arwdDxtm/postgres",
+            "service_role=arwdDxtm/postgres"
+          ],
+          "rls": false,
+          "owner": "postgres",
+          "table": "training_session_circuits",
+          "force_rls": false
+        },
+        {
+          "acl": [
+            "postgres=arwdDxtm/postgres",
+            "anon=arwdDxtm/postgres",
+            "authenticated=arwdDxtm/postgres",
+            "service_role=arwdDxtm/postgres"
+          ],
+          "rls": false,
+          "owner": "postgres",
+          "table": "training_session_intervals",
+          "force_rls": false
+        },
+        {
+          "acl": [
+            "postgres=arwdDxtm/postgres",
+            "service_role=arwdDxtm/postgres",
+            "authenticated=arw/postgres"
+          ],
+          "rls": true,
+          "owner": "postgres",
+          "table": "training_session_records",
+          "force_rls": false
+        },
+        {
+          "acl": [
+            "postgres=arwdDxtm/postgres",
+            "anon=arwdDxtm/postgres",
+            "authenticated=arwdDxtm/postgres",
+            "service_role=arwdDxtm/postgres"
+          ],
+          "rls": false,
+          "owner": "postgres",
+          "table": "training_session_sets",
+          "force_rls": false
+        },
+        {
+          "acl": [
+            "postgres=arwdDxtm/postgres",
+            "service_role=arwdDxtm/postgres",
+            "authenticated=r/postgres"
+          ],
+          "rls": true,
+          "owner": "postgres",
+          "table": "training_sessions",
+          "force_rls": false
+        },
+        {
+          "acl": [
+            "postgres=arwdDxtm/postgres",
+            "service_role=arwdDxtm/postgres",
+            "authenticated=arw/postgres"
+          ],
+          "rls": true,
+          "owner": "postgres",
+          "table": "training_set_results",
+          "force_rls": false
+        },
+        {
+          "acl": [
+            "postgres=arwdDxtm/postgres",
+            "anon=arwdDxtm/postgres",
+            "authenticated=arwdDxtm/postgres",
+            "service_role=arwdDxtm/postgres"
+          ],
+          "rls": true,
+          "owner": "postgres",
+          "table": "weekly_blueprints",
+          "force_rls": false
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "target_ref": "otnhhdxstdnwccehacku",
+    "method": "POST",
+    "path": "/database/query/read-only",
+    "http_status": 201,
+    "started_at": "2026-11-05T05:54:58.761655+00:00",
+    "captured_at": "2026-11-05T05:55:00.485895+00:00",
+    "cf_ray": "a5599b5e7ea24f50-CGK"
+  }
+}

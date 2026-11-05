@@ -1,0 +1,26 @@
+{
+  "metadata": {
+    "target_ref": "otnhhdxstdnwccehacku",
+    "method": "PATCH",
+    "path": "/config/auth",
+    "http_status": 200,
+    "started_at": "2026-11-05T05:56:21.695842+00:00",
+    "captured_at": "2026-11-05T05:56:21.917012+00:00",
+    "cf_ray": "a5599d64cdab0ddc-CGK"
+  },
+  "settings": {
+    "site_url": "http://localhost:55425",
+    "uri_allow_list": "http://localhost:55425/**,cohortplatform://auth-callback",
+    "disable_signup": false,
+    "external_email_enabled": true,
+    "mailer_autoconfirm": false,
+    "security_captcha_enabled": false,
+    "external_anonymous_users_enabled": false,
+    "smtp_host": null,
+    "smtp_port": null,
+    "rate_limit_email_sent": null,
+    "jwt_exp": 3600,
+    "password_min_length": 6,
+    "mailer_otp_exp": 3600
+  }
+}

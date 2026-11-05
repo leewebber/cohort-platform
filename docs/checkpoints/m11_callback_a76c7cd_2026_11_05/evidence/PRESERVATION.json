@@ -1,0 +1,6 @@
+{
+  "before_manifest_sha256": "b683de35a30c72e625b6d198980c0ab0c5b0ef60cab901e1d0ac1d42caaf5080",
+  "precommit_manifest_sha256": "b683de35a30c72e625b6d198980c0ab0c5b0ef60cab901e1d0ac1d42caaf5080",
+  "older_workspace_state_byte_equal": true,
+  "untracked_full_review_byte_equal": true
+}

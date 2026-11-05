@@ -1,0 +1,19 @@
+{
+  "data": [
+    {
+      "drain": {
+        "active_writers": [],
+        "prepared_transactions": 0
+      }
+    }
+  ],
+  "metadata": {
+    "target_ref": "otnhhdxstdnwccehacku",
+    "method": "POST",
+    "path": "/database/query/read-only",
+    "http_status": 201,
+    "started_at": "2026-11-05T05:55:11.472517+00:00",
+    "captured_at": "2026-11-05T05:55:14.085132+00:00",
+    "cf_ray": "a5599badcefb4536-CGK"
+  }
+}

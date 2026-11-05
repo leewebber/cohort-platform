@@ -1,0 +1,37 @@
+{
+  "data": [
+    {
+      "new_tables": [
+        {
+          "table": "athlete_running_quality_inputs",
+          "exists": true
+        },
+        {
+          "table": "athlete_running_zone2_inputs",
+          "exists": true
+        },
+        {
+          "table": "athlete_training_setup",
+          "exists": true
+        },
+        {
+          "table": "private_programme_alpha_eligibility",
+          "exists": true
+        },
+        {
+          "table": "programme_occurrence_zone2_targets",
+          "exists": true
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "target_ref": "otnhhdxstdnwccehacku",
+    "method": "POST",
+    "path": "/database/query/read-only",
+    "http_status": 201,
+    "started_at": "2026-11-05T05:54:56.977492+00:00",
+    "captured_at": "2026-11-05T05:54:58.647737+00:00",
+    "cf_ray": "a5599b533902f3f2-CGK"
+  }
+}
