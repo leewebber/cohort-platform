@@ -1,0 +1,26 @@
+{
+  "status": "STOPPED_BEFORE_APPLY_CREDENTIAL_REVOKED_OFFLINE_FIX_REHEARSED",
+  "date": "2026-11-05",
+  "base": "6628343f004aa48a4a2ad88ca70aa2340b967051",
+  "hosted_migrations_applied": 0,
+  "callback_added": false,
+  "operational_logins_issued": 1,
+  "replacement_issued": false,
+  "supported_revocation_http": 200,
+  "zero_cli_roles_and_backends": true,
+  "ledger_count": 130,
+  "ledger_tip": "20261024130000",
+  "all_67_public_and_2_auth_table_aggregates_unchanged": true,
+  "focused_python_tests": {
+    "command": "python3 -m unittest discover -s tool/programmes/hybrid_10k -p enablement_checks_test.py -v",
+    "passed": 12,
+    "exit": 0
+  },
+  "actual_local_cli_rehearsal": "evidence/LOCAL_RESULT.json",
+  "reviewed_postcheck_sql_executed_locally": true,
+  "thirty_scoped_functions_and_effective_grants_match_local": true,
+  "unchanged_approved_migrations_and_auth_proposal": true,
+  "broad_flutter_suites_reused_not_rerun": true,
+  "M1.1": "OPEN",
+  "Gate_A": "OPEN"
+}

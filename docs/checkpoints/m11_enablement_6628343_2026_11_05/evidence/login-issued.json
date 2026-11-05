@@ -1,0 +1,15 @@
+{
+  "principal": "cli_login_postgres",
+  "ttl_seconds": 300,
+  "request_started_at": "2026-11-05T02:34:06.680533+00:00",
+  "response_received_at": "2026-11-05T02:34:08.372500+00:00",
+  "metadata": {
+    "target_ref": "otnhhdxstdnwccehacku",
+    "method": "POST",
+    "path": "/cli/login-role",
+    "http_status": 201,
+    "started_at": "2026-11-05T02:34:06.710474+00:00",
+    "captured_at": "2026-11-05T02:34:08.371717+00:00",
+    "cf_ray": "a55875210f32c02e-DPS"
+  }
+}

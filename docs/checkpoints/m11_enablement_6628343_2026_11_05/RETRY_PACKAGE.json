@@ -1,0 +1,23 @@
+{
+  "status": "OFFLINE_CORRECTED_REHEARSED_REQUIRES_ONE_NEW_LOGIN_AUTHORITY",
+  "approved_migration_and_callback_commit": "6628343f004aa48a4a2ad88ca70aa2340b967051",
+  "migration_manifest_sha256": "b0710bd7bdac0464cc3b6c9f28291ab70154e0418e4c1f0f5ad3a6eabcb4ea28",
+  "auth_proposal_sha256": "6ec85d9b9648f3bcf5fc2778553acd2452924c9a53cafe29d86332ed2da30f59",
+  "adapter_sha256": "e3b1a11f3222dbcfe900f801690404bf9d065197acab0980dd7564ccfa07f637",
+  "scripts_sha256": {
+    "support.py.txt": "ff137476834ab8c9353e618a5912bfab5f27ba8b8376fe340e13977cdbf0b765",
+    "extra_prepare.py.txt": "d038fcaea516d61f0d0b6bdade16ef85f1d235f860b4bc01d63a85d3b2552dc2",
+    "live.py.txt": "36387b5f9dc27bc447822d55a988b616f8cecb61610b5f8e9103ab97fd7ec9c8",
+    "compare_pre.py.txt": "5026d0f1e867155dd51074974c78f256cda2079563bd2ee0f03aac7e5bf8deb1",
+    "prepare.py.txt": "a8f32cc775d119d5674dcd53be6f414694945a90dfd28b92a89320214b217bff"
+  },
+  "automatic_login_reissuance_avoided": "Same authorised cli_login_postgres / postgres route via supported db-url, password only in child env, no linked per-command minting",
+  "old_authority": "Five migration/callback approval remains recorded; the single login is consumed and revoked. No replacement is currently authorised.",
+  "prescription_or_target_changes": false,
+  "hosted_mutations_remaining": "All five migrations and callback addition; none applied",
+  "tls_ca_pem_sha256": "700723581420dd1ac98fd7e9ac529f0ef210eadcaf87fc868a3ad7d114c2f3b7",
+  "tls_ca_certificate_sha256": "807025ad50d4ed219d2c9c7d299c004f824eb00cf7f65afef607d07b72e6cafa",
+  "tls_ca_expires_at": "2031-04-26T10:56:53+00:00",
+  "cli_version": "2.109.1",
+  "cli_binary_sha256": "b7be23f4e211b75c00a3df5fcd1f96f3905983c74ff3189bfc69ad5b0f7132c4"
+}

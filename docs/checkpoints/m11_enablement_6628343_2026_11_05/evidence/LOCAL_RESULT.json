@@ -1,0 +1,18 @@
+{
+  "classification": "DISPOSABLE_LOCAL_EXACT_CLI_REHEARSAL_NOT_HOSTED_RESULT",
+  "passed": true,
+  "ten_genuine_retained_values_through_actual_psql": true,
+  "exact_five_file_dry_run": true,
+  "exact_five_file_apply": true,
+  "reviewed_postcheck_sql_executed_verbatim": true,
+  "all_30_scoped_functions_and_effective_grants_exact": true,
+  "table_and_column_effective_privileges_exact": true,
+  "five_new_tables_empty_and_receipts_null": true,
+  "final_dry_run_empty": true,
+  "anchor_repeat_noop": true,
+  "unexpected_anchor_body_drift_refused_and_rolled_back": true,
+  "local_before_ledger": 131,
+  "local_after_ledger": 136,
+  "local_only_baseline_ledger_entries": 1,
+  "no_hosted_login_or_mutation": true
+}

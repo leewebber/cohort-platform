@@ -1,0 +1,16 @@
+{
+  "closed_at_utc": "2026-11-05T02:44:14.714668+00:00",
+  "local_project_id": "s12g11051039042e66",
+  "task_containers_remaining": 0,
+  "task_volumes_remaining": 0,
+  "other_containers_unchanged": true,
+  "task_local_workdir_removed": true,
+  "temporary_local_secret_material_removed": [
+    "local-cli-home",
+    "local-apply-copy/supabase/.temp",
+    "local-start.private.log",
+    "local-status.private.json"
+  ],
+  "hosted_credential_reissued": false,
+  "pre_existing_temp_and_backups_untouched": true
+}

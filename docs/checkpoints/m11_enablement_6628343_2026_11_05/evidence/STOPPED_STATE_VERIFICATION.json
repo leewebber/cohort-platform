@@ -1,0 +1,26 @@
+{
+  "checked_at": "2026-11-05T02:37:42.772533+00:00",
+  "all_passed": true,
+  "checks": {
+    "inventory_02_unchanged": true,
+    "inventory_03_unchanged": true,
+    "inventory_04_unchanged": true,
+    "inventory_05_unchanged": true,
+    "inventory_06_unchanged": true,
+    "inventory_07_unchanged": true,
+    "inventory_08_unchanged": true,
+    "inventory_09_unchanged": true,
+    "inventory_10_unchanged": true,
+    "catalogue_unchanged": true,
+    "protected-rows_unchanged": true,
+    "existing-authority_unchanged": true,
+    "auth-rows_unchanged": true,
+    "auth_settings_and_template_unchanged": true,
+    "zero_cli_roles_and_backends": true
+  },
+  "ledger_count": 130,
+  "ledger_tip": "20261024130000",
+  "callback_added": false,
+  "migration_apply_attempted": false,
+  "no_real_account_or_athlete_mutation": true
+}

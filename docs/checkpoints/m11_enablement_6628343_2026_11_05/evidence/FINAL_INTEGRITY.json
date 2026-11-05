@@ -1,0 +1,9 @@
+{
+  "no_secret_patterns": true,
+  "new_document_links_valid": true,
+  "corrected_scripts_compile": true,
+  "all_135_approved_source_hashes_unchanged": true,
+  "approved_migration_and_auth_manifest_bytes_equal_6628343": true,
+  "original_untracked_full_review_unchanged": true,
+  "no_old_evidence_rewritten": true
+}

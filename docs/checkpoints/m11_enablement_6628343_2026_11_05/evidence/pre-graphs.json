@@ -1,0 +1,19 @@
+{
+  "data": [
+    {
+      "collisions": {
+        "existing_candidate_protocols": [],
+        "existing_candidate_lineage_revisions": 0
+      }
+    }
+  ],
+  "metadata": {
+    "target_ref": "otnhhdxstdnwccehacku",
+    "method": "POST",
+    "path": "/database/query/read-only",
+    "http_status": 201,
+    "started_at": "2026-11-05T02:26:23.142575+00:00",
+    "captured_at": "2026-11-05T02:26:24.763249+00:00",
+    "cf_ray": "a55869d03856ea89-CGK"
+  }
+}

@@ -6,7 +6,13 @@ This plan controls delivery priorities. It preserves technical authority contrac
 it does not grant implementation, content, hosted, account or release authority.
 [M0 findings and critical path](../checkpoints/m0_alpha_baseline/HANDOFF.md).
 
-## Current single point — M1.1 exact hosted-enablement decision
+## Current single point — M1.1 corrected enablement retry connection
+
+The founder approved the exact five migrations and native callback at 6628343 plus one temporary CLI login. [Actual stopped attempt and closeout](../checkpoints/m11_enablement_6628343_2026_11_05/HANDOFF.md): fresh healthy Field Manual still matches ledger130; a local psql/API JSON boundary error stopped before dry-run/apply/PATCH. No schema/callback/data changed. Supported revocation succeeded and zero CLI roles/backends were independently verified before native expiry. The one-login authority is consumed and closed; no replacement is authorised.
+
+The exact-type boundary and owned idle-pooler cleanup guard are corrected offline. Twelve focused tests and an actual disposable local CLI five-file dry-run/apply/verbatim-postcheck/empty-retry rehearsal pass, including all thirty scoped functions/grants, table/column authority and drift rollback. Approved migration/auth payloads, D8/prescriptions/targets and the genuine client/source candidate are unchanged. **Next single founder action: authorise one fresh temporary CLI login for the corrected same-scope retry with clients closed.** Existing five-file/callback approval remains recorded. M1.1 and Gate A stay OPEN; programme publication/access and installed acquisition/restart acceptance remain separate. UI acceptance and authoring/discretionary-polish freeze stand.
+
+## Retained release-candidate enablement proposal — approved, attempt stopped above
 
 One [genuine Hybrid 10K release candidate](../checkpoints/m11_release_candidate_2026_11_04/HANDOFF.md) now combines admitted e676e31 source with the two D8 approvals recorded at 8be184c. All sixty graphs admit; all 105 strength prescriptions and forty running bodies remain exact. Approved athlete copy is carried into local immutable revisions. Authenticated disposable acquisition, representative strength/running starts, save/reopen/paused restore, expiry/renewal, canonical completion/retry/correction and History pass. This is local source/client evidence, not installed acceptance or programme publication.
 

@@ -1,0 +1,16 @@
+import sys
+from support import *
+assert not (OUT/'login-attempt.json').exists() and not (OUT/'pre-target.json').exists(),'Choose a new task-owned directory; preserve all older evidence'
+project,meta=api();safe={k:project.get(k) for k in ['id','name','region','status']};save('pre-target.json',{'project':safe,'metadata':meta});assert safe=={'id':TARGET,'name':'Cohort Field Manual','region':'eu-west-1','status':'ACTIVE_HEALTHY'},'Wrong/inactive target; no resume'
+health,meta=api('/health?services=db&services=auth&services=rest&services=storage&services=realtime');save('pre-health.json',{'services':health,'metadata':meta});assert len(health)==5 and all(s['healthy'] and s['status']=='ACTIVE_HEALTHY' for s in health)
+subprocess.run([sys.executable,str(ROOT/'tool/programmes/hybrid_10k/prepare_deployment_copy.py'),'--out',str(OUT/'deployment-copy')],check=True)
+statements=[s.strip() for s in (PKG/'PREFLIGHT.sql').read_text().split(';') if s.strip().startswith('SELECT ')];assert len(statements)==10
+for i,s in enumerate(statements,1):save('pre-read-%02d.json'%i,readonly(s+';'))
+for name,file in [('catalogue','CATALOGUE_PROTECTED_STATE.sql'),('graphs','GRAPH_IDENTITY_PREFLIGHT.sql')]:save('pre-'+name+'.json',readonly((PKG/file).read_text()))
+a,meta=api('/config/auth');save('pre-auth.json',{'settings':auth_view(a),'template_flags':template_flags(a),'metadata':meta});del a
+pool,meta=api('/config/database/pooler');save('pooler.json',{'data':[{k:p.get(k) for k in ['db_host','db_port','db_user','db_name','pool_mode','identifier','database_type']} for p in pool],'metadata':meta});del pool
+save('pre-login-state.json',readonly(ROLE_STATE));save('pre-drain.json',readonly(DRAIN))
+subprocess.run([sys.executable,str(OUT/'compare_pre.py')],check=True)
+subprocess.run([sys.executable,str(OUT/'extra_prepare.py')],check=True)
+(OUT/'cli-home').mkdir(mode=0o700)
+print('Fresh exact-target preflight and all commands ready; NO LOGIN ISSUED. live.py requires separate renewed one-login authority.')

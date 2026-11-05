@@ -1,0 +1,29 @@
+{
+  "status": "FRESH_PREFLIGHT_MATCHES_6628343",
+  "checked_at": "2026-11-05T02:27:49.580213+00:00",
+  "ledger_count": 130,
+  "ledger_tip": "20261024130000",
+  "catalogue_rows": 172,
+  "existing_public_functions": 206,
+  "protected_public_tables": 67,
+  "checks": {
+    "inventory_02": true,
+    "inventory_03": true,
+    "inventory_04": true,
+    "inventory_05": true,
+    "inventory_06": true,
+    "inventory_07": true,
+    "inventory_08": true,
+    "inventory_09": true,
+    "inventory_10": true,
+    "catalogue_rows_schema_and_five_consumers": true,
+    "all_graph_collisions_absent": true,
+    "auth_settings_exact": true,
+    "confirmation_template_exact": true,
+    "no_existing_cli_roles_or_backends": true,
+    "drain_clear": true,
+    "exact_135_source_hashes": true,
+    "writer_hold": "Founder confirms Cohort and authoring/import clients closed for this deployment window"
+  },
+  "credential_issued": false
+}

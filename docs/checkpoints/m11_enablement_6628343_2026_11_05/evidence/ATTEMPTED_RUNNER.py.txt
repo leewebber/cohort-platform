@@ -1,0 +1,144 @@
+from support import *
+from datetime import timedelta
+import signal,urllib.parse,shutil
+MANIFEST=json.loads((PKG/'MIGRATIONS.json').read_text());EXPECTED_NAMES=[Path(m['file']).name for m in MANIFEST['migrations']];EXPECTED_FUNCTIONS=json.loads((PKG/'POSTCHECK_EXPECTED_FUNCTIONS.json').read_text())['functions'];NEW_TABLES={'athlete_training_setup','private_programme_alpha_eligibility','athlete_running_zone2_inputs','programme_occurrence_zone2_targets','athlete_running_quality_inputs'}
+CA=OUT/'supabase-prod-ca-2021.crt';BASE_ENV={k:v for k,v in os.environ.items() if not k.startswith(('PG','SUPABASE_')) and k not in ['DATABASE_URL','DB_URL']};BASE_ENV.update({'SUPABASE_HOME':str(OUT/'cli-home'),'PGAPPNAME':LABEL,'PGCONNECT_TIMEOUT':'10','PGSSLMODE':'verify-full','PGSSLROOTCERT':str(CA)})
+secret=None;deadline=None;attempted=False;result={'status':'NOT_STARTED','migration_apply_attempted':False,'auth_patch_attempted':False}
+def budget(reserve=5):
+ assert deadline and (deadline-now()).total_seconds()>reserve,'Insufficient remaining authorised/provider lifetime; stop'
+ return (deadline-now()).total_seconds()
+def scrub(text):
+ if secret:
+  for value in [secret,urllib.parse.quote(secret,safe=''),urllib.parse.quote_plus(secret)]:text=text.replace(value,'[REDACTED]')
+ return re.sub(r'postgres(?:ql)?://[^\s\"\']+','[CONNECTION REDACTED]',text)
+def process(args,env,limit):
+ p=subprocess.Popen(args,env=env,stdin=subprocess.DEVNULL,stdout=subprocess.PIPE,stderr=subprocess.PIPE,start_new_session=True)
+ try:out,err=p.communicate(timeout=min(limit,budget()-2))
+ except subprocess.TimeoutExpired:
+  os.killpg(p.pid,signal.SIGKILL);out,err=p.communicate();raise RuntimeError('Task command timed out; no retry') from None
+ return p.returncode,scrub((out+err).decode(errors='replace'))
+def psql(sql):
+ budget();env=BASE_ENV|DB_ENV
+ p=subprocess.Popen([PSQL,'-X','-qAt','-v','ON_ERROR_STOP=1'],env=env,stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.PIPE,start_new_session=True)
+ prefix="SET ROLE postgres; SET application_name='"+LABEL+"'; SET statement_timeout='20s';\n"
+ try:out,err=p.communicate((prefix+sql).encode(),timeout=min(30,budget()-2))
+ except subprocess.TimeoutExpired:
+  os.killpg(p.pid,signal.SIGKILL);p.communicate();raise RuntimeError('Bounded operator query timed out; no retry') from None
+ assert p.returncode==0,'Operator read-only verification refused; close out without repair'
+ return out.decode()
+def cli(name,dry):
+ budget(90 if not dry else 60)
+ args=['/opt/homebrew/bin/supabase','db','push','--db-url',DSN,'--workdir',str(OUT/'deployment-copy')]
+ args+=['--dry-run'] if dry else ['--yes']
+ started=now().isoformat();code,output=process(args,BASE_ENV|DB_ENV,90 if not dry else 35)
+ (OUT/(name+'.txt')).write_text(output)
+ names=list(dict.fromkeys(re.findall(r'\b(20\d{12}_[A-Za-z0-9_]+\.sql)\b',output)))
+ save(name+'.json',{'started_at':started,'finished_at':now().isoformat(),'exit':code,'migration_filenames':names,'command':'supabase db push --db-url <password-free task connection> --workdir <exact pinned copy> '+('--dry-run' if dry else '--yes'),'same_single_issued_login':True,'automatic_linked_login_path_unused':True,'output_sha256':sha(output.encode())})
+ assert code==0,'Normal CLI command failed; no blind retry or alternative runner'
+ return output,names
+
+def closeout():
+ global secret
+ r={'started_at':now().isoformat(),'task_use_stopped':True,'replacement_issued':False}
+ try:
+  if attempted:
+   s=readonly(ROLE_STATE);r['before_revocation']=s;state=scalar(s)
+   if state['roles'] or state['backends']:
+    assert [x['name'] for x in state['roles']]==['cli_login_postgres'],'Unexpected CLI principal; refuse broad deletion'
+    assert not state['backends'],'Unexpected task/other backend remains; do not hide it with role deletion'
+    d,m=api('/cli/login-role','DELETE');r['supported_delete']={'acknowledgement':d,'metadata':m}
+   after=readonly(ROLE_STATE);r['after_revocation']=after;r['revoked_and_zero_backends']=scalar(after)=={'roles':[],'backends':[]}
+  else:r['revocation']='NOT_ISSUED'
+ except Exception as error:r['failure']=scrub(str(error)) if isinstance(error,(RuntimeError,AssertionError)) else type(error).__name__
+ finally:
+  secret=None
+  for k in list(globals().get('DB_ENV',{})):
+   if k=='PGPASSWORD':DB_ENV[k]=''
+  home=OUT/'cli-home'
+  if home.exists():shutil.rmtree(home)
+  # Only this operation's fresh copy can contain CLI cache/traces.
+  cache=OUT/'deployment-copy/supabase/.temp'
+  if cache.exists():shutil.rmtree(cache)
+  r['temporary_credential_cache_removed']=not home.exists() and not cache.exists();r['finished_at']=now().isoformat();save('CREDENTIAL_CLOSEOUT.json',r)
+ return r
+
+try:
+ assert not (OUT/'login-attempt.json').exists(),'Single login attempt already consumed'
+ assert json.loads((OUT/'PREFLIGHT_REVIEW.json').read_text())['status']=='FRESH_PREFLIGHT_MATCHES_6628343'
+ for f,h in MANIFEST['deployment_copy_files'].items():assert sha((ROOT/f).read_bytes())==h and sha((OUT/'deployment-copy'/f).read_bytes())==h,'Reviewed source/copy drift'
+ assert CA.is_file()
+ p,m=api();assert p['id']==TARGET and p['name']=='Cohort Field Manual' and p['status']=='ACTIVE_HEALTHY','Wrong/inactive target; no resume'
+ health,hm=api('/health?services=db&services=auth&services=rest&services=storage&services=realtime');save('immediate-health.json',{'services':health,'metadata':hm});assert len(health)==5 and all(x['healthy'] and x['status']=='ACTIVE_HEALTHY' for x in health),'Service health changed; stop'
+ assert scalar(readonly(ROLE_STATE))=={'roles':[],'backends':[]},'Existing operator capability interference'
+ assert scalar(readonly(DRAIN))=={'active_writers':[],'prepared_transactions':0},'Writer drain not clear'
+ started=now();save('login-attempt.json',{'attempt':1,'request_started_at':started.isoformat(),'authority':'Founder exact 6628343 five migrations plus native callback; one CLI login max 30min/earlier provider expiry; no replacement','target_ref':TARGET});attempted=True
+ login,issuer=api('/cli/login-role','POST',{'read_only':False})
+ save('login-issued.json',{'principal':login.get('role'),'ttl_seconds':login.get('ttl_seconds'),'request_started_at':started.isoformat(),'response_received_at':now().isoformat(),'metadata':issuer})
+ assert login.get('role')=='cli_login_postgres' and isinstance(login.get('password'),str) and isinstance(login.get('ttl_seconds'),int),'Unexpected issuer contract'
+ deadline=started+timedelta(seconds=min(1800,login['ttl_seconds']));secret=login.pop('password');del login
+ pool=json.loads((OUT/'pooler.json').read_text())['data'];assert len(pool)==1 and pool[0]['identifier']==TARGET and pool[0]['database_type']=='PRIMARY' and pool[0]['db_name']=='postgres','Unexpected pooler target';pool=pool[0]
+ DB_ENV={'PGHOST':pool['db_host'],'PGPORT':str(pool['db_port']),'PGUSER':'cli_login_postgres.'+TARGET,'PGDATABASE':'postgres','PGPASSWORD':secret}
+ query=urllib.parse.urlencode({'sslmode':'verify-full','sslrootcert':str(CA),'application_name':LABEL,'connect_timeout':'10'})
+ DSN='postgresql://'+DB_ENV['PGUSER']+'@'+DB_ENV['PGHOST']+':'+DB_ENV['PGPORT']+'/postgres?'+query
+ role_sql="SELECT jsonb_build_object('session_user',session_user,'role',current_user,'database',current_database(),'application_name',current_setting('application_name'),'provider_expiry',(SELECT rolvaliduntil FROM pg_roles WHERE rolname=session_user),'system_identifier',(SELECT system_identifier::text FROM pg_control_system()),'memberships',(SELECT jsonb_agg(jsonb_build_object('role',r.rolname,'member',m.rolname,'admin',a.admin_option,'inherit',a.inherit_option,'set',a.set_option) ORDER BY r.rolname,m.rolname) FROM pg_auth_members a JOIN pg_roles r ON r.oid=a.roleid JOIN pg_roles m ON m.oid=a.member WHERE m.rolname=session_user),'attributes',(SELECT jsonb_build_object('login',rolcanlogin,'super',rolsuper,'inherit',rolinherit,'createdb',rolcreatedb,'createrole',rolcreaterole,'bypassrls',rolbypassrls) FROM pg_roles WHERE rolname=session_user));"
+ role=json.loads(psql(role_sql));save('operator-identity.json',role)
+ assert role['session_user']=='cli_login_postgres' and role['role']=='postgres' and role['database']=='postgres' and role['application_name']==LABEL and role['system_identifier']=='7656985631720456337','Wrong operator identity/target'
+ assert role['memberships']==[{'role':'postgres','member':'cli_login_postgres','admin':False,'inherit':False,'set':True}],'Unexpected existing membership'
+ assert role['attributes']=={'login':True,'super':False,'inherit':False,'createdb':False,'createrole':False,'bypassrls':False},'Unexpected temporary role attributes'
+ expiry=datetime.fromisoformat(role['provider_expiry']);deadline=min(started+timedelta(minutes=30),expiry);save('task-deadline.json',{'conservative_request_start':started.isoformat(),'actual_provider_expiry':expiry.isoformat(),'task_use_deadline':deadline.isoformat(),'limit':'30 minutes from issuance or earlier provider expiry; conservative request-start accounting used'})
+ statements=[s.strip() for s in (PKG/'PREFLIGHT.sql').read_text().split(';') if s.strip().startswith('SELECT ')];assert len(statements)==10
+ for i,statement in enumerate(statements[1:],2):
+  actual=json.loads(psql('BEGIN READ ONLY;\n'+statement+';\nCOMMIT;'));assert actual==json.loads((OUT/('pre-read-%02d.json'%i)).read_text())['data'][0],'Fresh operator inventory drift'
+ for label,file in [('catalogue',PKG/'CATALOGUE_PROTECTED_STATE.sql'),('protected-rows',OUT/'PROTECTED_ROWS.sql')]:
+  actual=json.loads(psql('BEGIN READ ONLY;\n'+file.read_text()+'\nCOMMIT;'));save('operator-pre-'+label+'.json',actual)
+  old=json.loads((OUT/('pre-'+label+'.json')).read_text())['data'][0]
+  if label=='catalogue':
+   av=next(iter(actual.values()));ov=next(iter(old.values()));assert all(av[k]==ov[k] for k in ['columns','constraints','indexes','rows','consumer_guard']),'Fresh operator catalogue/consumer drift'
+  else:assert actual==old,'Fresh operator protected rows drift'
+ output,names=cli('DRY_RUN_BEFORE',True);assert names==EXPECTED_NAMES,'Dry-run does not list exactly the approved five files'
+ budget(90);save('APPLY_GATE.json',{'checked_at':now().isoformat(),'target_ref':TARGET,'source_commit':'6628343f004aa48a4a2ad88ca70aa2340b967051','files':MANIFEST['migrations'],'exact_dry_run_matches':True,'remaining_native_seconds':budget(),'writer_hold':'Founder explicitly confirms closed clients; fresh observed drain clear','execution_connection':'Supported --db-url with same one cli_login_postgres credential and built-in SET SESSION ROLE postgres; password supplied only in process env; no linked reissuance, no main password'})
+ result['migration_apply_attempted']=True;output,names=cli('APPLY',False);assert names==EXPECTED_NAMES,'Unexpected apply file acknowledgement'
+ result['schema_apply_acknowledged']=True
+ # Run the reviewed read-only postcheck file verbatim, before comparing fresh independent reads.
+ raw=psql((PKG/'POSTCHECK.sql').read_text());(OUT/'POSTCHECK_PSQL.txt').write_text(raw)
+ for i,statement in enumerate(statements,1):save('post-read-%02d.json'%i,readonly(statement+';'))
+ for label,file in [('catalogue',PKG/'CATALOGUE_PROTECTED_STATE.sql'),('protected-rows',OUT/'PROTECTED_ROWS.sql'),('existing-authority',OUT/'EXISTING_AUTHORITY.sql'),('scoped-functions',OUT/'SCOPED_FUNCTIONS.sql'),('table-privileges',OUT/'TABLE_PRIVILEGES.sql'),('column-privileges',OUT/'COLUMN_PRIVILEGES.sql')]:save('post-'+label+'.json',readonly(file.read_text()))
+ if (OUT/'AUTH_ROWS.sql').exists():save('post-auth-rows.json',readonly((OUT/'AUTH_ROWS.sql').read_text()))
+ checks={}
+ pre=lambda i:scalar(json.loads((OUT/('pre-read-%02d.json'%i)).read_text()))
+ post=lambda i:scalar(json.loads((OUT/('post-read-%02d.json'%i)).read_text()))
+ before=pre(2);after=post(2);old={x['version']:x for x in before};new={x['version']:x for x in after};versions=[x['version'] for x in MANIFEST['migrations']]
+ checks['exact_five_ledger_additions']=len(after)==135 and set(new)-set(old)==set(versions) and max(new)=='20261104120000';checks['all_130_old_ledger_entries_exact']=all(new.get(v)==x for v,x in old.items())
+ checks['all_30_scoped_function_bodies_owners_acls_config_effective_grants_exact']=scalar(json.loads((OUT/'post-scoped-functions.json').read_text()))==EXPECTED_FUNCTIONS
+ old={x['signature']:x for x in pre(3)};new={x['signature']:x for x in post(3)};allowed={x['signature'] for x in EXPECTED_FUNCTIONS}
+ checks['old_function_oids_preserved']=all(s in new and new[s]['oid']==v['oid'] for s,v in old.items());checks['unaffected_functions_exact']=all(new.get(s)==v for s,v in old.items() if s not in allowed);checks['no_unapproved_functions_added']=set(new)-set(old)<=allowed
+ oldtables={x['table']:x for x in pre(6)};newtables={x['table']:x for x in post(6)};checks['exact_five_new_tables']=set(newtables)-set(oldtables)==NEW_TABLES;checks['all_old_table_authorities_exact']=all(newtables.get(s)==x for s,x in oldtables.items());checks['new_tables_owner_rls']=all(newtables[t]['rls'] and not newtables[t]['force_rls'] and newtables[t]['owner']=='postgres' for t in NEW_TABLES)
+ checks['global_default_privileges_exact']=post(7)==pre(7)
+ for i,key,namefield,expected_new in [(8,'policies','policyname',{'zone2_input_owner','zone2_snapshot_owner','quality_input_owner'}),(9,'triggers','name',{'zone2_snapshot_immutable','guard_zone2_record','completion_receipt_guard'})]:
+  prior=pre(i);later=post(i);checks['old_'+key+'_exact']=all(x in later for x in prior);added=[x for x in later if x not in prior];checks['exact_new_'+key]=len(added)==3 and {x[namefield] for x in added}==expected_new
+  if i==8:checks['new_policies_owner_read_only']=all(x['roles']==['authenticated'] and x['cmd']=='SELECT' and x['with_check'] is None and 'auth.uid()' in x['qual'] and 'cohort_auth_is_athlete()' in x['qual'] for x in added)
+ expected_select={'athlete_running_zone2_inputs','programme_occurrence_zone2_targets','athlete_running_quality_inputs'}
+ for label in ['table','column']:
+  rows=scalar(json.loads((OUT/('post-'+label+'-privileges.json')).read_text()));checks['new_'+label+'_effective_privileges_exact']=all(x['allowed']==(x['role']=='authenticated' and x['table'] in expected_select and x['privilege']=='SELECT') for x in rows)
+ cat=scalar(json.loads((OUT/'post-catalogue.json').read_text()));beforecat=scalar(json.loads((OUT/'pre-catalogue.json').read_text()));checks['all_172_catalogue_rows_schema_five_consumers_exact']=all(cat[k]==beforecat[k] for k in ['columns','constraints','indexes','rows','consumer_guard'])
+ for label in ['protected-rows','existing-authority']+(['auth-rows'] if (OUT/'pre-auth-rows.json').exists() else []):checks[label+'_exact']=scalar(json.loads((OUT/('post-'+label+'.json')).read_text()))==scalar(json.loads((OUT/('pre-'+label+'.json')).read_text()))
+ # The reviewed postcheck returns five empty tables and null historical receipts.
+ lines=raw.splitlines();empty=json.loads(lines[2]);checks['all_five_new_tables_empty_historical_receipts_null']=all(v==0 for v in empty.values())
+ checks['candidate_unpublished']=post(10)==pre(10)
+ save('POSTCHECK_REVIEW.json',{'checked_at':now().isoformat(),'checks':checks,'all_passed':all(checks.values()),'ledger_count':len(after),'functions_before':len(old),'functions_after':len(new),'new_functions':sorted(set(new)-set(old)),'changed_existing_bodies':sorted(s for s in old if s in new and old[s]['body_sha256']!=new[s]['body_sha256'])})
+ assert all(checks.values()),'Postchecks mismatch; no repair or programme/athlete operation'
+ output,names=cli('DRY_RUN_AFTER',True);assert not names and 'up to date' in output.lower(),'Final ordinary dry-run is not empty'
+ result['schema_verified']=True
+ # Exact separately authorised callback addition; preserve every other returned setting in memory.
+ budget(90);auth,am=api('/config/auth');baseline=json.loads((OUT/'pre-auth.json').read_text());assert auth_view(auth)==baseline['settings'] and template_flags(auth)==baseline['template_flags'],'Fresh auth config drift; no patch'
+ proposal=json.loads((PKG/'AUTH_CONFIG_PROPOSAL.json').read_text());payload=proposal['exact_payload'];assert set(payload)=={'uri_allow_list'}
+ save('AUTH_PATCH_GATE.json',{'checked_at':now().isoformat(),'metadata':am,'exact_payload':payload,'pre_settings':auth_view(auth),'template_flags':template_flags(auth)})
+ result['auth_patch_attempted']=True;ack,meta=api('/config/auth','PATCH',payload);save('AUTH_PATCH_ACK.json',{'metadata':meta,'settings':auth_view(ack)});del ack
+ after,meta=api('/config/auth');a=dict(auth);b=dict(after);a.pop('uri_allow_list',None);b.pop('uri_allow_list',None)
+ okay=after.get('uri_allow_list')==payload['uri_allow_list'] and a==b and template_flags(after)==baseline['template_flags'];save('AUTH_PATCH_POSTCHECK.json',{'metadata':meta,'settings':auth_view(after),'template_flags':template_flags(after),'all_other_returned_configuration_fields_exact':a==b,'exact_callback_union':after.get('uri_allow_list')==payload['uri_allow_list'],'passed':okay});del auth,after,a,b
+ assert okay,'Auth postcheck drift; no unapproved further patch'
+ result['auth_callback_verified']=True;result['status']='APPLIED_AND_VERIFIED'
+except Exception as error:
+ result['status']='STOPPED';result['failure']=scrub(str(error)) if isinstance(error,(RuntimeError,AssertionError)) else type(error).__name__
+finally:
+ result['finished_at']=now().isoformat();save('RESULT.json',result);closed=closeout();print(json.dumps({'status':result['status'],'failure':result.get('failure'),'schema_verified':result.get('schema_verified',False),'callback_verified':result.get('auth_callback_verified',False),'credential_revoked_and_zero_backends':closed.get('revoked_and_zero_backends',False),'secret_cache_removed':closed.get('temporary_credential_cache_removed',False)}))

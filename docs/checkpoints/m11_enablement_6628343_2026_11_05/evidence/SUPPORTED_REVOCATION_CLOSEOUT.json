@@ -1,0 +1,74 @@
+{
+  "started_at": "2026-11-05T02:35:24.227774+00:00",
+  "task_use_stopped": true,
+  "task_client_processes_closed": true,
+  "remaining_predelete_backend_was_only_owned_idle_pooler_backend": true,
+  "before": {
+    "data": [
+      {
+        "state": {
+          "roles": [
+            {
+              "name": "cli_login_postgres",
+              "valid_until": "2026-11-05T02:39:08.329157+00:00"
+            }
+          ],
+          "backends": [
+            {
+              "user": "cli_login_postgres",
+              "state": "idle",
+              "application_name": "m11_enablement_6628343_20261105"
+            }
+          ]
+        }
+      }
+    ],
+    "metadata": {
+      "target_ref": "otnhhdxstdnwccehacku",
+      "method": "POST",
+      "path": "/database/query/read-only",
+      "http_status": 201,
+      "started_at": "2026-11-05T02:35:24.227774+00:00",
+      "captured_at": "2026-11-05T02:35:25.994564+00:00",
+      "cf_ray": "a5587705edfb051a-CGK"
+    }
+  },
+  "supported_delete": {
+    "acknowledgement": {
+      "message": "ok"
+    },
+    "metadata": {
+      "target_ref": "otnhhdxstdnwccehacku",
+      "method": "DELETE",
+      "path": "/cli/login-role",
+      "http_status": 200,
+      "started_at": "2026-11-05T02:35:26.032300+00:00",
+      "captured_at": "2026-11-05T02:35:27.727622+00:00",
+      "cf_ray": "a55877113bde4f19-CGK"
+    }
+  },
+  "after": {
+    "data": [
+      {
+        "state": {
+          "roles": [],
+          "backends": []
+        }
+      }
+    ],
+    "metadata": {
+      "target_ref": "otnhhdxstdnwccehacku",
+      "method": "POST",
+      "path": "/database/query/read-only",
+      "http_status": 201,
+      "started_at": "2026-11-05T02:35:27.768147+00:00",
+      "captured_at": "2026-11-05T02:35:30.183007+00:00",
+      "cf_ray": "a558771bea33e77a-CGK"
+    }
+  },
+  "revoked_and_zero_backends": true,
+  "provider_expiry_from_issuance_record": "2026-11-05T02:39:08.329157+00:00",
+  "temporary_credential_cache_removed": true,
+  "replacement_issued": false,
+  "finished_at": "2026-11-05T02:35:30.183530+00:00"
+}

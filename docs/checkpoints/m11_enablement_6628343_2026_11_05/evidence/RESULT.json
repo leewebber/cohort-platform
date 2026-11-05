@@ -1,0 +1,7 @@
+{
+  "status": "STOPPED",
+  "migration_apply_attempted": false,
+  "auth_patch_attempted": false,
+  "failure": "Fresh operator inventory drift",
+  "finished_at": "2026-11-05T02:34:18.547015+00:00"
+}

@@ -1,0 +1,11 @@
+{
+  "before_sha256": "a321c8ea0b9114845383e6c638d9e2e4e977404b0817e6be56905754cd2fa81e",
+  "after_sha256": "a321c8ea0b9114845383e6c638d9e2e4e977404b0817e6be56905754cd2fa81e",
+  "all_equal": true,
+  "older_existing_checkouts": 20,
+  "older_registrations": 25,
+  "tracked_untracked_files": 54537,
+  "ignored_env_temp_files": 21,
+  "older_indices_refs_FETCH_HEAD_and_bounded_backups_preserved": true,
+  "original_untracked_full_review_preserved": true
+}

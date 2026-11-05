@@ -1,5 +1,21 @@
 # Current repository checkpoint
 
+> **M1.1 approved enablement stopped before apply — 2026-11-05:**
+> [Actual attempt, closeout and corrected retry](./m11_enablement_6628343_2026_11_05/HANDOFF.md)
+> record fresh healthy Field Manual ledger130 and exact schema/catalogue/auth baseline.
+> One authorised login issued; a local psql/API JSON-wrapper comparison error stopped
+> before CLI dry-run, migration apply or callback PATCH. Supported DELETE succeeded;
+> zero CLI roles/backends verified 10:35:30 WITA, before native expiry10:39:08.
+> All67 public-table and both auth-table aggregates/schema/authorities remain exact.
+> Corrected exact-type adapter/owned-idle-pooler closeout passes12 focused tests;
+> actual disposable CLI five-file dry-run/apply/verbatim postchecks/empty retry pass,
+> with all30 scoped function and table/column grant checks. Approved migrations,
+> prescriptions, targets and 6628343 source candidate remain unchanged.
+> No replacement login, hosted migration/callback/publication/athlete write.
+> **Next single action: one fresh login authority for the corrected exact retry,
+> with clients closed; five migrations/callback approval remains recorded.**
+> UI acceptance/polish freeze stand; M1.1 and Gate A OPEN.
+
 > **M1.1 genuine Hybrid 10K release candidate — 2026-11-04:**
 > [Candidate, bounded fixes and evidence](./m11_release_candidate_2026_11_04/HANDOFF.md)
 > retain one genuine e676e31 + approved 8be184c wording candidate; all 60 graphs

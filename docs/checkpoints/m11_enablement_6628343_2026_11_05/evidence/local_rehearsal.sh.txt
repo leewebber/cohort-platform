@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+set -euo pipefail
+umask 077
+TASK_RELEASE_OUT=/private/tmp/m11_enablement_6628343_20261105
+source "$PWD/supabase/tests/lib/prepare_disposable_workdir.sh"
+sprint12_assert_no_hosted_intent
+sprint12_prepare_disposable_workdir > "$TASK_RELEASE_OUT/local-prepare.txt"
+python3 - "$SPRINT12_WORKDIR" "$SPRINT12_PROJECT_ID" <<'PY'
+from pathlib import Path
+import json,sys
+out=Path('/private/tmp/m11_enablement_6628343_20261105');work=Path(sys.argv[1]);manifest=json.loads(Path('docs/checkpoints/m11_release_candidate_2026_11_04/MIGRATIONS.json').read_text())
+for item in manifest['migrations']:(work/item['file']).unlink()
+(work/'supabase/migrations/20261026120000_durable_publication_approval_events.sql').unlink()
+p=work/'supabase/migrations/20260701000000_local_test_baseline_prereq.sql';p.write_text(p.read_text()+Path('supabase/tests/sql/backfill_hosted_default_grants_fixture.sql').read_text())
+(out/'LOCAL_INFO.json').write_text(json.dumps({'workdir':str(work),'project_id':sys.argv[2],'container':'supabase_db_'+sys.argv[2],'scope':'DISPOSABLE_LOOPBACK_ONLY_NO_REAL_ACCOUNT_OR_ATHLETE_DATA'})+'\n')
+PY
+supabase start --workdir "$SPRINT12_WORKDIR" --exclude edge-runtime,imgproxy,mailpit,realtime,storage-api,studio,vector --ignore-health-check > "$TASK_RELEASE_OUT/local-start.private.log" 2>&1
+sprint12_assert_local_container "supabase_db_${SPRINT12_PROJECT_ID}" "$SPRINT12_PROJECT_ID"
+supabase status -o json --workdir "$SPRINT12_WORKDIR" > "$TASK_RELEASE_OUT/local-status.private.json" 2>/dev/null
+printf '%s\n' 'DISPOSABLE_130_PRODUCTION_FILE_BASELINE_READY; no hosted credential or write'

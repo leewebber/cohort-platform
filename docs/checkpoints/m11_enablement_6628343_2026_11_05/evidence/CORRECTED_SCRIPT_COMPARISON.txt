@@ -1,0 +1,1 @@
+Corrected one-column psql/API boundary in all operator inventories and protected maps; no double unwrap of catalogue. Added exact-type JSON equality. Retain actual values before any refusal. Owned idle pooler backends can use supported DELETE only when principal, native expiry, label and idle state match. All unrelated checks, endpoints and five migration/callback bytes retained.
