@@ -1,0 +1,9 @@
+{
+  "image": "public.ecr.aws/supabase/supavisor:2.9.7",
+  "id": "sha256:be033cf4746a438fa7bfb6a7e589c9a4c950cc7fafea1ea8ec1a15952aa851e6",
+  "repo_digests": [
+    "public.ecr.aws/supabase/supavisor@sha256:be033cf4746a438fa7bfb6a7e589c9a4c950cc7fafea1ea8ec1a15952aa851e6"
+  ],
+  "anonymous_public_pull": true,
+  "same_existing_engine": true
+}

@@ -1,0 +1,11 @@
+{
+  "classification": "ACTUAL_LOCAL_SUPAVISOR_METADATA_ONLY",
+  "username": "postgres.pooler-dev",
+  "backend_user": "postgres",
+  "auth_query_manager": "pgbouncer",
+  "tenant": "pooler-dev",
+  "pool_mode": "session",
+  "container_session_listener": 5432,
+  "mapped_loopback_port": 49168,
+  "image": "public.ecr.aws/supabase/supavisor:2.9.7"
+}

@@ -1,0 +1,13 @@
+{
+  "checked_at_utc": "2026-11-05T03:52:30.662247+00:00",
+  "operator_package_commit": "f6c108031f4f1484488994c709a4ca9b93e969be",
+  "approved_five_migration_callback_commit": "6628343f004aa48a4a2ad88ca70aa2340b967051",
+  "all_pinned_scripts_source_and_tls_inputs_match": true,
+  "all_126_retained_artifact_evidence_pins_match": true,
+  "fresh_ledger_130_schema_catalogue_auth_and_protected_preflight_matches": true,
+  "retained_local_rehearsal_reused_unchanged": true,
+  "exact_apply_readback_and_revoke_commands_ready": true,
+  "minimum_mutation_readback_reserve_seconds": 90,
+  "current_founder_authority": "One fresh read-write CLI login solely f6c1080 corrected retry; max30minutes/earlier provider expiry, no replacement; exact five previously approved migrations and callback only; no publication/accounts/eligibility/assignments/athlete writes",
+  "no_credential_issued_yet": true
+}

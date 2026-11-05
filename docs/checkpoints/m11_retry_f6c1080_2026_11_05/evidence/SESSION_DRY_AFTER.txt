@@ -1,0 +1,6 @@
+Remote database is up to date.
+Using workdir /private/tmp/m11_retry_f6c1080_20261105/session_rehearsal_v2/local-apply-copy
+DRY RUN: migrations will *not* be pushed to the database.
+Connecting to remote database...
+A new version of Supabase CLI is available: v3.0.0 (currently installed v2.109.1)
+We recommend updating regularly for new features and bug fixes: https://supabase.com/docs/guides/cli/getting-started#updating-the-supabase-cli

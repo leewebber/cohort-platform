@@ -1,0 +1,21 @@
+test_existing_session_entry_remains_exact (enablement_checks_test.CliPoolerSelectionTests.test_existing_session_entry_remains_exact) ... ok
+test_transaction_metadata_selects_same_host_session_listener (enablement_checks_test.CliPoolerSelectionTests.test_transaction_metadata_selects_same_host_session_listener) ... ok
+test_unknown_mode_port_or_cardinality_refuses (enablement_checks_test.CliPoolerSelectionTests.test_unknown_mode_port_or_cardinality_refuses) ... ok
+test_wrong_target_host_database_or_replica_refuses (enablement_checks_test.CliPoolerSelectionTests.test_wrong_target_host_database_or_replica_refuses) ... ok
+test_bad_api_cardinality_refuses (enablement_checks_test.OperatorBoundaryTests.test_bad_api_cardinality_refuses) ... ok
+test_catalogue_and_consumer_drift_still_refuse (enablement_checks_test.OperatorBoundaryTests.test_catalogue_and_consumer_drift_still_refuse) ... ok
+test_catalogue_mapping_is_not_unwrapped_twice (enablement_checks_test.OperatorBoundaryTests.test_catalogue_mapping_is_not_unwrapped_twice) ... ok
+test_every_retained_inventory_preserves_exact_value_across_boundaries (enablement_checks_test.OperatorBoundaryTests.test_every_retained_inventory_preserves_exact_value_across_boundaries) ... ok
+test_foreign_or_active_backend_refuses (enablement_checks_test.OperatorBoundaryTests.test_foreign_or_active_backend_refuses) ... ok
+test_null_empty_boolean_number_and_array_order_remain_distinct (enablement_checks_test.OperatorBoundaryTests.test_null_empty_boolean_number_and_array_order_remain_distinct) ... ok
+test_original_ledger_failure_reproduces_without_target_drift (enablement_checks_test.OperatorBoundaryTests.test_original_ledger_failure_reproduces_without_target_drift) ... ok
+test_other_or_reissued_principal_refuses (enablement_checks_test.OperatorBoundaryTests.test_other_or_reissued_principal_refuses) ... ok
+test_owned_idle_pooler_backend_can_be_revoked (enablement_checks_test.OperatorBoundaryTests.test_owned_idle_pooler_backend_can_be_revoked) ... ok
+test_real_function_body_and_grant_drift_still_refuse (enablement_checks_test.OperatorBoundaryTests.test_real_function_body_and_grant_drift_still_refuse) ... ok
+test_real_ledger_drift_still_refuses (enablement_checks_test.OperatorBoundaryTests.test_real_ledger_drift_still_refuses) ... ok
+test_wrapped_psql_payload_still_refuses (enablement_checks_test.OperatorBoundaryTests.test_wrapped_psql_payload_still_refuses) ... ok
+
+----------------------------------------------------------------------
+Ran 16 tests in 0.025s
+
+OK

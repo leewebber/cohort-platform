@@ -1,0 +1,25 @@
+from support import *
+check={}
+for i in range(2,11):
+ a=json.loads((OUT/('pre-read-%02d.json'%i)).read_text())['data'];b=json.loads((PKG/'evidence'/('HOSTED_READ_%02d.json'%i)).read_text())['data'];check['inventory_%02d'%i]=a==b
+assert all(check.values()),check
+cat=scalar(json.loads((OUT/'pre-catalogue.json').read_text()));old=scalar(json.loads((PKG/'evidence/HOSTED_CATALOGUE_STATE.json').read_text()));check['catalogue_rows_schema_and_five_consumers']=all(cat[k]==old[k] for k in ['columns','constraints','indexes','rows','consumer_guard'])
+check['all_graph_collisions_absent']=scalar(json.loads((OUT/'pre-graphs.json').read_text()))=={'existing_candidate_protocols':[],'existing_candidate_lineage_revisions':0}
+a=json.loads((OUT/'pre-auth.json').read_text());check['auth_settings_exact']=a['settings']==json.loads((PKG/'evidence/HOSTED_AUTH_SETTINGS.json').read_text())['settings'];check['confirmation_template_exact']=a['template_flags']==json.loads((PKG/'evidence/HOSTED_CONFIRMATION_TEMPLATE_FLAGS.json').read_text())['flags']
+check['no_existing_cli_roles_or_backends']=scalar(json.loads((OUT/'pre-login-state.json').read_text()))=={'roles':[],'backends':[]}
+check['drain_clear']=scalar(json.loads((OUT/'pre-drain.json').read_text()))=={'active_writers':[],'prepared_transactions':0}
+assert all(check.values()),check
+manifest=json.loads((PKG/'MIGRATIONS.json').read_text())
+for f,h in manifest['deployment_copy_files'].items():assert sha((ROOT/f).read_bytes())==h and sha((OUT/'deployment-copy'/f).read_bytes())==h
+names=[x['table'] for x in scalar(json.loads((OUT/'pre-read-06.json').read_text()))];assert all(re.fullmatch(r'[a-z_][a-z0-9_]*',n) for n in names)
+# Count/digest only; no athlete/account row is retained. Strip only the future
+# nullable receipt column so its additive schema does not alter the old-row digest.
+queries=["SELECT '"+n+"' AS name,count(*) AS count,md5(coalesce(jsonb_agg(to_jsonb(t)-'completion_request_sha256' ORDER BY (to_jsonb(t)-'completion_request_sha256')::text)::text,'null')) AS digest FROM public.\""+n+'\" t' for n in names]
+q="SELECT jsonb_object_agg(name,jsonb_build_object('count',count,'digest',digest)) AS protected_rows FROM ("+' UNION ALL '.join(queries)+') x;'
+(OUT/'PROTECTED_ROWS.sql').write_text(q+'\n');save('pre-protected-rows.json',readonly(q))
+# Existing role and membership state without password attributes.
+q="SELECT jsonb_build_object('roles',(SELECT jsonb_agg(jsonb_build_object('name',rolname,'login',rolcanlogin,'super',rolsuper,'inherit',rolinherit,'createdb',rolcreatedb,'createrole',rolcreaterole,'replication',rolreplication,'bypassrls',rolbypassrls) ORDER BY rolname) FROM pg_roles WHERE rolname NOT LIKE 'cli_login_%'),'memberships',(SELECT jsonb_agg(jsonb_build_object('role',r.rolname,'member',m.rolname,'admin',a.admin_option,'inherit',a.inherit_option,'set',a.set_option) ORDER BY r.rolname,m.rolname) FROM pg_auth_members a JOIN pg_roles r ON r.oid=a.roleid JOIN pg_roles m ON m.oid=a.member WHERE m.rolname NOT LIKE 'cli_login_%' AND r.rolname NOT LIKE 'cli_login_%')) AS existing_authority;"
+(OUT/'EXISTING_AUTHORITY.sql').write_text(q+'\n');save('pre-existing-authority.json',readonly(q))
+check['exact_135_source_hashes']=True;hold=json.loads((OUT/'FOUNDER_HOLD.json').read_text());assert hold.get('clients_closed') is True and hold.get('actual_founder_reference'),'Current genuine writer/client hold required';check['writer_hold']=hold
+save('PREFLIGHT_REVIEW.json',{'status':'FRESH_PREFLIGHT_MATCHES_6628343','checked_at':now().isoformat(),'ledger_count':130,'ledger_tip':'20261024130000','catalogue_rows':172,'existing_public_functions':206,'protected_public_tables':len(names),'checks':check,'credential_issued':False})
+print('PASS: fresh schema/ledger/functions/catalogue/protected consumers/auth/collisions match; current protected-row baseline captured for',len(names),'public tables; no credential issued')

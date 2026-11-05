@@ -6,7 +6,13 @@ This plan controls delivery priorities. It preserves technical authority contrac
 it does not grant implementation, content, hosted, account or release authority.
 [M0 findings and critical path](../checkpoints/m0_alpha_baseline/HANDOFF.md).
 
-## Current single point — M1.1 corrected enablement retry connection
+## Current single point — M1.1 normal-session enablement retry
+
+[The f6c1080 live attempt](../checkpoints/m11_retry_f6c1080_2026_11_05/HANDOFF.md) passed fresh exact ledger130 preflight and a normal CLI dry-run listing exactly five approved files. Apply then failed on transaction-pooler prepared-statement collision42P05 before any migration. Independent schema/public/auth data and settings remain unchanged; callback absent, ledger130. Supported revoke succeeded and zero CLI roles/backends were verified before native expiry. **Existing clients may reopen; no new source/client activation or installed acceptance follows.**
+
+The wrapper selected6543 instead of the installed CLI's normal same-host session5432 transport. The bounded correction preserves the target, principal/membership, permissions and exact approved five migrations/callback. Sixteen focused tests and an actual disposable Supavisor session-pooler five-file CLI/apply/postcheck/repeated-fresh-client proof pass. [Prepared session retry](../checkpoints/m11_retry_f6c1080_2026_11_05/SESSION_RETRY.md) requires that proof and fresh preflight before any credential. **Next single founder action: one fresh login authority for this normal-session retry, with clients closed for the new window.** Current one-login authority is consumed/revoked; no replacement. M1.1/Gate A stay OPEN; D8 and UI acceptance stand, authoring/polish remain frozen. Publication/access/build/installed acquisition/restart and other Gate A work remain separate.
+
+## Retained f6c1080 corrected-JSON retry — transport failure above
 
 The founder approved the exact five migrations and native callback at 6628343 plus one temporary CLI login. [Actual stopped attempt and closeout](../checkpoints/m11_enablement_6628343_2026_11_05/HANDOFF.md): fresh healthy Field Manual still matches ledger130; a local psql/API JSON boundary error stopped before dry-run/apply/PATCH. No schema/callback/data changed. Supported revocation succeeded and zero CLI roles/backends were independently verified before native expiry. The one-login authority is consumed and closed; no replacement is authorised.
 

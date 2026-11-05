@@ -1,0 +1,17 @@
+{
+  "project": {
+    "id": "otnhhdxstdnwccehacku",
+    "name": "Cohort Field Manual",
+    "region": "eu-west-1",
+    "status": "ACTIVE_HEALTHY"
+  },
+  "metadata": {
+    "target_ref": "otnhhdxstdnwccehacku",
+    "method": "GET",
+    "path": "",
+    "http_status": 200,
+    "started_at": "2026-11-05T04:22:34.692707+00:00",
+    "captured_at": "2026-11-05T04:22:38.105651+00:00",
+    "cf_ray": "a55914177f4ab5ce-CGK"
+  }
+}

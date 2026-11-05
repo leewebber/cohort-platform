@@ -1,0 +1,10 @@
+{
+  "before_manifest_sha256": "7b3581ae5a174fa0f2064c4b60ee5fbef5088f4eec87e5ccee0f6e85eaca5d27",
+  "precommit_manifest_sha256": "7b3581ae5a174fa0f2064c4b60ee5fbef5088f4eec87e5ccee0f6e85eaca5d27",
+  "byte_equal": true,
+  "older_checkouts": 20,
+  "older_registrations": 25,
+  "tracked_untracked_files": 54537,
+  "ignored_env_temp_files": 21,
+  "indices_refs_FETCH_HEAD_and_bounded_backups_preserved": true
+}

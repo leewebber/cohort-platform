@@ -1,0 +1,31 @@
+{
+  "classification": "ACTUAL_DISPOSABLE_SUPAVISOR_SESSION_CLI_REHEARSAL_NOT_HOSTED",
+  "passed": true,
+  "session_pooler": {
+    "classification": "ACTUAL_LOCAL_SUPAVISOR_METADATA_ONLY",
+    "username": "postgres.pooler-dev",
+    "backend_user": "postgres",
+    "auth_query_manager": "pgbouncer",
+    "tenant": "pooler-dev",
+    "pool_mode": "session",
+    "container_session_listener": 5432,
+    "mapped_loopback_port": 49168,
+    "image": "public.ecr.aws/supabase/supavisor:2.9.7"
+  },
+  "ten_retained_hosted_values_through_actual_session_psql": true,
+  "same_prepared_name_across_two_new_psql_clients": true,
+  "exact_five_file_cli_dry_run_and_apply": true,
+  "reviewed_postcheck_sql_executed_verbatim": true,
+  "all_thirty_function_bodies_acls_owners_config_effective_grants_exact": true,
+  "all_new_table_and_column_effective_grants_exact": true,
+  "new_tables_empty_historical_receipts_null": true,
+  "two_fresh_cli_final_dry_runs_empty_without_statement_collision": true,
+  "anchor_repeat_noop": true,
+  "anchor_drift_refused_and_rolled_back": true,
+  "local_final_ledger": {
+    "tip": "20261104120000",
+    "count": 136
+  },
+  "local_only_baseline_ledger_entries": 1,
+  "new_hosted_login_or_mutation": false
+}

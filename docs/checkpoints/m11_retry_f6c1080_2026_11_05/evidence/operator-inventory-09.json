@@ -1,0 +1,300 @@
+{
+  "value": [
+    {
+      "name": "trg_content_graph_manifests_immutable",
+      "table": "content_graph_manifests",
+      "definition": "CREATE TRIGGER trg_content_graph_manifests_immutable BEFORE DELETE OR UPDATE ON public.content_graph_manifests FOR EACH ROW EXECUTE FUNCTION content_graph_prevent_published_mutation()"
+    },
+    {
+      "name": "hyrox_base_evidence_immutable",
+      "table": "hyrox_base_benchmark_revisions",
+      "definition": "CREATE TRIGGER hyrox_base_evidence_immutable BEFORE DELETE OR UPDATE ON public.hyrox_base_benchmark_revisions FOR EACH ROW EXECUTE FUNCTION cohort_base_reject_mutation()"
+    },
+    {
+      "name": "hyrox_base_selection_immutable",
+      "table": "hyrox_base_benchmark_selections",
+      "definition": "CREATE TRIGGER hyrox_base_selection_immutable BEFORE DELETE OR UPDATE ON public.hyrox_base_benchmark_selections FOR EACH ROW EXECUTE FUNCTION cohort_base_reject_mutation()"
+    },
+    {
+      "name": "hyrox_dependency_immutable",
+      "table": "hyrox_prescription_dependencies",
+      "definition": "CREATE TRIGGER hyrox_dependency_immutable BEFORE DELETE OR UPDATE ON public.hyrox_prescription_dependencies FOR EACH ROW EXECUTE FUNCTION cohort_tracking_artifact_immutable()"
+    },
+    {
+      "name": "performance_result_corrections_append_only",
+      "table": "performance_result_corrections",
+      "definition": "CREATE TRIGGER performance_result_corrections_append_only BEFORE DELETE OR UPDATE ON public.performance_result_corrections FOR EACH ROW EXECUTE FUNCTION cohort_guard_performance_result_corrections()"
+    },
+    {
+      "name": "profiles_set_updated_at",
+      "table": "profiles",
+      "definition": "CREATE TRIGGER profiles_set_updated_at BEFORE UPDATE ON public.profiles FOR EACH ROW EXECUTE FUNCTION cohort_set_updated_at()"
+    },
+    {
+      "name": "programme_assignments_protect_materialisation",
+      "table": "programme_assignments",
+      "definition": "CREATE TRIGGER programme_assignments_protect_materialisation BEFORE UPDATE ON public.programme_assignments FOR EACH ROW EXECUTE FUNCTION cohort_programme_assignment_protect_materialisation()"
+    },
+    {
+      "name": "programme_assignments_protect_schedule_revision",
+      "table": "programme_assignments",
+      "definition": "CREATE TRIGGER programme_assignments_protect_schedule_revision BEFORE UPDATE ON public.programme_assignments FOR EACH ROW EXECUTE FUNCTION cohort_programme_assignment_protect_schedule_revision()"
+    },
+    {
+      "name": "programme_assignments_set_updated_at",
+      "table": "programme_assignments",
+      "definition": "CREATE TRIGGER programme_assignments_set_updated_at BEFORE UPDATE ON public.programme_assignments FOR EACH ROW EXECUTE FUNCTION cohort_set_updated_at()"
+    },
+    {
+      "name": "trg_content_graph_assignment_pin_immutable",
+      "table": "programme_assignments",
+      "definition": "CREATE TRIGGER trg_content_graph_assignment_pin_immutable BEFORE UPDATE ON public.programme_assignments FOR EACH ROW EXECUTE FUNCTION content_graph_prevent_assignment_repin()"
+    },
+    {
+      "name": "programme_lineages_set_updated_at",
+      "table": "programme_lineages",
+      "definition": "CREATE TRIGGER programme_lineages_set_updated_at BEFORE UPDATE ON public.programme_lineages FOR EACH ROW EXECUTE FUNCTION cohort_set_updated_at()"
+    },
+    {
+      "name": "duration_choice_immutable",
+      "table": "programme_occurrence_duration_choices",
+      "definition": "CREATE TRIGGER duration_choice_immutable BEFORE DELETE OR UPDATE ON public.programme_occurrence_duration_choices FOR EACH ROW EXECUTE FUNCTION cohort_tracking_artifact_immutable()"
+    },
+    {
+      "name": "programme_occurrence_running_target_snapshot_immutable",
+      "table": "programme_occurrence_running_target_snapshots",
+      "definition": "CREATE TRIGGER programme_occurrence_running_target_snapshot_immutable BEFORE DELETE OR UPDATE ON public.programme_occurrence_running_target_snapshots FOR EACH ROW EXECUTE FUNCTION cohort_reject_running_target_snapshot_mutation()"
+    },
+    {
+      "name": "v3_immutable",
+      "table": "programme_occurrence_v3_prescription_snapshots",
+      "definition": "CREATE TRIGGER v3_immutable BEFORE DELETE OR UPDATE ON public.programme_occurrence_v3_prescription_snapshots FOR EACH ROW EXECUTE FUNCTION cohort_tracking_artifact_immutable()"
+    },
+    {
+      "name": "tracking_artifact_immutable",
+      "table": "programme_publication_artifacts",
+      "definition": "CREATE TRIGGER tracking_artifact_immutable BEFORE DELETE OR UPDATE ON public.programme_publication_artifacts FOR EACH ROW EXECUTE FUNCTION cohort_tracking_artifact_immutable()"
+    },
+    {
+      "name": "programme_schedule_occurrences_preserve_original_date",
+      "table": "programme_schedule_occurrences",
+      "definition": "CREATE TRIGGER programme_schedule_occurrences_preserve_original_date BEFORE INSERT OR UPDATE ON public.programme_schedule_occurrences FOR EACH ROW EXECUTE FUNCTION cohort_preserve_occurrence_original_date()"
+    },
+    {
+      "name": "programme_schedule_occurrences_rpc_only",
+      "table": "programme_schedule_occurrences",
+      "definition": "CREATE TRIGGER programme_schedule_occurrences_rpc_only BEFORE INSERT OR DELETE OR UPDATE ON public.programme_schedule_occurrences FOR EACH ROW EXECUTE FUNCTION cohort_programme_schedule_require_rpc_write()"
+    },
+    {
+      "name": "programme_schedule_operations_rpc_only",
+      "table": "programme_schedule_operations",
+      "definition": "CREATE TRIGGER programme_schedule_operations_rpc_only BEFORE INSERT OR DELETE OR UPDATE ON public.programme_schedule_operations FOR EACH ROW EXECUTE FUNCTION cohort_programme_schedule_require_rpc_write()"
+    },
+    {
+      "name": "programme_schedule_projections_rpc_only",
+      "table": "programme_schedule_projections",
+      "definition": "CREATE TRIGGER programme_schedule_projections_rpc_only BEFORE INSERT OR DELETE OR UPDATE ON public.programme_schedule_projections FOR EACH ROW EXECUTE FUNCTION cohort_programme_schedule_require_rpc_write()"
+    },
+    {
+      "name": "programme_slot_outcomes_set_updated_at",
+      "table": "programme_slot_outcomes",
+      "definition": "CREATE TRIGGER programme_slot_outcomes_set_updated_at BEFORE UPDATE ON public.programme_slot_outcomes FOR EACH ROW EXECUTE FUNCTION cohort_set_updated_at()"
+    },
+    {
+      "name": "v3_immutable",
+      "table": "programme_v3_prescription_consents",
+      "definition": "CREATE TRIGGER v3_immutable BEFORE DELETE OR UPDATE ON public.programme_v3_prescription_consents FOR EACH ROW EXECUTE FUNCTION cohort_tracking_artifact_immutable()"
+    },
+    {
+      "name": "v3_immutable",
+      "table": "programme_v3_prescription_reviews",
+      "definition": "CREATE TRIGGER v3_immutable BEFORE DELETE OR UPDATE ON public.programme_v3_prescription_reviews FOR EACH ROW EXECUTE FUNCTION cohort_tracking_artifact_immutable()"
+    },
+    {
+      "name": "v3_artifact_immutable",
+      "table": "programme_v3_publication_artifacts",
+      "definition": "CREATE TRIGGER v3_artifact_immutable BEFORE DELETE OR UPDATE ON public.programme_v3_publication_artifacts FOR EACH ROW EXECUTE FUNCTION cohort_tracking_artifact_immutable()"
+    },
+    {
+      "name": "programme_version_adaptation_permissions_immutability",
+      "table": "programme_version_adaptation_permissions",
+      "definition": "CREATE TRIGGER programme_version_adaptation_permissions_immutability BEFORE INSERT OR DELETE OR UPDATE ON public.programme_version_adaptation_permissions FOR EACH ROW EXECUTE FUNCTION cohort_reject_published_programme_content_mutation()"
+    },
+    {
+      "name": "programme_version_assessments_immutability",
+      "table": "programme_version_assessments",
+      "definition": "CREATE TRIGGER programme_version_assessments_immutability BEFORE INSERT OR DELETE OR UPDATE ON public.programme_version_assessments FOR EACH ROW EXECUTE FUNCTION cohort_reject_published_programme_content_mutation()"
+    },
+    {
+      "name": "programme_version_comparison_identities_immutability",
+      "table": "programme_version_comparison_identities",
+      "definition": "CREATE TRIGGER programme_version_comparison_identities_immutability BEFORE INSERT OR DELETE OR UPDATE ON public.programme_version_comparison_identities FOR EACH ROW EXECUTE FUNCTION cohort_reject_published_programme_content_mutation()"
+    },
+    {
+      "name": "programme_version_days_immutability",
+      "table": "programme_version_days",
+      "definition": "CREATE TRIGGER programme_version_days_immutability BEFORE INSERT OR DELETE OR UPDATE ON public.programme_version_days FOR EACH ROW EXECUTE FUNCTION cohort_reject_published_programme_content_mutation()"
+    },
+    {
+      "name": "programme_version_evidence_requirements_immutability",
+      "table": "programme_version_evidence_requirements",
+      "definition": "CREATE TRIGGER programme_version_evidence_requirements_immutability BEFORE INSERT OR DELETE OR UPDATE ON public.programme_version_evidence_requirements FOR EACH ROW EXECUTE FUNCTION cohort_reject_published_programme_content_mutation()"
+    },
+    {
+      "name": "programme_version_phases_immutability",
+      "table": "programme_version_phases",
+      "definition": "CREATE TRIGGER programme_version_phases_immutability BEFORE INSERT OR DELETE OR UPDATE ON public.programme_version_phases FOR EACH ROW EXECUTE FUNCTION cohort_reject_published_programme_content_mutation()"
+    },
+    {
+      "name": "programme_version_protected_invariants_immutability",
+      "table": "programme_version_protected_invariants",
+      "definition": "CREATE TRIGGER programme_version_protected_invariants_immutability BEFORE INSERT OR DELETE OR UPDATE ON public.programme_version_protected_invariants FOR EACH ROW EXECUTE FUNCTION cohort_reject_published_programme_content_mutation()"
+    },
+    {
+      "name": "plan_package_v2_slot_insert",
+      "table": "programme_version_session_slots",
+      "definition": "CREATE TRIGGER plan_package_v2_slot_insert BEFORE INSERT ON public.programme_version_session_slots FOR EACH ROW EXECUTE FUNCTION cohort_plan_package_v2_slot_insert()"
+    },
+    {
+      "name": "programme_version_session_slots_immutability",
+      "table": "programme_version_session_slots",
+      "definition": "CREATE TRIGGER programme_version_session_slots_immutability BEFORE INSERT OR DELETE OR UPDATE ON public.programme_version_session_slots FOR EACH ROW EXECUTE FUNCTION cohort_reject_published_programme_content_mutation()"
+    },
+    {
+      "name": "running_execution_mapping_scope",
+      "table": "programme_version_session_slots",
+      "definition": "CREATE TRIGGER running_execution_mapping_scope BEFORE INSERT OR UPDATE OF authored_running_v1, protocol_id ON public.programme_version_session_slots FOR EACH ROW EXECUTE FUNCTION cohort_validate_running_execution_mapping_scope()"
+    },
+    {
+      "name": "programme_version_weeks_immutability",
+      "table": "programme_version_weeks",
+      "definition": "CREATE TRIGGER programme_version_weeks_immutability BEFORE INSERT OR DELETE OR UPDATE ON public.programme_version_weeks FOR EACH ROW EXECUTE FUNCTION cohort_reject_published_programme_content_mutation()"
+    },
+    {
+      "name": "plan_package_v2_version_insert",
+      "table": "programme_versions",
+      "definition": "CREATE TRIGGER plan_package_v2_version_insert BEFORE INSERT ON public.programme_versions FOR EACH ROW EXECUTE FUNCTION cohort_plan_package_v2_version_insert()"
+    },
+    {
+      "name": "programme_versions_immutability",
+      "table": "programme_versions",
+      "definition": "CREATE TRIGGER programme_versions_immutability BEFORE DELETE OR UPDATE ON public.programme_versions FOR EACH ROW EXECUTE FUNCTION cohort_reject_published_programme_content_mutation()"
+    },
+    {
+      "name": "programme_versions_set_updated_at",
+      "table": "programme_versions",
+      "definition": "CREATE TRIGGER programme_versions_set_updated_at BEFORE UPDATE ON public.programme_versions FOR EACH ROW EXECUTE FUNCTION cohort_set_updated_at()"
+    },
+    {
+      "name": "zz_reject_unresolved_package_version",
+      "table": "programme_versions",
+      "definition": "CREATE TRIGGER zz_reject_unresolved_package_version BEFORE INSERT OR UPDATE OF package_schema_version ON public.programme_versions FOR EACH ROW EXECUTE FUNCTION cohort_reject_unresolved_package_version()"
+    },
+    {
+      "name": "published_exercise_definition_immutable",
+      "table": "published_exercise_definition_versions",
+      "definition": "CREATE TRIGGER published_exercise_definition_immutable BEFORE DELETE OR UPDATE ON public.published_exercise_definition_versions FOR EACH ROW EXECUTE FUNCTION cohort_tracking_artifact_immutable()"
+    },
+    {
+      "name": "published_exercise_retirement_immutable",
+      "table": "published_exercise_version_retirements",
+      "definition": "CREATE TRIGGER published_exercise_retirement_immutable BEFORE DELETE OR UPDATE ON public.published_exercise_version_retirements FOR EACH ROW EXECUTE FUNCTION cohort_tracking_artifact_immutable()"
+    },
+    {
+      "name": "trg_publisher_athlete_invitations_updated",
+      "table": "publisher_athlete_invitations",
+      "definition": "CREATE TRIGGER trg_publisher_athlete_invitations_updated BEFORE UPDATE ON public.publisher_athlete_invitations FOR EACH ROW EXECUTE FUNCTION publisher_athlete_set_updated_at()"
+    },
+    {
+      "name": "trg_publisher_athlete_membership_events_immutable",
+      "table": "publisher_athlete_membership_events",
+      "definition": "CREATE TRIGGER trg_publisher_athlete_membership_events_immutable BEFORE DELETE OR UPDATE ON public.publisher_athlete_membership_events FOR EACH ROW EXECUTE FUNCTION publisher_athlete_prevent_event_mutation()"
+    },
+    {
+      "name": "trg_publisher_athlete_memberships_updated",
+      "table": "publisher_athlete_memberships",
+      "definition": "CREATE TRIGGER trg_publisher_athlete_memberships_updated BEFORE UPDATE ON public.publisher_athlete_memberships FOR EACH ROW EXECUTE FUNCTION publisher_athlete_set_updated_at()"
+    },
+    {
+      "name": "running_5k_benchmark_evidence_append_only",
+      "table": "running_5k_benchmark_evidence",
+      "definition": "CREATE TRIGGER running_5k_benchmark_evidence_append_only BEFORE DELETE OR UPDATE ON public.running_5k_benchmark_evidence FOR EACH ROW EXECUTE FUNCTION cohort_reject_running_5k_evidence_mutation()"
+    },
+    {
+      "name": "running_5k_benchmark_revisions_append_only",
+      "table": "running_5k_benchmark_evidence_revisions",
+      "definition": "CREATE TRIGGER running_5k_benchmark_revisions_append_only BEFORE DELETE OR UPDATE ON public.running_5k_benchmark_evidence_revisions FOR EACH ROW EXECUTE FUNCTION cohort_reject_running_5k_evidence_mutation()"
+    },
+    {
+      "name": "b3_running_result_authority",
+      "table": "training_block_results",
+      "definition": "CREATE TRIGGER b3_running_result_authority BEFORE UPDATE OF block_snapshot, result_data ON public.training_block_results FOR EACH ROW EXECUTE FUNCTION cohort_guard_b3_running_result_authority()"
+    },
+    {
+      "name": "guard_direct_result_write_v1",
+      "table": "training_block_results",
+      "definition": "CREATE TRIGGER guard_direct_result_write_v1 BEFORE INSERT OR UPDATE ON public.training_block_results FOR EACH ROW EXECUTE FUNCTION cohort_guard_direct_result_write_v1()"
+    },
+    {
+      "name": "guard_result_identity_v1",
+      "table": "training_block_results",
+      "definition": "CREATE TRIGGER guard_result_identity_v1 BEFORE INSERT OR UPDATE ON public.training_block_results FOR EACH ROW EXECUTE FUNCTION cohort_guard_result_identity_v1()"
+    },
+    {
+      "name": "guard_v3_block_actuals",
+      "table": "training_block_results",
+      "definition": "CREATE TRIGGER guard_v3_block_actuals BEFORE INSERT OR UPDATE ON public.training_block_results FOR EACH ROW EXECUTE FUNCTION cohort_v3_block_actuals_guard()"
+    },
+    {
+      "name": "guard_direct_result_write_v1",
+      "table": "training_exercise_results",
+      "definition": "CREATE TRIGGER guard_direct_result_write_v1 BEFORE INSERT OR UPDATE ON public.training_exercise_results FOR EACH ROW EXECUTE FUNCTION cohort_guard_direct_result_write_v1()"
+    },
+    {
+      "name": "guard_result_identity_v1",
+      "table": "training_exercise_results",
+      "definition": "CREATE TRIGGER guard_result_identity_v1 BEFORE INSERT OR UPDATE ON public.training_exercise_results FOR EACH ROW EXECUTE FUNCTION cohort_guard_result_identity_v1()"
+    },
+    {
+      "name": "freeze_b3_running_completion_history",
+      "table": "training_session_records",
+      "definition": "CREATE TRIGGER freeze_b3_running_completion_history AFTER INSERT OR UPDATE OF status ON public.training_session_records FOR EACH ROW WHEN ((new.status = ANY (ARRAY['completed'::text, 'partially_completed'::text]))) EXECUTE FUNCTION cohort_freeze_b3_running_completion_history()"
+    },
+    {
+      "name": "guard_completion_record_identity_v1",
+      "table": "training_session_records",
+      "definition": "CREATE TRIGGER guard_completion_record_identity_v1 BEFORE INSERT OR UPDATE OF record_id, athlete_id, training_session_id, programme_id, assignment_id, programme_session_id, source_protocol_id, status ON public.training_session_records FOR EACH ROW EXECUTE FUNCTION cohort_guard_completion_record_identity_v1()"
+    },
+    {
+      "name": "guard_duration_record_prescription",
+      "table": "training_session_records",
+      "definition": "CREATE TRIGGER guard_duration_record_prescription BEFORE INSERT OR UPDATE ON public.training_session_records FOR EACH ROW EXECUTE FUNCTION cohort_duration_record_prescription_guard()"
+    },
+    {
+      "name": "guard_v3_record_prescription",
+      "table": "training_session_records",
+      "definition": "CREATE TRIGGER guard_v3_record_prescription BEFORE INSERT OR UPDATE ON public.training_session_records FOR EACH ROW EXECUTE FUNCTION cohort_v3_record_prescription_guard()"
+    },
+    {
+      "name": "trg_sync_training_session_from_terminal_record",
+      "table": "training_session_records",
+      "definition": "CREATE TRIGGER trg_sync_training_session_from_terminal_record AFTER INSERT OR UPDATE OF status ON public.training_session_records FOR EACH ROW EXECUTE FUNCTION cohort_sync_training_session_from_terminal_record()"
+    },
+    {
+      "name": "guard_direct_result_write_v1",
+      "table": "training_set_results",
+      "definition": "CREATE TRIGGER guard_direct_result_write_v1 BEFORE INSERT OR UPDATE ON public.training_set_results FOR EACH ROW EXECUTE FUNCTION cohort_guard_direct_result_write_v1()"
+    },
+    {
+      "name": "guard_result_identity_v1",
+      "table": "training_set_results",
+      "definition": "CREATE TRIGGER guard_result_identity_v1 BEFORE INSERT OR UPDATE ON public.training_set_results FOR EACH ROW EXECUTE FUNCTION cohort_guard_result_identity_v1()"
+    },
+    {
+      "name": "training_set_results_interval_ordinal",
+      "table": "training_set_results",
+      "definition": "CREATE TRIGGER training_set_results_interval_ordinal BEFORE INSERT OR UPDATE ON public.training_set_results FOR EACH ROW EXECUTE FUNCTION cohort_guard_interval_set_ordinal()"
+    }
+  ],
+  "matches_independent_read": true
+}

@@ -48,3 +48,29 @@ def require_owned_login_for_revocation(state, application_name, provider_expiry)
         or b.get('state') != 'idle' for b in backends
     ):
         raise ValueError('Unexpected active or foreign CLI backend')
+
+
+def cli_session_pooler(rows, target_ref):
+    """Use the installed CLI's normal 5432 shared-session listener.
+
+    Management reports a default transaction entry on 6543. Supabase's CLI ix()
+    normalises that same verified host to mmT=5432 for session semantics; copying
+    db_port directly into an explicit CLI URL incorrectly bypasses that step.
+    This selects no new principal, tenant, host, capability or provider setting.
+    """
+    if not isinstance(rows, list) or len(rows) != 1:
+        raise ValueError('Expected one verified primary pooler entry')
+    row = rows[0]
+    if (target_ref != 'otnhhdxstdnwccehacku'
+            or row.get('identifier') != target_ref
+            or row.get('database_type') != 'PRIMARY'
+            or row.get('db_name') != 'postgres'
+            or row.get('db_host') != 'aws-0-eu-west-1.pooler.supabase.com'):
+        raise ValueError('Unexpected pooler target or hostname')
+    if (row.get('pool_mode'), row.get('db_port')) not in {
+        ('transaction', 6543), ('session', 5432)
+    }:
+        raise ValueError('Unexpected pooler mode/port pair')
+    return {'db_host': row['db_host'], 'db_port': 5432, 'db_name': 'postgres',
+            'pool_mode': 'session', 'identifier': target_ref,
+            'selection': 'Installed CLI ix() / mmT=5432 normal shared-session route'}

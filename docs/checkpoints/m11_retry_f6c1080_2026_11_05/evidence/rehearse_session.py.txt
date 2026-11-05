@@ -1,0 +1,49 @@
+from pathlib import Path
+import json,subprocess,os,re,urllib.parse,shutil,hashlib,sys
+ROOT=Path.cwd();OUT=Path('/private/tmp/m11_retry_f6c1080_20261105/session_rehearsal_v2');PKG=ROOT/'docs/checkpoints/m11_release_candidate_2026_11_04';LOCAL=OUT/'local-evidence';LOCAL.mkdir()
+sys.path.insert(0,str(ROOT/'tool/programmes/hybrid_10k'));from enablement_checks import api_json_value,psql_matches_api,exact_json
+info=json.loads((OUT/'LOCAL_INFO.json').read_text());status=json.loads((OUT/'local-status.private.json').read_text());u=urllib.parse.urlparse(status['DB_URL']);fixture=json.loads((OUT/'POOLER_FIXTURE.json').read_text());mode=json.loads((OUT/'LOCAL_POOLER_MODE.json').read_text());assert u.hostname=='127.0.0.1' and fixture['pool_mode']=='session' and fixture['container_session_listener']==5432 and fixture['mapped_loopback_port']==mode['port'] and info['container'].startswith('supabase_db_s12g')
+env={k:v for k,v in os.environ.items() if not k.startswith(('SUPABASE_','PG')) and k not in ['DB_URL','DATABASE_URL']};env.update({'SUPABASE_HOME':str(OUT/'local-cli-home'),'PGHOST':u.hostname,'PGPORT':str(fixture['mapped_loopback_port']),'PGDATABASE':'postgres','PGUSER':fixture['username'],'PGPASSWORD':urllib.parse.unquote(u.password),'PGSSLMODE':'disable'})
+def psql(q):
+ r=subprocess.run(['/opt/homebrew/opt/libpq/bin/psql','-X','-qAt','-v','ON_ERROR_STOP=1'],input=q.encode(),env=env,stdout=subprocess.PIPE,stderr=subprocess.PIPE,timeout=35)
+ assert r.returncode==0,'Local SQL refused: '+r.stderr.decode()[:1500]
+ return r.stdout.decode()
+def save(n,x): (LOCAL/n).write_text(json.dumps(x,indent=2)+'\n')
+for _ in range(2):
+ assert psql('PREPARE m11_session_fixture AS SELECT 1; EXECUTE m11_session_fixture;').strip()=='1'
+statements=[s.strip() for s in (PKG/'PREFLIGHT.sql').read_text().split(';') if s.strip().startswith('SELECT ')];assert len(statements)==10
+pre=[]
+for i,s in enumerate(statements,1):
+ raw=psql(s+';');value=json.loads(raw);response={'data':[{'value':value}]};assert psql_matches_api(raw,response);pre.append(value)
+ # Genuine retained JSON values through an actual psql SELECT, no table write.
+ response=json.loads((PKG/'evidence'/('HOSTED_READ_%02d.json'%i)).read_text());literal=json.dumps(api_json_value(response));assert '$exact_boundary$' not in literal
+ raw=psql("SELECT $exact_boundary$"+literal+"$exact_boundary$::jsonb;");assert psql_matches_api(raw,response)
+save('BOUNDARY.json',{'classification':'DISPOSABLE_LOCAL_PSQL_WITH_RETAINED_HOSTED_JSON_VALUES','all_ten_actual_psql_boundaries_pass':True,'original_ledger_wrapper_comparison_fails':pre[1]!={'value':pre[1]},'no_target_rule_weakened':True})
+copy=OUT/'local-apply-copy';subprocess.run(['python3','tool/programmes/hybrid_10k/prepare_deployment_copy.py','--out',str(copy)],check=True,stdout=subprocess.PIPE)
+# LOCAL ONLY: mirror the disposable fixture ledger entry; never in hosted copy.
+baseline=Path(info['workdir'])/'supabase/migrations/20260701000000_local_test_baseline_prereq.sql';shutil.copyfile(baseline,copy/'supabase/migrations'/baseline.name)
+dsn='postgresql://'+urllib.parse.quote(fixture['username'],safe='')+'@127.0.0.1:'+str(fixture['mapped_loopback_port'])+'/postgres?sslmode=disable'
+expected=[Path(x['file']).name for x in json.loads((PKG/'MIGRATIONS.json').read_text())['migrations']]
+def cli(name,flags):
+ r=subprocess.run(['/opt/homebrew/bin/supabase','db','push','--db-url',dsn,'--workdir',str(copy)]+flags,env=env,stdout=subprocess.PIPE,stderr=subprocess.PIPE,timeout=90)
+ text=(r.stdout+r.stderr).decode(errors='replace');text=re.sub(r'postgres(?:ql)?://[^\s\"\']+','[LOCAL CONNECTION REDACTED]',text)
+ (LOCAL/(name+'.txt')).write_text(text);names=list(dict.fromkeys(re.findall(r'\b(20\d{12}_[A-Za-z0-9_]+\.sql)\b',text)));assert r.returncode==0,'Local CLI refused; inspect non-secret local transcript';return names,text
+names,_=cli('DRY_BEFORE',['--dry-run']);assert names==expected,names
+names,_=cli('APPLY',['--yes']);assert names==expected,names
+raw=psql((PKG/'POSTCHECK.sql').read_text());(LOCAL/'POSTCHECK.txt').write_text(raw)
+post=[json.loads(psql(s+';')) for s in statements];save('POST_INVENTORY.json',post)
+scoped=json.loads(psql((OUT/'SCOPED_FUNCTIONS.sql').read_text()));assert exact_json(scoped,json.loads((PKG/'POSTCHECK_EXPECTED_FUNCTIONS.json').read_text())['functions'])
+privileged={'athlete_running_zone2_inputs','programme_occurrence_zone2_targets','athlete_running_quality_inputs'}
+for kind in ['TABLE','COLUMN']:
+ rows=json.loads(psql((OUT/(kind+'_PRIVILEGES.sql')).read_text()));assert all(x['allowed']==(x['role']=='authenticated' and x['table'] in privileged and x['privilege']=='SELECT') for x in rows)
+empty=json.loads(raw.splitlines()[2]);assert all(v==0 for v in empty.values())
+names,text=cli('DRY_AFTER',['--dry-run']);assert not names and 'up to date' in text.lower()
+# Repeated and drifted guarded anchor application in a local rollback transaction.
+anchor=ROOT/'supabase/migrations/20261104120000_private_alpha_explicit_start_anchor.sql';psql(anchor.read_text())
+body=psql("SELECT pg_get_functiondef('public.materialise_athlete_plan_from_enrolment(uuid,text)'::regprocedure);");assert '-- M11_PRIVATE_ALPHA_EXPLICIT_START_ANCHOR_V1' in body
+wrong=body.replace('-- M11_PRIVATE_ALPHA_EXPLICIT_START_ANCHOR_V1','-- LOCAL_NEGATIVE_DRIFT');guard=re.sub(r'(?m)^BEGIN;\n|^COMMIT;\n?','',anchor.read_text())
+r=subprocess.run(['/opt/homebrew/opt/libpq/bin/psql','-X','-qAt','-v','ON_ERROR_STOP=1'],input=('BEGIN;\n'+wrong+'\n;\n'+guard).encode(),env=env,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+assert r.returncode!=0 and b'private_alpha_start_anchor_unexpected_materialiser' in r.stderr
+assert psql("SELECT pg_get_functiondef('public.materialise_athlete_plan_from_enrolment(uuid,text)'::regprocedure);")==body
+save('RESULT.json',{'classification':'DISPOSABLE_LOCAL_SUPAVISOR_SESSION_CLI_REHEARSAL_NOT_HOSTED_RESULT','passed':True,'session_pooler':fixture,'same_prepared_name_across_two_new_clients':True,'ten_genuine_retained_values_through_actual_psql':True,'exact_five_file_dry_run':True,'exact_five_file_apply':True,'reviewed_postcheck_sql_executed_verbatim':True,'all_30_scoped_functions_and_effective_grants_exact':True,'table_and_column_effective_privileges_exact':True,'five_new_tables_empty_and_receipts_null':True,'final_dry_run_empty':True,'anchor_repeat_noop':True,'unexpected_anchor_body_drift_refused_and_rolled_back':True,'local_before_ledger':len(pre[1]),'local_after_ledger':len(post[1]),'local_only_baseline_ledger_entries':1,'no_hosted_login_or_mutation':True})
+print('PASS: actual local Supavisor session-pooler psql adapter + exact five-file CLI dry-run/apply/postchecks/empty retry; all30 function and table/column permission checks; repeat/conflict rollback')

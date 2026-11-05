@@ -1,0 +1,13 @@
+{
+  "counts": {
+    "GET ": 3,
+    "GET /health": 4,
+    "POST /database/query/read-only": 37,
+    "GET /config/auth": 2,
+    "GET /config/database/pooler": 1,
+    "POST /cli/login-role": 1,
+    "DELETE /cli/login-role": 1
+  },
+  "one_issuance_one_delete_no_callback_patch": true,
+  "no_new_login_after_closeout": true
+}

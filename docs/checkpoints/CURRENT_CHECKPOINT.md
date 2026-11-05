@@ -1,5 +1,20 @@
 # Current repository checkpoint
 
+> **M1.1 f6c1080 retry — exact preview, transport failure, revoked (2026-11-05):**
+> [Actual result and session correction](./m11_retry_f6c1080_2026_11_05/HANDOFF.md)
+> record healthy exact ledger130 preflight and an exit0 dry-run listing exactly
+> the approved five files. Apply failed before any migration with transaction-pooler
+> prepared-statement collision42P05. Independent old schema/data/auth checks match;
+> ledger stays130, callback absent. Supported revoke succeeded, zero CLI roles/backends
+> verified11:53:41 WITA, before provider expiry11:57:37. Existing clients may reopen.
+> Offline wrapper correction restores the installed CLI normal same-host session5432
+> route; no identity, permission, migration, callback or prescription change. Sixteen
+> focused tests and actual Supavisor session five-file CLI/apply/postcheck/two-empty-
+> retry proof pass; same prepared name works across fresh clients. Local resources
+> and temporary material removed. No replacement, hosted migrations or athlete writes.
+> **Next: one separately authorised fresh login for the normal-session retry, with
+> a new client hold.** UI acceptance/polish freeze stand; M1.1/Gate A OPEN.
+
 > **M1.1 approved enablement stopped before apply — 2026-11-05:**
 > [Actual attempt, closeout and corrected retry](./m11_enablement_6628343_2026_11_05/HANDOFF.md)
 > record fresh healthy Field Manual ledger130 and exact schema/catalogue/auth baseline.

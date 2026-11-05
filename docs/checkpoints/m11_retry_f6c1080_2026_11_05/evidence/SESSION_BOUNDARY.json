@@ -1,0 +1,6 @@
+{
+  "classification": "DISPOSABLE_LOCAL_PSQL_WITH_RETAINED_HOSTED_JSON_VALUES",
+  "all_ten_actual_psql_boundaries_pass": true,
+  "original_ledger_wrapper_comparison_fails": true,
+  "no_target_rule_weakened": true
+}

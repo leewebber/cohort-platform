@@ -1,0 +1,21 @@
+from support import *
+q="SELECT jsonb_agg(jsonb_build_object('name',t,'select_allowed',has_table_privilege(current_user,t,'SELECT')) ORDER BY t) AS auth_guard_access FROM unnest(ARRAY['auth.users','auth.identities']) t;"
+a=readonly(q);save('auth-guard-access.json',a)
+if all(x['select_allowed'] for x in scalar(a)):
+ q="SELECT jsonb_object_agg(name,jsonb_build_object('count',count,'digest',digest)) AS protected_auth FROM (SELECT 'auth.users' AS name,count(*) AS count,md5(coalesce(jsonb_agg(to_jsonb(t) ORDER BY to_jsonb(t)::text)::text,'null')) AS digest FROM auth.users t UNION ALL SELECT 'auth.identities',count(*),md5(coalesce(jsonb_agg(to_jsonb(t) ORDER BY to_jsonb(t)::text)::text,'null')) FROM auth.identities t) x;"
+ (OUT/'AUTH_ROWS.sql').write_text(q+'\n');save('pre-auth-rows.json',readonly(q))
+# Extra read-only postchecks prepared in advance; no RPC or athlete-data write.
+expected=json.loads((PKG/'POSTCHECK_EXPECTED_FUNCTIONS.json').read_text())['functions'];names=[e['signature'].replace("'","''") for e in expected]
+q="SELECT jsonb_agg(jsonb_build_object('signature',p.oid::regprocedure::text,'body_sha256',encode(extensions.digest(convert_to(p.prosrc,'UTF8'),'sha256'),'hex'),'owner',pg_get_userbyid(p.proowner),'security_definer',p.prosecdef,'config',p.proconfig,'acl',p.proacl,'authenticated_execute',has_function_privilege('authenticated',p.oid,'EXECUTE'),'anon_execute',has_function_privilege('anon',p.oid,'EXECUTE'),'service_execute',has_function_privilege('service_role',p.oid,'EXECUTE')) ORDER BY p.oid::regprocedure::text) AS functions FROM pg_proc p WHERE p.oid::regprocedure::text=ANY(ARRAY["+','.join("'"+n+"'" for n in names)+"]);"
+(OUT/'SCOPED_FUNCTIONS.sql').write_text(q+'\n')
+newtables=['athlete_training_setup','private_programme_alpha_eligibility','athlete_running_zone2_inputs','programme_occurrence_zone2_targets','athlete_running_quality_inputs'];tables=','.join("'"+t+"'" for t in newtables)
+q="SELECT jsonb_agg(jsonb_build_object('table',t,'role',r,'privilege',v,'allowed',has_table_privilege(r,'public.'||t,v)) ORDER BY t,r,v) AS table_privileges FROM unnest(ARRAY["+tables+"]) t CROSS JOIN unnest(ARRAY['anon','authenticated','service_role','cohort_exercise_version_publisher']) r CROSS JOIN unnest(ARRAY['SELECT','INSERT','UPDATE','DELETE','TRUNCATE','REFERENCES','TRIGGER','MAINTAIN']) v;"
+(OUT/'TABLE_PRIVILEGES.sql').write_text(q+'\n')
+q="SELECT jsonb_agg(jsonb_build_object('table',c.table_name,'column',c.column_name,'role',r,'privilege',v,'allowed',has_column_privilege(r,'public.'||c.table_name,c.column_name,v)) ORDER BY c.table_name,c.column_name,r,v) AS column_privileges FROM information_schema.columns c CROSS JOIN unnest(ARRAY['anon','authenticated','service_role','cohort_exercise_version_publisher']) r CROSS JOIN unnest(ARRAY['SELECT','INSERT','UPDATE','REFERENCES']) v WHERE c.table_schema='public' AND c.table_name=ANY(ARRAY["+tables+"]);"
+(OUT/'COLUMN_PRIVILEGES.sql').write_text(q+'\n')
+print('Prepared exact read-only effective function/table/column checks and protected-auth aggregate guard; no login issued')
+
+import sys
+sys.path.insert(0,str(ROOT/'tool/programmes/hybrid_10k'))
+from enablement_checks import cli_session_pooler
+save('SESSION_ENDPOINT.json',cli_session_pooler(json.loads((OUT/'pooler.json').read_text())['data'],TARGET))

@@ -1,0 +1,19 @@
+{
+  "data": [
+    {
+      "state": {
+        "roles": [],
+        "backends": []
+      }
+    }
+  ],
+  "metadata": {
+    "target_ref": "otnhhdxstdnwccehacku",
+    "method": "POST",
+    "path": "/database/query/read-only",
+    "http_status": 201,
+    "started_at": "2026-11-05T04:22:39.721615+00:00",
+    "captured_at": "2026-11-05T04:22:41.283801+00:00",
+    "cf_ray": "a5591422fe104ac7-CGK"
+  }
+}

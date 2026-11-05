@@ -1,0 +1,16 @@
+{
+  "started_at": "2026-11-05T03:53:20.566342+00:00",
+  "finished_at": "2026-11-05T03:53:33.100838+00:00",
+  "exit": 0,
+  "migration_filenames": [
+    "20261026110000_training_setup_private_alpha_acquisition.sql",
+    "20261027120000_confirmed_running_zone_targets.sql",
+    "20261027130000_alpha_quality_running_targets.sql",
+    "20261028120000_terminal_completion_retry.sql",
+    "20261104120000_private_alpha_explicit_start_anchor.sql"
+  ],
+  "command": "supabase db push --db-url <password-free task connection> --workdir <exact pinned copy> --dry-run",
+  "same_single_issued_login": true,
+  "automatic_linked_login_path_unused": true,
+  "output_sha256": "a684cb3295346d9d7085b392724e3ec406e6b950c3c6d3c6e13e84c29c35b150"
+}

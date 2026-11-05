@@ -1,0 +1,19 @@
+Finished supabase db push.
+Using workdir /private/tmp/m11_retry_f6c1080_20261105/session_rehearsal_v2/local-apply-copy
+Connecting to remote database...
+Do you want to push these migrations to the remote database?
+ • 20261026110000_training_setup_private_alpha_acquisition.sql
+ • 20261027120000_confirmed_running_zone_targets.sql
+ • 20261027130000_alpha_quality_running_targets.sql
+ • 20261028120000_terminal_completion_retry.sql
+ • 20261104120000_private_alpha_explicit_start_anchor.sql
+
+ [Y/n] y
+Applying migration 20261026110000_training_setup_private_alpha_acquisition.sql...
+Applying migration 20261027120000_confirmed_running_zone_targets.sql...
+Applying migration 20261027130000_alpha_quality_running_targets.sql...
+Applying migration 20261028120000_terminal_completion_retry.sql...
+NOTICE (00000): trigger "completion_receipt_guard" for relation "public.programme_slot_outcomes" does not exist, skipping
+Applying migration 20261104120000_private_alpha_explicit_start_anchor.sql...
+A new version of Supabase CLI is available: v3.0.0 (currently installed v2.109.1)
+We recommend updating regularly for new features and bug fixes: https://supabase.com/docs/guides/cli/getting-started#updating-the-supabase-cli

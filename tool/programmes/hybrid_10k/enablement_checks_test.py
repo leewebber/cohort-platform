@@ -3,7 +3,7 @@ import json
 import unittest
 from pathlib import Path
 from enablement_checks import (api_json_value, exact_json, psql_matches_api,
-                               require_owned_login_for_revocation)
+                               require_owned_login_for_revocation, cli_session_pooler)
 
 ROOT = Path(__file__).resolve().parents[3]
 BASE = ROOT / 'docs/checkpoints/m11_release_candidate_2026_11_04/evidence'
@@ -87,6 +87,39 @@ class OperatorBoundaryTests(unittest.TestCase):
             state = self.state(); state['roles'][0][field] = value
             with self.assertRaises(ValueError):
                 require_owned_login_for_revocation(state, 'task-owned', self.expiry)
+
+
+class CliPoolerSelectionTests(unittest.TestCase):
+    target = 'otnhhdxstdnwccehacku'
+    def entry(self, mode='transaction', port=6543):
+        return {'db_host': 'aws-0-eu-west-1.pooler.supabase.com', 'db_port': port,
+                'pool_mode': mode, 'db_name': 'postgres',
+                'database_type': 'PRIMARY', 'identifier': self.target}
+
+    def test_transaction_metadata_selects_same_host_session_listener(self):
+        old = self.entry(); result = cli_session_pooler([old], self.target)
+        self.assertEqual(result['db_host'], old['db_host'])
+        self.assertEqual(result['identifier'], old['identifier'])
+        self.assertEqual((result['pool_mode'], result['db_port']), ('session', 5432))
+        self.assertEqual(old['db_port'], 6543)  # no provider/config mutation
+
+    def test_existing_session_entry_remains_exact(self):
+        result = cli_session_pooler([self.entry('session', 5432)], self.target)
+        self.assertEqual(result['db_port'], 5432)
+
+    def test_wrong_target_host_database_or_replica_refuses(self):
+        for field, value in [('identifier', 'different'), ('db_host', 'other.example'),
+                             ('db_name', 'other'), ('database_type', 'REPLICA')]:
+            row = self.entry(); row[field] = value
+            with self.assertRaises(ValueError): cli_session_pooler([row], self.target)
+        with self.assertRaises(ValueError): cli_session_pooler([self.entry()], 'different')
+
+    def test_unknown_mode_port_or_cardinality_refuses(self):
+        for mode, port in [('session', 6543), ('transaction', 5432), ('unknown', 5432)]:
+            with self.assertRaises(ValueError):
+                cli_session_pooler([self.entry(mode, port)], self.target)
+        for rows in [[], [self.entry(), self.entry()]]:
+            with self.assertRaises(ValueError): cli_session_pooler(rows, self.target)
 
 
 if __name__ == '__main__': unittest.main()

@@ -1,0 +1,18 @@
+{
+  "closed_at_utc": "2026-11-05T04:18:01.251983+00:00",
+  "local_project_id": "s12g110512104337c3",
+  "task_containers_remaining": 0,
+  "task_volumes_remaining": 0,
+  "other_containers_unchanged": true,
+  "task_workdir_removed": true,
+  "temporary_local_material_removed": [
+    "local-cli-home",
+    "local-apply-copy/supabase/.temp",
+    "local-start.private.log",
+    "local-status.private.json",
+    "docker-anonymous"
+  ],
+  "shared_docker_settings_or_credentials_changed": false,
+  "public_image_cache_preserved": true,
+  "new_hosted_login_issued": false
+}

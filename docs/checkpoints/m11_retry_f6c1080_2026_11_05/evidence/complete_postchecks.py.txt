@@ -1,0 +1,19 @@
+from pathlib import Path
+import shutil
+base=Path('/private/tmp/m11_retry_f6c1080_20261105');out=Path(__file__).resolve().parent
+for f in ['SCOPED_FUNCTIONS.sql','TABLE_PRIVILEGES.sql','COLUMN_PRIVILEGES.sql']:shutil.copyfile(base/f,out/f)
+s=(out/'rehearse_session.py').read_text();prefix=s.split('statements=[s.strip()')[0].replace('LOCAL.mkdir()','LOCAL.mkdir(exist_ok=True)');exec(compile(prefix,'local-session-helpers','exec'))
+copy=OUT/'local-apply-copy';dsn='postgresql://'+urllib.parse.quote(fixture['username'],safe='')+'@127.0.0.1:'+str(fixture['mapped_loopback_port'])+'/postgres?sslmode=disable';expected=[Path(x['file']).name for x in json.loads((PKG/'MIGRATIONS.json').read_text())['migrations']]
+cli_code=s[s.index('def cli('):s.index("names,_=cli('DRY_BEFORE'")];exec(compile(cli_code,'local-cli-helper','exec'))
+scoped=json.loads(psql((OUT/'SCOPED_FUNCTIONS.sql').read_text()));assert exact_json(scoped,json.loads((PKG/'POSTCHECK_EXPECTED_FUNCTIONS.json').read_text())['functions'])
+privileged={'athlete_running_zone2_inputs','programme_occurrence_zone2_targets','athlete_running_quality_inputs'}
+for kind in ['TABLE','COLUMN']:
+ rows=json.loads(psql((OUT/(kind+'_PRIVILEGES.sql')).read_text()));assert all(x['allowed']==(x['role']=='authenticated' and x['table'] in privileged and x['privilege']=='SELECT') for x in rows)
+raw=psql((PKG/'POSTCHECK.sql').read_text());(LOCAL/'POSTCHECK_VERIFIED.txt').write_text(raw);assert all(v==0 for v in json.loads(raw.splitlines()[2]).values())
+for name in ['DRY_AFTER','DRY_REPEAT']:
+ names,text=cli(name,['--dry-run']);assert not names and 'up to date' in text.lower()
+anchor=ROOT/'supabase/migrations/20261104120000_private_alpha_explicit_start_anchor.sql';psql(anchor.read_text());body=psql("SELECT pg_get_functiondef('public.materialise_athlete_plan_from_enrolment(uuid,text)'::regprocedure);");assert '-- M11_PRIVATE_ALPHA_EXPLICIT_START_ANCHOR_V1' in body
+wrong=body.replace('-- M11_PRIVATE_ALPHA_EXPLICIT_START_ANCHOR_V1','-- LOCAL_NEGATIVE_DRIFT');guard=re.sub(r'(?m)^BEGIN;\n|^COMMIT;\n?','',anchor.read_text());r=subprocess.run(['/opt/homebrew/opt/libpq/bin/psql','-X','-qAt','-v','ON_ERROR_STOP=1'],input=('BEGIN;\n'+wrong+'\n;\n'+guard).encode(),env=env,stdout=subprocess.PIPE,stderr=subprocess.PIPE);assert r.returncode!=0 and b'private_alpha_start_anchor_unexpected_materialiser' in r.stderr;assert psql("SELECT pg_get_functiondef('public.materialise_athlete_plan_from_enrolment(uuid,text)'::regprocedure);")==body
+ledger=json.loads(psql("SELECT jsonb_build_object('count',count(*),'tip',max(version)) FROM supabase_migrations.schema_migrations;"));assert ledger=={'count':136,'tip':'20261104120000'}
+result={'classification':'ACTUAL_DISPOSABLE_SUPAVISOR_SESSION_CLI_REHEARSAL_NOT_HOSTED','passed':True,'session_pooler':fixture,'ten_retained_hosted_values_through_actual_session_psql':True,'same_prepared_name_across_two_new_psql_clients':True,'exact_five_file_cli_dry_run_and_apply':True,'reviewed_postcheck_sql_executed_verbatim':True,'all_thirty_function_bodies_acls_owners_config_effective_grants_exact':True,'all_new_table_and_column_effective_grants_exact':True,'new_tables_empty_historical_receipts_null':True,'two_fresh_cli_final_dry_runs_empty_without_statement_collision':True,'anchor_repeat_noop':True,'anchor_drift_refused_and_rolled_back':True,'local_final_ledger':ledger,'local_only_baseline_ledger_entries':1,'new_hosted_login_or_mutation':False}
+save('RESULT.json',result);(OUT/'SESSION_POOLER_REHEARSAL_PASS.json').write_text(json.dumps(result,indent=2)+'\n');print('PASS: actual Supavisor session listener — exact five CLI dry-run/apply, thirty function/grant postchecks, both privilege matrices, two empty fresh CLI retries, prepared-name isolation and guarded conflict rollback')

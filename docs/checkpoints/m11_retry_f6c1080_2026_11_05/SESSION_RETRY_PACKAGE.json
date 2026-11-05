@@ -1,0 +1,32 @@
+{
+  "status": "OFFLINE_SESSION_TRANSPORT_CORRECTION_PROVED_REQUIRES_SEPARATE_ONE_LOGIN_AUTHORITY",
+  "supersedes_operator_transport": "f6c1080 copied db_port6543; normal installed CLI ix() normalises pooler port to5432",
+  "approved_five_migration_callback_commit": "6628343f004aa48a4a2ad88ca70aa2340b967051",
+  "attempted_operator_commit": "f6c108031f4f1484488994c709a4ca9b93e969be",
+  "adapter_sha256": "406e64d761f9a208d0c449f2150122026469b42048cacce7ff0c36d42084df84",
+  "scripts_sha256": {
+    "support.py.txt": "a53808e55aa590885a22ab46b65821af2f2e98d07a1a6ba9acc9ff3013f3e466",
+    "extra_prepare.py.txt": "3ebb3869ddab1564d8890d5141cc00e52cabdf45f590366ae5ecab83858587e2",
+    "live.py.txt": "d25c61d93c728008e4d8927a340b764638e9a63a87d83a8fd4e9c2fd5e2ba90b",
+    "compare_pre.py.txt": "5026d0f1e867155dd51074974c78f256cda2079563bd2ee0f03aac7e5bf8deb1",
+    "prepare.py.txt": "a8f32cc775d119d5674dcd53be6f414694945a90dfd28b92a89320214b217bff"
+  },
+  "migrations_and_callback_payloads_changed": false,
+  "new_privileged_route": false,
+  "principal": "cli_login_postgres",
+  "execution_role": "postgres",
+  "target_ref": "otnhhdxstdnwccehacku",
+  "pooler_host": "aws-0-eu-west-1.pooler.supabase.com",
+  "pooler_mode": "session",
+  "pooler_port": 5432,
+  "permission_or_provider_config_change": false,
+  "source": "https://supabase.com/docs/guides/database/connecting-to-postgres",
+  "current_login_authority": "Consumed and revoked. No replacement login authorised.",
+  "session_tls_proof": "evidence/SESSION_TLS_READINESS.json",
+  "session_pooler_rehearsal": "evidence/SESSION_POOLER_REHEARSAL_PASS.json",
+  "session_pooler_rehearsal_sha256": "42d9a466fd49d0b6eb826ab05f3f14840ee21a89eb36cfe94bd2736d6e664604",
+  "focused_tests_passed": 16,
+  "migration_manifest_sha256": "b0710bd7bdac0464cc3b6c9f28291ab70154e0418e4c1f0f5ad3a6eabcb4ea28",
+  "auth_proposal_sha256": "6ec85d9b9648f3bcf5fc2778553acd2452924c9a53cafe29d86332ed2da30f59",
+  "cli_binary_sha256": "b7be23f4e211b75c00a3df5fcd1f96f3905983c74ff3189bfc69ad5b0f7132c4"
+}

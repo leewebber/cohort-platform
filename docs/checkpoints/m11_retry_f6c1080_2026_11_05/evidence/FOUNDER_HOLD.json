@@ -1,0 +1,6 @@
+{
+  "clients_closed": true,
+  "actual_founder_reference": "Founder previously explicitly confirmed \"Closed for this deployment window\"; current request authorises the corrected retry and asks to confirm whether clients may reopen. Continued hold stated in commentary before this retry, with independent drain/state checks.",
+  "current_authority": "One fresh temporary read-write CLI login solely for f6c1080 corrected retry, max30min/earlier provider expiry; no replacement; five approved migrations and callback only",
+  "recorded_at_utc": "2026-11-05T03:50:43.229595+00:00"
+}

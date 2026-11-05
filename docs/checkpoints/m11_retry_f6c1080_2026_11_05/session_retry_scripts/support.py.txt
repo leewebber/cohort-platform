@@ -1,0 +1,43 @@
+from pathlib import Path
+from datetime import datetime,timezone
+import json,os,subprocess,urllib.request,urllib.error,hashlib,re
+ROOT=Path('/Users/leewebber/.codex/worktrees/m11-founder-authoring/cohort_platform'); OUT=Path(__file__).resolve().parent;TARGET='otnhhdxstdnwccehacku';PKG=ROOT/'docs/checkpoints/m11_release_candidate_2026_11_04'
+LABEL='m11_enablement_session_retry';PSQL='/opt/homebrew/opt/libpq/bin/psql'
+def now():return datetime.now(timezone.utc)
+def sha(raw):return hashlib.sha256(raw).hexdigest()
+def save(name,data):
+ p=OUT/name;p.parent.mkdir(parents=True,exist_ok=True)
+ with p.open('x') as f:json.dump(data,f,indent=2);f.write('\n')
+def token():
+ r=subprocess.run(['security','find-generic-password','-s','Supabase CLI','-w'],stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+ if r.returncode:raise RuntimeError('Existing normal Management authentication unavailable')
+ return r.stdout.decode().strip()
+def api(path='',method='GET',payload=None):
+ allowed_get=['','/health?services=db&services=auth&services=rest&services=storage&services=realtime','/config/auth','/config/database/pooler']
+ assert (method=='GET' and path in allowed_get) or (method=='POST' and path in ['/database/query/read-only','/cli/login-role']) or (method=='DELETE' and path=='/cli/login-role') or (method=='PATCH' and path=='/config/auth')
+ t=token();req=urllib.request.Request('https://api.supabase.com/v1/projects/'+TARGET+path,method=method,data=None if payload is None else json.dumps(payload).encode(),headers={'Authorization':'Bearer '+t,'Content-Type':'application/json'});del t
+ started=now().isoformat()
+ try:
+  with urllib.request.urlopen(req,timeout=25) as r:
+   raw=r.read();meta={'target_ref':TARGET,'method':method,'path':path.split('?')[0],'http_status':r.status,'started_at':started,'captured_at':now().isoformat(),'cf_ray':r.headers.get('cf-ray')}
+ except urllib.error.HTTPError as err:raise RuntimeError('Management HTTP '+str(err.code)+' '+path) from None
+ except Exception as err:raise RuntimeError('Management transport '+type(err).__name__+' '+path) from None
+ with (OUT/'api-journal.jsonl').open('a') as f:f.write(json.dumps(meta)+'\n')
+ return json.loads(raw) if raw.strip() else None,meta
+
+def readonly(sql):
+ assert sql.lstrip().startswith(('SELECT','--'))
+ data,meta=api('/database/query/read-only','POST',{'query':sql});return {'data':data,'metadata':meta}
+
+def scalar(response):
+ rows=response['data'];assert len(rows)==1 and len(rows[0])==1
+ return next(iter(rows[0].values()))
+
+AUTH_FIELDS=['site_url','uri_allow_list','disable_signup','external_email_enabled','mailer_autoconfirm','security_captcha_enabled','external_anonymous_users_enabled','smtp_host','smtp_port','rate_limit_email_sent','jwt_exp','password_min_length','mailer_otp_exp']
+def auth_view(raw):
+ return {k:raw.get(k) for k in AUTH_FIELDS}
+def template_flags(raw):
+ value=raw.get('mailer_templates_confirmation_content');return {'template_field_present':'mailer_templates_confirmation_content' in raw,'custom_confirmation_template_present':bool(value),'uses_confirmation_url':'.ConfirmationURL' in (value or ''),'uses_redirect_to':'.RedirectTo' in (value or ''),'uses_site_url':'.SiteURL' in (value or ''),'template_sha256':sha(value.encode()) if value else None}
+
+ROLE_STATE="SELECT jsonb_build_object('roles',(SELECT coalesce(jsonb_agg(jsonb_build_object('name',rolname,'valid_until',rolvaliduntil) ORDER BY rolname),'[]'::jsonb) FROM pg_roles WHERE rolname LIKE 'cli_login_%'),'backends',(SELECT coalesce(jsonb_agg(jsonb_build_object('user',usename,'application_name',application_name,'state',state) ORDER BY pid),'[]'::jsonb) FROM pg_stat_activity WHERE usename LIKE 'cli_login_%')) AS state;"
+DRAIN="SELECT jsonb_build_object('active_writers',(SELECT coalesce(jsonb_agg(jsonb_build_object('application_name',application_name,'user',usename,'state',state,'query_type',split_part(ltrim(query),' ',1)) ORDER BY pid),'[]'::jsonb) FROM pg_stat_activity WHERE datname=current_database() AND pid<>pg_backend_pid() AND backend_type='client backend' AND state='active' AND query ~* '^\\s*(insert|update|delete|merge|alter|create|drop|truncate|call|do|begin)'),'prepared_transactions',(SELECT count(*) FROM pg_prepared_xacts WHERE database=current_database())) AS drain;"

@@ -1,0 +1,10 @@
+{
+  "started_at": "2026-11-05T03:53:33.101648+00:00",
+  "finished_at": "2026-11-05T03:53:36.246428+00:00",
+  "exit": 1,
+  "migration_filenames": [],
+  "command": "supabase db push --db-url <password-free task connection> --workdir <exact pinned copy> --yes",
+  "same_single_issued_login": true,
+  "automatic_linked_login_path_unused": true,
+  "output_sha256": "4485de27ae6e420b4b6da4bf40b03b00abd3e85da0b0212f2cbecafbedac77d2"
+}

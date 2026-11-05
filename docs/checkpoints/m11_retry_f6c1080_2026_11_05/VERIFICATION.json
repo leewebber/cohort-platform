@@ -1,0 +1,31 @@
+{
+  "status": "DRY_RUN_EXACT_APPLY_TRANSPORT_FAILURE_ZERO_MIGRATIONS_CREDENTIAL_REVOKED",
+  "date": "2026-11-05",
+  "base": "f6c108031f4f1484488994c709a4ca9b93e969be",
+  "healthy_target": "otnhhdxstdnwccehacku",
+  "exact_five_cli_dry_run_exit": 0,
+  "apply_attempts": 1,
+  "apply_exit": 1,
+  "apply_failure": "prepared statement lrupsc_1_0 already exists SQLSTATE42P05 on transaction6543",
+  "hosted_migration_additions": 0,
+  "callback_added": false,
+  "hosted_ledger_count": 130,
+  "old_schema_and_all_67_public_plus_2_auth_aggregates_unchanged": true,
+  "operational_logins_issued": 1,
+  "replacement_issued": false,
+  "supported_revocation_http": 200,
+  "zero_cli_roles_and_backends": true,
+  "clients_may_reopen_existing_workflows": true,
+  "focused_python_tests": {
+    "command": "python3 -m unittest discover -s tool/programmes/hybrid_10k -p enablement_checks_test.py -v",
+    "passed": 16,
+    "exit": 0
+  },
+  "actual_session_pooler_rehearsal": "evidence/SESSION_POOLER_REHEARSAL_PASS.json",
+  "normal_cli_session_transport_fix_only": true,
+  "approved_migrations_auth_prescriptions_targets_unchanged": true,
+  "no_new_runtime_ui_or_schema_source_changes": true,
+  "unchanged_app_suites_reused_not_rerun": true,
+  "M1.1": "OPEN",
+  "Gate_A": "OPEN"
+}

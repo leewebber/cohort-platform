@@ -1,0 +1,7 @@
+{
+  "status": "STOPPED",
+  "migration_apply_attempted": true,
+  "auth_patch_attempted": false,
+  "failure": "Normal CLI command failed; no blind retry or alternative runner",
+  "finished_at": "2026-11-05T03:53:36.246853+00:00"
+}

@@ -1,0 +1,1409 @@
+{
+  "value": [
+    {
+      "cmd": "INSERT",
+      "qual": null,
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "coach_athlete_invites",
+      "permissive": "PERMISSIVE",
+      "policyname": "coach_athlete_invites_coach_insert",
+      "schemaname": "public",
+      "with_check": "((coach_id = auth.uid()) AND (status = 'pending'::text) AND (expires_at > now()))"
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "(coach_id = auth.uid())",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "coach_athlete_invites",
+      "permissive": "PERMISSIVE",
+      "policyname": "coach_athlete_invites_coach_select",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "UPDATE",
+      "qual": "((coach_id = auth.uid()) AND (status = 'pending'::text))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "coach_athlete_invites",
+      "permissive": "PERMISSIVE",
+      "policyname": "coach_athlete_invites_coach_update",
+      "schemaname": "public",
+      "with_check": "(coach_id = auth.uid())"
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "(athlete_id = auth.uid())",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "coach_athlete_relationships",
+      "permissive": "PERMISSIVE",
+      "policyname": "coach_athlete_relationships_athlete_select",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "(coach_id = auth.uid())",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "coach_athlete_relationships",
+      "permissive": "PERMISSIVE",
+      "policyname": "coach_athlete_relationships_coach_select",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "DELETE",
+      "qual": "false",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "content_graph_manifests",
+      "permissive": "PERMISSIVE",
+      "policyname": "content_graph_manifests_no_delete",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "INSERT",
+      "qual": null,
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "content_graph_manifests",
+      "permissive": "PERMISSIVE",
+      "policyname": "content_graph_manifests_no_insert",
+      "schemaname": "public",
+      "with_check": "false"
+    },
+    {
+      "cmd": "UPDATE",
+      "qual": "false",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "content_graph_manifests",
+      "permissive": "PERMISSIVE",
+      "policyname": "content_graph_manifests_no_update",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "content_graph_actor_may_read_manifest(programme_version_id, publisher_id, publication_state)",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "content_graph_manifests",
+      "permissive": "PERMISSIVE",
+      "policyname": "content_graph_manifests_select",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "DELETE",
+      "qual": "false",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "content_publisher_principals",
+      "permissive": "PERMISSIVE",
+      "policyname": "content_publisher_principals_no_delete",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "INSERT",
+      "qual": null,
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "content_publisher_principals",
+      "permissive": "PERMISSIVE",
+      "policyname": "content_publisher_principals_no_insert",
+      "schemaname": "public",
+      "with_check": "false"
+    },
+    {
+      "cmd": "UPDATE",
+      "qual": "false",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "content_publisher_principals",
+      "permissive": "PERMISSIVE",
+      "policyname": "content_publisher_principals_no_update",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "(principal_id = auth.uid())",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "content_publisher_principals",
+      "permissive": "PERMISSIVE",
+      "policyname": "content_publisher_principals_select",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "DELETE",
+      "qual": "false",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "content_publishers",
+      "permissive": "PERMISSIVE",
+      "policyname": "content_publishers_no_delete",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "INSERT",
+      "qual": null,
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "content_publishers",
+      "permissive": "PERMISSIVE",
+      "policyname": "content_publishers_no_direct_write",
+      "schemaname": "public",
+      "with_check": "false"
+    },
+    {
+      "cmd": "UPDATE",
+      "qual": "false",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "content_publishers",
+      "permissive": "PERMISSIVE",
+      "policyname": "content_publishers_no_update",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "(((first_party = true) AND (lifecycle = 'active'::text)) OR (EXISTS ( SELECT 1\n   FROM content_publisher_principals m\n  WHERE ((m.publisher_id = content_publishers.id) AND (m.principal_id = auth.uid())))))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "content_publishers",
+      "permissive": "PERMISSIVE",
+      "policyname": "content_publishers_select",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "((published IS TRUE) AND cohort_can_read_assigned_exercise(exercise_id))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "exercises_v2",
+      "permissive": "PERMISSIVE",
+      "policyname": "authenticated_assigned_exercises_select",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "((athlete_id = ( SELECT auth.uid() AS uid)) AND cohort_auth_is_athlete())",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "hyrox_base_benchmark_revisions",
+      "permissive": "PERMISSIVE",
+      "policyname": "hyrox_base_evidence_owner_read",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "((athlete_id = ( SELECT auth.uid() AS uid)) AND cohort_auth_is_athlete())",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "hyrox_base_benchmark_selections",
+      "permissive": "PERMISSIVE",
+      "policyname": "hyrox_base_selection_owner_read",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "((lifecycle_status = 'published'::text) AND (published = 'true'::text) AND cohort_can_read_assigned_protocol(protocol_id))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "performance_protocols",
+      "permissive": "PERMISSIVE",
+      "policyname": "authenticated_assigned_protocols_select",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "(athlete_id = (auth.uid())::text)",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "performance_result_corrections",
+      "permissive": "PERMISSIVE",
+      "policyname": "performance_result_corrections_athlete_select",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "INSERT",
+      "qual": null,
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "profiles",
+      "permissive": "PERMISSIVE",
+      "policyname": "profiles_insert_own",
+      "schemaname": "public",
+      "with_check": "(id = auth.uid())"
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "((id = auth.uid()) OR (EXISTS ( SELECT 1\n   FROM coach_athlete_relationships r\n  WHERE ((r.status = 'active'::text) AND (((r.coach_id = auth.uid()) AND (r.athlete_id = profiles.id)) OR ((r.athlete_id = auth.uid()) AND (r.coach_id = profiles.id)))))))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "profiles",
+      "permissive": "PERMISSIVE",
+      "policyname": "profiles_select_linked_users",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "(id = auth.uid())",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "profiles",
+      "permissive": "PERMISSIVE",
+      "policyname": "profiles_select_own",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "UPDATE",
+      "qual": "(id = auth.uid())",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "profiles",
+      "permissive": "PERMISSIVE",
+      "policyname": "profiles_update_own",
+      "schemaname": "public",
+      "with_check": "(id = auth.uid())"
+    },
+    {
+      "cmd": "INSERT",
+      "qual": null,
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "programme_adaptation_events",
+      "permissive": "PERMISSIVE",
+      "policyname": "programme_adaptation_events_athlete_insert",
+      "schemaname": "public",
+      "with_check": "(athlete_id = auth.uid())"
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "(athlete_id = auth.uid())",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "programme_adaptation_events",
+      "permissive": "PERMISSIVE",
+      "policyname": "programme_adaptation_events_athlete_select",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "(EXISTS ( SELECT 1\n   FROM coach_athlete_relationships car\n  WHERE ((car.athlete_id = programme_adaptation_events.athlete_id) AND (car.coach_id = auth.uid()) AND (car.status = 'active'::text))))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "programme_adaptation_events",
+      "permissive": "PERMISSIVE",
+      "policyname": "programme_adaptation_events_coach_select",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "(athlete_id = auth.uid())",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "programme_assignments",
+      "permissive": "PERMISSIVE",
+      "policyname": "programme_assignments_athlete_select",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "UPDATE",
+      "qual": "(athlete_id = auth.uid())",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "programme_assignments",
+      "permissive": "PERMISSIVE",
+      "policyname": "programme_assignments_athlete_update",
+      "schemaname": "public",
+      "with_check": "(athlete_id = auth.uid())"
+    },
+    {
+      "cmd": "INSERT",
+      "qual": null,
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "programme_assignments",
+      "permissive": "PERMISSIVE",
+      "policyname": "programme_assignments_coach_insert",
+      "schemaname": "public",
+      "with_check": "cohort_coach_has_active_athlete(athlete_id)"
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "cohort_coach_has_active_athlete(athlete_id)",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "programme_assignments",
+      "permissive": "PERMISSIVE",
+      "policyname": "programme_assignments_coach_select",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "UPDATE",
+      "qual": "cohort_coach_has_active_athlete(athlete_id)",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "programme_assignments",
+      "permissive": "PERMISSIVE",
+      "policyname": "programme_assignments_coach_update",
+      "schemaname": "public",
+      "with_check": "cohort_coach_has_active_athlete(athlete_id)"
+    },
+    {
+      "cmd": "INSERT",
+      "qual": null,
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "programme_assignments",
+      "permissive": "PERMISSIVE",
+      "policyname": "programme_assignments_dual_role_self_insert",
+      "schemaname": "public",
+      "with_check": "((athlete_id = auth.uid()) AND cohort_auth_is_dual_role_coach_athlete())"
+    },
+    {
+      "cmd": "DELETE",
+      "qual": "cohort_programme_lineage_is_dev_coach_deletable(id)",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "programme_lineages",
+      "permissive": "PERMISSIVE",
+      "policyname": "programme_lineages_delete_coach",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "INSERT",
+      "qual": null,
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "programme_lineages",
+      "permissive": "PERMISSIVE",
+      "policyname": "programme_lineages_insert_coach",
+      "schemaname": "public",
+      "with_check": "(cohort_auth_is_coach() AND (created_by = (auth.uid())::text))"
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "cohort_programme_lineage_has_dev_readable_version(id)",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "programme_lineages",
+      "permissive": "PERMISSIVE",
+      "policyname": "programme_lineages_select_catalogue",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "(cohort_auth_is_coach() AND (created_by = (auth.uid())::text))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "programme_lineages",
+      "permissive": "PERMISSIVE",
+      "policyname": "programme_lineages_select_coach",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "UPDATE",
+      "qual": "(cohort_auth_is_coach() AND (created_by = (auth.uid())::text))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "programme_lineages",
+      "permissive": "PERMISSIVE",
+      "policyname": "programme_lineages_update_coach",
+      "schemaname": "public",
+      "with_check": "(cohort_auth_is_coach() AND (created_by = (auth.uid())::text))"
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "((athlete_id = ( SELECT auth.uid() AS uid)) AND cohort_auth_is_athlete())",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "programme_occurrence_duration_choices",
+      "permissive": "PERMISSIVE",
+      "policyname": "duration_choice_owner",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "((athlete_id = ( SELECT auth.uid() AS uid)) AND cohort_auth_is_athlete())",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "programme_occurrence_v3_prescription_snapshots",
+      "permissive": "PERMISSIVE",
+      "policyname": "v3_owner_read",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "(EXISTS ( SELECT 1\n   FROM programme_schedule_projections p\n  WHERE ((p.assignment_id = programme_schedule_occurrences.assignment_id) AND (p.athlete_id = auth.uid()))))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "programme_schedule_occurrences",
+      "permissive": "PERMISSIVE",
+      "policyname": "programme_schedule_occurrences_athlete_select",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "(EXISTS ( SELECT 1\n   FROM programme_schedule_projections p\n  WHERE ((p.assignment_id = programme_schedule_occurrences.assignment_id) AND cohort_coach_has_active_athlete(p.athlete_id))))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "programme_schedule_occurrences",
+      "permissive": "PERMISSIVE",
+      "policyname": "programme_schedule_occurrences_coach_select",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "(athlete_id = auth.uid())",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "programme_schedule_operations",
+      "permissive": "PERMISSIVE",
+      "policyname": "programme_schedule_operations_athlete_select",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "cohort_coach_has_active_athlete(athlete_id)",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "programme_schedule_operations",
+      "permissive": "PERMISSIVE",
+      "policyname": "programme_schedule_operations_coach_select",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "(athlete_id = auth.uid())",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "programme_schedule_projections",
+      "permissive": "PERMISSIVE",
+      "policyname": "programme_schedule_projections_athlete_select",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "cohort_coach_has_active_athlete(athlete_id)",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "programme_schedule_projections",
+      "permissive": "PERMISSIVE",
+      "policyname": "programme_schedule_projections_coach_select",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "INSERT",
+      "qual": null,
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "programme_slot_outcomes",
+      "permissive": "PERMISSIVE",
+      "policyname": "programme_slot_outcomes_athlete_insert",
+      "schemaname": "public",
+      "with_check": "(EXISTS ( SELECT 1\n   FROM programme_assignments a\n  WHERE ((a.id = programme_slot_outcomes.assignment_id) AND (a.athlete_id = auth.uid()))))"
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "(EXISTS ( SELECT 1\n   FROM programme_assignments a\n  WHERE ((a.id = programme_slot_outcomes.assignment_id) AND (a.athlete_id = auth.uid()))))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "programme_slot_outcomes",
+      "permissive": "PERMISSIVE",
+      "policyname": "programme_slot_outcomes_athlete_select",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "UPDATE",
+      "qual": "(EXISTS ( SELECT 1\n   FROM programme_assignments a\n  WHERE ((a.id = programme_slot_outcomes.assignment_id) AND (a.athlete_id = auth.uid()))))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "programme_slot_outcomes",
+      "permissive": "PERMISSIVE",
+      "policyname": "programme_slot_outcomes_athlete_update",
+      "schemaname": "public",
+      "with_check": "(EXISTS ( SELECT 1\n   FROM programme_assignments a\n  WHERE ((a.id = programme_slot_outcomes.assignment_id) AND (a.athlete_id = auth.uid()))))"
+    },
+    {
+      "cmd": "INSERT",
+      "qual": null,
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "programme_slot_outcomes",
+      "permissive": "PERMISSIVE",
+      "policyname": "programme_slot_outcomes_coach_insert",
+      "schemaname": "public",
+      "with_check": "(EXISTS ( SELECT 1\n   FROM programme_assignments a\n  WHERE ((a.id = programme_slot_outcomes.assignment_id) AND cohort_coach_has_active_athlete(a.athlete_id))))"
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "(EXISTS ( SELECT 1\n   FROM programme_assignments a\n  WHERE ((a.id = programme_slot_outcomes.assignment_id) AND cohort_coach_has_active_athlete(a.athlete_id))))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "programme_slot_outcomes",
+      "permissive": "PERMISSIVE",
+      "policyname": "programme_slot_outcomes_coach_select",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "UPDATE",
+      "qual": "(EXISTS ( SELECT 1\n   FROM programme_assignments a\n  WHERE ((a.id = programme_slot_outcomes.assignment_id) AND cohort_coach_has_active_athlete(a.athlete_id))))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "programme_slot_outcomes",
+      "permissive": "PERMISSIVE",
+      "policyname": "programme_slot_outcomes_coach_update",
+      "schemaname": "public",
+      "with_check": "(EXISTS ( SELECT 1\n   FROM programme_assignments a\n  WHERE ((a.id = programme_slot_outcomes.assignment_id) AND cohort_coach_has_active_athlete(a.athlete_id))))"
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "((athlete_id = ( SELECT auth.uid() AS uid)) AND cohort_auth_is_athlete())",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "programme_v3_prescription_consents",
+      "permissive": "PERMISSIVE",
+      "policyname": "v3_owner_read",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "((athlete_id = ( SELECT auth.uid() AS uid)) AND cohort_auth_is_athlete())",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "programme_v3_prescription_reviews",
+      "permissive": "PERMISSIVE",
+      "policyname": "v3_owner_read",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "(EXISTS ( SELECT 1\n   FROM programme_versions v\n  WHERE ((v.id = programme_version_adaptation_permissions.version_id) AND (v.lifecycle_status = 'published'::text) AND (v.library_scope = 'cohort_global'::text) AND (v.approved_for_global = true))))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "programme_version_adaptation_permissions",
+      "permissive": "PERMISSIVE",
+      "policyname": "programme_version_adaptation_permissions_select_catalogue",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "cohort_programme_version_is_dev_coach_readable(version_id)",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "programme_version_adaptation_permissions",
+      "permissive": "PERMISSIVE",
+      "policyname": "programme_version_adaptation_permissions_select_coach",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "(EXISTS ( SELECT 1\n   FROM programme_versions v\n  WHERE ((v.id = programme_version_assessments.version_id) AND (v.lifecycle_status = 'published'::text) AND (v.library_scope = 'cohort_global'::text) AND (v.approved_for_global = true))))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "programme_version_assessments",
+      "permissive": "PERMISSIVE",
+      "policyname": "programme_version_assessments_select_catalogue",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "cohort_programme_version_is_dev_coach_readable(version_id)",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "programme_version_assessments",
+      "permissive": "PERMISSIVE",
+      "policyname": "programme_version_assessments_select_coach",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "(EXISTS ( SELECT 1\n   FROM programme_versions v\n  WHERE ((v.id = programme_version_comparison_identities.version_id) AND (v.lifecycle_status = 'published'::text) AND (v.library_scope = 'cohort_global'::text) AND (v.approved_for_global = true))))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "programme_version_comparison_identities",
+      "permissive": "PERMISSIVE",
+      "policyname": "programme_version_comparison_identities_select_catalogue",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "cohort_programme_version_is_dev_coach_readable(version_id)",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "programme_version_comparison_identities",
+      "permissive": "PERMISSIVE",
+      "policyname": "programme_version_comparison_identities_select_coach",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "(EXISTS ( SELECT 1\n   FROM programme_version_weeks w\n  WHERE ((w.id = programme_version_days.week_id) AND cohort_can_read_assigned_programme_version(w.version_id))))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "programme_version_days",
+      "permissive": "PERMISSIVE",
+      "policyname": "programme_version_days_select_assigned",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "(EXISTS ( SELECT 1\n   FROM (programme_version_weeks w\n     JOIN programme_versions v ON ((v.id = w.version_id)))\n  WHERE ((w.id = programme_version_days.week_id) AND (v.lifecycle_status = 'published'::text) AND (v.library_scope = 'cohort_global'::text) AND (v.approved_for_global = true))))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "programme_version_days",
+      "permissive": "PERMISSIVE",
+      "policyname": "programme_version_days_select_catalogue",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "cohort_programme_week_is_dev_coach_readable(week_id)",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "programme_version_days",
+      "permissive": "PERMISSIVE",
+      "policyname": "programme_version_days_select_coach",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "ALL",
+      "qual": "cohort_programme_week_is_dev_coach_draft_writable(week_id)",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "programme_version_days",
+      "permissive": "PERMISSIVE",
+      "policyname": "programme_version_days_write_coach",
+      "schemaname": "public",
+      "with_check": "cohort_programme_week_is_dev_coach_draft_writable(week_id)"
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "(EXISTS ( SELECT 1\n   FROM programme_versions v\n  WHERE ((v.id = programme_version_evidence_requirements.version_id) AND (v.lifecycle_status = 'published'::text) AND (v.library_scope = 'cohort_global'::text) AND (v.approved_for_global = true))))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "programme_version_evidence_requirements",
+      "permissive": "PERMISSIVE",
+      "policyname": "programme_version_evidence_requirements_select_catalogue",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "cohort_programme_version_is_dev_coach_readable(version_id)",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "programme_version_evidence_requirements",
+      "permissive": "PERMISSIVE",
+      "policyname": "programme_version_evidence_requirements_select_coach",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "cohort_can_read_assigned_programme_version(version_id)",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "programme_version_phases",
+      "permissive": "PERMISSIVE",
+      "policyname": "programme_version_phases_select_assigned",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "(EXISTS ( SELECT 1\n   FROM programme_versions v\n  WHERE ((v.id = programme_version_phases.version_id) AND (v.lifecycle_status = 'published'::text) AND (v.library_scope = 'cohort_global'::text) AND (v.approved_for_global = true))))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "programme_version_phases",
+      "permissive": "PERMISSIVE",
+      "policyname": "programme_version_phases_select_catalogue",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "cohort_programme_version_is_dev_coach_readable(version_id)",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "programme_version_phases",
+      "permissive": "PERMISSIVE",
+      "policyname": "programme_version_phases_select_coach",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "ALL",
+      "qual": "cohort_programme_version_is_dev_coach_draft_writable(version_id)",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "programme_version_phases",
+      "permissive": "PERMISSIVE",
+      "policyname": "programme_version_phases_write_coach",
+      "schemaname": "public",
+      "with_check": "cohort_programme_version_is_dev_coach_draft_writable(version_id)"
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "(EXISTS ( SELECT 1\n   FROM programme_versions v\n  WHERE ((v.id = programme_version_protected_invariants.version_id) AND (v.lifecycle_status = 'published'::text) AND (v.library_scope = 'cohort_global'::text) AND (v.approved_for_global = true))))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "programme_version_protected_invariants",
+      "permissive": "PERMISSIVE",
+      "policyname": "programme_version_protected_invariants_select_catalogue",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "cohort_programme_version_is_dev_coach_readable(version_id)",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "programme_version_protected_invariants",
+      "permissive": "PERMISSIVE",
+      "policyname": "programme_version_protected_invariants_select_coach",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "(EXISTS ( SELECT 1\n   FROM (programme_version_days d\n     JOIN programme_version_weeks w ON ((w.id = d.week_id)))\n  WHERE ((d.id = programme_version_session_slots.day_id) AND cohort_can_read_assigned_programme_version(w.version_id))))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "programme_version_session_slots",
+      "permissive": "PERMISSIVE",
+      "policyname": "programme_version_session_slots_select_assigned",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "(EXISTS ( SELECT 1\n   FROM ((programme_version_days d\n     JOIN programme_version_weeks w ON ((w.id = d.week_id)))\n     JOIN programme_versions v ON ((v.id = w.version_id)))\n  WHERE ((d.id = programme_version_session_slots.day_id) AND (v.lifecycle_status = 'published'::text) AND (v.library_scope = 'cohort_global'::text) AND (v.approved_for_global = true))))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "programme_version_session_slots",
+      "permissive": "PERMISSIVE",
+      "policyname": "programme_version_session_slots_select_catalogue",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "(EXISTS ( SELECT 1\n   FROM (programme_version_days d\n     JOIN programme_version_weeks w ON ((w.id = d.week_id)))\n  WHERE ((d.id = programme_version_session_slots.day_id) AND cohort_programme_version_is_dev_coach_readable(w.version_id))))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "programme_version_session_slots",
+      "permissive": "PERMISSIVE",
+      "policyname": "programme_version_session_slots_select_coach",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "ALL",
+      "qual": "(EXISTS ( SELECT 1\n   FROM programme_version_days d\n  WHERE ((d.id = programme_version_session_slots.day_id) AND cohort_programme_week_is_dev_coach_draft_writable(d.week_id))))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "programme_version_session_slots",
+      "permissive": "PERMISSIVE",
+      "policyname": "programme_version_session_slots_write_coach",
+      "schemaname": "public",
+      "with_check": "(EXISTS ( SELECT 1\n   FROM programme_version_days d\n  WHERE ((d.id = programme_version_session_slots.day_id) AND cohort_programme_week_is_dev_coach_draft_writable(d.week_id))))"
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "cohort_can_read_assigned_programme_version(version_id)",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "programme_version_weeks",
+      "permissive": "PERMISSIVE",
+      "policyname": "programme_version_weeks_select_assigned",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "(EXISTS ( SELECT 1\n   FROM programme_versions v\n  WHERE ((v.id = programme_version_weeks.version_id) AND (v.lifecycle_status = 'published'::text) AND (v.library_scope = 'cohort_global'::text) AND (v.approved_for_global = true))))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "programme_version_weeks",
+      "permissive": "PERMISSIVE",
+      "policyname": "programme_version_weeks_select_catalogue",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "cohort_programme_version_is_dev_coach_readable(version_id)",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "programme_version_weeks",
+      "permissive": "PERMISSIVE",
+      "policyname": "programme_version_weeks_select_coach",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "ALL",
+      "qual": "cohort_programme_version_is_dev_coach_draft_writable(version_id)",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "programme_version_weeks",
+      "permissive": "PERMISSIVE",
+      "policyname": "programme_version_weeks_write_coach",
+      "schemaname": "public",
+      "with_check": "cohort_programme_version_is_dev_coach_draft_writable(version_id)"
+    },
+    {
+      "cmd": "UPDATE",
+      "qual": "(cohort_auth_is_coach() AND (lifecycle_status = 'published'::text) AND (owner_type = 'coach'::text) AND (owner_id = (auth.uid())::text) AND (library_scope = 'coach_private'::text) AND (organisation_id IS NULL) AND cohort_programme_lineage_is_dev_coach_owned(lineage_id))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "programme_versions",
+      "permissive": "PERMISSIVE",
+      "policyname": "programme_versions_archive_coach",
+      "schemaname": "public",
+      "with_check": "(cohort_auth_is_coach() AND (lifecycle_status = 'archived'::text) AND (archived_at IS NOT NULL) AND (owner_type = 'coach'::text) AND (owner_id = (auth.uid())::text) AND (library_scope = 'coach_private'::text) AND (organisation_id IS NULL) AND cohort_programme_lineage_is_dev_coach_owned(lineage_id))"
+    },
+    {
+      "cmd": "DELETE",
+      "qual": "cohort_programme_version_is_dev_coach_draft_deletable(id)",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "programme_versions",
+      "permissive": "PERMISSIVE",
+      "policyname": "programme_versions_delete_coach_draft",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "INSERT",
+      "qual": null,
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "programme_versions",
+      "permissive": "PERMISSIVE",
+      "policyname": "programme_versions_insert_coach_draft",
+      "schemaname": "public",
+      "with_check": "(cohort_auth_is_coach() AND (lifecycle_status = 'draft'::text) AND (owner_type = 'coach'::text) AND (owner_id = (auth.uid())::text) AND (library_scope = 'coach_private'::text) AND (approved_for_global = false) AND (organisation_id IS NULL) AND cohort_programme_lineage_is_dev_coach_owned(lineage_id))"
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "cohort_can_read_assigned_programme_version(id)",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "programme_versions",
+      "permissive": "PERMISSIVE",
+      "policyname": "programme_versions_select_assigned",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "((lifecycle_status = 'published'::text) AND (library_scope = 'cohort_global'::text) AND (approved_for_global = true))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "programme_versions",
+      "permissive": "PERMISSIVE",
+      "policyname": "programme_versions_select_catalogue",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "(cohort_auth_is_coach() AND (owner_type = 'coach'::text) AND (owner_id = (auth.uid())::text) AND (library_scope = 'coach_private'::text) AND (organisation_id IS NULL) AND (lifecycle_status = ANY (ARRAY['draft'::text, 'published'::text, 'archived'::text])))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "programme_versions",
+      "permissive": "PERMISSIVE",
+      "policyname": "programme_versions_select_coach",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "UPDATE",
+      "qual": "(cohort_auth_is_coach() AND (lifecycle_status = 'draft'::text) AND (owner_type = 'coach'::text) AND (owner_id = (auth.uid())::text) AND (library_scope = 'coach_private'::text) AND (approved_for_global = false) AND (organisation_id IS NULL) AND cohort_programme_lineage_is_dev_coach_owned(lineage_id))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "programme_versions",
+      "permissive": "PERMISSIVE",
+      "policyname": "programme_versions_update_coach_draft",
+      "schemaname": "public",
+      "with_check": "(cohort_auth_is_coach() AND (owner_type = 'coach'::text) AND (owner_id = (auth.uid())::text) AND (library_scope = 'coach_private'::text) AND (approved_for_global = false) AND (approved_for_adaptation = false) AND (organisation_id IS NULL) AND ((created_by = (auth.uid())::text) OR (created_by IS NULL)) AND cohort_programme_lineage_is_dev_coach_owned(lineage_id) AND ((lifecycle_status = 'draft'::text) OR ((lifecycle_status = 'published'::text) AND (published_at IS NOT NULL))))"
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "cohort_can_read_assigned_protocol(protocol_id)",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "protocol_steps",
+      "permissive": "PERMISSIVE",
+      "policyname": "authenticated_assigned_protocol_steps_select",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "DELETE",
+      "qual": "false",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "publisher_athlete_invitations",
+      "permissive": "PERMISSIVE",
+      "policyname": "publisher_athlete_invitations_no_delete",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "UPDATE",
+      "qual": "false",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "publisher_athlete_invitations",
+      "permissive": "PERMISSIVE",
+      "policyname": "publisher_athlete_invitations_no_update",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "INSERT",
+      "qual": null,
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "publisher_athlete_invitations",
+      "permissive": "PERMISSIVE",
+      "policyname": "publisher_athlete_invitations_no_write",
+      "schemaname": "public",
+      "with_check": "false"
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "((athlete_id = auth.uid()) OR content_graph_publisher_may_operate(publisher_id))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "publisher_athlete_invitations",
+      "permissive": "PERMISSIVE",
+      "policyname": "publisher_athlete_invitations_select",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "DELETE",
+      "qual": "false",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "publisher_athlete_membership_events",
+      "permissive": "PERMISSIVE",
+      "policyname": "publisher_athlete_membership_events_no_delete",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "INSERT",
+      "qual": null,
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "publisher_athlete_membership_events",
+      "permissive": "PERMISSIVE",
+      "policyname": "publisher_athlete_membership_events_no_insert",
+      "schemaname": "public",
+      "with_check": "false"
+    },
+    {
+      "cmd": "UPDATE",
+      "qual": "false",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "publisher_athlete_membership_events",
+      "permissive": "PERMISSIVE",
+      "policyname": "publisher_athlete_membership_events_no_update",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "((athlete_id = auth.uid()) OR content_graph_publisher_may_operate(publisher_id))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "publisher_athlete_membership_events",
+      "permissive": "PERMISSIVE",
+      "policyname": "publisher_athlete_membership_events_select",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "DELETE",
+      "qual": "false",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "publisher_athlete_memberships",
+      "permissive": "PERMISSIVE",
+      "policyname": "publisher_athlete_memberships_no_delete",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "INSERT",
+      "qual": null,
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "publisher_athlete_memberships",
+      "permissive": "PERMISSIVE",
+      "policyname": "publisher_athlete_memberships_no_insert",
+      "schemaname": "public",
+      "with_check": "false"
+    },
+    {
+      "cmd": "UPDATE",
+      "qual": "false",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "publisher_athlete_memberships",
+      "permissive": "PERMISSIVE",
+      "policyname": "publisher_athlete_memberships_no_update",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "((athlete_id = auth.uid()) OR content_graph_publisher_may_operate(publisher_id))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "publisher_athlete_memberships",
+      "permissive": "PERMISSIVE",
+      "policyname": "publisher_athlete_memberships_select",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "(athlete_id = auth.uid())",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "running_5k_benchmark_evidence",
+      "permissive": "PERMISSIVE",
+      "policyname": "running_5k_benchmark_evidence_owner_select",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "(EXISTS ( SELECT 1\n   FROM running_5k_benchmark_evidence e\n  WHERE ((e.evidence_id = running_5k_benchmark_evidence_revisions.evidence_id) AND (e.athlete_id = auth.uid()))))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "running_5k_benchmark_evidence_revisions",
+      "permissive": "PERMISSIVE",
+      "policyname": "running_5k_benchmark_revisions_owner_select",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "(EXISTS ( SELECT 1\n   FROM session_blocks b\n  WHERE ((b.block_id = session_block_exercises.block_id) AND cohort_can_read_assigned_protocol(b.session_id))))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "session_block_exercises",
+      "permissive": "PERMISSIVE",
+      "policyname": "authenticated_assigned_session_block_exercises_select",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "cohort_can_read_assigned_protocol(session_id)",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "session_blocks",
+      "permissive": "PERMISSIVE",
+      "policyname": "authenticated_assigned_session_blocks_select",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "ALL",
+      "qual": "(EXISTS ( SELECT 1\n   FROM training_session_records r\n  WHERE ((r.record_id = training_block_results.session_record_id) AND (r.athlete_id = (auth.uid())::text))))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "training_block_results",
+      "permissive": "PERMISSIVE",
+      "policyname": "performance_block_results_athlete_all",
+      "schemaname": "public",
+      "with_check": "(EXISTS ( SELECT 1\n   FROM training_session_records r\n  WHERE ((r.record_id = training_block_results.session_record_id) AND (r.athlete_id = (auth.uid())::text) AND (r.status = 'in_progress'::text))))"
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "(EXISTS ( SELECT 1\n   FROM training_session_records r\n  WHERE ((r.record_id = training_block_results.session_record_id) AND cohort_coach_has_active_athlete(r.athlete_id))))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "training_block_results",
+      "permissive": "PERMISSIVE",
+      "policyname": "performance_block_results_coach_select",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "ALL",
+      "qual": "(EXISTS ( SELECT 1\n   FROM (training_block_results b\n     JOIN training_session_records r ON ((r.record_id = b.session_record_id)))\n  WHERE ((b.block_result_id = training_exercise_results.block_result_id) AND (r.athlete_id = (auth.uid())::text))))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "training_exercise_results",
+      "permissive": "PERMISSIVE",
+      "policyname": "performance_exercise_results_athlete_all",
+      "schemaname": "public",
+      "with_check": "(EXISTS ( SELECT 1\n   FROM (training_block_results b\n     JOIN training_session_records r ON ((r.record_id = b.session_record_id)))\n  WHERE ((b.block_result_id = training_exercise_results.block_result_id) AND (r.athlete_id = (auth.uid())::text) AND (r.status = 'in_progress'::text))))"
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "(EXISTS ( SELECT 1\n   FROM (training_block_results b\n     JOIN training_session_records r ON ((r.record_id = b.session_record_id)))\n  WHERE ((b.block_result_id = training_exercise_results.block_result_id) AND cohort_coach_has_active_athlete(r.athlete_id))))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "training_exercise_results",
+      "permissive": "PERMISSIVE",
+      "policyname": "performance_exercise_results_coach_select",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "INSERT",
+      "qual": null,
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "training_session_records",
+      "permissive": "PERMISSIVE",
+      "policyname": "performance_records_athlete_insert",
+      "schemaname": "public",
+      "with_check": "(athlete_id = (auth.uid())::text)"
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "(athlete_id = (auth.uid())::text)",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "training_session_records",
+      "permissive": "PERMISSIVE",
+      "policyname": "performance_records_athlete_select",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "UPDATE",
+      "qual": "((athlete_id = (auth.uid())::text) AND (status = 'in_progress'::text))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "training_session_records",
+      "permissive": "PERMISSIVE",
+      "policyname": "performance_records_athlete_update",
+      "schemaname": "public",
+      "with_check": "(athlete_id = (auth.uid())::text)"
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "cohort_coach_has_active_athlete(athlete_id)",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "training_session_records",
+      "permissive": "PERMISSIVE",
+      "policyname": "performance_records_coach_select",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "((athlete_id = (auth.uid())::text) AND cohort_auth_is_athlete())",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "training_sessions",
+      "permissive": "PERMISSIVE",
+      "policyname": "training_sessions_athlete_select",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "ALL",
+      "qual": "(EXISTS ( SELECT 1\n   FROM ((training_exercise_results e\n     JOIN training_block_results b ON ((b.block_result_id = e.block_result_id)))\n     JOIN training_session_records r ON ((r.record_id = b.session_record_id)))\n  WHERE ((e.exercise_result_id = training_set_results.exercise_result_id) AND (r.athlete_id = (auth.uid())::text))))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "training_set_results",
+      "permissive": "PERMISSIVE",
+      "policyname": "performance_set_results_athlete_all",
+      "schemaname": "public",
+      "with_check": "(EXISTS ( SELECT 1\n   FROM ((training_exercise_results e\n     JOIN training_block_results b ON ((b.block_result_id = e.block_result_id)))\n     JOIN training_session_records r ON ((r.record_id = b.session_record_id)))\n  WHERE ((e.exercise_result_id = training_set_results.exercise_result_id) AND (r.athlete_id = (auth.uid())::text) AND (r.status = 'in_progress'::text))))"
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "(EXISTS ( SELECT 1\n   FROM ((training_exercise_results e\n     JOIN training_block_results b ON ((b.block_result_id = e.block_result_id)))\n     JOIN training_session_records r ON ((r.record_id = b.session_record_id)))\n  WHERE ((e.exercise_result_id = training_set_results.exercise_result_id) AND cohort_coach_has_active_athlete(r.athlete_id))))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "training_set_results",
+      "permissive": "PERMISSIVE",
+      "policyname": "performance_set_results_coach_select",
+      "schemaname": "public",
+      "with_check": null
+    }
+  ],
+  "matches_independent_read": true
+}

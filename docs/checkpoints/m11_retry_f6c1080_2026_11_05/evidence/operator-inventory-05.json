@@ -1,0 +1,8 @@
+{
+  "value": {
+    "extensions_digest": true,
+    "training_timezone": true,
+    "completion_receipt_column": false
+  },
+  "matches_independent_read": true
+}

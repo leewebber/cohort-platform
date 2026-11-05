@@ -1,0 +1,8 @@
+{
+  "all_five_script_pins_match": true,
+  "adapter_and_approved_manifests_match": true,
+  "cli_binary_and_ca_match": true,
+  "code_syntax_valid": true,
+  "retained_twelve_test_and_actual_local_cli_rehearsal_reused": "f6c1080 immutable evidence; unchanged source; no broad suites repeated",
+  "credential_issued": false
+}

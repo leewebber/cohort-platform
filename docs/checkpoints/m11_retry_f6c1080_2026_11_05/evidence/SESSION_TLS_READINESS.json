@@ -1,0 +1,12 @@
+{
+  "classification": "PUBLIC_TLS_READINESS_ONLY_NO_DATABASE_STARTUP_OR_AUTHENTICATION",
+  "checked_at_utc": "2026-11-05T03:59:03.133338+00:00",
+  "same_verified_pooler_hostname": "aws-0-eu-west-1.pooler.supabase.com",
+  "session_listener_port": 5432,
+  "postgres_ssl_request_accepted": true,
+  "tls_chain_and_hostname_verified": true,
+  "tls_version": "TLSv1.3",
+  "leaf_certificate_sha256": "03709ca44d1b06e4504da0a83b6ca065761edc704cd5634bcc3894fd5c7b3248",
+  "credentials_or_usernames_sent": false,
+  "hosted_operator_session_authenticated": false
+}

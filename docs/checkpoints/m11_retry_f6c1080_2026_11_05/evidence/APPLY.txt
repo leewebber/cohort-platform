@@ -1,0 +1,4 @@
+Using workdir /private/tmp/m11_retry_f6c1080_20261105/deployment-copy
+Connecting to remote database...
+failed to parse rows: ERROR: prepared statement "lrupsc_1_0" already exists (SQLSTATE 42P05)
+Try rerunning the command with --debug to troubleshoot the error.

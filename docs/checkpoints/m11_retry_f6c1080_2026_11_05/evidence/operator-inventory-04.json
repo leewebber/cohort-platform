@@ -1,0 +1,25 @@
+{
+  "value": [
+    {
+      "table": "athlete_running_quality_inputs",
+      "exists": false
+    },
+    {
+      "table": "athlete_running_zone2_inputs",
+      "exists": false
+    },
+    {
+      "table": "athlete_training_setup",
+      "exists": false
+    },
+    {
+      "table": "private_programme_alpha_eligibility",
+      "exists": false
+    },
+    {
+      "table": "programme_occurrence_zone2_targets",
+      "exists": false
+    }
+  ],
+  "matches_independent_read": true
+}
