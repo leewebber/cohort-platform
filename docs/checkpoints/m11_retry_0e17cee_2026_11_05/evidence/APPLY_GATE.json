@@ -1,0 +1,41 @@
+{
+  "checked_at": "2026-11-05T05:39:49.861205+00:00",
+  "target_ref": "otnhhdxstdnwccehacku",
+  "source_commit": "6628343f004aa48a4a2ad88ca70aa2340b967051",
+  "files": [
+    {
+      "order": 1,
+      "file": "supabase/migrations/20261026110000_training_setup_private_alpha_acquisition.sql",
+      "sha256": "59cb7a97e5c5bcd6e5bc230631a1c34942ce4cd7610aa253b1556510df7248f5",
+      "version": "20261026110000"
+    },
+    {
+      "order": 2,
+      "file": "supabase/migrations/20261027120000_confirmed_running_zone_targets.sql",
+      "sha256": "26038e82bae21130982ccaed65be14ee49ad4581256f99476ccb5ba071b0de6a",
+      "version": "20261027120000"
+    },
+    {
+      "order": 3,
+      "file": "supabase/migrations/20261027130000_alpha_quality_running_targets.sql",
+      "sha256": "5c49656c6fa85f6ef0c4524491d61dc53ff42a0bb7e61bbfe33a24ab0dc3b520",
+      "version": "20261027130000"
+    },
+    {
+      "order": 4,
+      "file": "supabase/migrations/20261028120000_terminal_completion_retry.sql",
+      "sha256": "00c5f094d6c49716109fa67066d6d570e4af27ee24f0bd9b5237433e6d3a0ffa",
+      "version": "20261028120000"
+    },
+    {
+      "order": 5,
+      "file": "supabase/migrations/20261104120000_private_alpha_explicit_start_anchor.sql",
+      "sha256": "5b914514273c864907d6fefd9cdc3e49c940610a7fe8fe0a26f7265f7d2db3aa",
+      "version": "20261104120000"
+    }
+  ],
+  "exact_dry_run_matches": true,
+  "remaining_native_seconds": 256.917291,
+  "writer_hold": "Founder explicitly confirms closed clients; fresh observed drain clear",
+  "execution_connection": "Normal CLI shared-session port5432, supported --db-url with same one cli_login_postgres credential and built-in SET SESSION ROLE postgres; password supplied only in process env; no linked reissuance, no main password"
+}

@@ -1,0 +1,3265 @@
+{
+  "data": [
+    {
+      "column_privileges": [
+        {
+          "role": "anon",
+          "table": "athlete_running_quality_inputs",
+          "column": "athlete_id",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_running_quality_inputs",
+          "column": "athlete_id",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_running_quality_inputs",
+          "column": "athlete_id",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_running_quality_inputs",
+          "column": "athlete_id",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_running_quality_inputs",
+          "column": "athlete_id",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_running_quality_inputs",
+          "column": "athlete_id",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_running_quality_inputs",
+          "column": "athlete_id",
+          "allowed": true,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_running_quality_inputs",
+          "column": "athlete_id",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_running_quality_inputs",
+          "column": "athlete_id",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_running_quality_inputs",
+          "column": "athlete_id",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_running_quality_inputs",
+          "column": "athlete_id",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_running_quality_inputs",
+          "column": "athlete_id",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_running_quality_inputs",
+          "column": "athlete_id",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_running_quality_inputs",
+          "column": "athlete_id",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_running_quality_inputs",
+          "column": "athlete_id",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_running_quality_inputs",
+          "column": "athlete_id",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_running_quality_inputs",
+          "column": "confirmed_at",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_running_quality_inputs",
+          "column": "confirmed_at",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_running_quality_inputs",
+          "column": "confirmed_at",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_running_quality_inputs",
+          "column": "confirmed_at",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_running_quality_inputs",
+          "column": "confirmed_at",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_running_quality_inputs",
+          "column": "confirmed_at",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_running_quality_inputs",
+          "column": "confirmed_at",
+          "allowed": true,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_running_quality_inputs",
+          "column": "confirmed_at",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_running_quality_inputs",
+          "column": "confirmed_at",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_running_quality_inputs",
+          "column": "confirmed_at",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_running_quality_inputs",
+          "column": "confirmed_at",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_running_quality_inputs",
+          "column": "confirmed_at",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_running_quality_inputs",
+          "column": "confirmed_at",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_running_quality_inputs",
+          "column": "confirmed_at",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_running_quality_inputs",
+          "column": "confirmed_at",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_running_quality_inputs",
+          "column": "confirmed_at",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_running_quality_inputs",
+          "column": "five_k_date",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_running_quality_inputs",
+          "column": "five_k_date",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_running_quality_inputs",
+          "column": "five_k_date",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_running_quality_inputs",
+          "column": "five_k_date",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_running_quality_inputs",
+          "column": "five_k_date",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_running_quality_inputs",
+          "column": "five_k_date",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_running_quality_inputs",
+          "column": "five_k_date",
+          "allowed": true,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_running_quality_inputs",
+          "column": "five_k_date",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_running_quality_inputs",
+          "column": "five_k_date",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_running_quality_inputs",
+          "column": "five_k_date",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_running_quality_inputs",
+          "column": "five_k_date",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_running_quality_inputs",
+          "column": "five_k_date",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_running_quality_inputs",
+          "column": "five_k_date",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_running_quality_inputs",
+          "column": "five_k_date",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_running_quality_inputs",
+          "column": "five_k_date",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_running_quality_inputs",
+          "column": "five_k_date",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_running_quality_inputs",
+          "column": "five_k_seconds",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_running_quality_inputs",
+          "column": "five_k_seconds",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_running_quality_inputs",
+          "column": "five_k_seconds",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_running_quality_inputs",
+          "column": "five_k_seconds",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_running_quality_inputs",
+          "column": "five_k_seconds",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_running_quality_inputs",
+          "column": "five_k_seconds",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_running_quality_inputs",
+          "column": "five_k_seconds",
+          "allowed": true,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_running_quality_inputs",
+          "column": "five_k_seconds",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_running_quality_inputs",
+          "column": "five_k_seconds",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_running_quality_inputs",
+          "column": "five_k_seconds",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_running_quality_inputs",
+          "column": "five_k_seconds",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_running_quality_inputs",
+          "column": "five_k_seconds",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_running_quality_inputs",
+          "column": "five_k_seconds",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_running_quality_inputs",
+          "column": "five_k_seconds",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_running_quality_inputs",
+          "column": "five_k_seconds",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_running_quality_inputs",
+          "column": "five_k_seconds",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_running_quality_inputs",
+          "column": "five_k_timezone",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_running_quality_inputs",
+          "column": "five_k_timezone",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_running_quality_inputs",
+          "column": "five_k_timezone",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_running_quality_inputs",
+          "column": "five_k_timezone",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_running_quality_inputs",
+          "column": "five_k_timezone",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_running_quality_inputs",
+          "column": "five_k_timezone",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_running_quality_inputs",
+          "column": "five_k_timezone",
+          "allowed": true,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_running_quality_inputs",
+          "column": "five_k_timezone",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_running_quality_inputs",
+          "column": "five_k_timezone",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_running_quality_inputs",
+          "column": "five_k_timezone",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_running_quality_inputs",
+          "column": "five_k_timezone",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_running_quality_inputs",
+          "column": "five_k_timezone",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_running_quality_inputs",
+          "column": "five_k_timezone",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_running_quality_inputs",
+          "column": "five_k_timezone",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_running_quality_inputs",
+          "column": "five_k_timezone",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_running_quality_inputs",
+          "column": "five_k_timezone",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_running_quality_inputs",
+          "column": "five_k_withdrawn",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_running_quality_inputs",
+          "column": "five_k_withdrawn",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_running_quality_inputs",
+          "column": "five_k_withdrawn",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_running_quality_inputs",
+          "column": "five_k_withdrawn",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_running_quality_inputs",
+          "column": "five_k_withdrawn",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_running_quality_inputs",
+          "column": "five_k_withdrawn",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_running_quality_inputs",
+          "column": "five_k_withdrawn",
+          "allowed": true,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_running_quality_inputs",
+          "column": "five_k_withdrawn",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_running_quality_inputs",
+          "column": "five_k_withdrawn",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_running_quality_inputs",
+          "column": "five_k_withdrawn",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_running_quality_inputs",
+          "column": "five_k_withdrawn",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_running_quality_inputs",
+          "column": "five_k_withdrawn",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_running_quality_inputs",
+          "column": "five_k_withdrawn",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_running_quality_inputs",
+          "column": "five_k_withdrawn",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_running_quality_inputs",
+          "column": "five_k_withdrawn",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_running_quality_inputs",
+          "column": "five_k_withdrawn",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_running_quality_inputs",
+          "column": "manual_origin",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_running_quality_inputs",
+          "column": "manual_origin",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_running_quality_inputs",
+          "column": "manual_origin",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_running_quality_inputs",
+          "column": "manual_origin",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_running_quality_inputs",
+          "column": "manual_origin",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_running_quality_inputs",
+          "column": "manual_origin",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_running_quality_inputs",
+          "column": "manual_origin",
+          "allowed": true,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_running_quality_inputs",
+          "column": "manual_origin",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_running_quality_inputs",
+          "column": "manual_origin",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_running_quality_inputs",
+          "column": "manual_origin",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_running_quality_inputs",
+          "column": "manual_origin",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_running_quality_inputs",
+          "column": "manual_origin",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_running_quality_inputs",
+          "column": "manual_origin",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_running_quality_inputs",
+          "column": "manual_origin",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_running_quality_inputs",
+          "column": "manual_origin",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_running_quality_inputs",
+          "column": "manual_origin",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_running_quality_inputs",
+          "column": "manual_seconds_per_km",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_running_quality_inputs",
+          "column": "manual_seconds_per_km",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_running_quality_inputs",
+          "column": "manual_seconds_per_km",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_running_quality_inputs",
+          "column": "manual_seconds_per_km",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_running_quality_inputs",
+          "column": "manual_seconds_per_km",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_running_quality_inputs",
+          "column": "manual_seconds_per_km",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_running_quality_inputs",
+          "column": "manual_seconds_per_km",
+          "allowed": true,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_running_quality_inputs",
+          "column": "manual_seconds_per_km",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_running_quality_inputs",
+          "column": "manual_seconds_per_km",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_running_quality_inputs",
+          "column": "manual_seconds_per_km",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_running_quality_inputs",
+          "column": "manual_seconds_per_km",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_running_quality_inputs",
+          "column": "manual_seconds_per_km",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_running_quality_inputs",
+          "column": "manual_seconds_per_km",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_running_quality_inputs",
+          "column": "manual_seconds_per_km",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_running_quality_inputs",
+          "column": "manual_seconds_per_km",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_running_quality_inputs",
+          "column": "manual_seconds_per_km",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_running_quality_inputs",
+          "column": "manual_withdrawn",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_running_quality_inputs",
+          "column": "manual_withdrawn",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_running_quality_inputs",
+          "column": "manual_withdrawn",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_running_quality_inputs",
+          "column": "manual_withdrawn",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_running_quality_inputs",
+          "column": "manual_withdrawn",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_running_quality_inputs",
+          "column": "manual_withdrawn",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_running_quality_inputs",
+          "column": "manual_withdrawn",
+          "allowed": true,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_running_quality_inputs",
+          "column": "manual_withdrawn",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_running_quality_inputs",
+          "column": "manual_withdrawn",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_running_quality_inputs",
+          "column": "manual_withdrawn",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_running_quality_inputs",
+          "column": "manual_withdrawn",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_running_quality_inputs",
+          "column": "manual_withdrawn",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_running_quality_inputs",
+          "column": "manual_withdrawn",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_running_quality_inputs",
+          "column": "manual_withdrawn",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_running_quality_inputs",
+          "column": "manual_withdrawn",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_running_quality_inputs",
+          "column": "manual_withdrawn",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_running_quality_inputs",
+          "column": "revision",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_running_quality_inputs",
+          "column": "revision",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_running_quality_inputs",
+          "column": "revision",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_running_quality_inputs",
+          "column": "revision",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_running_quality_inputs",
+          "column": "revision",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_running_quality_inputs",
+          "column": "revision",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_running_quality_inputs",
+          "column": "revision",
+          "allowed": true,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_running_quality_inputs",
+          "column": "revision",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_running_quality_inputs",
+          "column": "revision",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_running_quality_inputs",
+          "column": "revision",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_running_quality_inputs",
+          "column": "revision",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_running_quality_inputs",
+          "column": "revision",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_running_quality_inputs",
+          "column": "revision",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_running_quality_inputs",
+          "column": "revision",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_running_quality_inputs",
+          "column": "revision",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_running_quality_inputs",
+          "column": "revision",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_running_quality_inputs",
+          "column": "sustained",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_running_quality_inputs",
+          "column": "sustained",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_running_quality_inputs",
+          "column": "sustained",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_running_quality_inputs",
+          "column": "sustained",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_running_quality_inputs",
+          "column": "sustained",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_running_quality_inputs",
+          "column": "sustained",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_running_quality_inputs",
+          "column": "sustained",
+          "allowed": true,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_running_quality_inputs",
+          "column": "sustained",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_running_quality_inputs",
+          "column": "sustained",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_running_quality_inputs",
+          "column": "sustained",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_running_quality_inputs",
+          "column": "sustained",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_running_quality_inputs",
+          "column": "sustained",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_running_quality_inputs",
+          "column": "sustained",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_running_quality_inputs",
+          "column": "sustained",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_running_quality_inputs",
+          "column": "sustained",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_running_quality_inputs",
+          "column": "sustained",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_running_zone2_inputs",
+          "column": "athlete_id",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_running_zone2_inputs",
+          "column": "athlete_id",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_running_zone2_inputs",
+          "column": "athlete_id",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_running_zone2_inputs",
+          "column": "athlete_id",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_running_zone2_inputs",
+          "column": "athlete_id",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_running_zone2_inputs",
+          "column": "athlete_id",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_running_zone2_inputs",
+          "column": "athlete_id",
+          "allowed": true,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_running_zone2_inputs",
+          "column": "athlete_id",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_running_zone2_inputs",
+          "column": "athlete_id",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_running_zone2_inputs",
+          "column": "athlete_id",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_running_zone2_inputs",
+          "column": "athlete_id",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_running_zone2_inputs",
+          "column": "athlete_id",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_running_zone2_inputs",
+          "column": "athlete_id",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_running_zone2_inputs",
+          "column": "athlete_id",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_running_zone2_inputs",
+          "column": "athlete_id",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_running_zone2_inputs",
+          "column": "athlete_id",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_running_zone2_inputs",
+          "column": "confirmed_at",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_running_zone2_inputs",
+          "column": "confirmed_at",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_running_zone2_inputs",
+          "column": "confirmed_at",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_running_zone2_inputs",
+          "column": "confirmed_at",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_running_zone2_inputs",
+          "column": "confirmed_at",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_running_zone2_inputs",
+          "column": "confirmed_at",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_running_zone2_inputs",
+          "column": "confirmed_at",
+          "allowed": true,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_running_zone2_inputs",
+          "column": "confirmed_at",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_running_zone2_inputs",
+          "column": "confirmed_at",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_running_zone2_inputs",
+          "column": "confirmed_at",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_running_zone2_inputs",
+          "column": "confirmed_at",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_running_zone2_inputs",
+          "column": "confirmed_at",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_running_zone2_inputs",
+          "column": "confirmed_at",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_running_zone2_inputs",
+          "column": "confirmed_at",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_running_zone2_inputs",
+          "column": "confirmed_at",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_running_zone2_inputs",
+          "column": "confirmed_at",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_running_zone2_inputs",
+          "column": "lower_bpm",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_running_zone2_inputs",
+          "column": "lower_bpm",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_running_zone2_inputs",
+          "column": "lower_bpm",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_running_zone2_inputs",
+          "column": "lower_bpm",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_running_zone2_inputs",
+          "column": "lower_bpm",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_running_zone2_inputs",
+          "column": "lower_bpm",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_running_zone2_inputs",
+          "column": "lower_bpm",
+          "allowed": true,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_running_zone2_inputs",
+          "column": "lower_bpm",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_running_zone2_inputs",
+          "column": "lower_bpm",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_running_zone2_inputs",
+          "column": "lower_bpm",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_running_zone2_inputs",
+          "column": "lower_bpm",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_running_zone2_inputs",
+          "column": "lower_bpm",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_running_zone2_inputs",
+          "column": "lower_bpm",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_running_zone2_inputs",
+          "column": "lower_bpm",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_running_zone2_inputs",
+          "column": "lower_bpm",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_running_zone2_inputs",
+          "column": "lower_bpm",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_running_zone2_inputs",
+          "column": "revision",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_running_zone2_inputs",
+          "column": "revision",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_running_zone2_inputs",
+          "column": "revision",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_running_zone2_inputs",
+          "column": "revision",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_running_zone2_inputs",
+          "column": "revision",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_running_zone2_inputs",
+          "column": "revision",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_running_zone2_inputs",
+          "column": "revision",
+          "allowed": true,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_running_zone2_inputs",
+          "column": "revision",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_running_zone2_inputs",
+          "column": "revision",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_running_zone2_inputs",
+          "column": "revision",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_running_zone2_inputs",
+          "column": "revision",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_running_zone2_inputs",
+          "column": "revision",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_running_zone2_inputs",
+          "column": "revision",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_running_zone2_inputs",
+          "column": "revision",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_running_zone2_inputs",
+          "column": "revision",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_running_zone2_inputs",
+          "column": "revision",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_running_zone2_inputs",
+          "column": "upper_bpm",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_running_zone2_inputs",
+          "column": "upper_bpm",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_running_zone2_inputs",
+          "column": "upper_bpm",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_running_zone2_inputs",
+          "column": "upper_bpm",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_running_zone2_inputs",
+          "column": "upper_bpm",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_running_zone2_inputs",
+          "column": "upper_bpm",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_running_zone2_inputs",
+          "column": "upper_bpm",
+          "allowed": true,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_running_zone2_inputs",
+          "column": "upper_bpm",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_running_zone2_inputs",
+          "column": "upper_bpm",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_running_zone2_inputs",
+          "column": "upper_bpm",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_running_zone2_inputs",
+          "column": "upper_bpm",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_running_zone2_inputs",
+          "column": "upper_bpm",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_running_zone2_inputs",
+          "column": "upper_bpm",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_running_zone2_inputs",
+          "column": "upper_bpm",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_running_zone2_inputs",
+          "column": "upper_bpm",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_running_zone2_inputs",
+          "column": "upper_bpm",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_running_zone2_inputs",
+          "column": "withdrawn",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_running_zone2_inputs",
+          "column": "withdrawn",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_running_zone2_inputs",
+          "column": "withdrawn",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_running_zone2_inputs",
+          "column": "withdrawn",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_running_zone2_inputs",
+          "column": "withdrawn",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_running_zone2_inputs",
+          "column": "withdrawn",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_running_zone2_inputs",
+          "column": "withdrawn",
+          "allowed": true,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_running_zone2_inputs",
+          "column": "withdrawn",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_running_zone2_inputs",
+          "column": "withdrawn",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_running_zone2_inputs",
+          "column": "withdrawn",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_running_zone2_inputs",
+          "column": "withdrawn",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_running_zone2_inputs",
+          "column": "withdrawn",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_running_zone2_inputs",
+          "column": "withdrawn",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_running_zone2_inputs",
+          "column": "withdrawn",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_running_zone2_inputs",
+          "column": "withdrawn",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_running_zone2_inputs",
+          "column": "withdrawn",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_training_setup",
+          "column": "athlete_id",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_training_setup",
+          "column": "athlete_id",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_training_setup",
+          "column": "athlete_id",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_training_setup",
+          "column": "athlete_id",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_training_setup",
+          "column": "athlete_id",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_training_setup",
+          "column": "athlete_id",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_training_setup",
+          "column": "athlete_id",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_training_setup",
+          "column": "athlete_id",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_training_setup",
+          "column": "athlete_id",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_training_setup",
+          "column": "athlete_id",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_training_setup",
+          "column": "athlete_id",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_training_setup",
+          "column": "athlete_id",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_training_setup",
+          "column": "athlete_id",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_training_setup",
+          "column": "athlete_id",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_training_setup",
+          "column": "athlete_id",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_training_setup",
+          "column": "athlete_id",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_training_setup",
+          "column": "completed_at",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_training_setup",
+          "column": "completed_at",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_training_setup",
+          "column": "completed_at",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_training_setup",
+          "column": "completed_at",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_training_setup",
+          "column": "completed_at",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_training_setup",
+          "column": "completed_at",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_training_setup",
+          "column": "completed_at",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_training_setup",
+          "column": "completed_at",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_training_setup",
+          "column": "completed_at",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_training_setup",
+          "column": "completed_at",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_training_setup",
+          "column": "completed_at",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_training_setup",
+          "column": "completed_at",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_training_setup",
+          "column": "completed_at",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_training_setup",
+          "column": "completed_at",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_training_setup",
+          "column": "completed_at",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_training_setup",
+          "column": "completed_at",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_training_setup",
+          "column": "timezone",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_training_setup",
+          "column": "timezone",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_training_setup",
+          "column": "timezone",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_training_setup",
+          "column": "timezone",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_training_setup",
+          "column": "timezone",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_training_setup",
+          "column": "timezone",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_training_setup",
+          "column": "timezone",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_training_setup",
+          "column": "timezone",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_training_setup",
+          "column": "timezone",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_training_setup",
+          "column": "timezone",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_training_setup",
+          "column": "timezone",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_training_setup",
+          "column": "timezone",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_training_setup",
+          "column": "timezone",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_training_setup",
+          "column": "timezone",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_training_setup",
+          "column": "timezone",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_training_setup",
+          "column": "timezone",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_training_setup",
+          "column": "updated_at",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_training_setup",
+          "column": "updated_at",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_training_setup",
+          "column": "updated_at",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "anon",
+          "table": "athlete_training_setup",
+          "column": "updated_at",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_training_setup",
+          "column": "updated_at",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_training_setup",
+          "column": "updated_at",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_training_setup",
+          "column": "updated_at",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "authenticated",
+          "table": "athlete_training_setup",
+          "column": "updated_at",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_training_setup",
+          "column": "updated_at",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_training_setup",
+          "column": "updated_at",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_training_setup",
+          "column": "updated_at",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "athlete_training_setup",
+          "column": "updated_at",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_training_setup",
+          "column": "updated_at",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_training_setup",
+          "column": "updated_at",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_training_setup",
+          "column": "updated_at",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "service_role",
+          "table": "athlete_training_setup",
+          "column": "updated_at",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "anon",
+          "table": "private_programme_alpha_eligibility",
+          "column": "athlete_id",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "anon",
+          "table": "private_programme_alpha_eligibility",
+          "column": "athlete_id",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "anon",
+          "table": "private_programme_alpha_eligibility",
+          "column": "athlete_id",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "anon",
+          "table": "private_programme_alpha_eligibility",
+          "column": "athlete_id",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "authenticated",
+          "table": "private_programme_alpha_eligibility",
+          "column": "athlete_id",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "authenticated",
+          "table": "private_programme_alpha_eligibility",
+          "column": "athlete_id",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "authenticated",
+          "table": "private_programme_alpha_eligibility",
+          "column": "athlete_id",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "authenticated",
+          "table": "private_programme_alpha_eligibility",
+          "column": "athlete_id",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "private_programme_alpha_eligibility",
+          "column": "athlete_id",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "private_programme_alpha_eligibility",
+          "column": "athlete_id",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "private_programme_alpha_eligibility",
+          "column": "athlete_id",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "private_programme_alpha_eligibility",
+          "column": "athlete_id",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "service_role",
+          "table": "private_programme_alpha_eligibility",
+          "column": "athlete_id",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "service_role",
+          "table": "private_programme_alpha_eligibility",
+          "column": "athlete_id",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "service_role",
+          "table": "private_programme_alpha_eligibility",
+          "column": "athlete_id",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "service_role",
+          "table": "private_programme_alpha_eligibility",
+          "column": "athlete_id",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "anon",
+          "table": "private_programme_alpha_eligibility",
+          "column": "expires_at",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "anon",
+          "table": "private_programme_alpha_eligibility",
+          "column": "expires_at",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "anon",
+          "table": "private_programme_alpha_eligibility",
+          "column": "expires_at",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "anon",
+          "table": "private_programme_alpha_eligibility",
+          "column": "expires_at",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "authenticated",
+          "table": "private_programme_alpha_eligibility",
+          "column": "expires_at",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "authenticated",
+          "table": "private_programme_alpha_eligibility",
+          "column": "expires_at",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "authenticated",
+          "table": "private_programme_alpha_eligibility",
+          "column": "expires_at",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "authenticated",
+          "table": "private_programme_alpha_eligibility",
+          "column": "expires_at",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "private_programme_alpha_eligibility",
+          "column": "expires_at",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "private_programme_alpha_eligibility",
+          "column": "expires_at",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "private_programme_alpha_eligibility",
+          "column": "expires_at",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "private_programme_alpha_eligibility",
+          "column": "expires_at",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "service_role",
+          "table": "private_programme_alpha_eligibility",
+          "column": "expires_at",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "service_role",
+          "table": "private_programme_alpha_eligibility",
+          "column": "expires_at",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "service_role",
+          "table": "private_programme_alpha_eligibility",
+          "column": "expires_at",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "service_role",
+          "table": "private_programme_alpha_eligibility",
+          "column": "expires_at",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "anon",
+          "table": "private_programme_alpha_eligibility",
+          "column": "programme_version_id",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "anon",
+          "table": "private_programme_alpha_eligibility",
+          "column": "programme_version_id",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "anon",
+          "table": "private_programme_alpha_eligibility",
+          "column": "programme_version_id",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "anon",
+          "table": "private_programme_alpha_eligibility",
+          "column": "programme_version_id",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "authenticated",
+          "table": "private_programme_alpha_eligibility",
+          "column": "programme_version_id",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "authenticated",
+          "table": "private_programme_alpha_eligibility",
+          "column": "programme_version_id",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "authenticated",
+          "table": "private_programme_alpha_eligibility",
+          "column": "programme_version_id",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "authenticated",
+          "table": "private_programme_alpha_eligibility",
+          "column": "programme_version_id",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "private_programme_alpha_eligibility",
+          "column": "programme_version_id",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "private_programme_alpha_eligibility",
+          "column": "programme_version_id",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "private_programme_alpha_eligibility",
+          "column": "programme_version_id",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "private_programme_alpha_eligibility",
+          "column": "programme_version_id",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "service_role",
+          "table": "private_programme_alpha_eligibility",
+          "column": "programme_version_id",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "service_role",
+          "table": "private_programme_alpha_eligibility",
+          "column": "programme_version_id",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "service_role",
+          "table": "private_programme_alpha_eligibility",
+          "column": "programme_version_id",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "service_role",
+          "table": "private_programme_alpha_eligibility",
+          "column": "programme_version_id",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "anon",
+          "table": "private_programme_alpha_eligibility",
+          "column": "revoked_at",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "anon",
+          "table": "private_programme_alpha_eligibility",
+          "column": "revoked_at",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "anon",
+          "table": "private_programme_alpha_eligibility",
+          "column": "revoked_at",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "anon",
+          "table": "private_programme_alpha_eligibility",
+          "column": "revoked_at",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "authenticated",
+          "table": "private_programme_alpha_eligibility",
+          "column": "revoked_at",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "authenticated",
+          "table": "private_programme_alpha_eligibility",
+          "column": "revoked_at",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "authenticated",
+          "table": "private_programme_alpha_eligibility",
+          "column": "revoked_at",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "authenticated",
+          "table": "private_programme_alpha_eligibility",
+          "column": "revoked_at",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "private_programme_alpha_eligibility",
+          "column": "revoked_at",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "private_programme_alpha_eligibility",
+          "column": "revoked_at",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "private_programme_alpha_eligibility",
+          "column": "revoked_at",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "private_programme_alpha_eligibility",
+          "column": "revoked_at",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "service_role",
+          "table": "private_programme_alpha_eligibility",
+          "column": "revoked_at",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "service_role",
+          "table": "private_programme_alpha_eligibility",
+          "column": "revoked_at",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "service_role",
+          "table": "private_programme_alpha_eligibility",
+          "column": "revoked_at",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "service_role",
+          "table": "private_programme_alpha_eligibility",
+          "column": "revoked_at",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "anon",
+          "table": "programme_occurrence_zone2_targets",
+          "column": "athlete_id",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "anon",
+          "table": "programme_occurrence_zone2_targets",
+          "column": "athlete_id",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "anon",
+          "table": "programme_occurrence_zone2_targets",
+          "column": "athlete_id",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "anon",
+          "table": "programme_occurrence_zone2_targets",
+          "column": "athlete_id",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "authenticated",
+          "table": "programme_occurrence_zone2_targets",
+          "column": "athlete_id",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "authenticated",
+          "table": "programme_occurrence_zone2_targets",
+          "column": "athlete_id",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "authenticated",
+          "table": "programme_occurrence_zone2_targets",
+          "column": "athlete_id",
+          "allowed": true,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "authenticated",
+          "table": "programme_occurrence_zone2_targets",
+          "column": "athlete_id",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "programme_occurrence_zone2_targets",
+          "column": "athlete_id",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "programme_occurrence_zone2_targets",
+          "column": "athlete_id",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "programme_occurrence_zone2_targets",
+          "column": "athlete_id",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "programme_occurrence_zone2_targets",
+          "column": "athlete_id",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "service_role",
+          "table": "programme_occurrence_zone2_targets",
+          "column": "athlete_id",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "service_role",
+          "table": "programme_occurrence_zone2_targets",
+          "column": "athlete_id",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "service_role",
+          "table": "programme_occurrence_zone2_targets",
+          "column": "athlete_id",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "service_role",
+          "table": "programme_occurrence_zone2_targets",
+          "column": "athlete_id",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "anon",
+          "table": "programme_occurrence_zone2_targets",
+          "column": "occurrence_id",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "anon",
+          "table": "programme_occurrence_zone2_targets",
+          "column": "occurrence_id",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "anon",
+          "table": "programme_occurrence_zone2_targets",
+          "column": "occurrence_id",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "anon",
+          "table": "programme_occurrence_zone2_targets",
+          "column": "occurrence_id",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "authenticated",
+          "table": "programme_occurrence_zone2_targets",
+          "column": "occurrence_id",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "authenticated",
+          "table": "programme_occurrence_zone2_targets",
+          "column": "occurrence_id",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "authenticated",
+          "table": "programme_occurrence_zone2_targets",
+          "column": "occurrence_id",
+          "allowed": true,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "authenticated",
+          "table": "programme_occurrence_zone2_targets",
+          "column": "occurrence_id",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "programme_occurrence_zone2_targets",
+          "column": "occurrence_id",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "programme_occurrence_zone2_targets",
+          "column": "occurrence_id",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "programme_occurrence_zone2_targets",
+          "column": "occurrence_id",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "programme_occurrence_zone2_targets",
+          "column": "occurrence_id",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "service_role",
+          "table": "programme_occurrence_zone2_targets",
+          "column": "occurrence_id",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "service_role",
+          "table": "programme_occurrence_zone2_targets",
+          "column": "occurrence_id",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "service_role",
+          "table": "programme_occurrence_zone2_targets",
+          "column": "occurrence_id",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "service_role",
+          "table": "programme_occurrence_zone2_targets",
+          "column": "occurrence_id",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "anon",
+          "table": "programme_occurrence_zone2_targets",
+          "column": "snapshot",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "anon",
+          "table": "programme_occurrence_zone2_targets",
+          "column": "snapshot",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "anon",
+          "table": "programme_occurrence_zone2_targets",
+          "column": "snapshot",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "anon",
+          "table": "programme_occurrence_zone2_targets",
+          "column": "snapshot",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "authenticated",
+          "table": "programme_occurrence_zone2_targets",
+          "column": "snapshot",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "authenticated",
+          "table": "programme_occurrence_zone2_targets",
+          "column": "snapshot",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "authenticated",
+          "table": "programme_occurrence_zone2_targets",
+          "column": "snapshot",
+          "allowed": true,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "authenticated",
+          "table": "programme_occurrence_zone2_targets",
+          "column": "snapshot",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "programme_occurrence_zone2_targets",
+          "column": "snapshot",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "programme_occurrence_zone2_targets",
+          "column": "snapshot",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "programme_occurrence_zone2_targets",
+          "column": "snapshot",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "programme_occurrence_zone2_targets",
+          "column": "snapshot",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "service_role",
+          "table": "programme_occurrence_zone2_targets",
+          "column": "snapshot",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "service_role",
+          "table": "programme_occurrence_zone2_targets",
+          "column": "snapshot",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "service_role",
+          "table": "programme_occurrence_zone2_targets",
+          "column": "snapshot",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "service_role",
+          "table": "programme_occurrence_zone2_targets",
+          "column": "snapshot",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "anon",
+          "table": "programme_occurrence_zone2_targets",
+          "column": "training_session_id",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "anon",
+          "table": "programme_occurrence_zone2_targets",
+          "column": "training_session_id",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "anon",
+          "table": "programme_occurrence_zone2_targets",
+          "column": "training_session_id",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "anon",
+          "table": "programme_occurrence_zone2_targets",
+          "column": "training_session_id",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "authenticated",
+          "table": "programme_occurrence_zone2_targets",
+          "column": "training_session_id",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "authenticated",
+          "table": "programme_occurrence_zone2_targets",
+          "column": "training_session_id",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "authenticated",
+          "table": "programme_occurrence_zone2_targets",
+          "column": "training_session_id",
+          "allowed": true,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "authenticated",
+          "table": "programme_occurrence_zone2_targets",
+          "column": "training_session_id",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "programme_occurrence_zone2_targets",
+          "column": "training_session_id",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "programme_occurrence_zone2_targets",
+          "column": "training_session_id",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "programme_occurrence_zone2_targets",
+          "column": "training_session_id",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "cohort_exercise_version_publisher",
+          "table": "programme_occurrence_zone2_targets",
+          "column": "training_session_id",
+          "allowed": false,
+          "privilege": "UPDATE"
+        },
+        {
+          "role": "service_role",
+          "table": "programme_occurrence_zone2_targets",
+          "column": "training_session_id",
+          "allowed": false,
+          "privilege": "INSERT"
+        },
+        {
+          "role": "service_role",
+          "table": "programme_occurrence_zone2_targets",
+          "column": "training_session_id",
+          "allowed": false,
+          "privilege": "REFERENCES"
+        },
+        {
+          "role": "service_role",
+          "table": "programme_occurrence_zone2_targets",
+          "column": "training_session_id",
+          "allowed": false,
+          "privilege": "SELECT"
+        },
+        {
+          "role": "service_role",
+          "table": "programme_occurrence_zone2_targets",
+          "column": "training_session_id",
+          "allowed": false,
+          "privilege": "UPDATE"
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "target_ref": "otnhhdxstdnwccehacku",
+    "method": "POST",
+    "path": "/database/query/read-only",
+    "http_status": 201,
+    "started_at": "2026-11-05T05:40:28.921496+00:00",
+    "captured_at": "2026-11-05T05:40:30.883757+00:00",
+    "cf_ray": "a559862198398740-CGK"
+  }
+}

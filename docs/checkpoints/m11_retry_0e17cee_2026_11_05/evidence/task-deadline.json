@@ -1,0 +1,6 @@
+{
+  "conservative_request_start": "2026-11-05T05:39:05.170846+00:00",
+  "actual_provider_expiry": "2026-11-05T05:44:06.778517+00:00",
+  "task_use_deadline": "2026-11-05T05:44:06.778517+00:00",
+  "limit": "30 minutes from issuance or earlier provider expiry; conservative request-start accounting used"
+}

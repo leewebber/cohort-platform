@@ -1,0 +1,12 @@
+{
+  "dry_run_and_apply_shared_one_dsn": true,
+  "session_port": 5432,
+  "apply_remaining_seconds": 256.917291,
+  "temporary_logins_issued": 1,
+  "temporary_logins_revoked": 1,
+  "management_patch_requests": 0,
+  "reserve_stop_before_callback": true,
+  "final_ordinary_cli_dry_run_executed": false,
+  "actual_ledger_and_pinned_source_versions_equal": true,
+  "client_hold_release": false
+}

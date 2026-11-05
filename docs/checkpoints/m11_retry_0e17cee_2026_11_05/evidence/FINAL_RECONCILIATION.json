@@ -1,0 +1,33 @@
+{
+  "ledger_count": 135,
+  "tip": "20261104120000",
+  "added_versions": [
+    "20261026110000",
+    "20261027120000",
+    "20261027130000",
+    "20261028120000",
+    "20261104120000"
+  ],
+  "callback_present": false,
+  "allowlist": "http://localhost:55425/**",
+  "checks": {
+    "inventory_02_equals_pre": false,
+    "inventory_03_equals_pre": false,
+    "inventory_04_equals_pre": false,
+    "inventory_05_equals_pre": false,
+    "inventory_06_equals_pre": false,
+    "inventory_07_equals_pre": true,
+    "inventory_08_equals_pre": false,
+    "inventory_09_equals_pre": false,
+    "inventory_10_equals_pre": true,
+    "catalogue": true,
+    "protected-rows": true,
+    "existing-authority": true,
+    "auth-rows": true,
+    "healthy": true,
+    "auth_other_inspected_fields": true,
+    "auth_template": true,
+    "zero_cli_roles_backends": true,
+    "original_ledger_exact": true
+  }
+}

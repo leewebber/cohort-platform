@@ -1,0 +1,10 @@
+{
+  "passed": true,
+  "ledger_count": 135,
+  "original_runner_failed_check_reconciled": "two private copies explicitly created by the approved Zone 2 SQL",
+  "scope_function_checks": 32,
+  "independent_post_inventory_exact": true,
+  "local_and_hosted_version_sets_equal": true,
+  "final_cli_dry_run_executed": false,
+  "credential_already_revoked": true
+}

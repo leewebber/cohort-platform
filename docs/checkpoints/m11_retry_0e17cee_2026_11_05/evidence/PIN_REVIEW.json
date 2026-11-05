@@ -1,0 +1,6 @@
+{
+  "approved_commit": "0e17cee63fda1e71e3842d5b6317dfbd9b515acf",
+  "all_retained_artifact_pins_match": true,
+  "script_adapter_migration_callback_cli_ca_and_rehearsal_pins_match": true,
+  "expected_session_listener": 5432
+}

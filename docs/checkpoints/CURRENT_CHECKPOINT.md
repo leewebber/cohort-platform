@@ -1,5 +1,17 @@
 # Current repository checkpoint
 
+> **M1.1 0e17cee hosted schema applied, callback pending (2026-11-05):**
+> [Hosted apply and reconciliation](./m11_retry_0e17cee_2026_11_05/HANDOFF.md)
+> verify the exact five-file batch on the same session-mode preview/apply connection.
+> Ledger 135 through 20261104120000. The runner flagged two private copies omitted
+> from its inventory. Both are authored by the approved Zone 2 SQL and match
+> original body hashes and owner-only execution. Protected checks match across
+> all 67 public and both auth tables, the 172-row catalogue and five consumers.
+> The single login was revoked, with zero roles/backends verified at 13:40:37 WITA.
+> Callback remains pending after the 90-second reserve gate. **Clients stay closed
+> for this window.** Next is a bounded Management-only completion decision.
+> M1.1 and Gate A remain open.
+
 > **M1.1 f6c1080 retry — exact preview, transport failure, revoked (2026-11-05):**
 > [Actual result and session correction](./m11_retry_f6c1080_2026_11_05/HANDOFF.md)
 > record healthy exact ledger130 preflight and an exit0 dry-run listing exactly

@@ -1,0 +1,33 @@
+from support import *
+pairs = {
+ 'cohort_fixed_before_zone2(uuid,timestamp with time zone)': 'cohort_create_or_resume_fixed_occurrence_at(uuid,timestamp with time zone)',
+ 'cohort_generic_before_zone2(jsonb)': 'create_or_resume_programme_training_session(jsonb)',
+}
+postcheck=json.loads((OUT/'POSTCHECK_REVIEW.json').read_text())
+assert {k for k,v in postcheck['checks'].items() if not v}=={'no_unapproved_functions_added'}
+before={r['signature']:r for r in scalar(json.loads((OUT/'pre-read-03.json').read_text()))}
+expected={x['signature'] for x in json.loads((PKG/'POSTCHECK_EXPECTED_FUNCTIONS.json').read_text())['functions']}
+assert set(postcheck['new_functions'])-expected==set(pairs)
+migration=ROOT/'supabase/migrations/20261027120000_confirmed_running_zone_targets.sql'
+approved=next(m for m in json.loads((PKG/'MIGRATIONS.json').read_text())['migrations'] if m['version']=='20261027120000')
+assert sha(migration.read_bytes())==approved['sha256']
+for clone, original in pairs.items():
+    clone_name=clone.split('(')[0]
+    original_name=original.split('(')[0]
+    sql=migration.read_text()
+    assert f"'FUNCTION public.{original_name}(', 'FUNCTION public.{clone_name}('" in sql
+    assert f"'{clone_name}'" in sql
+    assert 'REVOKE ALL ON FUNCTION %s FROM PUBLIC,anon,authenticated,service_role' in sql
+    assert 'REVOKE ALL ON FUNCTION %s FROM cohort_exercise_version_publisher' in sql
+quoted=','.join(f"'{s}'" for s in pairs)
+response=readonly(f"""SELECT jsonb_agg(jsonb_build_object('signature',p.oid::regprocedure::text,'owner',pg_get_userbyid(p.proowner),'acl',p.proacl,'security_definer',p.prosecdef,'config',p.proconfig,'body_sha256',encode(extensions.digest(convert_to(p.prosrc,'UTF8'),'sha256'),'hex'),'anon_execute',has_function_privilege('anon',p.oid,'EXECUTE'),'authenticated_execute',has_function_privilege('authenticated',p.oid,'EXECUTE'),'service_execute',has_function_privilege('service_role',p.oid,'EXECUTE'),'publisher_execute',has_function_privilege('cohort_exercise_version_publisher',p.oid,'EXECUTE')) ORDER BY p.oid::regprocedure::text) AS functions FROM pg_proc p JOIN pg_namespace n ON n.oid=p.pronamespace WHERE n.nspname='public' AND p.oid::regprocedure::text=ANY(ARRAY[{quoted}]);""")
+save('CLONE_READBACK.json',response)
+rows={r['signature']:r for r in scalar(response)}
+assert set(rows)==set(pairs)
+for clone,original in pairs.items():
+    r,old=rows[clone],before[original]
+    assert all(r[k]==old[k] for k in ['owner','config','security_definer','body_sha256']),clone
+    assert r['acl']==['postgres=X/postgres'],clone
+    assert not any(r[k] for k in ['anon_execute','authenticated_execute','service_execute','publisher_execute']),clone
+save('CLONE_RECONCILIATION.json',{'verified':True,'exact_approved_migration_sha256':approved['sha256'],'source_copies':pairs,'exact_original_body_owner_config_security':True,'owner_only_acl_and_all_four_unprivileged_execute_denials':True,'total_scoped_function_checks':32,'original_runner_failure':'The 30-name manifest omitted two source-generated copies.'})
+print('Both migration-authored copies match original bodies and security, with owner-only ACLs and all four caller EXECUTE denials')

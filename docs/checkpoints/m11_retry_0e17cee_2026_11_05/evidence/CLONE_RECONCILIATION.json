@@ -1,0 +1,12 @@
+{
+  "verified": true,
+  "exact_approved_migration_sha256": "26038e82bae21130982ccaed65be14ee49ad4581256f99476ccb5ba071b0de6a",
+  "source_copies": {
+    "cohort_fixed_before_zone2(uuid,timestamp with time zone)": "cohort_create_or_resume_fixed_occurrence_at(uuid,timestamp with time zone)",
+    "cohort_generic_before_zone2(jsonb)": "create_or_resume_programme_training_session(jsonb)"
+  },
+  "exact_original_body_owner_config_security": true,
+  "owner_only_acl_and_all_four_unprivileged_execute_denials": true,
+  "total_scoped_function_checks": 32,
+  "original_runner_failure": "The 30-name manifest omitted two source-generated copies."
+}

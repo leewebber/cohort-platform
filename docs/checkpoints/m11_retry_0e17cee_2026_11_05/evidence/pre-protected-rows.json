@@ -1,0 +1,285 @@
+{
+  "data": [
+    {
+      "protected_rows": {
+        "profiles": {
+          "count": 2,
+          "digest": "ee580e31c6e73735d7b42eb6d01dc807"
+        },
+        "programmes": {
+          "count": 1,
+          "digest": "b02ff128b552b0d51d28c48ee4d3fc39"
+        },
+        "exercises_v1": {
+          "count": 72,
+          "digest": "252f4d9f264eda53405c360dca35d40a"
+        },
+        "exercises_v2": {
+          "count": 172,
+          "digest": "63a7af087a849905d8e3801146e857fe"
+        },
+        "athlete_state": {
+          "count": 1,
+          "digest": "72ea70f35c86703903bb589dd8a3b319"
+        },
+        "training_logs": {
+          "count": 3,
+          "digest": "bf8a3c8d36f8d1767eb9c59562855dc7"
+        },
+        "protocol_steps": {
+          "count": 203,
+          "digest": "bc13412a136db8fe0cbadb2e92a2fad3"
+        },
+        "session_blocks": {
+          "count": 495,
+          "digest": "1a8fb6135a09c24db805921202ae13a4"
+        },
+        "programme_weeks": {
+          "count": 1,
+          "digest": "cf5352146ea5f37e304bc4657a52f23e"
+        },
+        "session_lineages": {
+          "count": 306,
+          "digest": "dc946d25c373d2c7f43256766e64819a"
+        },
+        "training_sessions": {
+          "count": 47,
+          "digest": "d1460bd339481ce7376e1570fb51d6d4"
+        },
+        "weekly_blueprints": {
+          "count": 0,
+          "digest": "37a6259cc0c1dae299a7866489dff0bd"
+        },
+        "content_publishers": {
+          "count": 1,
+          "digest": "e1418e6f601c7c01b674a8643d714e82"
+        },
+        "programme_lineages": {
+          "count": 10,
+          "digest": "f6918c4a413313fe9592970512b2488d"
+        },
+        "programme_sessions": {
+          "count": 1,
+          "digest": "9f0aa009579f5ee2601b2212d702bd57"
+        },
+        "programme_versions": {
+          "count": 11,
+          "digest": "66fd73a4746c7df81b24dc896d3e1195"
+        },
+        "protocol_exercises": {
+          "count": 4,
+          "digest": "f4131103520d843e0ee6648256eaa0a0"
+        },
+        "training_set_results": {
+          "count": 411,
+          "digest": "9dbd4476fe5083a30060b932817e8bcb"
+        },
+        "coach_athlete_invites": {
+          "count": 0,
+          "digest": "37a6259cc0c1dae299a7866489dff0bd"
+        },
+        "performance_protocols": {
+          "count": 317,
+          "digest": "b5336ba9478402390441f1893b0d68bf"
+        },
+        "programme_assignments": {
+          "count": 4,
+          "digest": "9c19392c6fecd57571b7dd287eefd466"
+        },
+        "training_session_sets": {
+          "count": 11,
+          "digest": "35852f2f626a6d77da17e677ee712014"
+        },
+        "programme_version_days": {
+          "count": 181,
+          "digest": "45da3a6b6bef3f05ba81eb1d96056ecf"
+        },
+        "training_block_results": {
+          "count": 63,
+          "digest": "b030f140e1d7ff33aafe2b9ab473bd6b"
+        },
+        "content_graph_manifests": {
+          "count": 2,
+          "digest": "e0eeddbe5c4eba6e2241562937a8ab82"
+        },
+        "knowledge_relationships": {
+          "count": 4,
+          "digest": "a47cf0020a9084ff3bc6c1bfa29005aa"
+        },
+        "programme_slot_outcomes": {
+          "count": 19,
+          "digest": "77bf15604ff29f79df28f379e36547f1"
+        },
+        "programme_version_weeks": {
+          "count": 29,
+          "digest": "a745d1bdea5a2000bb06dede13e8ab4b"
+        },
+        "session_block_exercises": {
+          "count": 1648,
+          "digest": "6fac342ab0bf46ca2dfe2fc90db21f5a"
+        },
+        "programme_version_phases": {
+          "count": 4,
+          "digest": "7c70b3d2decd0e0a315b7044a30e4329"
+        },
+        "training_session_records": {
+          "count": 24,
+          "digest": "4ad1de0aa4b592c66de926de70667a84"
+        },
+        "training_exercise_results": {
+          "count": 183,
+          "digest": "13bad7afbac944f0a2224f04dfe43d29"
+        },
+        "training_session_circuits": {
+          "count": 4,
+          "digest": "d6e84fd37efb3af9eaf396dbf199f06c"
+        },
+        "training_session_intervals": {
+          "count": 1,
+          "digest": "6375db446c9fd105fdaad527a42d3e38"
+        },
+        "coach_athlete_relationships": {
+          "count": 0,
+          "digest": "37a6259cc0c1dae299a7866489dff0bd"
+        },
+        "programme_adaptation_events": {
+          "count": 0,
+          "digest": "37a6259cc0c1dae299a7866489dff0bd"
+        },
+        "cohort_v3_publication_claims": {
+          "count": 0,
+          "digest": "37a6259cc0c1dae299a7866489dff0bd"
+        },
+        "content_publisher_principals": {
+          "count": 1,
+          "digest": "2a79cd5af66da09fe4590dfaeaa7c81f"
+        },
+        "programme_schedule_operations": {
+          "count": 4,
+          "digest": "fca2e3dce1137da012f5a82ec67c117d"
+        },
+        "programme_version_assessments": {
+          "count": 0,
+          "digest": "37a6259cc0c1dae299a7866489dff0bd"
+        },
+        "publisher_athlete_invitations": {
+          "count": 0,
+          "digest": "37a6259cc0c1dae299a7866489dff0bd"
+        },
+        "publisher_athlete_memberships": {
+          "count": 0,
+          "digest": "37a6259cc0c1dae299a7866489dff0bd"
+        },
+        "running_5k_benchmark_evidence": {
+          "count": 1,
+          "digest": "372ef8b962bedbe102bcdce8485d9586"
+        },
+        "hyrox_base_benchmark_revisions": {
+          "count": 0,
+          "digest": "37a6259cc0c1dae299a7866489dff0bd"
+        },
+        "performance_result_corrections": {
+          "count": 0,
+          "digest": "37a6259cc0c1dae299a7866489dff0bd"
+        },
+        "programme_schedule_occurrences": {
+          "count": 230,
+          "digest": "4833b1d89d9121e0596d61bffb349a62"
+        },
+        "programme_schedule_projections": {
+          "count": 4,
+          "digest": "96d22c831482b685f912036610aaae62"
+        },
+        "hyrox_base_benchmark_selections": {
+          "count": 0,
+          "digest": "37a6259cc0c1dae299a7866489dff0bd"
+        },
+        "hyrox_prescription_dependencies": {
+          "count": 3,
+          "digest": "a18f0791130a9d37b3e5187dd3fe1e25"
+        },
+        "programme_publication_artifacts": {
+          "count": 0,
+          "digest": "37a6259cc0c1dae299a7866489dff0bd"
+        },
+        "programme_version_session_slots": {
+          "count": 188,
+          "digest": "36b9f3cd72a9009c94ee473513635eb0"
+        },
+        "content_graph_reconstruction_jobs": {
+          "count": 0,
+          "digest": "37a6259cc0c1dae299a7866489dff0bd"
+        },
+        "programme_v3_prescription_reviews": {
+          "count": 0,
+          "digest": "37a6259cc0c1dae299a7866489dff0bd"
+        },
+        "programme_v3_prescription_consents": {
+          "count": 0,
+          "digest": "37a6259cc0c1dae299a7866489dff0bd"
+        },
+        "programme_v3_publication_artifacts": {
+          "count": 0,
+          "digest": "37a6259cc0c1dae299a7866489dff0bd"
+        },
+        "publisher_athlete_membership_events": {
+          "count": 0,
+          "digest": "37a6259cc0c1dae299a7866489dff0bd"
+        },
+        "private_programme_graph_repair_events": {
+          "count": 3,
+          "digest": "3343649783261ff9b3acd1d45e13d7d0"
+        },
+        "programme_occurrence_duration_choices": {
+          "count": 0,
+          "digest": "37a6259cc0c1dae299a7866489dff0bd"
+        },
+        "programme_version_protected_invariants": {
+          "count": 0,
+          "digest": "37a6259cc0c1dae299a7866489dff0bd"
+        },
+        "published_exercise_definition_versions": {
+          "count": 0,
+          "digest": "37a6259cc0c1dae299a7866489dff0bd"
+        },
+        "published_exercise_version_retirements": {
+          "count": 0,
+          "digest": "37a6259cc0c1dae299a7866489dff0bd"
+        },
+        "programme_version_comparison_identities": {
+          "count": 5,
+          "digest": "b7cc01b55c968d3fe380bb0421bb73a8"
+        },
+        "programme_version_evidence_requirements": {
+          "count": 0,
+          "digest": "37a6259cc0c1dae299a7866489dff0bd"
+        },
+        "running_5k_benchmark_evidence_revisions": {
+          "count": 1,
+          "digest": "fcc220b3488b665dac40dc381882ebca"
+        },
+        "programme_version_adaptation_permissions": {
+          "count": 0,
+          "digest": "37a6259cc0c1dae299a7866489dff0bd"
+        },
+        "programme_occurrence_running_target_snapshots": {
+          "count": 4,
+          "digest": "36149c77ebd1df92e3fea4c7b8b03345"
+        },
+        "programme_occurrence_v3_prescription_snapshots": {
+          "count": 0,
+          "digest": "37a6259cc0c1dae299a7866489dff0bd"
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "target_ref": "otnhhdxstdnwccehacku",
+    "method": "POST",
+    "path": "/database/query/read-only",
+    "http_status": 201,
+    "started_at": "2026-11-05T05:38:33.033505+00:00",
+    "captured_at": "2026-11-05T05:38:35.229174+00:00",
+    "cf_ray": "a559834d4cadaa09-CGK"
+  }
+}

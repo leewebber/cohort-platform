@@ -1,0 +1,25 @@
+{
+  "role": "postgres",
+  "database": "postgres",
+  "attributes": {
+    "login": true,
+    "super": false,
+    "inherit": false,
+    "createdb": false,
+    "bypassrls": false,
+    "createrole": false
+  },
+  "memberships": [
+    {
+      "set": true,
+      "role": "postgres",
+      "admin": false,
+      "member": "cli_login_postgres",
+      "inherit": false
+    }
+  ],
+  "session_user": "cli_login_postgres",
+  "provider_expiry": "2026-11-05T05:44:06.778517+00:00",
+  "application_name": "m11_enablement_session_retry",
+  "system_identifier": "7656985631720456337"
+}

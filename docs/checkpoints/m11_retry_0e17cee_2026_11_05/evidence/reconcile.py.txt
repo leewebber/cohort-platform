@@ -1,0 +1,51 @@
+from support import *
+
+statements = [s.strip() for s in (PKG/'PREFLIGHT.sql').read_text().split(';')
+              if s.strip().startswith('SELECT ')]
+checks = {}
+for i in range(2, 11):
+    result = readonly(statements[i-1]+';')
+    save(f'final-read-{i:02d}.json', result)
+    before = json.loads((OUT/f'pre-read-{i:02d}.json').read_text())['data']
+    checks[f'inventory_{i:02d}_equals_pre'] = result['data'] == before
+for label, path in [
+    ('catalogue', PKG/'CATALOGUE_PROTECTED_STATE.sql'),
+    ('protected-rows', OUT/'PROTECTED_ROWS.sql'),
+    ('existing-authority', OUT/'EXISTING_AUTHORITY.sql'),
+    ('auth-rows', OUT/'AUTH_ROWS.sql'),
+]:
+    result = readonly(path.read_text())
+    save(f'final-{label}.json', result)
+    current = scalar(result)
+    prior = scalar(json.loads((OUT/f'pre-{label}.json').read_text()))
+    if label == 'catalogue':
+        checks[label] = all(current[k] == prior[k] for k in ['columns','constraints','indexes','rows','consumer_guard'])
+    else:
+        checks[label] = current == prior
+project, meta = api()
+save('FINAL_TARGET.json', {'project': {k:project.get(k) for k in ['id','name','region','status']}, 'metadata':meta})
+assert project['id'] == TARGET
+health, meta = api('/health?services=db&services=auth&services=rest&services=storage&services=realtime')
+save('FINAL_HEALTH.json', {'services':health,'metadata':meta})
+checks['healthy'] = project['status']=='ACTIVE_HEALTHY' and len(health)==5 and all(s['healthy'] and s['status']=='ACTIVE_HEALTHY' for s in health)
+auth, meta = api('/config/auth')
+view = auth_view(auth)
+flags = template_flags(auth)
+save('FINAL_AUTH.json', {'settings':view,'template_flags':flags,'metadata':meta})
+del auth
+baseline = json.loads((OUT/'pre-auth.json').read_text())
+checks['auth_other_inspected_fields'] = all(view[k]==baseline['settings'][k] for k in view if k!='uri_allow_list')
+checks['auth_template'] = flags==baseline['template_flags']
+roles=readonly(ROLE_STATE)
+save('FINAL_CLI_STATE.json',roles)
+checks['zero_cli_roles_backends'] = scalar(roles)=={'roles':[],'backends':[]}
+ledger = scalar(json.loads((OUT/'final-read-02.json').read_text()))
+prior = scalar(json.loads((OUT/'pre-read-02.json').read_text()))
+old={x['version']:x for x in prior}
+current={x['version']:x for x in ledger}
+checks['original_ledger_exact']=all(current.get(v)==row for v,row in old.items())
+result={'ledger_count':len(ledger),'tip':max(current),'added_versions':sorted(set(current)-set(old)),
+        'callback_present':'cohortplatform://auth-callback' in view['uri_allow_list'].split(','),
+        'allowlist':view['uri_allow_list'],'checks':checks}
+save('FINAL_RECONCILIATION.json',result)
+print(json.dumps(result))

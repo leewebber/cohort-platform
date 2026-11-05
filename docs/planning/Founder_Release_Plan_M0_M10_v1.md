@@ -6,7 +6,13 @@ This plan controls delivery priorities. It preserves technical authority contrac
 it does not grant implementation, content, hosted, account or release authority.
 [M0 findings and critical path](../checkpoints/m0_alpha_baseline/HANDOFF.md).
 
-## Current single point — M1.1 normal-session enablement retry
+## Current single point — M1.1 callback and hold closeout
+
+The five approved migrations applied on Field Manual using the proved normal session connection, and the exact ledger is now 135 through 20261104120000. The postcheck inventory omitted two approved private copies. Both were verified independently with exact original bodies and owner-only execution, alongside matching protected state. The single login was revoked. The callback is pending because the reconciliation reached the execution reserve gate. Keep the client hold for this enablement window. [Hosted apply and reconciliation](../checkpoints/m11_retry_0e17cee_2026_11_05/HANDOFF.md)
+
+The next decision covers the Management-only callback completion window and use of exact independent ledger/source parity for the outstanding final CLI preview. Publication, account and athlete operations remain separate. M1.1 and Gate A remain open. [Callback continuation](../checkpoints/m11_retry_0e17cee_2026_11_05/CALLBACK_CONTINUATION.md)
+
+## Retained normal-session enablement preparation
 
 [The f6c1080 live attempt](../checkpoints/m11_retry_f6c1080_2026_11_05/HANDOFF.md) passed fresh exact ledger130 preflight and a normal CLI dry-run listing exactly five approved files. Apply then failed on transaction-pooler prepared-statement collision42P05 before any migration. Independent schema/public/auth data and settings remain unchanged; callback absent, ledger130. Supported revoke succeeded and zero CLI roles/backends were verified before native expiry. **Existing clients may reopen; no new source/client activation or installed acceptance follows.**
 

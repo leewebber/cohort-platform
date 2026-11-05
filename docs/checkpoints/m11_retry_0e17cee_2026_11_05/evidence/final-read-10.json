@@ -1,0 +1,20 @@
+{
+  "data": [
+    {
+      "collisions": {
+        "catalogue_rows": 172,
+        "candidate_lineage_rows": 0,
+        "candidate_version_rows": 0
+      }
+    }
+  ],
+  "metadata": {
+    "target_ref": "otnhhdxstdnwccehacku",
+    "method": "POST",
+    "path": "/database/query/read-only",
+    "http_status": 201,
+    "started_at": "2026-11-05T05:41:26.948173+00:00",
+    "captured_at": "2026-11-05T05:41:28.504695+00:00",
+    "cf_ray": "a559878c2d61d8a3-CGK"
+  }
+}

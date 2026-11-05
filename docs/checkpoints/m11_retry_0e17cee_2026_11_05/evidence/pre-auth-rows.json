@@ -1,0 +1,25 @@
+{
+  "data": [
+    {
+      "protected_auth": {
+        "auth.users": {
+          "count": 2,
+          "digest": "89db3d6180aac373d6991b4152a472e2"
+        },
+        "auth.identities": {
+          "count": 2,
+          "digest": "8f001f8793440a23fc2a889fae98a8c5"
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "target_ref": "otnhhdxstdnwccehacku",
+    "method": "POST",
+    "path": "/database/query/read-only",
+    "http_status": 201,
+    "started_at": "2026-11-05T05:38:39.215787+00:00",
+    "captured_at": "2026-11-05T05:38:40.849126+00:00",
+    "cf_ray": "a5598373f9cfe77a-CGK"
+  }
+}
