@@ -1,3 +1,5 @@
+import 'package:cohort_platform/application/ports/knowledge_graph_reader.dart';
+import 'package:cohort_platform/models/session_block_type.dart';
 import 'package:cohort_platform/domain/adaptation/adaptation_domain.dart';
 import 'package:cohort_platform/features/session/models/session_execution_plan.dart';
 import 'package:cohort_platform/models/protocol_draft.dart';
@@ -15,10 +17,28 @@ class ProgrammeAdaptationPlanApplier {
     required SessionExecutionPlan originalPlan,
     required ProtocolDraft authoredDraft,
     required AdaptedSessionExecutionSnapshot snapshot,
+    KnowledgeGraphReader? knowledge,
   }) {
     if (snapshot.sourceProtocolId.trim() != authoredDraft.protocolId.trim()) {
       throw StateError(
         'Snapshot protocol does not match authored draft protocol.',
+      );
+    }
+
+    final swaps = snapshot.appliedAdaptationAudit.where(
+      (entry) => entry.actionType == AdaptationActionType.swapExercise,
+    );
+    if (swaps.isNotEmpty) {
+      if (knowledge == null ||
+          snapshot.appliedAdaptationAudit.length != 1 ||
+          snapshot.omittedBlocks.isNotEmpty) {
+        throw StateError('Expected one exact equipment substitution.');
+      }
+      return _applyExerciseSwap(
+        originalPlan,
+        authoredDraft,
+        swaps.single,
+        knowledge,
       );
     }
 
@@ -42,16 +62,7 @@ class ProgrammeAdaptationPlanApplier {
         blocks.add(base);
         continue;
       }
-      final swapByOriginal = <String, String>{
-        for (final entry in snapshot.appliedAdaptationAudit)
-          if (entry.actionType == AdaptationActionType.swapExercise &&
-              entry.originalValueReference != null &&
-              entry.appliedValueReference != null)
-            entry.originalValueReference!: entry.appliedValueReference!,
-      };
-      blocks.add(
-        _applyRetainedBlock(base, retained, swapByOriginalId: swapByOriginal),
-      );
+      blocks.add(_applyRetainedBlock(base, retained));
     }
 
     if (blocks.isEmpty) {
@@ -71,11 +82,118 @@ class ProgrammeAdaptationPlanApplier {
     );
   }
 
+  SessionExecutionPlan _applyExerciseSwap(
+    SessionExecutionPlan plan,
+    ProtocolDraft draft,
+    AdaptationStepAuditEntry swap,
+    KnowledgeGraphReader knowledge,
+  ) {
+    final source = swap.originalValueReference;
+    final replacement = swap.appliedValueReference;
+    final draftBlock = draft.blocks.singleWhere(
+      (block) => block.localId == swap.blockLocalId,
+    );
+    final link = draftBlock.linkedExercises.singleWhere(
+      (link) =>
+          link.localId == swap.exerciseLinkLocalId && link.exerciseId == source,
+    );
+    final block = plan.blocks.singleWhere(
+      (block) => block.blockId == draftBlock.stableId,
+    );
+    final original = block.linkedExercises.singleWhere(
+      (exercise) =>
+          exercise.position == link.position && exercise.exerciseId == source,
+    );
+    final originalExercise = source == null
+        ? null
+        : knowledge.exerciseById(source);
+    final candidate = replacement == null
+        ? null
+        : knowledge.exerciseById(replacement);
+    final prescription = original.prescription;
+    const bodyweight = 'cohort.equipment.bodyweight';
+    // Keep this slice to a working strength placement with transferable
+    // programming. Exercise-specific loads or capture instructions need review.
+    if (originalExercise == null ||
+        candidate == null ||
+        originalExercise.requiredEquipmentIds.contains(bodyweight) ||
+        candidate.requiredEquipmentIds.isEmpty ||
+        candidate.requiredEquipmentIds.contains(bodyweight) ||
+        candidate.meta.status != 'active' ||
+        candidate.meta.label.trim().isEmpty ||
+        (block.blockType != SessionBlockType.strength &&
+            block.blockType != SessionBlockType.accessory) ||
+        prescription == null ||
+        !prescription.hasStructuredData ||
+        (prescription.load != null &&
+            prescription.load!.type != StrengthLoadType.athleteSelected) ||
+        prescription.coachCue?.trim().isNotEmpty == true ||
+        prescription.authoredDetails != null ||
+        prescription.performanceCapture != null ||
+        plan.prescriptionLoadOverrides.isNotEmpty) {
+      throw StateError(
+        'The replacement needs an approved strength prescription.',
+      );
+    }
+    if (block.linkedExercises.any(
+      (exercise) => exercise.exerciseId == replacement,
+    )) {
+      throw StateError(
+        'The replacement would duplicate an exercise in this block.',
+      );
+    }
+
+    final adaptedBlock = SessionExecutionBlock(
+      blockId: block.blockId,
+      title: block.title,
+      blockType: block.blockType,
+      content: block.content,
+      workoutFormat: block.workoutFormat,
+      position: block.position,
+      boundTarget: block.boundTarget,
+      timerConfiguration: block.timerConfiguration,
+      timerSummary: block.timerSummary,
+      coachNotes: block.coachNotes,
+      performanceCaptureMode: block.performanceCaptureMode,
+      linkedExercises: [
+        for (final exercise in block.linkedExercises)
+          if (identical(exercise, original))
+            SessionExecutionExerciseSummary(
+              exerciseId: candidate.id,
+              displayName: candidate.meta.label,
+              position: original.position,
+              prescription: prescription,
+              executionGroupKey: original.executionGroupKey,
+              executionGroupLabel: original.executionGroupLabel,
+              executionGroupRounds: original.executionGroupRounds,
+            )
+          else
+            exercise,
+      ],
+    );
+    return SessionExecutionPlan(
+      sessionId: plan.sessionId,
+      sessionTitle: plan.sessionTitle,
+      blocks: [
+        for (final original in plan.blocks)
+          identical(original, block) ? adaptedBlock : original,
+      ],
+      protocol: plan.protocol,
+      durationMin: plan.durationMin,
+      coachNotes: plan.coachNotes,
+      programmeContextLabel: plan.programmeContextLabel,
+      prescriptionLoadOverrides: plan.prescriptionLoadOverrides,
+      boundPrescriptionSnapshot: plan.boundPrescriptionSnapshot,
+      durationChoiceSnapshot: plan.durationChoiceSnapshot,
+      runningTargetAdmissionSnapshot: plan.runningTargetAdmissionSnapshot,
+      authoredSource: plan.authoredSource,
+    );
+  }
+
   SessionExecutionBlock _applyRetainedBlock(
     SessionExecutionBlock base,
-    BlockExecutionSnapshot retained, {
-    Map<String, String> swapByOriginalId = const {},
-  }) {
+    BlockExecutionSnapshot retained,
+  ) {
     final byLinkId = {
       for (final exercise in retained.exercises)
         exercise.exerciseLinkLocalId: exercise,
@@ -89,10 +207,6 @@ class ProgrammeAdaptationPlanApplier {
           ExerciseExecutionSnapshot? match;
           // Prefer stable exercise id; link local ids are not on SessionExecutionExerciseSummary.
           match = byExerciseId[summary.exerciseId];
-          final swappedTo = swapByOriginalId[summary.exerciseId];
-          if (match == null && swappedTo != null) {
-            match = byExerciseId[swappedTo];
-          }
           if (match == null &&
               byLinkId.length == 1 &&
               base.linkedExercises.length == 1) {

@@ -1,3 +1,4 @@
+import 'package:cohort_platform/application/ports/knowledge_graph_reader.dart';
 import 'package:cohort_platform/domain/adaptation/adaptation_domain.dart';
 import 'package:cohort_platform/domain/coach_brain/session_adaptation/session_adaptation_pipeline.dart';
 import 'package:cohort_platform/features/adaptation/models/programme_adaptation_proposal.dart';
@@ -20,6 +21,7 @@ class ProgrammeAdaptationProposalMapper {
     required AdaptationRequest request,
     required SessionAdaptationPipelineRun run,
     required ProtocolDraft authoredDraft,
+    required KnowledgeGraphReader knowledge,
     DateTime? proposedAt,
   }) {
     final stamp = proposedAt ?? DateTime.now().toUtc();
@@ -185,7 +187,7 @@ class ProgrammeAdaptationProposalMapper {
 
     final snapshot = application.snapshot!;
     final sessionChanges = _sessionChanges(snapshot);
-    final exerciseChanges = _exerciseChanges(snapshot);
+    final exerciseChanges = _exerciseChanges(snapshot, knowledge);
 
     if (sessionChanges.isEmpty && exerciseChanges.isEmpty) {
       return _noSafe(
@@ -205,6 +207,7 @@ class ProgrammeAdaptationProposalMapper {
         originalPlan: package.plan,
         authoredDraft: authoredDraft,
         snapshot: snapshot,
+        knowledge: knowledge,
       );
       final originalFingerprint = ProgrammeAdaptationFingerprints.plan(
         package.plan,
@@ -383,6 +386,7 @@ class ProgrammeAdaptationProposalMapper {
 
   static List<ProgrammeAdaptationMaterialChange> _exerciseChanges(
     AdaptedSessionExecutionSnapshot snapshot,
+    KnowledgeGraphReader knowledge,
   ) {
     final changes = <ProgrammeAdaptationMaterialChange>[];
 
@@ -432,14 +436,24 @@ class ProgrammeAdaptationProposalMapper {
       if (already) continue;
       final before = entry.originalValueReference;
       final after = entry.appliedValueReference;
+      var summary = '${entry.actionType.name} on exercise link $linkId';
+      if (entry.actionType == AdaptationActionType.swapExercise &&
+          before != null &&
+          after != null) {
+        final from = knowledge.exerciseById(before)?.meta.label ?? before;
+        final to = knowledge.exerciseById(after)?.meta.label ?? after;
+        final rules = knowledge
+            .substitutionsForSource(before)
+            .where((rule) => rule.candidateExerciseId == after);
+        summary =
+            '$from → $to. ${rules.length == 1 ? rules.single.explanation.trim() : 'The replacement fits your available equipment.'}';
+      }
       changes.add(
         ProgrammeAdaptationMaterialChange(
           scope: ProgrammeAdaptationChangeScope.exercise,
           targetId: linkId,
           actionLabel: entry.actionType.name,
-          summary:
-              '${entry.actionType.name} on exercise link $linkId'
-              '${before != null && after != null ? ': $before → $after' : ''}',
+          summary: summary,
           exerciseLinkLocalId: linkId,
           blockLocalId: entry.blockLocalId,
           beforeValue: before,

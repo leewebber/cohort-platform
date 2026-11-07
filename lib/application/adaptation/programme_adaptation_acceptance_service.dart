@@ -1,5 +1,7 @@
 import 'package:cohort_platform/application/ports/knowledge_graph_reader.dart';
 import 'package:cohort_platform/features/adaptation/models/accepted_adaptation_decision.dart';
+import 'package:cohort_platform/features/authored_plan_package/plan_package_manifest.dart';
+import 'package:cohort_platform/models/adaptation_reason.dart';
 import 'package:cohort_platform/features/adaptation/models/programme_adaptation_proposal.dart';
 import 'package:cohort_platform/features/adaptation/services/adaptation_policy_gate.dart';
 import 'package:cohort_platform/features/admin/services/protocol_builder_service.dart';
@@ -58,14 +60,13 @@ class ProgrammeAdaptationAcceptanceResult {
 /// advance cursor, rewrite the Plan Package, or invoke Adaptive Progression.
 class ProgrammeAdaptationAcceptanceService {
   ProgrammeAdaptationAcceptanceService({
-    required AthleteProgrammeSessionPrepareService prepareService,
+    required this._prepareService,
     PlanPackageSessionAdaptationAdapter? adapter,
     ProgrammeProtocolDraftLoader? loadProtocolDraft,
     ProgrammeAdaptationPermissionLoader? loadAdaptationPermissions,
     ProgrammeKnowledgeLoader? loadKnowledge,
     KnowledgeGraphReader? knowledge,
-  }) : _prepareService = prepareService,
-       _adapterOverride = adapter,
+  }) : _adapterOverride = adapter,
        _loadProtocolDraft =
            loadProtocolDraft ??
            ((protocolId) => ProtocolBuilderService().loadProtocol(protocolId)),
@@ -78,6 +79,7 @@ class ProgrammeAdaptationAcceptanceService {
                : ProgrammeAdaptationProposalService.defaultKnowledgeLoader);
 
   final AthleteProgrammeSessionPrepareService _prepareService;
+
   /// When null, freshness revalidation builds an adapter with curated knowledge
   /// — the same graph propose used. A knowledge-less default historically made
   /// equipment accept return [freshness_invalid] after a valid proposal.
@@ -188,17 +190,18 @@ class ProgrammeAdaptationAcceptanceService {
     // Freshness revalidation: re-run pipeline and require identical reviewed plan.
     try {
       final draft = await _loadProtocolDraft(currentPackage.protocolId!.trim());
-      final permissions = await _loadAdaptationPermissions(
-        currentPackage.programmeVersionId!.trim(),
-      );
+      final permissions = proposal.reason == AdaptationReason.equipment
+          ? await _loadAdaptationPermissions(
+              currentPackage.programmeVersionId!.trim(),
+            )
+          : const <PlanPackageAdaptationPermission>[];
+      final knowledge = await _loadKnowledge();
       // Must use the same knowledge-backed adapter path as propose. Without
       // knowledge, equipment substitutions cannot resolve and freshness fails
       // closed even though the reviewed proposal was acceptable.
       final adapter =
           _adapterOverride ??
-          PlanPackageSessionAdaptationAdapter(
-            knowledge: await _loadKnowledge(),
-          );
+          PlanPackageSessionAdaptationAdapter(knowledge: knowledge);
       final run = adapter.evaluate(
         package: currentPackage,
         request: proposal.request!,
@@ -210,6 +213,7 @@ class ProgrammeAdaptationAcceptanceService {
         request: proposal.request!,
         run: run,
         authoredDraft: draft,
+        knowledge: knowledge,
         proposedAt: proposal.proposedAt,
       );
       if (!fresh.isAcceptable) {

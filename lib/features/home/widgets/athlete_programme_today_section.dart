@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../programme/screens/programme_prescription_review_screen.dart';
 
-import '../../../application/adaptation/programme_adaptation_acceptance_service.dart';
 import '../../../application/adaptation/programme_adaptation_reversion_service.dart';
 import '../../../core/presentation/athlete_safe_error_presenter.dart';
 import '../../../core/theme/spacing.dart';
@@ -72,11 +71,7 @@ class _AthleteProgrammeTodaySectionState
       widget.executionLauncher ?? ProgrammeSessionExecutionLauncher();
   late final ProgrammeAdaptFlow _adaptFlow =
       widget.adaptFlow ??
-      ProgrammeAdaptFlow(
-        acceptanceService: ProgrammeAdaptationAcceptanceService(
-          prepareService: _prepare,
-        ),
-      );
+      ProgrammeAdaptFlow.forPreparedSession(prepareService: _prepare);
   late final ProgrammeAdaptationReversionService _reversion =
       widget.reversionService ??
       ProgrammeAdaptationReversionService(prepareService: _prepare);
@@ -189,7 +184,10 @@ class _AthleteProgrammeTodaySectionState
   }
 
   bool get _canAdapt {
-    if (_result?.executionContext?.packageSchemaVersion == 3) return false;
+    if (_result?.executionContext?.packageSchemaVersion == 3 ||
+        widget.fixedOccurrence?.isResumable == true) {
+      return false;
+    }
     final package = _result?.package;
     if (_result == null || !_result!.isReady || package == null) return false;
     if (_opening || _adapting || _reverting) return false;
@@ -202,6 +200,7 @@ class _AthleteProgrammeTodaySectionState
   }
 
   bool get _canRevert {
+    if (widget.fixedOccurrence?.isResumable == true) return false;
     final package = _result?.package;
     if (_result == null || !_result!.isReady || package == null) return false;
     if (_opening || _adapting || _reverting) return false;

@@ -44,9 +44,7 @@ class ProgrammeAdaptationProposalService {
            loadAdaptationPermissions ?? ((_) async => const []),
        _loadKnowledge =
            loadKnowledge ??
-           (knowledge != null
-               ? () async => knowledge
-               : defaultKnowledgeLoader),
+           (knowledge != null ? () async => knowledge : defaultKnowledgeLoader),
        _adapterOverride = adapter;
 
   final ProgrammeProtocolDraftLoader _loadProtocolDraft;
@@ -129,15 +127,14 @@ class ProgrammeAdaptationProposalService {
           .applyNormalized(request, validation.normalizedEquipment);
     }
 
-    final permissions = await _loadAdaptationPermissions(
-      package.programmeVersionId!.trim(),
-    );
-
     final adapter =
         _adapterOverride ??
         PlanPackageSessionAdaptationAdapter(knowledge: knowledge);
 
     try {
+      final permissions = request.reason == AdaptationReason.equipment
+          ? await _loadAdaptationPermissions(package.programmeVersionId!.trim())
+          : const <PlanPackageAdaptationPermission>[];
       final draft = await _loadProtocolDraft(package.protocolId!.trim());
       final run = adapter.evaluate(
         package: package,
@@ -151,6 +148,7 @@ class ProgrammeAdaptationProposalService {
         request: effectiveRequest,
         run: run,
         authoredDraft: draft,
+        knowledge: knowledge,
         proposedAt: proposedAt,
       );
     } on PlanPackageAdaptationAdapterException catch (error) {

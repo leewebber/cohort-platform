@@ -1,3 +1,4 @@
+import '../../../models/adaptation_reason.dart';
 import '../../../application/hyrox_base/duration_choice.dart';
 import 'package:flutter/material.dart';
 import '../../../domain/hyrox_base/programme_prescription.dart';
@@ -262,6 +263,12 @@ class ProgrammeSessionExecutionLauncher {
     }
 
     if (!context.mounted) return;
+    final decision = package.acceptedAdaptation;
+    if (decision?.reasonCode == AdaptationReason.equipment.name) {
+      programmeContext = programmeContext.copyWith(
+        acceptedEquipmentSummary: decision!.changeSummary.join('\n'),
+      );
+    }
     try {
       await _sessionExecution.launchActiveSessionWithPlan(
         context: context,

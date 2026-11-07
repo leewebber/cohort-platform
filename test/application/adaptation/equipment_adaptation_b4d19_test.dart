@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:cohort_platform/application/adaptation/adaptation_application.dart';
@@ -24,11 +25,35 @@ import 'package:cohort_platform/models/protocol_draft.dart';
 import 'package:cohort_platform/models/session_block_exercise_link.dart';
 import 'package:cohort_platform/models/session_block_type.dart';
 import 'package:cohort_platform/models/strength_exercise_prescription.dart';
+import 'package:cohort_platform/application/adaptation/programme_adaptation_permission_reader.dart';
+import 'package:cohort_platform/core/persistence/athlete_persistence.dart';
+import 'package:cohort_platform/features/home/services/programme_adapt_flow.dart';
+import 'package:cohort_platform/features/home/widgets/athlete_programme_today_section.dart';
+import 'package:cohort_platform/features/performance/models/training_session_record.dart';
+import 'package:cohort_platform/features/performance/repositories/in_memory_performance_record_store.dart';
+import 'package:cohort_platform/features/performance/screens/training_history_detail_screen.dart';
+import 'package:cohort_platform/features/performance/services/performance_record_save_coordinator.dart';
+import 'package:cohort_platform/features/programme/models/fixed_programme_occurrence_projection.dart';
+import 'package:cohort_platform/features/programme/services/athlete_programme_completion_service.dart';
+import 'package:cohort_platform/features/programme/services/athlete_programme_completion_store.dart';
+import 'package:cohort_platform/features/session/controllers/session_execution_controller.dart';
+import 'package:cohort_platform/features/session/screens/active_session_screen.dart';
+import 'package:cohort_platform/features/session/services/production_restore_envelope_store.dart';
+import 'package:cohort_platform/features/session/services/programme_session_execution_launcher.dart';
+import 'package:cohort_platform/features/session/services/programme_training_session_start_store.dart';
+import 'package:cohort_platform/features/session/services/session_execution_launcher.dart';
+import 'package:cohort_platform/models/programme_vocabulary.dart';
+import 'package:cohort_platform/models/programme_version.dart';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart';
+import 'package:http/testing.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../support/adaptation_planning_test_support.dart';
 import '../../support/in_memory_programme_stores.dart';
 import '../../support/programme_session_authoring_test_support.dart';
+import '../../support/programme_schedule_test_fixtures.dart';
 
 void main() {
   late InMemoryKnowledgeGraphReader knowledge;
@@ -70,6 +95,365 @@ void main() {
       loadAdaptationPermissions: (_) async => perms ?? permissions,
     );
   }
+
+  testWidgets('equipment review, accept, cold restore and programme History', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(900, 1100);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    addTearDown(AthletePersistence.resetForTests);
+    addTearDown(AthleteSessionMemoryStore.instance.clearAll);
+
+    const athlete = 'equipment-fixture-athlete';
+    final tables = InMemoryProgrammeTables();
+    final assignments = InMemoryProgrammeAssignmentStore(tables);
+    final versions = InMemoryProgrammeVersionStore(tables);
+    final assignment = ProgrammeScheduleTestFixtures.materialisedAssignment(
+      athleteId: athlete,
+    ).copyWith(scheduleMode: 'fixed_schedule');
+    tables.assignments.add(assignment);
+    final version = ProgrammeVersion(
+      id: assignment.programmeVersionId,
+      lineageId: ProgrammeScheduleTestFixtures.lineageId,
+      versionNumber: 1,
+      lifecycleStatus: ProgrammeLifecycleStatus.published,
+      libraryScope: ProgrammeLibraryScope.cohortGlobal,
+      ownerType: ProgrammeOwnerType.global,
+      name: 'Equipment fixture programme',
+      packageContentHash: assignment.materialisedPackageContentHash,
+      packageSchemaVersion: 2,
+    );
+    await versions.saveTemplateTree(
+      version: version,
+      tree: ProgrammeScheduleTestFixtures.singleWeekTree(
+        days: [
+          ProgrammeScheduleTestFixtures.trainingDay(
+            id: ProgrammeScheduleTestFixtures.day1Id,
+            weekId: ProgrammeScheduleTestFixtures.week1Id,
+            dayKey: 'day_1',
+            dayOrder: 1,
+            slots: [
+              ProgrammeScheduleTestFixtures.requiredSlot(
+                id: ProgrammeScheduleTestFixtures.slot1Id,
+                dayId: ProgrammeScheduleTestFixtures.day1Id,
+                sessionOrder: 1,
+                protocolId: draft.protocolId,
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+    final resolver = AthleteProgrammeAuthoredSlotResolver(
+      versionStore: versions,
+    );
+    final resolved = await resolver.resolve(
+      assignment,
+      scheduleDate: DateTime.utc(2026, 11, 9),
+    );
+    FixedProgrammeOccurrenceProjection occurrence({required bool resumed}) =>
+        FixedProgrammeOccurrenceProjection(
+          assignmentId: assignment.id,
+          occurrenceId: 'fixture-occurrence',
+          sessionSlotId: resolved.slot.id,
+          programmeVersionId: version.id,
+          protocolId: draft.protocolId,
+          programmedSessionKey: resolved.programmedSessionKey.value,
+          weekNumber: 1,
+          dayKey: 'day_1',
+          sessionOrder: 1,
+          scheduledDate: '2026-11-09',
+          originalScheduledDate: '2026-11-09',
+          state: resumed
+              ? FixedProgrammeOccurrenceState.inProgress
+              : FixedProgrammeOccurrenceState.today,
+          sessionTitle: draft.name,
+          trainingSessionId: resumed ? 91 : null,
+        );
+
+    var permitted = false;
+    final permissionReads = <String>[];
+    final client = (await tester.runAsync(
+      () async => SupabaseClient(
+        'http://localhost:12345',
+        'local-test-key',
+        httpClient: MockClient((request) async {
+          expect(request.method, 'GET');
+          expect(
+            request.url.path,
+            '/rest/v1/programme_version_adaptation_permissions',
+          );
+          permissionReads.add(request.url.queryParameters['version_id']!);
+          return Response(
+            jsonEncode([
+              if (permitted)
+                {
+                  'permission_key': 'fixture-equipment',
+                  'change_kind': 'substitute_approved_equipment',
+                  'target_ref': 'programme',
+                  'athlete_agreement_required': true,
+                },
+            ]),
+            200,
+            headers: {'content-type': 'application/json'},
+            request: request,
+          );
+        }),
+        authOptions: AuthClientOptions(autoRefreshToken: false),
+      ),
+    ))!;
+    addTearDown(client.dispose);
+    final permissionReader = ProgrammeAdaptationPermissionReader(
+      client: client,
+    );
+    final start = _EquipmentFixtureStart(athlete, assignment.lineageCode);
+    final original = package.plan;
+    var kv = InMemoryKvStore();
+    var records = InMemoryPerformanceRecordStore();
+    late AthleteProgrammeSessionPrepareService prepare;
+    late PerformanceRecordSaveCoordinator coordinator;
+    late _EquipmentFixtureCompletion completion;
+    Future<void> mount({required bool resumed}) async {
+      final repository = AthleteLocalRepository(kv);
+      AthletePersistence.bindForTests(repository);
+      prepare = AthleteProgrammeSessionPrepareService(
+        assignmentStore: assignments,
+        slotResolver: resolver,
+        sessionLoader: _FixedLoader(original),
+        localRepository: repository,
+      );
+      completion = _EquipmentFixtureCompletion(records);
+      coordinator = PerformanceRecordSaveCoordinator(
+        store: records,
+        programmeCompletionService: AthleteProgrammeCompletionService(
+          store: completion,
+          assignmentStore: assignments,
+          performanceStore: records,
+          localRepository: repository,
+        ),
+      );
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: AthleteProgrammeTodaySection(
+              athleteId: athlete,
+              fixedAssignment: assignment,
+              fixedOccurrence: occurrence(resumed: resumed),
+              prepareService: prepare,
+              adaptFlow: ProgrammeAdaptFlow.forPreparedSession(
+                prepareService: prepare,
+                loadAdaptationPermissions: permissionReader.load,
+                loadProtocolDraft: (id) async {
+                  expect(id, draft.protocolId);
+                  return draft;
+                },
+                loadKnowledge: () async => knowledge,
+              ),
+              executionLauncher: ProgrammeSessionExecutionLauncher(
+                startStore: start,
+                sessionExecutionLauncher: SessionExecutionLauncher(
+                  saveCoordinator: coordinator,
+                  restoreEnvelopeStore: ProductionRestoreEnvelopeStore(),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+    }
+
+    Future<void> tap(String text) async {
+      final finder = find.text(text);
+      await tester.ensureVisible(finder);
+      await tester.pumpAndSettle();
+      await tester.tap(finder);
+      await tester.pumpAndSettle(
+        const Duration(milliseconds: 100),
+        EnginePhase.sendSemanticsUpdate,
+        const Duration(seconds: 4),
+      );
+    }
+
+    Future<void> review() async {
+      await tap('Adapt Session');
+      await tap('Equipment');
+      await tap('Kettlebell');
+      await tap('Bodyweight');
+      await tap('Continue');
+    }
+
+    await mount(resumed: false);
+    final key = resolved.programmedSessionKey.value;
+    final preparedKey = PersistenceKeys.generatedSession(athlete);
+    final originalBytes = kv.debugDump[preparedKey];
+    expect(originalBytes, isNotNull);
+
+    await review();
+    expect(
+      find.textContaining(
+        'Authored adaptation permissions do not permit equipment',
+      ),
+      findsOneWidget,
+    );
+    expect(find.text('Accept Adaptation'), findsNothing);
+    await tap('Keep Original Session');
+    expect(kv.debugDump[preparedKey], originalBytes);
+    expect(prepare.cachedPackageForKey(key)!.acceptedAdaptation, isNull);
+
+    permitted = true;
+    await review();
+    expect(
+      find.textContaining('Back squat → Goblet squat'),
+      findsOneWidget,
+      reason: tester
+          .widgetList<Text>(find.byType(Text))
+          .map((t) => t.data)
+          .join(' | '),
+    );
+    expect(
+      find.textContaining('Reduces absolute load potential'),
+      findsOneWidget,
+    );
+    expect(kv.debugDump[preparedKey], originalBytes);
+    await tap('Keep Original Session');
+    expect(kv.debugDump[preparedKey], originalBytes);
+    expect(prepare.cachedPackageForKey(key)!.acceptedAdaptation, isNull);
+    expect(start.calls, isEmpty);
+
+    await review();
+    await tap('Accept Adaptation');
+    expect(permissionReads, List.filled(4, 'eq.${version.id}'));
+    final accepted = prepare.cachedPackageForKey(key)!;
+    expect(accepted.acceptedAdaptation, isNotNull);
+    expect(
+      accepted.plan.blocks.first.linkedExercises.single.exerciseId,
+      JourneyDEquipmentAdaptationContract.replacementExerciseId,
+    );
+    expect(accepted.plan.blocks.last, same(original.blocks.last));
+    expect(
+      accepted.plan.blocks.first.linkedExercises.single.prescription!.toJson(),
+      original.blocks.first.linkedExercises.single.prescription!.toJson(),
+    );
+    expect(
+      assignment.toUpdateMap(),
+      (await assignments.getById(assignment.id))!.toUpdateMap(),
+    );
+
+    await tap('Begin');
+    var screen = tester.widget<ActiveSessionScreen>(
+      find.byType(ActiveSessionScreen),
+    );
+    expect(screen.trainingSessionId, 91);
+    final initialDraft = screen.performanceController.draft;
+    final firstBlock = initialDraft.blockDrafts.first;
+    final goblet = firstBlock.exerciseResults.single;
+    final setId = goblet.sets.first.setResultId;
+    expect(goblet.exerciseSnapshot.displayName, 'Goblet squat');
+    screen.performanceController.updateSet(
+      firstBlock.sourceBlockId,
+      goblet.sourceExerciseId,
+      setId,
+      (set) => set.copyWith(reps: 5, load: 16, loadUnit: 'kg', completed: true),
+    );
+    await tap('Back to Home');
+
+    // Relaunch with only serialized prepared state, restore envelope and actuals.
+    await tester.pumpWidget(const SizedBox());
+    AthleteSessionMemoryStore.instance.clearAll();
+    final saved = kv.debugDump;
+    kv = InMemoryKvStore();
+    for (final entry in saved.entries) {
+      await kv.writeString(entry.key, entry.value);
+    }
+    final recordTrees =
+        jsonDecode(jsonEncode(records.exportCompletionTrees())) as List;
+    records = InMemoryPerformanceRecordStore()
+      ..seedFromCompletionTrees(recordTrees.cast<Map<String, dynamic>>());
+    await mount(resumed: true);
+    expect(find.text('Adapt Session'), findsNothing);
+    expect(find.text('Revert to Original'), findsNothing);
+    await tap('Resume');
+    screen = tester.widget<ActiveSessionScreen>(
+      find.byType(ActiveSessionScreen),
+    );
+    expect(start.calls.map((call) => call['occurrence_id']), [
+      'fixture-occurrence',
+      'fixture-occurrence',
+    ]);
+    expect(screen.trainingSessionId, 91);
+    expect(screen.performanceController.draft.recordId, initialDraft.recordId);
+    final restored = screen
+        .performanceController
+        .draft
+        .blockDrafts
+        .first
+        .exerciseResults
+        .single;
+    expect(restored.sourceExerciseId, goblet.sourceExerciseId);
+    expect(restored.exerciseSnapshot.displayName, 'Goblet squat');
+    expect(restored.sets.first.setResultId, setId);
+    expect(restored.sets.first.reps, 5);
+    expect(restored.sets.first.load, 16);
+    expect(restored.sets.first.completed, isTrue);
+
+    for (final block in List.of(
+      screen.performanceController.draft.blockDrafts,
+    )) {
+      for (final exercise in block.exerciseResults) {
+        for (final set in exercise.sets.where((set) => !set.completed)) {
+          screen.performanceController.updateSet(
+            block.sourceBlockId,
+            exercise.sourceExerciseId,
+            set.setResultId,
+            (value) => value.copyWith(
+              reps: 5,
+              load: 16,
+              loadUnit: 'kg',
+              completed: true,
+            ),
+          );
+        }
+      }
+      screen.performanceController.markBlockComplete(block.sourceBlockId);
+      screen.controller.markBlockComplete(block.sourceBlockId);
+    }
+    // Save and reopen the real review route so it sees the completed capture.
+    await tap('Back to Home');
+    await tap('Resume');
+    await tap('Finish Session');
+    expect(find.text('Review Session'), findsOneWidget);
+    expect(find.textContaining('Back squat → Goblet squat'), findsOneWidget);
+    await tap('Save and finish');
+    expect(find.text('Session saved'), findsOneWidget);
+    expect(find.textContaining('Back squat → Goblet squat'), findsOneWidget);
+    expect(completion.calls, hasLength(1));
+    expect(completion.calls.single['protocol_id'], draft.protocolId);
+    expect(completion.calls.single['occurrence_id'], 'fixture-occurrence');
+
+    final history = await coordinator.listHistory(athleteId: athlete);
+    expect(history, hasLength(1));
+    expect(history.single.recordId, initialDraft.recordId);
+    final result = history.single.blockResults.first.exerciseResults.single;
+    expect(result.sourceExerciseId, goblet.sourceExerciseId);
+    expect(result.exerciseSnapshot.displayName, 'Goblet squat');
+    expect(result.setResults.first.load, 16);
+    await tester.pumpWidget(const SizedBox());
+    await tester.pumpWidget(
+      MaterialApp(
+        home: TrainingHistoryDetailScreen(
+          recordId: history.single.recordId,
+          athleteId: athlete,
+          saveCoordinator: coordinator,
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('Goblet squat'), findsOneWidget);
+    expect(find.text('Back squat'), findsNothing);
+  });
 
   group('B4d.19 equipment request validation', () {
     test('missing availableEquipment fails closed', () async {
@@ -269,6 +653,50 @@ void main() {
         );
       },
     );
+
+    test('an exact swap cannot carry over an exercise-specific load', () async {
+      final block = draft.blocks.first;
+      final link = block.linkedExercises.single;
+      final fixedLoadDraft = draft.copyWith(
+        blocks: [
+          block.copyWith(
+            linkedExercises: [
+              link.copyWith(
+                prescription: link.prescription!.copyWith(
+                  load: const StrengthLoadPrescription(
+                    type: StrengthLoadType.fixedKg,
+                    kg: 80,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          ...draft.blocks.skip(1),
+        ],
+      );
+      final original = _packageFromDraft(fixedLoadDraft);
+      final result = await service(draftOverride: fixedLoadDraft).propose(
+        package: original,
+        request: const AdaptationRequest(
+          reason: AdaptationReason.equipment,
+          availableEquipment:
+              JourneyDEquipmentAdaptationContract.availableEquipment,
+        ),
+      );
+      expect(result.isAcceptable, isFalse);
+      expect(
+        original
+            .plan
+            .blocks
+            .first
+            .linkedExercises
+            .single
+            .prescription!
+            .load!
+            .kg,
+        80,
+      );
+    });
 
     test('proposal is deterministic across repeated evaluation', () async {
       Future<ProgrammeAdaptationProposal> once() => service().propose(
@@ -852,4 +1280,52 @@ String _findKnowledgeRoot(Directory start) {
     dir = parent;
   }
   throw StateError('knowledge root not found from ${start.path}');
+}
+
+class _EquipmentFixtureStart implements ProgrammeTrainingSessionStartStore {
+  _EquipmentFixtureStart(this.athlete, this.lineage);
+
+  final String athlete;
+  final String lineage;
+  final calls = <Map<String, dynamic>>[];
+
+  @override
+  Future<Map<String, dynamic>> createOrResume(
+    Map<String, dynamic> payload,
+  ) async {
+    calls.add(payload);
+    return {
+      'status': calls.length == 1 ? 'created' : 'resumed',
+      'training_session': {
+        'id': 91,
+        'athlete_id': athlete,
+        'protocol_id': payload['effective_protocol_id'],
+        'programme_id': lineage,
+        'week_number': payload['expected_week'],
+        'day': payload['expected_day_key'],
+        'status': 'in_progress',
+      },
+    };
+  }
+}
+
+class _EquipmentFixtureCompletion implements AthleteProgrammeCompletionStore {
+  _EquipmentFixtureCompletion(this.records);
+
+  final InMemoryPerformanceRecordStore records;
+  final calls = <Map<String, dynamic>>[];
+
+  @override
+  Future<Map<String, dynamic>> completeAndAdvance(
+    Map<String, dynamic> payload,
+  ) async {
+    calls.add(payload);
+    final record = await records.getById(payload['record_id'] as String);
+    final committed = TrainingSessionRecord.fromCompletionTreeMap({
+      ...record!.toCompletionTreeMap(),
+      ...payload['completion_record'] as Map<String, dynamic>,
+    });
+    records.seedFromCompletionTrees([committed.toCompletionTreeMap()]);
+    return {'status': 'committed', 'code': 'committed'};
+  }
 }

@@ -24,6 +24,7 @@ class ProgrammeExecutionContext {
     this.packageSchemaVersion,
     this.programmeVersionNumber,
     this.packageSlotKey,
+    this.acceptedEquipmentSummary,
   });
 
   final String assignmentId;
@@ -51,6 +52,9 @@ class ProgrammeExecutionContext {
   final int? packageSchemaVersion;
   final int? programmeVersionNumber;
   final String? packageSlotKey;
+
+  /// Display copy from the accepted prepared-session decision.
+  final String? acceptedEquipmentSummary;
 
   bool get isProgrammeBacked =>
       assignmentId.isNotEmpty && sessionSlotId.isNotEmpty;
@@ -117,6 +121,7 @@ class ProgrammeExecutionContext {
     String? programmedSessionKey,
     String? occurrenceId,
     String? boundConsentId,
+    String? acceptedEquipmentSummary,
   }) {
     return ProgrammeExecutionContext(
       assignmentId: assignmentId,
@@ -136,6 +141,8 @@ class ProgrammeExecutionContext {
       packageSchemaVersion: packageSchemaVersion,
       programmeVersionNumber: programmeVersionNumber,
       packageSlotKey: packageSlotKey,
+      acceptedEquipmentSummary:
+          acceptedEquipmentSummary ?? this.acceptedEquipmentSummary,
     );
   }
 }

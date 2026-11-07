@@ -257,7 +257,9 @@ class _SessionFinishReviewScreenState extends State<SessionFinishReviewScreen> {
           builder: (_) => SessionCompleteScreen(
             state: widget.executionController.state,
             savedRecord: result.record,
-            adaptationMessage: result.adaptationResult?.athleteMessage,
+            adaptationMessage:
+                widget.programmeContext?.acceptedEquipmentSummary ??
+                result.adaptationResult?.athleteMessage,
             progressionResult: result.progressionResult,
             programmeProgress: widget.programmeProgress,
             onDone: widget.onSessionCompleted,
@@ -284,6 +286,9 @@ class _SessionFinishReviewScreenState extends State<SessionFinishReviewScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text('Review Session', style: CohortTextStyles.h1),
+              if (widget.programmeContext?.acceptedEquipmentSummary
+                  case final summary?)
+                Text(summary, style: CohortTextStyles.body),
               if (draft.sessionSnapshot.boundPrescription
                   case final prescription?)
                 ProgrammePrescriptionSummary(prescription: prescription),

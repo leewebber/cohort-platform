@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 import '../../../application/adaptation/programme_adaptation_acceptance_service.dart';
 import '../../../application/adaptation/programme_adaptation_fingerprints.dart';
 import '../../../application/adaptation/programme_adaptation_proposal_service.dart';
+import '../../../application/adaptation/programme_adaptation_permission_reader.dart';
 import '../../../core/presentation/athlete_safe_error_presenter.dart';
 import '../../../core/theme/text_styles.dart';
 import '../../../core/widgets/adaptation_bottom_sheet.dart';
 import '../../../core/widgets/programme_adaptation_proposal_sheet.dart';
 import '../../adaptation/models/programme_adaptation_proposal.dart';
 import '../../programme/models/programme_execution_context.dart';
+import '../../programme/services/athlete_programme_session_prepare_service.dart';
 import '../../session/models/prepared_execution_package.dart';
 import '../../session/models/session_execution_plan.dart';
 
@@ -32,10 +34,33 @@ class ProgrammeAdaptFlowResult {
 class ProgrammeAdaptFlow {
   ProgrammeAdaptFlow({
     ProgrammeAdaptationProposalService? proposalService,
-    ProgrammeAdaptationAcceptanceService? acceptanceService,
+    this._acceptanceService,
   }) : _proposalService =
-           proposalService ?? ProgrammeAdaptationProposalService(),
-       _acceptanceService = acceptanceService;
+           proposalService ?? ProgrammeAdaptationProposalService();
+
+  factory ProgrammeAdaptFlow.forPreparedSession({
+    required AthleteProgrammeSessionPrepareService prepareService,
+    ProgrammeAdaptationPermissionLoader? loadAdaptationPermissions,
+    ProgrammeProtocolDraftLoader? loadProtocolDraft,
+    ProgrammeKnowledgeLoader? loadKnowledge,
+  }) {
+    final permissions =
+        loadAdaptationPermissions ??
+        const ProgrammeAdaptationPermissionReader().load;
+    return ProgrammeAdaptFlow(
+      proposalService: ProgrammeAdaptationProposalService(
+        loadAdaptationPermissions: permissions,
+        loadProtocolDraft: loadProtocolDraft,
+        loadKnowledge: loadKnowledge,
+      ),
+      acceptanceService: ProgrammeAdaptationAcceptanceService(
+        prepareService: prepareService,
+        loadAdaptationPermissions: permissions,
+        loadProtocolDraft: loadProtocolDraft,
+        loadKnowledge: loadKnowledge,
+      ),
+    );
+  }
 
   final ProgrammeAdaptationProposalService _proposalService;
   final ProgrammeAdaptationAcceptanceService? _acceptanceService;

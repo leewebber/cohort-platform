@@ -13,10 +13,7 @@ import 'section_title.dart';
 /// Accept is enabled only for [ProgrammeAdaptationProposal.isAcceptable]
 /// reviewable proposals (Sprint 1.6C).
 class ProgrammeAdaptationProposalSheet extends StatefulWidget {
-  const ProgrammeAdaptationProposalSheet({
-    super.key,
-    required this.proposal,
-  });
+  const ProgrammeAdaptationProposalSheet({super.key, required this.proposal});
 
   final ProgrammeAdaptationProposal proposal;
 
@@ -78,7 +75,10 @@ class _ProgrammeAdaptationProposalSheetState
               ),
               if (isReviewable) ...[
                 const SizedBox(height: CohortSpacing.lg),
-                Text('ORIGINAL PRESCRIPTION', style: CohortTextStyles.sectionLabel),
+                Text(
+                  'ORIGINAL PRESCRIPTION',
+                  style: CohortTextStyles.sectionLabel,
+                ),
                 const SizedBox(height: CohortSpacing.sm),
                 Text(
                   'Protocol ${proposal.protocolId} · version '
@@ -168,7 +168,8 @@ class _ProgrammeAdaptationProposalSheetState
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(change.summary, style: CohortTextStyles.body),
-            if (change.beforeValue != null || change.afterValue != null) ...[
+            if (change.actionLabel != 'swapExercise' &&
+                (change.beforeValue != null || change.afterValue != null)) ...[
               const SizedBox(height: CohortSpacing.xs),
               Text(
                 'Before: ${change.beforeValue ?? '—'}',
