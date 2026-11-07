@@ -53,7 +53,7 @@
     "tool/release/build_app.sh": "ae0a830c8e1b7e274d1a39f956f0fd859eaeb22640214798d49283b33d88d1f0",
     "pubspec.lock": "e3309e33216d89cec5b40e11775a1b31f250c19b191ab526c184d9612e626b71",
     "ios/Runner/Info.plist": "088037b9b01bef45027ef595fc5224a39db87b96ad75be385e8687d4586d983a",
-    "docs/checkpoints/m12_end_programme_release/BUILD_RECEIPT.json": "438bef8055d7dfc6d95db84748795a8368acb182343e8790117f5fdd41256a28",
+    "docs/checkpoints/m12_end_programme_release/BUILD_RECEIPT.json": "2e92294161cc99ac024e4df1d8650ae40b15af94456a3b02630af660e5a1cc70",
     "docs/checkpoints/m12_end_programme_release/DEPLOYMENT_PROPOSAL.md": "1537f21548ccd3571979b50fa5adf16f377ad453c27ccb66736cac75149491c1"
   },
   "signed_build_source_commit": "c02a050442e988aa7b90e70734bd01173d08f6aa"

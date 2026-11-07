@@ -30,8 +30,10 @@
       "LastUpgradeVersion 2660 to 1510"
     ],
     "signing_settings_changed": false,
-    "patch_sha256": "cf405108237adbb5470278d1afbbdf9ebce6260122047577d961c9adf97d4a48",
-    "source_metadata_restored_after_build": true
+    "patch_sha256": "717f0fcfaa567052ebdacf2fad18e97b4aab8405cc8d87539f8e15559f95e799",
+    "source_metadata_restored_after_build": true,
+    "original_context_patch_sha256": "cf405108237adbb5470278d1afbbdf9ebce6260122047577d961c9adf97d4a48",
+    "retained_patch_format": "zero context; same exact three field changes"
   },
   "temporary_client_config_removed": true
 }
