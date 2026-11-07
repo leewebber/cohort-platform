@@ -1,5 +1,14 @@
 # Current repository checkpoint
 
+> **M1.2 End programme deployment closed out (2026-11-07)**
+> [Closeout](./m12_end_programme_release/DEPLOYMENT_CLOSEOUT.md) records Lee's
+> acceptance of exact ledger-136, schema, function and protected-state
+> reconciliation. The final CLI dry-run was not run. The client hold is
+> released and Lee installed signed build 1.0.0 (9).
+> [Installed transition](./m12_end_programme_release/INSTALLED_TRANSITION.md)
+> confirms Bali ended with History preserved and Hybrid 10K is the sole active
+> programme, scheduled from Monday 9 November 2026 WITA.
+
 > **M1.2 End programme release prepared (2026-11-07)**
 > [Release handoff](./m12_end_programme_release/HANDOFF.md) retains the passed review,
 > exact owner/pin and start/end locking proof, stale-request safety and completed

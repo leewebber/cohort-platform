@@ -1,0 +1,62 @@
+{
+  "source": "Retained Field Manual deployment reconciliation and scoped Management read-only transition readback",
+  "project": "otnhhdxstdnwccehacku",
+  "deployment": {
+    "published_commit": "4e99be8a3dd41a78a7f39347863e834951694c24",
+    "migration": "20261107120000_athlete_end_fixed_programme.sql",
+    "migration_sha256": "0bf399e24c589d443aefc9a54a8fdb8578dd67544905a85b8243273ac6db5282",
+    "ledger_before": 135,
+    "ledger_after": 136,
+    "ordered_original_135_exact": true,
+    "new_entry": {
+      "version": "20261107120000",
+      "name": "athlete_end_fixed_programme",
+      "statement_count": 9,
+      "statement_array_sha256": "0cab6ff74fac859c2301a4be7a45b40a99d1353822a3824638791e3f3aa54bc7"
+    },
+    "new_function_hashes_verified": true,
+    "existing_authority_preserved": true,
+    "protected_relation_fingerprints_equal": 74,
+    "final_cli_dry_run_run": false
+  },
+  "temporary_login_revoked_and_zero_roles_backends_verified": true,
+  "temporary_secrets_removed": true,
+  "founder_accepted_reconciliation_and_released_hold": true,
+  "installed_build_reported": "1.0.0 (9)",
+  "keep_programme_left_bali_active_reported": true,
+  "transition_readback_at_utc": "2026-11-07T10:12:07.756648+00:00",
+  "transition": {
+    "bali": {
+      "ended": true,
+      "status": "paused",
+      "version": "b1a1b001-0000-4000-8000-ba11b0010001"
+    },
+    "hybrid": {
+      "anchor": "2026-11-09",
+      "status": "active",
+      "version": "b0290b33-2764-4e5b-ad78-3d4beafbb375",
+      "timezone": "Asia/Makassar",
+      "materialised": true,
+      "schedule_mode": "fixed_schedule",
+      "projection_matches_pin": true
+    },
+    "active_count": 1,
+    "occurrence_count": 60,
+    "first_occurrence": {
+      "day": "day_1",
+      "date": "2026-11-09",
+      "week": 1,
+      "status": "scheduled",
+      "protocol": "protocol-e9569566-9d98-42f1-9095-ceb4db6612f3"
+    }
+  },
+  "history_fingerprints_match": {
+    "session_records": true,
+    "training_sessions": true,
+    "outcomes": true,
+    "block_results": true,
+    "exercise_results": true,
+    "set_results": true
+  },
+  "m13_installed_restart_accepted": false
+}
