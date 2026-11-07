@@ -1,0 +1,284 @@
+[
+  {
+    "source_session_id": "LW10K-W01-D04",
+    "protocol_id": "protocol-514e5f5a-c825-49cd-911a-a2bdf4f6c6d3",
+    "revision_number": 1,
+    "classification": "REVIEW_ONLY_NOT_ADMITTED_OR_PUBLISHED",
+    "blocks": [
+      {
+        "position": 1,
+        "block_type": "warm_up",
+        "title": "Preparation",
+        "content": "Retained proposed preparation: 5 minutes walking/marching; 10 bodyweight squats; 8 unloaded hinges; 8 scapular pull-ups OR shoulder-blade movements; 8 arm circles each direction. First loaded lower-body pattern: 2–4 progressively loaded warm-up sets; each new upper-body pattern: 1–2 light sets as needed; no failure. Bodyweight squats/unloaded hinges are preparation, not working squat/RDL prescriptions.",
+        "workout_format": "none",
+        "exercises": [],
+        "coach_notes": "Review order shown; within-session order remains part of D8 review. Preparation and warm-up sets are separate from working sets.\n\nTuesday introduces threshold intervals; Friday stays easy alongside Sunday’s long run. Strength uses the selected standard doses and prescribed repetitions in reserve.\n\nUse this week’s exact sets, rests and repetitions in reserve. The selected consolidation, lower-body control and taper instructions manage strength workload alongside the running."
+      },
+      {
+        "position": 2,
+        "block_type": "strength",
+        "title": "Thursday selected strength",
+        "content": "Exact founder-selected standard and week-specific doses; full programme D8 review pending.",
+        "workout_format": "none",
+        "performance_capture_mode": "auto",
+        "exercises": [
+          {
+            "position": 1,
+            "exercise_id": "EX-078",
+            "variant_key": "barbell_rdl",
+            "source_occurrence_id": "W01-B-barbell_rdl",
+            "display_label_override": "Barbell Romanian deadlift",
+            "prescription": {
+              "sets": 2,
+              "reps": {
+                "type": "range",
+                "min_reps": 5,
+                "max_reps": 6
+              },
+              "per_side": false,
+              "tempo": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
+              "coach_cue": "Thursday barbell RDL; controlled hinge, stop before spinal position changes. Log total external barbell load. Membership and dose explicitly selected.",
+              "authored_details": {
+                "source_occurrence_id": "W01-B-barbell_rdl",
+                "source_repetitions_or_duration": "5–6",
+                "source_rir": "2–3",
+                "source_tempo_reference": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
+                "source_rest_seconds": "120–180",
+                "selection": "RDL clarification",
+                "variant_key": "barbell_rdl",
+                "source_dose_status": "FOUNDER_SELECTED_STANDARD"
+              },
+              "load": {
+                "type": "athleteSelected"
+              },
+              "rest_seconds_range": [
+                120,
+                180
+              ],
+              "rir_range": [
+                2,
+                3
+              ],
+              "performance_capture": {
+                "load_unit": "kg",
+                "load_label": "Total barbell load"
+              }
+            },
+            "content_holds": [],
+            "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING"
+          },
+          {
+            "position": 2,
+            "exercise_id": "EX-172",
+            "variant_key": "reverse_lunge_db",
+            "source_occurrence_id": "W01-B-reverse_lunge_db",
+            "display_label_override": "DB reverse lunge",
+            "prescription": {
+              "sets": 1,
+              "reps": {
+                "type": "exact",
+                "exact_reps": 6
+              },
+              "per_side": true,
+              "tempo": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
+              "coach_cue": "Two dumbbells at sides, neutral grip; complete one side then the other. Rest 90 seconds after both sides. Log external load per dumbbell.",
+              "authored_details": {
+                "source_occurrence_id": "W01-B-reverse_lunge_db",
+                "source_repetitions_or_duration": "6/leg",
+                "source_rir": "2–3",
+                "source_tempo_reference": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
+                "source_rest_seconds": "90",
+                "selection": "D4",
+                "variant_key": "reverse_lunge_db",
+                "source_dose_status": "FOUNDER_SELECTED_STANDARD"
+              },
+              "load": {
+                "type": "athleteSelected"
+              },
+              "rest_seconds": 90,
+              "rir_range": [
+                2,
+                3
+              ],
+              "performance_capture": {
+                "load_unit": "kg",
+                "load_label": "External load per dumbbell"
+              }
+            },
+            "content_holds": [],
+            "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING"
+          },
+          {
+            "position": 3,
+            "exercise_id": "EX-171",
+            "variant_key": "seated_supported_db_press",
+            "source_occurrence_id": "W01-B-seated_supported_db_press",
+            "display_label_override": "Seated back-supported neutral-grip DB press",
+            "prescription": {
+              "sets": 3,
+              "reps": {
+                "type": "range",
+                "min_reps": 6,
+                "max_reps": 10
+              },
+              "per_side": false,
+              "tempo": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
+              "coach_cue": "Near-upright back support; seated, two dumbbells, neutral grip, strict without leg drive. External load per dumbbell.",
+              "authored_details": {
+                "source_occurrence_id": "W01-B-seated_supported_db_press",
+                "source_repetitions_or_duration": "6–10",
+                "source_rir": "2",
+                "source_tempo_reference": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
+                "source_rest_seconds": "120",
+                "selection": "D6",
+                "variant_key": "seated_supported_db_press",
+                "source_dose_status": "FOUNDER_SELECTED_STANDARD"
+              },
+              "load": {
+                "type": "athleteSelected"
+              },
+              "rest_seconds": 120,
+              "rir_range": [
+                2,
+                2
+              ],
+              "performance_capture": {
+                "load_unit": "kg",
+                "load_label": "External load per dumbbell"
+              }
+            },
+            "content_holds": [],
+            "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING"
+          },
+          {
+            "position": 4,
+            "exercise_id": "EX-038",
+            "variant_key": "bench_supported_db_row",
+            "source_occurrence_id": "W01-B-bench_supported_db_row",
+            "display_label_override": "Bench-supported single-arm DB row",
+            "prescription": {
+              "sets": 3,
+              "reps": {
+                "type": "range",
+                "min_reps": 8,
+                "max_reps": 12
+              },
+              "per_side": true,
+              "tempo": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
+              "coach_cue": "Free hand supported on bench; complete both sides, then rest 90 seconds. External load per dumbbell.",
+              "authored_details": {
+                "source_occurrence_id": "W01-B-bench_supported_db_row",
+                "source_repetitions_or_duration": "8–12/side",
+                "source_rir": "1–2",
+                "source_tempo_reference": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
+                "source_rest_seconds": "90",
+                "selection": "D7",
+                "variant_key": "bench_supported_db_row",
+                "source_dose_status": "FOUNDER_SELECTED_STANDARD"
+              },
+              "load": {
+                "type": "athleteSelected"
+              },
+              "rest_seconds": 90,
+              "rir_range": [
+                1,
+                2
+              ],
+              "performance_capture": {
+                "load_unit": "kg",
+                "load_label": "External load per dumbbell"
+              }
+            },
+            "content_holds": [],
+            "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING"
+          },
+          {
+            "position": 5,
+            "exercise_id": "EX-125",
+            "variant_key": "machine_standing_calf",
+            "source_occurrence_id": "W01-B-machine_standing_calf",
+            "display_label_override": "Bilateral machine standing calf raise",
+            "prescription": {
+              "sets": 2,
+              "reps": {
+                "type": "range",
+                "min_reps": 10,
+                "max_reps": 15
+              },
+              "per_side": false,
+              "tempo": "~2 seconds up, 1-second top pause, ~2 seconds down; full comfortable range (retained proposed tempo)",
+              "coach_cue": "Standing calf machine, bilateral; no unilateral DB substitution. Record actual machine resistance with its displayed unit/setup; no invented load or cross-machine equivalence.",
+              "authored_details": {
+                "source_occurrence_id": "W01-B-machine_standing_calf",
+                "source_repetitions_or_duration": "10–15",
+                "source_rir": "2",
+                "source_tempo_reference": "~2 seconds up, 1-second top pause, ~2 seconds down; full comfortable range (retained proposed tempo)",
+                "source_rest_seconds": "60–90",
+                "selection": "D2",
+                "variant_key": "machine_standing_calf",
+                "source_dose_status": "FOUNDER_SELECTED_STANDARD"
+              },
+              "rest_seconds_range": [
+                60,
+                90
+              ],
+              "rir_range": [
+                2,
+                2
+              ],
+              "load": {
+                "type": "athleteSelected"
+              },
+              "performance_capture": {
+                "load_label": "Machine-indicated resistance; retain actual unit and setup"
+              }
+            },
+            "content_holds": [],
+            "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING"
+          },
+          {
+            "position": 6,
+            "exercise_id": "EX-116",
+            "variant_key": "side_plank",
+            "source_occurrence_id": "W01-B-side_plank",
+            "display_label_override": "Bodyweight side plank",
+            "prescription": {
+              "sets": 2,
+              "reps": {
+                "type": "duration",
+                "text": "30–45 sec/side"
+              },
+              "per_side": true,
+              "tempo": "Controlled hold; stop before posture loss",
+              "coach_cue": "Each side 30–45 seconds; both sides form one set. Stop before posture loss; no external load or failure requirement.",
+              "authored_details": {
+                "source_occurrence_id": "W01-B-side_plank",
+                "source_repetitions_or_duration": "30–45 sec/side",
+                "source_rir": "N/A",
+                "source_tempo_reference": "Controlled hold; stop before posture loss",
+                "source_rest_seconds": "45–60",
+                "selection": "D3",
+                "variant_key": "side_plank",
+                "source_dose_status": "FOUNDER_SELECTED_STANDARD"
+              },
+              "rest_seconds_range": [
+                45,
+                60
+              ]
+            },
+            "content_holds": [],
+            "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING"
+          }
+        ]
+      },
+      {
+        "position": 3,
+        "block_type": "cool_down",
+        "title": "Finish",
+        "content": "3–5 minutes easy walking; retained proposed finish.",
+        "workout_format": "none",
+        "exercises": []
+      }
+    ]
+  }
+]

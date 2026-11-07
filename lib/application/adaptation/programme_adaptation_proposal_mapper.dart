@@ -22,6 +22,7 @@ class ProgrammeAdaptationProposalMapper {
     required SessionAdaptationPipelineRun run,
     required ProtocolDraft authoredDraft,
     required KnowledgeGraphReader knowledge,
+    bool isThursdayTrial = false,
     DateTime? proposedAt,
   }) {
     final stamp = proposedAt ?? DateTime.now().toUtc();
@@ -208,6 +209,7 @@ class ProgrammeAdaptationProposalMapper {
         authoredDraft: authoredDraft,
         snapshot: snapshot,
         knowledge: knowledge,
+        isThursdayTrial: isThursdayTrial,
       );
       final originalFingerprint = ProgrammeAdaptationFingerprints.plan(
         package.plan,

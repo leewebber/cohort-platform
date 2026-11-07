@@ -13,7 +13,9 @@ import 'cohort_button.dart';
 import 'cohort_card.dart';
 
 class AdaptationBottomSheet extends StatefulWidget {
-  const AdaptationBottomSheet({super.key});
+  const AdaptationBottomSheet({super.key, this.confirmDumbbellPair = false});
+
+  final bool confirmDumbbellPair;
 
   @override
   State<AdaptationBottomSheet> createState() => _AdaptationBottomSheetState();
@@ -21,12 +23,14 @@ class AdaptationBottomSheet extends StatefulWidget {
 
 class _AdaptationBottomSheetState extends State<AdaptationBottomSheet> {
   AdaptationReason? _selectedReason;
+  bool _confirmedPair = false;
   final Set<String> _selectedEquipment = {};
 
   void _selectReason(AdaptationReason reason) {
     setState(() {
       _selectedReason = reason;
       _selectedEquipment.clear();
+      _confirmedPair = false;
     });
   }
 
@@ -34,6 +38,7 @@ class _AdaptationBottomSheetState extends State<AdaptationBottomSheet> {
     setState(() {
       _selectedReason = null;
       _selectedEquipment.clear();
+      _confirmedPair = false;
     });
   }
 
@@ -78,6 +83,9 @@ class _AdaptationBottomSheetState extends State<AdaptationBottomSheet> {
       case AdaptationReason.equipment:
         return _EquipmentStep(
           selectedEquipment: _selectedEquipment,
+          confirmDumbbellPair: widget.confirmDumbbellPair,
+          confirmedPair: _confirmedPair,
+          onConfirmPair: (value) => setState(() => _confirmedPair = value),
           onBack: _goBack,
           onToggleEquipment: (equipment, isSelected) {
             setState(() {
@@ -92,6 +100,7 @@ class _AdaptationBottomSheetState extends State<AdaptationBottomSheet> {
             AdaptationRequest(
               reason: AdaptationReason.equipment,
               availableEquipment: Set<String>.from(_selectedEquipment),
+              confirmedMatchingDumbbellPairWithoutBarbell: _confirmedPair,
             ),
           ),
         );
@@ -213,12 +222,18 @@ class _EnvironmentStep extends StatelessWidget {
 class _EquipmentStep extends StatelessWidget {
   const _EquipmentStep({
     required this.selectedEquipment,
+    required this.confirmDumbbellPair,
+    required this.confirmedPair,
+    required this.onConfirmPair,
     required this.onBack,
     required this.onToggleEquipment,
     required this.onContinue,
   });
 
   final Set<String> selectedEquipment;
+  final bool confirmDumbbellPair;
+  final bool confirmedPair;
+  final ValueChanged<bool> onConfirmPair;
   final VoidCallback onBack;
   final void Function(String equipment, bool isSelected) onToggleEquipment;
   final VoidCallback onContinue;
@@ -240,6 +255,12 @@ class _EquipmentStep extends StatelessWidget {
                   onToggleEquipment(equipment, isSelected),
             ),
           ],
+          if (confirmDumbbellPair)
+            _EquipmentCheckbox(
+              label: 'I have two matching dumbbells and no barbell',
+              value: confirmedPair,
+              onChanged: onConfirmPair,
+            ),
           const SizedBox(height: CohortSpacing.lg),
           CohortButton(label: 'Continue', onPressed: onContinue),
         ],
@@ -384,11 +405,15 @@ class _EquipmentCheckbox extends StatelessWidget {
   }
 }
 
-Future<AdaptationRequest?> showAdaptationBottomSheet(BuildContext context) {
+Future<AdaptationRequest?> showAdaptationBottomSheet(
+  BuildContext context, {
+  bool confirmDumbbellPair = false,
+}) {
   return showModalBottomSheet<AdaptationRequest>(
     context: context,
     backgroundColor: CohortColors.surfaceRaised,
     isScrollControlled: true,
-    builder: (_) => const AdaptationBottomSheet(),
+    builder: (_) =>
+        AdaptationBottomSheet(confirmDumbbellPair: confirmDumbbellPair),
   );
 }

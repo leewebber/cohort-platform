@@ -1,3 +1,7 @@
+import 'dart:convert';
+
+import '../../core/persistence/session_execution_plan_codec.dart';
+
 import 'package:cohort_platform/application/ports/knowledge_graph_reader.dart';
 import 'package:cohort_platform/features/adaptation/models/accepted_adaptation_decision.dart';
 import 'package:cohort_platform/features/authored_plan_package/plan_package_manifest.dart';
@@ -10,7 +14,9 @@ import 'package:cohort_platform/features/programme/services/athlete_programme_se
 import 'package:cohort_platform/features/session/models/prepared_execution_package.dart';
 import 'package:cohort_platform/features/workout_player/models/workout_session_brief.dart';
 
+import 'm31_thursday_equipment_trial.dart';
 import 'plan_package_session_adaptation_adapter.dart';
+import 'programme_adaptation_permission_reader.dart';
 import 'programme_adaptation_fingerprints.dart';
 import 'programme_adaptation_proposal_mapper.dart';
 import 'programme_adaptation_proposal_service.dart';
@@ -190,12 +196,37 @@ class ProgrammeAdaptationAcceptanceService {
     // Freshness revalidation: re-run pipeline and require identical reviewed plan.
     try {
       final draft = await _loadProtocolDraft(currentPackage.protocolId!.trim());
-      final permissions = proposal.reason == AdaptationReason.equipment
+      final isTrial =
+          proposal.reason == AdaptationReason.equipment &&
+          currentPackage.programmeVersionId ==
+              M31ThursdayEquipmentTrial.versionId;
+      final slotKey = executionContext.packageSlotKey;
+      if (isTrial &&
+          !M31ThursdayEquipmentTrial.matches(currentPackage, slotKey)) {
+        throw PlanPackageAdaptationAdapterException(
+          'substitution_not_permitted',
+          'This slot is outside the equipment trial.',
+        );
+      }
+      final permissions = isTrial
+          ? await const ProgrammeAdaptationPermissionReader().loadThursdayTrial(
+              assignmentId: currentPackage.assignmentId!,
+              versionId: currentPackage.programmeVersionId!,
+              slotKey: slotKey!,
+            )
+          : proposal.reason == AdaptationReason.equipment
           ? await _loadAdaptationPermissions(
               currentPackage.programmeVersionId!.trim(),
             )
           : const <PlanPackageAdaptationPermission>[];
-      final knowledge = await _loadKnowledge();
+      final knowledge = isTrial
+          ? M31ThursdayEquipmentTrial.authorize(
+              package: currentPackage,
+              authoredSlot: slotKey,
+              request: proposal.request!,
+              permissions: permissions,
+            )
+          : await _loadKnowledge();
       // Must use the same knowledge-backed adapter path as propose. Without
       // knowledge, equipment substitutions cannot resolve and freshness fails
       // closed even though the reviewed proposal was acceptable.
@@ -207,6 +238,7 @@ class ProgrammeAdaptationAcceptanceService {
         request: proposal.request!,
         authoredDraft: draft,
         adaptationPermissions: permissions,
+        slotKey: slotKey,
       );
       final fresh = ProgrammeAdaptationProposalMapper.fromPipelineRun(
         package: currentPackage,
@@ -214,6 +246,7 @@ class ProgrammeAdaptationAcceptanceService {
         run: run,
         authoredDraft: draft,
         knowledge: knowledge,
+        isThursdayTrial: isTrial,
         proposedAt: proposal.proposedAt,
       );
       if (!fresh.isAcceptable) {
@@ -228,7 +261,13 @@ class ProgrammeAdaptationAcceptanceService {
       final freshFingerprint = ProgrammeAdaptationFingerprints.plan(
         fresh.reviewedExecutablePlan!,
       );
-      if (freshFingerprint != proposal.reviewedPlanFingerprint) {
+      const codec = SessionExecutionPlanCodec();
+      if (freshFingerprint != proposal.reviewedPlanFingerprint ||
+          (isTrial &&
+              jsonEncode(codec.encodePlan(fresh.reviewedExecutablePlan!)) !=
+                  jsonEncode(
+                    codec.encodePlan(proposal.reviewedExecutablePlan!),
+                  ))) {
         return ProgrammeAdaptationAcceptanceResult.failed(
           errorCode: 'proposal_mismatch',
           message:

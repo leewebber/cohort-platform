@@ -113,6 +113,8 @@ class EquipmentAdaptationRequestValidator {
       recoveryState: request.recoveryState,
       environment: request.environment,
       availableEquipment: normalized,
+      confirmedMatchingDumbbellPairWithoutBarbell:
+          request.confirmedMatchingDumbbellPairWithoutBarbell,
       availableMinutes: request.availableMinutes,
     );
   }

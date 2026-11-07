@@ -162,6 +162,8 @@ class ExercisePerformanceSnapshot {
     required this.position,
     this.labelOverride,
     this.loadKind = StrengthActualLoadKind.none,
+    this.loadPerDumbbell = false,
+    this.coachCue,
   });
 
   final String sourceExerciseId;
@@ -169,6 +171,8 @@ class ExercisePerformanceSnapshot {
   final int position;
   final String? labelOverride;
   final StrengthActualLoadKind loadKind;
+  final bool loadPerDumbbell;
+  final String? coachCue;
 
   Map<String, dynamic> toJson() => {
     'schemaVersion': 1,
@@ -177,6 +181,8 @@ class ExercisePerformanceSnapshot {
     'position': position,
     if (labelOverride != null) 'labelOverride': labelOverride,
     'loadKind': loadKind.dbValue,
+    if (loadPerDumbbell) 'loadPerDumbbell': true,
+    if (coachCue != null) 'coachCue': coachCue,
   };
 
   factory ExercisePerformanceSnapshot.fromJson(Map<String, dynamic> json) {
@@ -188,6 +194,8 @@ class ExercisePerformanceSnapshot {
           : int.tryParse(json['position']?.toString() ?? '') ?? 0,
       labelOverride: _trim(json['labelOverride']),
       loadKind: StrengthActualLoadKind.fromDb(json['loadKind']?.toString()),
+      loadPerDumbbell: json['loadPerDumbbell'] == true,
+      coachCue: _trim(json['coachCue']),
     );
   }
 

@@ -1,0 +1,5 @@
+NOTICE:  REPRODUCED: original hook allowed legacy private v2 to publish the candidate and seed permission without retained artifact
+NOTICE:  PASS: legacy publication and a failure after permission seeding roll back the whole trial
+NOTICE:  PASS: service-role retained publish commits one seal and permission; exact retry and conflicting retry preserve both rows
+NOTICE:  PASS: ordinary athlete sees one permission before End programme and zero after commit
+NOTICE:  PASS: End programme preserves the sealed permission row and function ACLs are bounded

@@ -1,0 +1,109 @@
+{
+  "adaptation_permissions": [
+    {
+      "id": "m31-w01-d04-rdl",
+      "change_kind": "substitute_approved_equipment",
+      "target_ref": "LW10K-W01-D04",
+      "athlete_agreement_required": true,
+      "scope_note": "EX-078 to EX-040 at W01-B-barbell_rdl only, with no barbell and two matching dumbbells."
+    }
+  ],
+  "assessments": [],
+  "comparison_identities": [],
+  "package_schema_version": 2,
+  "performance_evidence_requirements": [],
+  "phases": [],
+  "programme": {
+    "coaching_intent": "Preserve the authored Thursday strength session with one reviewable equipment alternative.",
+    "description": "Private one-session equipment trial derived from Hybrid 10K Week 1 Thursday.",
+    "duration_weeks": 1,
+    "library_scope": "coach_private",
+    "lineage_code": "HYBRID10K-M31-THURSDAY-TRIAL",
+    "name": "Hybrid 10K Thursday equipment trial",
+    "owner_type": "coach",
+    "sessions_per_week": 1,
+    "version_number": 1
+  },
+  "protected_invariants": [],
+  "sessions": [
+    {
+      "session_key": "m31-thursday-rdl-trial",
+      "protocol_id": "protocol-514e5f5a-c825-49cd-911a-a2bdf4f6c6d3",
+      "session_lineage_id": "0e648013-2a31-4b64-a462-a3e321581259",
+      "revision_number": 1,
+      "title": "Thursday selected strength"
+    }
+  ],
+  "weeks": [
+    {
+      "days": [
+        {
+          "day_key": "day_1",
+          "day_order": 1,
+          "day_type": "rest",
+          "title": "Rest",
+          "slots": []
+        },
+        {
+          "day_key": "day_2",
+          "day_order": 2,
+          "day_type": "rest",
+          "title": "Rest",
+          "slots": []
+        },
+        {
+          "day_key": "day_3",
+          "day_order": 3,
+          "day_type": "rest",
+          "title": "Rest",
+          "slots": []
+        },
+        {
+          "day_key": "day_4",
+          "day_order": 4,
+          "day_type": "training",
+          "slots": [
+            {
+              "completion_expectation": "required",
+              "display_title": "Thursday selected strength",
+              "is_optional": false,
+              "progression": {
+                "prescription_summary": "D1–D7 plus exact founder-selected week doses; D8 full-programme review in TEN_WEEK_REVIEW.md. No automatic progression."
+              },
+              "session_key": "m31-thursday-rdl-trial",
+              "session_order": 1,
+              "slot_key": "LW10K-W01-D04",
+              "time_of_day": "any",
+              "coach_note": "Use this week’s exact sets, rests and repetitions in reserve. The selected consolidation, lower-body control and taper instructions manage strength workload alongside the running."
+            }
+          ],
+          "title": "Thursday selected strength"
+        },
+        {
+          "day_key": "day_5",
+          "day_order": 5,
+          "day_type": "rest",
+          "title": "Rest",
+          "slots": []
+        },
+        {
+          "day_key": "day_6",
+          "day_order": 6,
+          "day_type": "rest",
+          "title": "Rest",
+          "slots": []
+        },
+        {
+          "day_key": "day_7",
+          "day_order": 7,
+          "day_type": "rest",
+          "title": "Rest",
+          "slots": []
+        }
+      ],
+      "title": "Performance foundation",
+      "week_number": 1,
+      "coach_note": "Tuesday introduces threshold intervals; Friday stays easy alongside Sunday’s long run. Strength uses the selected standard doses and prescribed repetitions in reserve."
+    }
+  ]
+}

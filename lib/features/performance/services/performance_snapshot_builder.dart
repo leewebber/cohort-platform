@@ -24,7 +24,12 @@ class PerformanceSnapshotBuilder {
     required int position,
     SessionBlockType blockType = SessionBlockType.custom,
   }) {
+    final perDumbbell =
+        summary.prescription?.performanceCapture?.loadLabel ==
+        'kg per dumbbell';
     return ExercisePerformanceSnapshot(
+      loadPerDumbbell: perDumbbell,
+      coachCue: perDumbbell ? summary.prescription?.coachCue : null,
       sourceExerciseId: summary.exerciseId,
       displayName: AthleteExerciseLabelResolver.fromExecutionSummary(summary),
       labelOverride: summary.displayLabelOverride,

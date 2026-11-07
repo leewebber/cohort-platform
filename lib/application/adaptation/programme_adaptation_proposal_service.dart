@@ -12,7 +12,9 @@ import 'package:cohort_platform/models/adaptation_request.dart';
 import 'package:cohort_platform/models/protocol_draft.dart';
 
 import 'equipment_adaptation_request_validator.dart';
+import 'm31_thursday_equipment_trial.dart';
 import 'plan_package_session_adaptation_adapter.dart';
+import 'programme_adaptation_permission_reader.dart';
 import 'programme_adaptation_proposal_mapper.dart';
 
 typedef ProgrammeProtocolDraftLoader =
@@ -127,14 +129,36 @@ class ProgrammeAdaptationProposalService {
           .applyNormalized(request, validation.normalizedEquipment);
     }
 
-    final adapter =
-        _adapterOverride ??
-        PlanPackageSessionAdaptationAdapter(knowledge: knowledge);
-
     try {
-      final permissions = request.reason == AdaptationReason.equipment
+      final isTrial =
+          request.reason == AdaptationReason.equipment &&
+          package.programmeVersionId == M31ThursdayEquipmentTrial.versionId;
+      if (isTrial && !M31ThursdayEquipmentTrial.matches(package, slotKey)) {
+        throw PlanPackageAdaptationAdapterException(
+          'substitution_not_permitted',
+          'This slot is outside the equipment trial.',
+        );
+      }
+      final permissions = isTrial
+          ? await const ProgrammeAdaptationPermissionReader().loadThursdayTrial(
+              assignmentId: package.assignmentId!,
+              versionId: package.programmeVersionId!,
+              slotKey: slotKey!,
+            )
+          : request.reason == AdaptationReason.equipment
           ? await _loadAdaptationPermissions(package.programmeVersionId!.trim())
           : const <PlanPackageAdaptationPermission>[];
+      final scopedKnowledge = isTrial
+          ? M31ThursdayEquipmentTrial.authorize(
+              package: package,
+              authoredSlot: slotKey,
+              request: effectiveRequest,
+              permissions: permissions,
+            )
+          : knowledge;
+      final adapter =
+          _adapterOverride ??
+          PlanPackageSessionAdaptationAdapter(knowledge: scopedKnowledge);
       final draft = await _loadProtocolDraft(package.protocolId!.trim());
       final run = adapter.evaluate(
         package: package,
@@ -148,7 +172,8 @@ class ProgrammeAdaptationProposalService {
         request: effectiveRequest,
         run: run,
         authoredDraft: draft,
-        knowledge: knowledge,
+        knowledge: scopedKnowledge,
+        isThursdayTrial: isTrial,
         proposedAt: proposedAt,
       );
     } on PlanPackageAdaptationAdapterException catch (error) {

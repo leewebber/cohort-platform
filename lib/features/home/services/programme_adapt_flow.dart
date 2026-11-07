@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../application/adaptation/m31_thursday_equipment_trial.dart';
 import '../../../application/adaptation/programme_adaptation_acceptance_service.dart';
 import '../../../application/adaptation/programme_adaptation_fingerprints.dart';
 import '../../../application/adaptation/programme_adaptation_proposal_service.dart';
@@ -85,7 +86,11 @@ class ProgrammeAdaptFlow {
       package.plan,
     );
 
-    final request = await showAdaptationBottomSheet(context);
+    final slotKey = executionContext?.packageSlotKey;
+    final request = await showAdaptationBottomSheet(
+      context,
+      confirmDumbbellPair: M31ThursdayEquipmentTrial.matches(package, slotKey),
+    );
     if (request == null || !context.mounted) {
       _assertUnchanged(package, beforeFingerprint, beforePlanFingerprint);
       return const ProgrammeAdaptFlowResult();
@@ -96,6 +101,7 @@ class ProgrammeAdaptFlow {
       proposal = await _proposalService.propose(
         package: package,
         request: request,
+        slotKey: slotKey,
       );
     } catch (error) {
       if (!context.mounted) return const ProgrammeAdaptFlowResult();

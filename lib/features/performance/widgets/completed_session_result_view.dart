@@ -950,6 +950,10 @@ class _CompletedExerciseDetail extends StatelessWidget {
                 exercise.comparisonHighlight ?? exercise.comparisonLabel,
                 style: CohortTextStyles.body,
               ),
+              if (exercise.coachCue case final cue?) ...[
+                const SizedBox(height: CohortSpacing.xs),
+                Text(cue, style: CohortTextStyles.body),
+              ],
               if (exercise.personalBestLabels.isNotEmpty) ...[
                 const SizedBox(height: CohortSpacing.xs),
                 for (final label in exercise.personalBestLabels)

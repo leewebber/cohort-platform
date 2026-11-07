@@ -424,6 +424,7 @@ class CompletedExerciseResultProjection {
     required this.comparisonStatus,
     required this.comparisonLabel,
     this.previousCompletedAt,
+    this.coachCue,
     this.bestSetLabel,
     this.estimated1RmLabel,
     this.volumeLabel,
@@ -440,6 +441,7 @@ class CompletedExerciseResultProjection {
   final DateTime? previousCompletedAt;
   final StrengthExerciseComparisonStatus comparisonStatus;
   final String comparisonLabel;
+  final String? coachCue;
   final String? bestSetLabel;
   final String? estimated1RmLabel;
   final String? volumeLabel;
@@ -453,7 +455,27 @@ class CompletedExerciseResultProjection {
     required TrainingSessionRecord current,
     required List<TrainingSessionRecord> athleteHistory,
   }) {
-    final kind = exercise.exerciseSnapshot.loadKind;
+    final snapshot = exercise.exerciseSnapshot;
+    final kind = snapshot.loadKind;
+    if (snapshot.loadPerDumbbell) {
+      return CompletedExerciseResultProjection(
+        sourceExerciseId: exercise.sourceExerciseId,
+        displayName: snapshot.displayName,
+        sets: StrengthResultComparison.authoredSets(exercise)
+            .map(
+              (set) => CompletedSetResultProjection.fromSet(
+                set,
+                loadKind: kind,
+                loadPerDumbbell: true,
+              ),
+            )
+            .toList(growable: false),
+        previousSets: const [],
+        comparisonStatus: StrengthExerciseComparisonStatus.notComparable,
+        comparisonLabel: 'Loads are recorded per dumbbell.',
+        coachCue: snapshot.coachCue,
+      );
+    }
     final previousOccurrence = StrengthResultComparison.previousOccurrence(
       exerciseId: exercise.sourceExerciseId,
       current: current,
@@ -686,18 +708,22 @@ class CompletedSetResultProjection {
     TrainingSetResult set, {
     required StrengthActualLoadKind loadKind,
     bool isBestSet = false,
+    bool loadPerDumbbell = false,
   }) {
+    final load = StrengthLoadDisplay.format(
+      load: set.load,
+      loadUnit: set.loadUnit,
+      kind: loadKind,
+    );
     return CompletedSetResultProjection(
       setNumber: set.setNumber,
       completed: set.completed,
       stateLabel: set.completed ? 'Completed' : 'Not completed',
       reps: set.reps,
       repsLabel: set.reps == null ? null : '${set.reps} reps',
-      loadLabel: StrengthLoadDisplay.format(
-        load: set.load,
-        loadUnit: set.loadUnit,
-        kind: loadKind,
-      ),
+      loadLabel: loadPerDumbbell && set.load != null && load != null
+          ? '$load per dumbbell'
+          : load,
       prescribedDistanceLabel: null,
       actualDistanceLabel: set.distance == null
           ? null
