@@ -14,6 +14,9 @@ class AcquisitionException implements Exception {
     'invalid_timezone' => 'Choose a valid training timezone.',
     'active_enrolment_exists' =>
       'You already have an active programme. Your current training is unchanged.',
+    'programme_not_active' => 'This programme is no longer active.',
+    'programme_session_in_progress' =>
+      'Finish your in-progress session before ending the programme.',
     'programme_unavailable' => 'This programme is not ready to start yet.',
     _ =>
       'This is unavailable right now. Your training is unchanged. Please retry.',
@@ -142,6 +145,22 @@ class SupabaseAcquisitionStore implements AcquisitionStore {
           ),
         )
         .toList();
+  }
+
+  Future<void> endProgramme({
+    required String assignmentId,
+    required String programmeVersionId,
+  }) async {
+    final result = await _call('end_my_fixed_programme', {
+      'p_assignment_id': assignmentId,
+      'p_programme_version_id': programmeVersionId,
+    });
+    if (result['status'] != 'ok' ||
+        result['athlete_id'] != athleteId ||
+        result['assignment_id'] != assignmentId ||
+        result['programme_version_id'] != programmeVersionId) {
+      throw const AcquisitionException('unavailable');
+    }
   }
 
   @override

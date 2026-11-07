@@ -23,6 +23,7 @@ import '../presentation/athlete_programme_continuity_copy.dart';
 import '../presentation/athlete_programme_lifecycle_presentation.dart';
 import '../widgets/athlete_programme_status_state.dart';
 import '../services/athlete_catalogue_enrolment_services.dart';
+import '../../programme_acquisition/acquisition_store.dart';
 import '../../programme_acquisition/private_programme_catalogue.dart';
 import '../services/athlete_plan_materialisation_service.dart';
 import '../services/athlete_programme_session_prepare_service.dart';
@@ -52,6 +53,7 @@ class AthleteProgrammeScreen extends StatefulWidget {
     this.executionLauncher,
     this.swapStore,
     this.onOpenCalendar,
+    this.endProgramme,
   });
 
   final String athleteId;
@@ -68,6 +70,7 @@ class AthleteProgrammeScreen extends StatefulWidget {
   final ProgrammeSessionExecutionLauncher? executionLauncher;
   final FutureProgrammeSessionSwapStore? swapStore;
   final VoidCallback? onOpenCalendar;
+  final Future<void> Function(ProgrammeAssignment assignment)? endProgramme;
 
   @override
   State<AthleteProgrammeScreen> createState() => _AthleteProgrammeScreenState();
@@ -81,6 +84,7 @@ class _AthleteProgrammeScreenState extends State<AthleteProgrammeScreen> {
       );
   FixedProgrammeCalendarProjection? _fixedCalendar;
   bool _fixedCalendarLoading = false;
+  bool _endingProgramme = false;
   String? _fixedCalendarError;
   AthleteProgrammeContinuity _continuity = const AthleteProgrammeContinuity(
     status: AthleteProgrammeContinuityStatus.none,
@@ -447,6 +451,104 @@ class _AthleteProgrammeScreenState extends State<AthleteProgrammeScreen> {
     );
   }
 
+  Future<void> _confirmEndProgramme(
+    ProgrammeAssignment assignment,
+    String name,
+  ) async {
+    if (_endingProgramme) return;
+    setState(() => _endingProgramme = true);
+    try {
+      final confirmed = await showDialog<bool>(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('End programme?'),
+          content: Text(
+            'End $name as your active programme? '
+            'Your completed sessions will stay in History.',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: const Text('Keep programme'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: const Text('End programme'),
+            ),
+          ],
+        ),
+      );
+      if (!mounted || confirmed != true) return;
+      if (_controller.activeAssignment?.id != assignment.id ||
+          widget.athleteId != assignment.athleteId) {
+        throw const AcquisitionException('programme_not_active');
+      }
+      final end = widget.endProgramme;
+      if (end != null) {
+        await end(assignment);
+      } else {
+        await SupabaseAcquisitionStore(
+          athleteId: assignment.athleteId,
+        ).endProgramme(
+          assignmentId: assignment.id,
+          programmeVersionId: assignment.programmeVersionId,
+        );
+      }
+      if (!mounted || widget.athleteId != assignment.athleteId) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Programme ended.')));
+      await _reloadProgrammeAfterEnd(assignment.athleteId);
+    } on AcquisitionException catch (error) {
+      if (!mounted || widget.athleteId != assignment.athleteId) return;
+      final needsReload = switch (error.code) {
+        'programme_session_in_progress' ||
+        'session_expired' ||
+        'access_denied' => false,
+        _ => true,
+      };
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            needsReload && error.code != 'programme_not_active'
+                ? 'Couldn’t confirm whether the programme ended. '
+                      'Reload Programmes to check.'
+                : error.message,
+          ),
+          action: needsReload
+              ? SnackBarAction(
+                  label: 'Reload',
+                  onPressed: () =>
+                      _reloadProgrammeAfterEnd(assignment.athleteId),
+                )
+              : null,
+        ),
+      );
+    } finally {
+      if (mounted) setState(() => _endingProgramme = false);
+    }
+  }
+
+  Future<void> _reloadProgrammeAfterEnd(String athleteId) async {
+    if (!mounted || widget.athleteId != athleteId) return;
+    try {
+      final refresh = widget.refreshController;
+      if (refresh == null) {
+        await _loadProgramme();
+      } else {
+        await refresh.reloadAuthoritativeSurfaces(source: 'programme_end');
+        refresh.requestRefresh(source: 'programme_end');
+      }
+    } catch (_) {
+      if (!mounted || widget.athleteId != athleteId) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Couldn’t refresh Programmes. Reopen it to check.'),
+        ),
+      );
+    }
+  }
+
   bool get _isCompletedProjection {
     final assignment = _controller.currentAssignment;
     return assignment != null &&
@@ -602,6 +704,15 @@ class _AthleteProgrammeScreenState extends State<AthleteProgrammeScreen> {
               ),
             ),
           ],
+          if (assignment.isActive &&
+              assignment.isFixedSchedule &&
+              assignment.isMaterialised)
+            TextButton(
+              onPressed: _endingProgramme
+                  ? null
+                  : () => _confirmEndProgramme(assignment, name),
+              child: const Text('End programme'),
+            ),
           const SizedBox(height: CohortSpacing.md),
           CohortButton(
             label: 'Browse programmes',

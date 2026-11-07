@@ -1,4 +1,5 @@
 // Opt-in GoTrue → actual app stores → PostgREST/SQL proof. Local fixtures only.
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
@@ -25,21 +26,23 @@ void main() {
       expect(api.host, '127.0.0.1');
       final container = config['CONTAINER'] as String;
       expect(container.startsWith('supabase_db_s12g'), isTrue);
+      Future<Process> openSql() => Process.start('docker', [
+        'exec',
+        '-i',
+        container,
+        'psql',
+        '-X',
+        '-U',
+        'postgres',
+        '-d',
+        'postgres',
+        '-At',
+        '-v',
+        'ON_ERROR_STOP=1',
+        '-q',
+      ]);
       Future<String> sql(String query) async {
-        final process = await Process.start('docker', [
-          'exec',
-          '-i',
-          container,
-          'psql',
-          '-X',
-          '-U',
-          'postgres',
-          '-d',
-          'postgres',
-          '-At',
-          '-v',
-          'ON_ERROR_STOP=1',
-        ]);
+        final process = await openSql();
         process.stdin.write(query);
         await process.stdin.close();
         final out = await utf8.decoder.bind(process.stdout).join();
@@ -288,6 +291,158 @@ void main() {
         await sql("SELECT count(*) FROM public.profiles WHERE id='$uid';"),
         '1',
       );
+      debugPrint('M12_STAGE=end-programme');
+      final ending = ids.first;
+      Matcher endError(String code) => isA<AcquisitionException>().having(
+        (error) => error.code,
+        'code',
+        code,
+      );
+      await expectLater(
+        foreign.endProgramme(assignmentId: ending, programmeVersionId: v1),
+        throwsA(endError('access_denied')),
+      );
+      await expectLater(
+        restored.endProgramme(assignmentId: ending, programmeVersionId: v2),
+        throwsA(endError('access_denied')),
+      );
+
+      final mismatchedActor = await restart.rpc(
+        'end_my_fixed_programme',
+        params: {
+          'p_expected_athlete_id': other,
+          'p_assignment_id': ending,
+          'p_programme_version_id': v1,
+        },
+      );
+      expect(mismatchedActor['status'], 'access_denied');
+      await expectLater(
+        restart
+            .from('programme_assignments')
+            .update({'ended_at': DateTime.now().toUtc().toIso8601String()})
+            .eq('id', ending),
+        throwsA(isA<PostgrestException>()),
+      );
+
+      // Seed one linked session in the disposable database and protect it
+      // through the same assignment/slot binding used by fixed session start.
+      await sql('''
+        WITH slot AS (
+          SELECT * FROM public.programme_schedule_occurrences
+          WHERE assignment_id='$ending' ORDER BY scheduled_date LIMIT 1
+        ), session AS (
+          INSERT INTO public.training_sessions(athlete_id,protocol_id,status)
+          SELECT '$uid',protocol_id,'in_progress' FROM slot RETURNING id
+        ), record AS (
+          INSERT INTO public.training_session_records(record_id,athlete_id,training_session_id,
+            source_protocol_id,assignment_id,programme_session_id,status,session_snapshot,started_at)
+          SELECT gen_random_uuid(),'$uid',session.id,slot.protocol_id,slot.assignment_id,
+            slot.session_slot_id,'in_progress','{}',now() FROM slot CROSS JOIN session
+          RETURNING record_id
+        )
+        INSERT INTO public.programme_slot_outcomes(
+          assignment_id,session_slot_id,week_number,day_key,session_order,
+          outcome_status,training_session_id,programme_version_id,
+          materialised_package_content_hash,programmed_session_key,completion_record_id)
+        SELECT assignment_id,session_slot_id,week_number,day_key,session_order,
+          'in_progress',session.id,programme_version_id,package_content_hash,
+          programmed_session_key,record.record_id FROM slot CROSS JOIN session CROSS JOIN record;
+      ''');
+      await expectLater(
+        restored.endProgramme(assignmentId: ending, programmeVersionId: v1),
+        throwsA(endError('programme_session_in_progress')),
+      );
+      await sql('''
+        UPDATE public.training_sessions SET status='completed'
+        WHERE id=(SELECT training_session_id FROM public.programme_slot_outcomes WHERE assignment_id='$ending');
+        UPDATE public.programme_slot_outcomes SET outcome_status='completed'
+        WHERE assignment_id='$ending';
+      ''');
+      await expectLater(
+        restored.endProgramme(assignmentId: ending, programmeVersionId: v1),
+        throwsA(endError('programme_session_in_progress')),
+      );
+      await sql('''
+        UPDATE public.training_session_records SET status='completed', completed_at=now()
+        WHERE assignment_id='$ending';
+        WITH block AS (
+          INSERT INTO public.training_block_results(block_result_id,session_record_id,
+            block_snapshot,status,result_type,position)
+          SELECT gen_random_uuid(),record_id,'{}','completed','strength',1
+          FROM public.training_session_records WHERE assignment_id='$ending'
+          RETURNING block_result_id
+        ), exercise AS (
+          INSERT INTO public.training_exercise_results(exercise_result_id,block_result_id,
+            exercise_snapshot,position)
+          SELECT gen_random_uuid(),block_result_id,'{}',1 FROM block
+          RETURNING exercise_result_id
+        )
+        INSERT INTO public.training_set_results(set_result_id,exercise_result_id,set_number,
+          reps,load,load_unit,completed,position)
+        SELECT gen_random_uuid(),exercise_result_id,1,5,10,'kg',true,1 FROM exercise;
+      ''');
+      Future<String> history() => sql('''
+        SELECT jsonb_build_object(
+          'outcomes',(SELECT jsonb_agg(to_jsonb(o) ORDER BY o.id) FROM public.programme_slot_outcomes o WHERE assignment_id='$ending'),
+          'occurrences',(SELECT jsonb_agg(to_jsonb(o) ORDER BY o.id) FROM public.programme_schedule_occurrences o WHERE assignment_id='$ending'),
+          'sessions',(SELECT jsonb_agg(to_jsonb(s) ORDER BY s.id) FROM public.training_sessions s JOIN public.programme_slot_outcomes o ON s.id=o.training_session_id WHERE o.assignment_id='$ending'),
+          'records',(SELECT jsonb_agg(to_jsonb(r) ORDER BY r.record_id) FROM public.training_session_records r WHERE assignment_id='$ending'),
+          'sets',(SELECT jsonb_agg(to_jsonb(s) ORDER BY s.set_result_id)
+            FROM public.training_set_results s JOIN public.training_exercise_results e USING(exercise_result_id)
+            JOIN public.training_block_results b USING(block_result_id)
+            JOIN public.training_session_records r ON r.record_id=b.session_record_id WHERE r.assignment_id='$ending'),
+          'exercises',(SELECT jsonb_agg(to_jsonb(e) ORDER BY e.exercise_result_id)
+            FROM public.training_exercise_results e JOIN public.training_block_results b USING(block_result_id)
+            JOIN public.training_session_records r ON r.record_id=b.session_record_id WHERE r.assignment_id='$ending'),
+          'blocks',(SELECT jsonb_agg(to_jsonb(b) ORDER BY b.block_result_id)
+            FROM public.training_block_results b JOIN public.training_session_records r
+            ON r.record_id=b.session_record_id WHERE r.assignment_id='$ending'),
+          'projection',(SELECT to_jsonb(p) FROM public.programme_schedule_projections p WHERE assignment_id='$ending'));
+      ''');
+      final savedHistory = await history();
+      await restored.endProgramme(assignmentId: ending, programmeVersionId: v1);
+      final endStamp = await sql(
+        "SELECT ended_at FROM public.programme_assignments WHERE id='$ending' AND status='paused';",
+      );
+      expect(endStamp, isNotEmpty);
+      final retainedRecords = await restart
+          .from('training_session_records')
+          .select('record_id,status')
+          .eq('assignment_id', ending);
+      expect(retainedRecords.single['status'], 'completed');
+      expect(await history(), savedHistory);
+      expect(
+        await sql(
+          "SELECT count(*) FROM public.programme_assignments WHERE athlete_id='$uid' AND status='active';",
+        ),
+        '0',
+      );
+      final londonToday = DateTime.parse(
+        await sql("SELECT (now() AT TIME ZONE 'Europe/London')::date;"),
+      );
+      final next = await restored.acquire(v2, londonToday);
+      expect(next, isNot(ending));
+      await restored.endProgramme(assignmentId: ending, programmeVersionId: v1);
+      expect(
+        await sql(
+          "SELECT ended_at FROM public.programme_assignments WHERE id='$ending';",
+        ),
+        endStamp,
+      );
+      expect(
+        await sql(
+          "SELECT id FROM public.programme_assignments WHERE athlete_id='$uid' AND status='active';",
+        ),
+        next,
+      );
+      expect(await history(), savedHistory);
+      expect(
+        await sql(
+          "SELECT has_function_privilege('authenticated','public.end_my_fixed_programme(uuid,uuid,uuid)','EXECUTE') AND NOT has_function_privilege('anon','public.end_my_fixed_programme(uuid,uuid,uuid)','EXECUTE') AND NOT has_function_privilege('service_role','public.end_my_fixed_programme(uuid,uuid,uuid)','EXECUTE');",
+        ),
+        't',
+      );
+
       // Sanitised stage marker for disposable proof diagnostics.
       debugPrint('M12_STAGE=logout');
       await authA.signOut();
@@ -305,7 +460,7 @@ void main() {
       await sql(
         "INSERT INTO public.private_programme_alpha_eligibility(athlete_id,programme_version_id) VALUES('$other','$v2');",
       );
-      final v2Assignment = await foreign.acquire(v2, DateTime(2026, 10, 27));
+      final v2Assignment = await foreign.acquire(v2, londonToday);
       final v2Calendar = await b.rpc(
         'resolve_fixed_programme_calendar',
         params: {'p_assignment_id': v2Assignment},
@@ -362,12 +517,126 @@ void main() {
         ),
         't',
       );
+      debugPrint('M12_STAGE=end-start-races');
+      String athleteTransaction(String owner) =>
+          """
+        SET LOCAL statement_timeout = '10s';
+        SET LOCAL request.jwt.claim.sub = '$owner';
+        SET LOCAL ROLE authenticated;
+      """;
+      String end(String owner, String id) =>
+          "public.end_my_fixed_programme('$owner','$id','$v2')->>'status'";
+      Future<String> occurrence(String id) => sql("""
+        SELECT id FROM public.programme_schedule_occurrences
+        WHERE assignment_id='$id' AND scheduled_date='${londonToday.toIso8601String().split('T').first}'::date;
+      """);
+      String start(String id) =>
+          "public.create_or_resume_fixed_programme_occurrence_session('$id')";
+      expect(
+        await sql("""
+        BEGIN ISOLATION LEVEL REPEATABLE READ;
+        ${athleteTransaction(uid)}
+        SELECT ${end(uid, next)};
+        ROLLBACK;
+      """),
+        'unavailable',
+      );
+      final aOccurrence = await occurrence(next);
+      final bOccurrence = await occurrence(v2Assignment);
+      expect(aOccurrence, isNotEmpty);
+      expect(bOccurrence, isNotEmpty);
+      await proveEndStartRace(
+        openSql: openSql,
+        sql: sql,
+        setup: athleteTransaction(uid),
+        first: "${start(aOccurrence)}->>'status'",
+        firstStatus: 'created',
+        second: end(uid, next),
+        secondStatus: 'programme_session_in_progress',
+      );
+      await proveEndStartRace(
+        openSql: openSql,
+        sql: sql,
+        setup: athleteTransaction(other),
+        first: end(other, v2Assignment),
+        firstStatus: 'ok',
+        second: "${start(bOccurrence)}->>'code'",
+        secondStatus: 'fixed_assignment_ineligible',
+      );
+      expect(
+        await sql("""
+        SELECT status || ':' || (SELECT count(*) FROM public.programme_slot_outcomes
+          WHERE assignment_id='$next' AND outcome_status='in_progress')
+        FROM public.programme_assignments WHERE id='$next';
+      """),
+        'active:1',
+      );
+      expect(
+        await sql("""
+        SELECT status || ':' || (SELECT count(*) FROM public.programme_slot_outcomes
+          WHERE assignment_id='$v2Assignment')
+        FROM public.programme_assignments WHERE id='$v2Assignment' AND ended_at IS NOT NULL;
+      """),
+        'paused:0',
+      );
     },
     timeout: const Timeout(Duration(minutes: 2)),
     skip: configPath == null
         ? 'Run only via disposable M1.2 local gate'
         : false,
   );
+}
+
+// Keep the first real RPC transaction open until PostgreSQL confirms that
+// the competing RPC is waiting on it. No timing assumption determines who wins.
+Future<void> proveEndStartRace({
+  required Future<Process> Function() openSql,
+  required Future<String> Function(String) sql,
+  required String setup,
+  required String first,
+  required String firstStatus,
+  required String second,
+  required String secondStatus,
+}) async {
+  final holder = await openSql();
+  final lines = StreamIterator(
+    holder.stdout.transform(utf8.decoder).transform(const LineSplitter()),
+  );
+  final errors = holder.stderr.transform(utf8.decoder).join();
+  try {
+    holder.stdin.write("BEGIN; $setup SELECT 'FIRST:' || ($first);\n");
+    await holder.stdin.flush();
+    expect(await lines.moveNext().timeout(const Duration(seconds: 10)), isTrue);
+    expect(lines.current, 'FIRST:$firstStatus');
+
+    final result = sql("""
+      BEGIN;
+      $setup
+      SET LOCAL application_name = 'm12-end-race-waiter';
+      SELECT $second;
+      COMMIT;
+    """);
+    // Consume the result even if the blocking assertion fails.
+    unawaited(result.then<void>((_) {}, onError: (Object _, StackTrace _) {}));
+    var blocked = false;
+    final deadline = Stopwatch()..start();
+    while (!blocked && deadline.elapsed < const Duration(seconds: 5)) {
+      blocked =
+          await sql("""
+        SELECT EXISTS (SELECT 1 FROM pg_stat_activity
+          WHERE application_name='m12-end-race-waiter'
+          AND cardinality(pg_blocking_pids(pid)) > 0);
+      """) ==
+          't';
+    }
+    expect(blocked, isTrue);
+    holder.stdin.writeln('COMMIT;');
+    expect(await result, secondStatus);
+  } finally {
+    await holder.stdin.close();
+    await lines.cancel();
+    expect(await holder.exitCode, 0, reason: await errors);
+  }
 }
 
 class MemoryPkce extends GotrueAsyncStorage {

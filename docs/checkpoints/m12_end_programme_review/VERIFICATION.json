@@ -1,0 +1,35 @@
+{
+  "scope": "Disposable local and source review only. No hosted/device operation.",
+  "base_commit": "a63e2c8492671c3d62924c6d092f8502e13213a4",
+  "passed": {
+    "focused_widget_file": "13 tests passed, including cancel/confirm, blocked response, lost-response reload without another write, acknowledged success despite failed sibling refresh",
+    "changed_file_analysis": "No issues found across four changed Dart files",
+    "authenticated_gate_fresh": "PASS",
+    "authenticated_gate_reset_repeat": "PASS",
+    "owner_scope": "Foreign owner, wrong pinned version, mismatched expected athlete and direct ended_at update denied",
+    "start_wins": "Real canonical fixed start held its transaction, competing end was observed blocked via pg_blocking_pids, then refused programme_session_in_progress after commit; active assignment and session retained",
+    "end_wins": "Exact end held its transaction, competing canonical start was observed blocked, then refused fixed_assignment_ineligible after commit; ended marker retained and no outcome inserted",
+    "nondefault_isolation": "REPEATABLE READ returns unavailable before mutation",
+    "stale_retry": "Old end replay after new assignment preserved exact new active pin and original end timestamp",
+    "history": "Exact fingerprints of completed records, blocks, exercises, sets, sessions, outcomes, occurrences and projection match before end, after end and after later assignment/replay; authenticated History record read still succeeds",
+    "single_migration_rehearsal": "Only reviewed file applied using local CLI, original ledger preserved and expected schema/function additions match",
+    "final_verify_sql": "All final SQL queries executed successfully on disposable local database after reset",
+    "source_baseline": "All 135 retained migration source SHA-256 pins match",
+    "diff_check": "git diff --check passed"
+  },
+  "reused_prior_task_evidence": [
+    "Six architecture safety groups passed for original End programme candidate; broad suite not repeated",
+    "Original 16 focused tests and prior local fresh/repeat acquisition/history checks retained"
+  ],
+  "corrected_test_preparation_failures": [
+    "Additional completed-child fixture initially omitted required result_type. Supplied strength and reran fresh/repeat successfully.",
+    "Standalone read-only SQL validation first hit the deliberate local reset before schema_migrations existed. Repeated successfully after reset."
+  ],
+  "pending": [
+    "Fresh read-only hosted identity/health/ledger/schema/protected-state preflight",
+    "Separately approved exact migration deployment and postchecks",
+    "Reviewed integration and signed 1.0.0 (9) build, then manual iPhone acceptance",
+    "Any actual athlete end or programme acquisition"
+  ],
+  "git": "Detached a63e2c8 local candidate, uncommitted and unpushed. Original checkouts and refs preserved."
+}

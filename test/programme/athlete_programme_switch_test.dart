@@ -20,6 +20,7 @@ import 'package:cohort_platform/models/programme_lineage.dart';
 import 'package:cohort_platform/models/programme_slot_outcome.dart';
 import 'package:cohort_platform/models/programme_version.dart';
 import 'package:cohort_platform/models/programme_vocabulary.dart';
+import 'package:cohort_platform/features/programme_acquisition/acquisition_store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -420,6 +421,143 @@ void main() {
   });
 
   group('AthleteProgrammeScreen widget', () {
+    testWidgets(
+      'End programme distinguishes a block from a lost response and reloads without writing',
+      (tester) async {
+        final assignment =
+            ProgrammeScheduleTestFixtures.materialisedAssignment().copyWith(
+              scheduleMode: 'fixed_schedule',
+            );
+        final tables = InMemoryProgrammeTables()
+          ..assignments.add(assignment)
+          ..versions.add(ProgrammeScheduleTestFixtures.version());
+        final assignments = InMemoryProgrammeAssignmentStore(tables);
+        final controller = AthleteProgrammeScreenController(
+          athleteId: athleteId,
+          assignmentStore: assignments,
+          versionStore: InMemoryProgrammeVersionStore(tables),
+        );
+        var endCalls = 0;
+        await tester.pumpWidget(
+          MaterialApp(
+            home: AthleteProgrammeScreen(
+              athleteId: athleteId,
+              controller: controller,
+              endProgramme: (target) async {
+                endCalls++;
+                if (endCalls == 1) {
+                  throw const AcquisitionException(
+                    'programme_session_in_progress',
+                  );
+                }
+                await assignments.update(
+                  target.copyWith(status: ProgrammeAssignmentStatus.paused),
+                );
+                throw const AcquisitionException('unavailable');
+              },
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        final end = find.widgetWithText(TextButton, 'End programme');
+        Future<void> confirmEnd() async {
+          await tester.ensureVisible(end);
+          await tester.tap(end);
+          await tester.pumpAndSettle();
+          await tester.tap(
+            find.descendant(of: find.byType(AlertDialog), matching: end),
+          );
+          await tester.pumpAndSettle();
+        }
+
+        await confirmEnd();
+        expect(
+          find.text(
+            'Finish your in-progress session before ending the programme.',
+          ),
+          findsOneWidget,
+        );
+        expect(await assignments.getActiveAssignment(athleteId), isNotNull);
+        expect(find.text('Reload'), findsNothing);
+        await tester.pump(const Duration(seconds: 5));
+        await tester.pumpAndSettle();
+
+        await confirmEnd();
+        expect(
+          find.text(
+            'Couldn’t confirm whether the programme ended. Reload Programmes to check.',
+          ),
+          findsOneWidget,
+        );
+        expect(find.text('Programme ended.'), findsNothing);
+        await tester.tap(find.text('Reload'));
+        await tester.pumpAndSettle();
+        expect(endCalls, 2);
+        expect(end, findsNothing);
+        expect(find.text('View programmes'), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      'End success stays acknowledged if another surface fails to reload',
+      (tester) async {
+        final assignment =
+            ProgrammeScheduleTestFixtures.materialisedAssignment().copyWith(
+              scheduleMode: 'fixed_schedule',
+            );
+        final tables = InMemoryProgrammeTables()
+          ..assignments.add(assignment)
+          ..versions.add(ProgrammeScheduleTestFixtures.version());
+        final assignments = InMemoryProgrammeAssignmentStore(tables);
+        final controller = AthleteProgrammeScreenController(
+          athleteId: athleteId,
+          assignmentStore: assignments,
+          versionStore: InMemoryProgrammeVersionStore(tables),
+        );
+        final refresh = HomeTodaySessionRefreshController()
+          ..attachSurface(Object(), ({required source}) async {
+            throw StateError('Synthetic local refresh failure');
+          });
+        var endCalls = 0;
+        await tester.pumpWidget(
+          MaterialApp(
+            home: AthleteProgrammeScreen(
+              athleteId: athleteId,
+              controller: controller,
+              refreshController: refresh,
+              endProgramme: (target) async {
+                endCalls++;
+                await assignments.update(
+                  target.copyWith(status: ProgrammeAssignmentStatus.paused),
+                );
+              },
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+        final end = find.widgetWithText(TextButton, 'End programme');
+        await tester.ensureVisible(end);
+        await tester.tap(end);
+        await tester.pumpAndSettle();
+        await tester.tap(
+          find.descendant(of: find.byType(AlertDialog), matching: end),
+        );
+        await tester.pumpAndSettle();
+        expect(find.text('Programme ended.'), findsOneWidget);
+        expect(endCalls, 1);
+        expect(tester.takeException(), isNull);
+        await tester.pump(const Duration(seconds: 5));
+        await tester.pumpAndSettle();
+        expect(
+          find.text('Couldn’t refresh Programmes. Reopen it to check.'),
+          findsOneWidget,
+        );
+        expect(find.textContaining('Couldn’t confirm whether'), findsNothing);
+        expect(end, findsNothing);
+      },
+    );
+
     testWidgets('deliberate browse action visible with active enrolment', (
       tester,
     ) async {
@@ -454,6 +592,75 @@ void main() {
       expect(find.text('Foundation'), findsOneWidget);
       expect(find.textContaining('Enrolled ·'), findsOneWidget);
     });
+
+    testWidgets(
+      'End programme needs confirmation and refreshes the active pin',
+      (tester) async {
+        final assignment =
+            ProgrammeScheduleTestFixtures.materialisedAssignment().copyWith(
+              scheduleMode: 'fixed_schedule',
+            );
+        final tables = InMemoryProgrammeTables()
+          ..assignments.add(assignment)
+          ..versions.add(
+            ProgrammeScheduleTestFixtures.version().copyWith(
+              name: 'Foundation',
+            ),
+          );
+        final assignments = InMemoryProgrammeAssignmentStore(tables);
+        final controller = AthleteProgrammeScreenController(
+          athleteId: athleteId,
+          assignmentStore: assignments,
+          versionStore: InMemoryProgrammeVersionStore(tables),
+        );
+        var endCalls = 0;
+        await tester.pumpWidget(
+          MaterialApp(
+            home: AthleteProgrammeScreen(
+              athleteId: athleteId,
+              controller: controller,
+              endProgramme: (target) async {
+                expect(target.id, assignment.id);
+                expect(
+                  target.programmeVersionId,
+                  assignment.programmeVersionId,
+                );
+                endCalls++;
+                await assignments.update(
+                  target.copyWith(status: ProgrammeAssignmentStatus.paused),
+                );
+              },
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        final end = find.widgetWithText(TextButton, 'End programme');
+        await tester.ensureVisible(end);
+        await tester.tap(end);
+        await tester.pumpAndSettle();
+        expect(
+          find.textContaining('completed sessions will stay in History'),
+          findsOneWidget,
+        );
+        await tester.tap(find.text('Keep programme'));
+        await tester.pumpAndSettle();
+        expect(endCalls, 0);
+
+        await tester.tap(end);
+        await tester.pumpAndSettle();
+        await tester.tap(
+          find.descendant(of: find.byType(AlertDialog), matching: end),
+        );
+        await tester.pumpAndSettle();
+        expect(endCalls, 1);
+        expect(find.text('Programme ended.'), findsOneWidget);
+        expect(await assignments.getActiveAssignment(athleteId), isNull);
+        expect(await assignments.getById(assignment.id), isNotNull);
+        expect(end, findsNothing);
+        expect(find.text('View programmes'), findsOneWidget);
+      },
+    );
 
     testWidgets('deliberate browse action available without active enrolment', (
       tester,
