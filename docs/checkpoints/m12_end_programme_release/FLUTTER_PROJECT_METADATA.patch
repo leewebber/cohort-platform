@@ -1,0 +1,34 @@
+diff --git a/ios/Runner.xcodeproj/project.pbxproj b/ios/Runner.xcodeproj/project.pbxproj
+index 3e98634..87e5c0b 100644
+--- a/ios/Runner.xcodeproj/project.pbxproj
++++ b/ios/Runner.xcodeproj/project.pbxproj
+@@ -3,7 +3,7 @@
+ 	archiveVersion = 1;
+ 	classes = {
+ 	};
+-	objectVersion = 60;
++	objectVersion = 54;
+ 	objects = {
+ 
+ /* Begin PBXBuildFile section */
+@@ -178,7 +178,7 @@
+ 			isa = PBXProject;
+ 			attributes = {
+ 				BuildIndependentTargetsInParallel = YES;
+-				LastUpgradeCheck = 2660;
++				LastUpgradeCheck = 1510;
+ 				ORGANIZATIONNAME = "";
+ 				TargetAttributes = {
+ 					331C8080294A63A400263BE5 = {
+diff --git a/ios/Runner.xcodeproj/xcshareddata/xcschemes/Runner.xcscheme b/ios/Runner.xcodeproj/xcshareddata/xcschemes/Runner.xcscheme
+index 15a4187..95d6e55 100644
+--- a/ios/Runner.xcodeproj/xcshareddata/xcschemes/Runner.xcscheme
++++ b/ios/Runner.xcodeproj/xcshareddata/xcschemes/Runner.xcscheme
+@@ -1,6 +1,6 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <Scheme
+-   LastUpgradeVersion = "2660"
++   LastUpgradeVersion = "1510"
+    version = "1.7">
+    <BuildAction
+       parallelizeBuildables = "YES"

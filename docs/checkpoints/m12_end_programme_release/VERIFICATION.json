@@ -1,0 +1,30 @@
+{
+  "review_evidence_preserved_byte_identically": true,
+  "reviewed_implementation_and_migration_preserved_byte_identically": true,
+  "integration_base": "a63e2c8492671c3d62924c6d092f8502e13213a4",
+  "implementation_commit": "c02a050442e988aa7b90e70734bd01173d08f6aa",
+  "new_source_change": "pubspec.yaml 1.0.0+8 to 1.0.0+9",
+  "focused_checks_passed": 39,
+  "focused_command": "flutter test --no-pub --reporter expanded test/programme/athlete_programme_switch_test.dart test/release/release_build_script_test.dart test/release/release_configuration_policy_test.dart test/release/release_configuration_ui_test.dart test/auth/auth_confirmation_redirect_test.dart",
+  "changed_dart_diagnostics": 0,
+  "review_auth_race_history_fresh_repeat_reused": true,
+  "review_six_safety_groups_reused": true,
+  "prepare_deployment_script": {
+    "exact_136_pinned_files": true,
+    "deferred_hyrox_excluded": true,
+    "existing_destination_refused": true,
+    "hosted_contact": false
+  },
+  "signed_build_receipt": "BUILD_RECEIPT.json",
+  "build_generated_project_metadata": "Only three Flutter format/upgrade fields changed during build. Retained patch and restored source metadata. Signing settings preserved.",
+  "preservation": {
+    "checkouts_verified": 4,
+    "heads_status_indices_dirty_and_temp_match": true
+  },
+  "hosted_contact": false,
+  "new_provider_credentials": false,
+  "installed_or_device_control": false,
+  "gate_a": "OPEN",
+  "M1_2": "OPEN",
+  "published_migration_sha256": "0bf399e24c589d443aefc9a54a8fdb8578dd67544905a85b8243273ac6db5282"
+}

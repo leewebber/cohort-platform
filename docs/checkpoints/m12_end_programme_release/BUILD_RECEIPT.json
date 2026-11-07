@@ -1,0 +1,37 @@
+{
+  "status": "SIGNED_RELEASE_BUILD_VERIFIED_NOT_INSTALLED",
+  "source_commit": "c02a050442e988aa7b90e70734bd01173d08f6aa",
+  "app_path": "/private/tmp/cohort-m12-release.kwq3ZsxY/source/build/ios/iphoneos/Runner.app",
+  "bundle_id": "uk.cohortperformance.cohort",
+  "version": "1.0.0",
+  "build": "9",
+  "profile_uuid": "215f0fd7-7ef1-4263-ae4c-4b324afb6cf4",
+  "profile_expiry_utc": "2026-11-13T11:20:51Z",
+  "team": "YTZK949GM2",
+  "profile_registered_device_set_matches_build8": true,
+  "registered_device_count": 1,
+  "signature_verified_deep_strict": true,
+  "signer_matches_profile_and_existing_identity": true,
+  "signer_certificate_sha1": "A7D9FD5AAA8A19859F91F746365C1D20643A5F8A",
+  "environment": "production",
+  "target_ref": "otnhhdxstdnwccehacku",
+  "key_role": "anon",
+  "internal_tools_enabled": false,
+  "native_callback": "cohortplatform://auth-callback",
+  "release_aot_present": true,
+  "kernel_blob_present": false,
+  "app_file_tree_sha256": "12625b137d6d4f69f16e97612323ff3a93c3ea314bb6e5185b9ca3e2cb78a225",
+  "app_file_count": 130,
+  "main_executable_sha256": "fb3497418e73d4a4989bd40745c2621646256fa39d18ea2cf4c5088262d372e5",
+  "flutter_generated_project_metadata": {
+    "fields": [
+      "objectVersion 60 to 54",
+      "LastUpgradeCheck 2660 to 1510",
+      "LastUpgradeVersion 2660 to 1510"
+    ],
+    "signing_settings_changed": false,
+    "patch_sha256": "cf405108237adbb5470278d1afbbdf9ebce6260122047577d961c9adf97d4a48",
+    "source_metadata_restored_after_build": true
+  },
+  "temporary_client_config_removed": true
+}

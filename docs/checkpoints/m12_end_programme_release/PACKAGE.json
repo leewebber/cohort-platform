@@ -1,0 +1,60 @@
+{
+  "status": "SIGNED_SOURCE_RELEASE_PREPARED_AWAITING_DEPLOYMENT_APPROVAL",
+  "base_commit": "a63e2c8492671c3d62924c6d092f8502e13213a4",
+  "target_ref": "otnhhdxstdnwccehacku",
+  "expected_hosted_ledger_count": 135,
+  "expected_hosted_ledger_tip": "20261104120000",
+  "expected_athlete_id": "79853f15-eac4-42eb-acfd-384bf2a87976",
+  "expected_bali_assignment_id": "d665e909-d946-414b-986e-8b47f40cd44d",
+  "expected_bali_version_id": "b1a1b001-0000-4000-8000-ba11b0010001",
+  "hybrid_version_id": "b0290b33-2764-4e5b-ad78-3d4beafbb375",
+  "hybrid_scope_seal_sha256": "6d851ceebe49cea3c45328abe2ac932024318e69bf2e211cc9e8abb8815fd99e",
+  "excluded_migration": "20261026120000_durable_publication_approval_events.sql",
+  "migration": "supabase/migrations/20261107120000_athlete_end_fixed_programme.sql",
+  "migration_sha256": "0bf399e24c589d443aefc9a54a8fdb8578dd67544905a85b8243273ac6db5282",
+  "new_ledger_entry": {
+    "version": "20261107120000",
+    "name": "athlete_end_fixed_programme",
+    "statement_count": 9,
+    "statement_array_sha256": "0cab6ff74fac859c2301a4be7a45b40a99d1353822a3824638791e3f3aa54bc7"
+  },
+  "new_function_definition_sha256": {
+    "cohort_protect_programme_end()": "1d44dc6588f1a90326f4730f8abf6477bd7c047371c0e5d3d7ba052f96196bd7",
+    "end_my_fixed_programme(uuid,uuid,uuid)": "81c441668c49450d438159ba1295e2fe84de180f4cedc39baf2dfbf34e893456"
+  },
+  "next_iphone_version": "1.0.0+9",
+  "implementation_commit": "c02a050442e988aa7b90e70734bd01173d08f6aa",
+  "baseline_source_proof": "docs/checkpoints/m11_callback_a76c7cd_2026_11_05/evidence/ORDERED_LEDGER_PROOF.json",
+  "baseline_hosted_ledger": "docs/checkpoints/m11_callback_a76c7cd_2026_11_05/evidence/LEDGER_AFTER.json",
+  "verification_sql": "docs/checkpoints/m12_end_programme_review/VERIFY.sql",
+  "cli_version": "2.109.1",
+  "cli_sha256": "b7be23f4e211b75c00a3df5fcd1f96f3905983c74ff3189bfc69ad5b0f7132c4",
+  "connection": {
+    "target": "otnhhdxstdnwccehacku",
+    "host": "aws-0-eu-west-1.pooler.supabase.com",
+    "port": 5432,
+    "mode": "session",
+    "database": "postgres",
+    "session_user": "cli_login_postgres",
+    "execution_role": "postgres",
+    "system_identifier": "7656985631720456337",
+    "tls": "verify-full, existing pinned CA",
+    "task_limit_seconds": 1800,
+    "execution_readback_reserve_seconds": 90,
+    "replacement_login_authority": false
+  },
+  "expected_post_ledger_count": 136,
+  "pins_sha256": {
+    "docs/checkpoints/m11_callback_a76c7cd_2026_11_05/evidence/ORDERED_LEDGER_PROOF.json": "9a408037a296e812d03716844332aea700c9831bbd7e1fbd737a5eb0c10a05f9",
+    "docs/checkpoints/m11_callback_a76c7cd_2026_11_05/evidence/LEDGER_AFTER.json": "fe05a227159fd16036303fe1921ce0c617d77e3db47c50fecf45e2dbbbd9d12b",
+    "docs/checkpoints/m12_end_programme_review/VERIFY.sql": "0a0c007e40faabee82e00f4c83c68967f8fa4c2d120228fe181224956bc7ac96",
+    "docs/checkpoints/m12_end_programme_release/prepare_deployment.py": "f50c35b6d72a8b1d01556aa96078a95107cddaf2eabb7b673cbe0a72ac8d4dae",
+    "pubspec.yaml": "4ade9d6ce436d9cc3b28ab9792064c65eac5f962f1768944b52e79a2c9e6b429",
+    "tool/release/build_app.sh": "ae0a830c8e1b7e274d1a39f956f0fd859eaeb22640214798d49283b33d88d1f0",
+    "pubspec.lock": "e3309e33216d89cec5b40e11775a1b31f250c19b191ab526c184d9612e626b71",
+    "ios/Runner/Info.plist": "088037b9b01bef45027ef595fc5224a39db87b96ad75be385e8687d4586d983a",
+    "docs/checkpoints/m12_end_programme_release/BUILD_RECEIPT.json": "438bef8055d7dfc6d95db84748795a8368acb182343e8790117f5fdd41256a28",
+    "docs/checkpoints/m12_end_programme_release/DEPLOYMENT_PROPOSAL.md": "1537f21548ccd3571979b50fa5adf16f377ad453c27ccb66736cac75149491c1"
+  },
+  "signed_build_source_commit": "c02a050442e988aa7b90e70734bd01173d08f6aa"
+}

@@ -1,5 +1,19 @@
 # Current repository checkpoint
 
+> **M1.2 End programme release prepared (2026-11-07)**
+> [Release handoff](./m12_end_programme_release/HANDOFF.md) retains the passed review,
+> exact owner/pin and start/end locking proof, stale-request safety and completed
+> History preservation. Both reviewed corrections are unchanged. Version is
+> 1.0.0+9. Thirty-nine focused integration/release checks and changed-file analysis
+> pass. The existing profile/certificate produced a verified signed iPhone release
+> artifact, with production Field Manual configuration and internal tools disabled.
+> Installation and launch remain pending. [Exact one-migration proposal](./m12_end_programme_release/DEPLOYMENT_PROPOSAL.md)
+> requires fresh ledger-135/health/protected-state checks and separately authorised
+> temporary session-mode connection. Expected ledger is 136. Actual Bali ending
+> and Hybrid 10K acquisition remain athlete-controlled later actions.
+> Next single action is approval of that deployment package. M1.2/Gate A remain
+> open. D8/UI acceptance stand and authoring/discretionary polish remain frozen.
+
 > **M1.1 hosted enablement verified (2026-11-05)**
 > [Management closeout](./m11_callback_a76c7cd_2026_11_05/HANDOFF.md)
 > records the exact ordered ledger of 135 through 20261104120000 and the

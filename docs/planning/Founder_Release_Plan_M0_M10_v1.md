@@ -6,7 +6,13 @@ This plan controls delivery priorities. It preserves technical authority contrac
 it does not grant implementation, content, hosted, account or release authority.
 [M0 findings and critical path](../checkpoints/m0_alpha_baseline/HANDOFF.md).
 
-## Current single point — M1.1 compatible-client readiness
+## Current single point — M1.2 End programme deployment approval
+
+The reviewed owner-confirmed End programme change is integrated for release with both review fixes preserved. Signed iPhone 1.0.0 (9) has passed local signature/profile/configuration checks. The original authenticated race/History proof is retained, with 39 focused integration/release checks passing. Installation and launch remain pending. [Release handoff](../checkpoints/m12_end_programme_release/HANDOFF.md)
+
+Next is the [exact single-migration deployment approval](../checkpoints/m12_end_programme_release/DEPLOYMENT_PROPOSAL.md), with fresh Field Manual ledger-135/health/authority/protected-state verification and one separately authorised temporary session-mode CLI connection. Expected ledger is 136. Then Lee installs build 9 manually and confirms his programme transition in the app, with History preservation verified before his independent Hybrid 10K acquisition. M1.2 and Gate A remain open. D8 approval, coach UI acceptance and authoring/discretionary-polish freeze stand.
+
+## Retained M1.1 compatible-client readiness
 
 Field Manual hosted schema and auth verification passed at ledger 135 through 20261104120000. The exact ordered ledger/source comparison closes the pending-migration check by founder approval. The final CLI dry-run was not run. The callback readback contains the original localhost entry and `cohortplatform://auth-callback`. All other returned auth fields, protected data and final health checks match. [Management closeout](../checkpoints/m11_callback_a76c7cd_2026_11_05/HANDOFF.md)
 
