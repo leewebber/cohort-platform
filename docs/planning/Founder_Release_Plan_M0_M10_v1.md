@@ -10,7 +10,11 @@ it does not grant implementation, content, hosted, account or release authority.
 
 Lee installed signed iPhone build 1.0.0 (9). Keep programme left Bali Hybrid Base active. Lee then ended Bali and acquired Hybrid 10K. Read-only verification confirmed Bali's end marker, matching History fingerprints, and a single active Hybrid 10K assignment with 60 scheduled occurrences from Monday 9 November 2026 WITA. The founder accepted the exact ledger-136 reconciliation and released the client hold. The final CLI dry-run was not run. [Verified M1.2 transition](../checkpoints/m12_end_programme_release/INSTALLED_TRANSITION.md)
 
-The next check is the first scheduled strength session on build 9. Save genuine actuals, close and reopen Cohort, resume the same session, and verify one completed History entry after finishing. Installed restart acceptance and Gate A remain open. D8 approval, coach UI acceptance and the authoring and discretionary polish freeze stand.
+The next check is the first scheduled Hybrid 10K strength session on signed iPhone build 1.0.0 (11). Save genuine actuals, close and reopen Cohort, resume the same session, and verify one completed History entry after finishing. Installed restart acceptance and Gate A remain open. D8 approval, coach UI acceptance and the authoring and discretionary polish freeze stand.
+
+## Parallel M3.1 equipment-substitution acceptance
+
+The separate private RDL trial passed on signed iPhone build 1.0.0 (11). Lee verified decline, acceptance, restart and History. Field Manual readback confirmed one completed trial record with the approved replacement and kg per dumbbell actuals. [Installed acceptance](../checkpoints/M31_EQUIPMENT_SUBSTITUTION_INSTALLED_ACCEPTANCE.md)
 
 ## Retained M1.1 compatible-client readiness
 
