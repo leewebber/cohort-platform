@@ -16,6 +16,15 @@ The next check is the first scheduled Hybrid 10K strength session on signed iPho
 
 The separate private RDL trial passed on signed iPhone build 1.0.0 (11). Lee verified decline, acceptance, restart and History. Field Manual readback confirmed one completed trial record with the approved replacement and kg per dumbbell actuals. [Installed acceptance](../checkpoints/M31_EQUIPMENT_SUBSTITUTION_INSTALLED_ACCEPTANCE.md)
 
+## Parallel M3.2 strength time-option release review
+
+The pinned private strength trial passed disposable publication, scoped read, review, restart, completion and History checks. Signed iPhone build 1.0.0 (12) matches the reviewed app source. The single schema migration awaits separate approval and fresh hosted preflight. Trial publication, recipient access and installed acceptance remain separate. M3.2 preparation proceeds in parallel with live M1.3 testing. [Trial](../programmes/m32_time_trial/README.md) · [Schema-only approval](../programmes/m32_time_trial/SCHEMA_ONLY_APPROVAL.md)
+
+Athlete UX backlog
+
+- Simplify the workout screen and warm-up text.
+- Make the weight-entry keypad easy to dismiss.
+
 ## Retained M1.1 compatible-client readiness
 
 Field Manual hosted schema and auth verification passed at ledger 135 through 20261104120000. The exact ordered ledger/source comparison closes the pending-migration check by founder approval. The final CLI dry-run was not run. The callback readback contains the original localhost entry and `cohortplatform://auth-callback`. All other returned auth fields, protected data and final health checks match. [Management closeout](../checkpoints/m11_callback_a76c7cd_2026_11_05/HANDOFF.md)
