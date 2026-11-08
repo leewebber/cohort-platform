@@ -43,6 +43,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'm31_thursday_trial_fixture.dart';
 import 'm31_trial_candidate_test.dart'
     show m31Candidate, gobletCandidate, gobletVersion;
+import 'm32_trial_candidate_test.dart' show m32Candidate, m32Version;
 
 class _LoopbackHttpOverrides extends HttpOverrides {}
 
@@ -50,41 +51,71 @@ void main() {
   final configFile = Platform.environment['M31_LOCAL_CONFIG'];
   for (final fixture in [
     (
+      forTime: false,
       directory: m31Candidate,
       version: M31ThursdayEquipmentTrial.versionId,
       sourceLabel: 'Barbell Romanian deadlift',
       replacementLabel: 'Dumbbell Romanian Deadlift',
     ),
     (
+      forTime: false,
       directory: gobletCandidate,
       version: gobletVersion,
       sourceLabel: 'Back Squat',
       replacementLabel: 'Goblet Squat',
     ),
+    (
+      forTime: true,
+      directory: m32Candidate,
+      version: m32Version,
+      sourceLabel: 'Dumbbell lateral raise',
+      replacementLabel: 'Barbell bench press',
+    ),
   ]) {
     testWidgets(
       'ordinary athlete reviews, restarts and completes ${fixture.directory}',
       (tester) async {
+        final forTime = fixture.forTime;
+        final approvalFile = forTime
+            ? 'time-approval.json'
+            : 'equipment-approval.json';
         final approvalData =
             jsonDecode(
-                  File(
-                    '${fixture.directory}/equipment-approval.json',
-                  ).readAsStringSync(),
+                  File('${fixture.directory}/$approvalFile').readAsStringSync(),
                 )
                 as Map<String, dynamic>;
-        final sourceId = approvalData['source_exercise_id'] as String;
-        final replacementId = approvalData['replacement_exercise_id'] as String;
-        final requiredEquipment = approvalData['required_equipment'] as String;
-        final missingEquipment = approvalData['missing_equipment'] as String;
-        final needsPair = approvalData['matching_dumbbell_pair'] as bool;
+        final sourceId = forTime
+            ? 'EX-044'
+            : approvalData['source_exercise_id'] as String;
+        final replacementId = forTime
+            ? 'EX-083'
+            : approvalData['replacement_exercise_id'] as String;
+        final requiredEquipment = approvalData['required_equipment'] as String?;
+        final missingEquipment = approvalData['missing_equipment'] as String?;
+        final needsPair = approvalData['matching_dumbbell_pair'] == true;
+        final originalGraph = forTime
+            ? (jsonDecode(
+                            File(
+                              '${fixture.directory}/protocol-graphs.json',
+                            ).readAsStringSync(),
+                          )
+                          as List)
+                      .single
+                  as Map
+            : null;
         final expectedPrescription = StrengthExercisePrescription.fromJson(
-          approvalData['prescription'] as Map<String, dynamic>,
+          (forTime
+                  ? originalGraph!['blocks'][1]['exercises'][0]['prescription']
+                  : approvalData['prescription'])
+              as Map<String, dynamic>,
         );
         final loggedLabel = needsPair ? '16 kg per dumbbell' : '16 kg';
-        final actualReps = [
-          expectedPrescription.reps.minReps!,
-          expectedPrescription.reps.maxReps!,
-        ];
+        final actualReps = forTime
+            ? List.filled(4, 8)
+            : [
+                expectedPrescription.reps.minReps!,
+                expectedPrescription.reps.maxReps!,
+              ];
         if (needsPair) {
           expect(
             expectedPrescription.toJson(),
@@ -168,7 +199,7 @@ void main() {
           Future<String> register(SupabaseClient actor) async {
             final suffix = Random.secure().nextInt(1 << 32);
             final response = await actor.auth.signUp(
-              email: 'm31-local-$suffix@example.com',
+              email: 'adapt-local-$suffix@example.com',
               password: 'Local-only-$suffix-aA!',
               data: {
                 'display_name': 'Disposable M3.1 athlete',
@@ -214,12 +245,39 @@ void main() {
             packageSlotKey: slot ?? slotKey,
             occurrenceId: occurrenceId,
           );
-          expect(
-            await reader.loadApprovedEquipment(
-              query(assignmentId: versionId, occurrenceId: versionId),
-            ),
-            isNull,
+          Future<bool> canRead(
+            ProgrammeAdaptationPermissionReader actor,
+            ProgrammeExecutionContext scope,
+          ) async {
+            if (forTime) {
+              final option = await actor.loadApprovedTime(scope);
+              if (option == null) return false;
+              expect(option.slotKey, slotKey);
+              expect(option.protocolId, protocolId);
+              expect(
+                [
+                  option.fullMinutes,
+                  option.shortMinutes,
+                  option.omittedPosition,
+                ],
+                [45, 30, 3],
+              );
+              expect(option.permission.athleteAgreementRequired, isTrue);
+            } else {
+              final approval = await actor.loadApprovedEquipment(scope);
+              if (approval == null) return false;
+              expect(approval.replacementId, replacementId);
+              expect(approval.slotKey, slotKey);
+              expect(approval.permission.athleteAgreementRequired, isTrue);
+            }
+            return true;
+          }
+
+          final absent = query(
+            assignmentId: versionId,
+            occurrenceId: versionId,
           );
+          expect(await canRead(reader, absent), isFalse);
           final acquisition = SupabaseAcquisitionStore(
             athleteId: athleteId,
             client: client,
@@ -230,10 +288,8 @@ void main() {
             "(athlete_id,programme_version_id) VALUES('$athleteId','$versionId')",
           );
           expect(
-            await reader.loadApprovedEquipment(
-              query(assignmentId: versionId, occurrenceId: versionId),
-            ),
-            isNull,
+            await canRead(reader, absent),
+            isFalse,
             reason: 'Eligibility alone grants no approval',
           );
           final today = await sql(
@@ -241,7 +297,7 @@ void main() {
           );
           final anchor = DateTime.parse(
             today,
-          ).subtract(const Duration(days: 3));
+          ).subtract(Duration(days: forTime ? 0 : 3));
           final assignmentId = await acquisition.acquire(versionId, anchor);
           const assignments = ProgrammeAssignmentSupabaseStore();
           final assignment = (await assignments.getActiveAssignment(
@@ -258,16 +314,11 @@ void main() {
             assignmentId: assignmentId,
             occurrenceId: occurrenceId,
           );
-          final approval = await reader.loadApprovedEquipment(scope);
-          expect(approval?.replacementId, replacementId);
-          expect(approval?.slotKey, slotKey);
-          expect(approval?.permission.athleteAgreementRequired, isTrue);
-          expect(
-            await ProgrammeAdaptationPermissionReader(
-              client: stranger,
-            ).loadApprovedEquipment(scope),
-            isNull,
+          expect(await canRead(reader, scope), isTrue);
+          final otherReader = ProgrammeAdaptationPermissionReader(
+            client: stranger,
           );
+          expect(await canRead(otherReader, scope), isFalse);
           for (final wrong in [
             query(assignmentId: versionId, occurrenceId: occurrenceId),
             query(assignmentId: assignmentId, occurrenceId: versionId),
@@ -282,7 +333,7 @@ void main() {
               slot: 'LW10K-W01-D01',
             ),
           ]) {
-            expect(await reader.loadApprovedEquipment(wrong), isNull);
+            expect(await canRead(reader, wrong), isFalse);
           }
           final otherAcquisition = SupabaseAcquisitionStore(
             athleteId: strangerId,
@@ -306,20 +357,15 @@ void main() {
             assignmentId: otherAssignment,
             occurrenceId: otherRow['id'] as String,
           );
-          final otherReader = ProgrammeAdaptationPermissionReader(
-            client: stranger,
-          );
-          expect(
-            await otherReader.loadApprovedEquipment(otherScope),
-            isNotNull,
-          );
+          expect(await canRead(otherReader, otherScope), isTrue);
+          expect(await canRead(reader, otherScope), isFalse);
           await otherAcquisition.endProgramme(
             assignmentId: otherAssignment,
             programmeVersionId: versionId,
           );
-          expect(await otherReader.loadApprovedEquipment(otherScope), isNull);
+          expect(await canRead(otherReader, otherScope), isFalse);
           debugPrint(
-            'OWNER PASS exact occurrence and access removed after End programme for $sourceId → $replacementId',
+            'OWNER PASS exact active assignment/version/occurrence/slot and removal after End programme for ${fixture.directory}',
           );
           FixedProgrammeOccurrenceProjection occurrence({
             int? trainingSessionId,
@@ -338,7 +384,9 @@ void main() {
             state: trainingSessionId == null
                 ? FixedProgrammeOccurrenceState.today
                 : FixedProgrammeOccurrenceState.inProgress,
-            sessionTitle: 'Thursday selected strength',
+            sessionTitle: forTime
+                ? 'Upper-body strength time trial'
+                : 'Thursday selected strength',
             trainingSessionId: trainingSessionId,
           );
 
@@ -368,32 +416,47 @@ void main() {
           expect(context.packageSlotKey, slotKey);
           final propose = ProgrammeAdaptationProposalService(
             loadEquipmentApproval: reader.loadApprovedEquipment,
+            loadTimeApproval: reader.loadApprovedTime,
           );
-          final request = AdaptationRequest(
-            reason: AdaptationReason.equipment,
-            availableEquipment: {requiredEquipment},
-            confirmedMatchingDumbbellPair: true,
-          );
-          expect(
-            (await propose.propose(
-              package: original,
-              request: request,
-              executionContext: context,
-              slotKey: 'LW10K-W01-D01',
-            )).isAcceptable,
-            isFalse,
-          );
+          final request = forTime
+              ? const AdaptationRequest(
+                  reason: AdaptationReason.time,
+                  availableMinutes: 30,
+                )
+              : AdaptationRequest(
+                  reason: AdaptationReason.equipment,
+                  availableEquipment: {requiredEquipment!},
+                  confirmedMatchingDumbbellPair: true,
+                );
+          if (!forTime) {
+            expect(
+              (await propose.propose(
+                package: original,
+                request: request,
+                executionContext: context,
+                slotKey: 'LW10K-W01-D01',
+              )).isAcceptable,
+              isFalse,
+            );
+          }
           for (final rejected in [
-            if (needsPair)
+            if (forTime)
+              const AdaptationRequest(
+                reason: AdaptationReason.time,
+                availableMinutes: 15,
+              )
+            else ...[
+              if (needsPair)
+                AdaptationRequest(
+                  reason: AdaptationReason.equipment,
+                  availableEquipment: {requiredEquipment!},
+                ),
               AdaptationRequest(
                 reason: AdaptationReason.equipment,
-                availableEquipment: {requiredEquipment},
+                availableEquipment: {requiredEquipment!, missingEquipment!},
+                confirmedMatchingDumbbellPair: true,
               ),
-            AdaptationRequest(
-              reason: AdaptationReason.equipment,
-              availableEquipment: {requiredEquipment, missingEquipment},
-              confirmedMatchingDumbbellPair: true,
-            ),
+            ],
           ]) {
             expect(
               (await propose.propose(
@@ -415,14 +478,20 @@ void main() {
             isTrue,
             reason: '${reviewed.noSafeReason} ${reviewed.athleteFacingMessage}',
           );
-          expect(reviewed.exerciseChanges, hasLength(1));
+          expect(reviewed.exerciseChanges, hasLength(forTime ? 0 : 1));
           Future<void> verifyDecline() async {
             final declined = await prepareWith(
               kv,
             ).prepareFixedOccurrence(assignment, occurrence());
             expect(jsonEncode(kv.debugDump), before);
             expect(
-              declined.package!.plan.blocks[1].linkedExercises.first.exerciseId,
+              declined
+                  .package!
+                  .plan
+                  .blocks[forTime ? 2 : 1]
+                  .linkedExercises
+                  .first
+                  .exerciseId,
               sourceId,
             );
           }
@@ -431,6 +500,7 @@ void main() {
             final accept = ProgrammeAdaptationAcceptanceService(
               prepareService: prepare,
               loadEquipmentApproval: reader.loadApprovedEquipment,
+              loadTimeApproval: reader.loadApprovedTime,
             );
             final accepted = await accept.accept(
               athleteId: athleteId,
@@ -449,12 +519,17 @@ void main() {
                 codec.encodePlan(adapted.plan)['blocks'] as List;
             final originalBlocks =
                 codec.encodePlan(original.plan)['blocks'] as List;
-            expect(restoredBlocks.first, originalBlocks.first);
-            expect(restoredBlocks.last, originalBlocks.last);
-            expect(
-              restoredBlocks[1]['linkedExercises'].skip(1),
-              originalBlocks[1]['linkedExercises'].skip(1),
-            );
+            if (forTime) {
+              expect(restoredBlocks, originalBlocks.take(2).toList());
+              expect(adapted.plan.durationMin, 30);
+            } else {
+              expect(restoredBlocks.first, originalBlocks.first);
+              expect(restoredBlocks.last, originalBlocks.last);
+              expect(
+                restoredBlocks[1]['linkedExercises'].skip(1),
+                originalBlocks[1]['linkedExercises'].skip(1),
+              );
+            }
             final replacement = adapted.plan.blocks[1].linkedExercises.first;
             expect(replacement.exerciseId, replacementId);
             expect(
@@ -462,7 +537,8 @@ void main() {
               expectedPrescription.toJson(),
             );
             debugPrint(
-              'ACCEPTANCE PASS decline preserves bytes; exact single placement changes only after acceptance',
+              'ACCEPTANCE PASS decline preserves bytes; '
+              '${forTime ? 'only the optional block is omitted' : 'only one exercise is replaced'} after acceptance',
             );
 
             final launcher = ProgrammeSessionExecutionLauncher(
@@ -486,10 +562,13 @@ void main() {
             final movement = capture.draft.blockDrafts
                 .expand((b) => b.exerciseResults)
                 .singleWhere((e) => e.sourceExerciseId == replacementId);
-            expect(movement.sets, hasLength(2));
+            expect(movement.sets, hasLength(actualReps.length));
             expect(movement.sets.every((s) => s.load == null), isTrue);
             for (final block in List.of(capture.draft.blockDrafts)) {
               for (final exercise in block.exerciseResults) {
+                if (forTime && exercise.sourceExerciseId != replacementId) {
+                  continue;
+                }
                 for (final set in exercise.sets) {
                   capture.updateSet(
                     block.sourceBlockId,
@@ -532,6 +611,13 @@ void main() {
               reason: '${reopened.code}: ${reopened.message}',
             );
             expect(reopened.package!.hasAcceptedAdaptation, isTrue);
+            if (forTime) {
+              expect(reopened.package!.plan.durationMin, 30);
+              expect(
+                codec.encodePlan(reopened.package!.plan)['blocks'],
+                restoredBlocks,
+              );
+            }
             expect(
               reopened
                   .package!
@@ -575,14 +661,20 @@ void main() {
             final history = await store.listHistory(athleteId: athleteId);
             expect(history, hasLength(1));
             expect(history.single.recordId, saved.recordId);
+            if (forTime) {
+              expect(history.single.blockResults.map((b) => b.position), [
+                1,
+                2,
+              ]);
+              expect(await canRead(reader, scope), isFalse);
+            }
             final retained = history.single.blockResults
                 .expand((b) => b.exerciseResults)
                 .singleWhere((e) => e.sourceExerciseId == replacementId);
             expect(
               retained.setResults.map((s) => [s.reps, s.load, s.loadUnit]),
               [
-                [actualReps[0], 16, 'kg'],
-                [actualReps[1], 16, 'kg'],
+                for (final reps in actualReps) [reps, 16, 'kg'],
               ],
             );
             final projected = CompletedExerciseResultProjection.fromExercise(
@@ -593,10 +685,10 @@ void main() {
             if (needsPair) {
               expect(projected.coachCue, expectedPrescription.coachCue);
             }
-            expect(projected.sets.map((s) => s.loadLabel), [
-              loggedLabel,
-              loggedLabel,
-            ]);
+            expect(
+              projected.sets.map((s) => s.loadLabel),
+              List.filled(actualReps.length, loggedLabel),
+            );
             debugPrint(
               'HISTORY PASS $replacementId after cold restore and completion at $loggedLabel',
             );
@@ -634,13 +726,19 @@ void main() {
           await tester.pumpAndSettle();
           expect(
             find.textContaining(
-              '${fixture.sourceLabel} → ${fixture.replacementLabel}',
+              forTime
+                  ? 'Estimated session duration 45m → 30m'
+                  : '${fixture.sourceLabel} → ${fixture.replacementLabel}',
             ),
             findsOneWidget,
           );
           expect(
             find.textContaining(
-              needsPair ? 'kg per dumbbell' : 'log the load in kg',
+              forTime
+                  ? 'Omit Optional upper-body accessories. All remaining sets, reps and rests stay as prescribed.'
+                  : needsPair
+                  ? 'kg per dumbbell'
+                  : 'log the load in kg',
             ),
             findsOneWidget,
           );

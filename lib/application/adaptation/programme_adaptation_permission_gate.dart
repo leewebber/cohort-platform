@@ -61,6 +61,23 @@ class ProgrammeAdaptationPermissionGate {
     );
   }
 
+  /// Time options require one explicit permission for the exact slot.
+  bool allowsOptionalAccessoryOmission({
+    required List<PlanPackageAdaptationPermission> permissions,
+    required String? slotKey,
+  }) {
+    if (slotKey == null || slotKey.isEmpty || slotKey == 'programme') {
+      return false;
+    }
+    final matches = permissions.where(
+      (permission) =>
+          permission.targetRef == slotKey &&
+          permission.changeKind ==
+              AdaptationChangeKind.removeOptionalAccessories,
+    );
+    return matches.length == 1 && matches.single.athleteAgreementRequired;
+  }
+
   ProgrammeAdaptationPermissionCheck _allow({
     required List<PlanPackageAdaptationPermission> permissions,
     required AdaptationReason reason,

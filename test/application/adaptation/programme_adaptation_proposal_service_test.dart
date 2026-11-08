@@ -22,16 +22,19 @@ void main() {
     late ProgrammeAdaptationProposalService service;
 
     setUp(() {
-      draft = buildTimedPlanningSession(protocolId: 'proto.adapt.1.6b');
+      draft = buildApprovedTimeSession(protocolId: 'proto.adapt.1.6b');
       package = _packageFromDraft(draft);
       service = ProgrammeAdaptationProposalService(
         loadProtocolDraft: (_) async => draft,
+        loadAdaptationPermissions: (_) async =>
+            const [approvedTimeFixturePermission],
       );
     });
 
     test('time constraint can produce a reviewable proposal with material changes',
         () async {
       final proposal = await service.propose(
+        slotKey: approvedTimeFixtureSlot,
         package: package,
         request: const AdaptationRequest(
           reason: AdaptationReason.time,
@@ -61,6 +64,7 @@ void main() {
     test('reviewable proposal retains separate session and exercise changes',
         () async {
       final proposal = await service.propose(
+        slotKey: approvedTimeFixtureSlot,
         package: package,
         request: const AdaptationRequest(
           reason: AdaptationReason.time,
@@ -87,6 +91,7 @@ void main() {
     test('equipment reason returns typed no-safe when pipeline cannot plan',
         () async {
       final proposal = await service.propose(
+        slotKey: approvedTimeFixtureSlot,
         package: package,
         request: const AdaptationRequest(
           reason: AdaptationReason.equipment,
@@ -115,6 +120,7 @@ void main() {
         AdaptationRequest(reason: AdaptationReason.recovery),
       ]) {
         final proposal = await service.propose(
+          slotKey: approvedTimeFixtureSlot,
           package: package,
           request: request,
         );
@@ -129,6 +135,7 @@ void main() {
 
     test('time already satisfied returns noAdaptationRequired', () async {
       final proposal = await service.propose(
+        slotKey: approvedTimeFixtureSlot,
         package: package,
         request: const AdaptationRequest(
           reason: AdaptationReason.time,
@@ -141,6 +148,49 @@ void main() {
         ProgrammeAdaptationProposalOutcome.noAdaptationRequired,
       );
       expect(proposal.allMaterialChanges, isEmpty);
+    });
+
+    test('an exact slot approval cannot be reused or squeezed below 30 minutes',
+        () async {
+      final original = _packageFingerprint(package);
+      for (final (slot, minutes) in [
+        ('another-slot', 30),
+        (approvedTimeFixtureSlot, 15),
+      ]) {
+        final proposal = await service.propose(
+          package: package,
+          slotKey: slot,
+          request: AdaptationRequest(
+            reason: AdaptationReason.time,
+            availableMinutes: minutes,
+          ),
+        );
+        expect(proposal.isAcceptable, isFalse);
+        expect(proposal.allMaterialChanges, isEmpty);
+      }
+      expect(_packageFingerprint(package), original);
+    });
+
+    test('the private read path cannot fall back to an unscoped permission', () async {
+      var directReads = 0;
+      final scoped = ProgrammeAdaptationProposalService(
+        loadProtocolDraft: (_) async => draft,
+        loadTimeApproval: (_) async => null,
+        loadAdaptationPermissions: (_) async {
+          directReads++;
+          return const [approvedTimeFixturePermission];
+        },
+      );
+      final proposal = await scoped.propose(
+        package: package,
+        slotKey: approvedTimeFixtureSlot,
+        request: const AdaptationRequest(
+          reason: AdaptationReason.time,
+          availableMinutes: 30,
+        ),
+      );
+      expect(proposal.isAcceptable, isFalse);
+      expect(directReads, 0);
     });
 
     test('stale non-programme package returns no-safe', () async {
@@ -157,6 +207,7 @@ void main() {
       );
 
       final proposal = await service.propose(
+        slotKey: approvedTimeFixtureSlot,
         package: legacy,
         request: const AdaptationRequest(
           reason: AdaptationReason.time,
@@ -201,6 +252,7 @@ void main() {
       final beforePlan = _planFingerprint(package.plan);
 
       await service.propose(
+        slotKey: approvedTimeFixtureSlot,
         package: package,
         request: const AdaptationRequest(
           reason: AdaptationReason.time,
@@ -208,6 +260,7 @@ void main() {
         ),
       );
       await service.propose(
+        slotKey: approvedTimeFixtureSlot,
         package: package,
         request: const AdaptationRequest(
           reason: AdaptationReason.equipment,

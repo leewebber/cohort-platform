@@ -15,6 +15,7 @@ import 'package:cohort_platform/features/session/models/prepared_execution_packa
 import 'package:cohort_platform/features/workout_player/models/workout_session_brief.dart';
 
 import 'approved_equipment_substitution.dart';
+import 'approved_time_option.dart';
 import 'plan_package_session_adaptation_adapter.dart';
 import 'programme_adaptation_fingerprints.dart';
 import 'programme_adaptation_proposal_mapper.dart';
@@ -71,6 +72,7 @@ class ProgrammeAdaptationAcceptanceService {
     ProgrammeAdaptationPermissionLoader? loadAdaptationPermissions,
     ProgrammeKnowledgeLoader? loadKnowledge,
     this._loadEquipmentApproval,
+    this._loadTimeApproval,
     KnowledgeGraphReader? knowledge,
   }) : _adapterOverride = adapter,
        _loadProtocolDraft =
@@ -94,6 +96,7 @@ class ProgrammeAdaptationAcceptanceService {
   final ProgrammeAdaptationPermissionLoader _loadAdaptationPermissions;
   final ProgrammeKnowledgeLoader _loadKnowledge;
   final ProgrammeEquipmentApprovalLoader? _loadEquipmentApproval;
+  final ProgrammeTimeApprovalLoader? _loadTimeApproval;
   final Set<String> _consumedProposalIds = <String>{};
   bool _acceptInFlight = false;
 
@@ -160,7 +163,17 @@ class ProgrammeAdaptationAcceptanceService {
             'prepared session was not changed.',
       );
     }
-    if (!_identityMatches(currentPackage, proposal)) {
+    if (!_identityMatches(currentPackage, proposal) ||
+        (proposal.reason == AdaptationReason.time &&
+            (executionContext.assignmentId != currentPackage.assignmentId ||
+                executionContext.programmeVersionId !=
+                    currentPackage.programmeVersionId ||
+                executionContext.packageContentHash !=
+                    currentPackage.packageContentHash ||
+                executionContext.programmedSessionKey !=
+                    currentPackage.programmedSessionKey.value ||
+                executionContext.effectiveProtocolId !=
+                    currentPackage.protocolId))) {
       return ProgrammeAdaptationAcceptanceResult.failed(
         errorCode: 'stale_identity',
         message:
@@ -206,9 +219,22 @@ class ProgrammeAdaptationAcceptanceService {
           (approval != null)) {
         throw StateError('Equipment approval changed since review.');
       }
+      final timeApproval = proposal.reason == AdaptationReason.time
+          ? await _loadTimeApproval?.call(executionContext)
+          : null;
+      if (proposal.evaluationProvenance.contains(
+            ApprovedTimeOption.provenance,
+          ) !=
+          (timeApproval != null)) {
+        throw StateError('Time approval changed since review.');
+      }
       final permissions = approval != null
           ? [approval.permission]
-          : proposal.reason == AdaptationReason.equipment
+          : timeApproval != null
+          ? [timeApproval.permission]
+          : proposal.reason == AdaptationReason.equipment ||
+                (proposal.reason == AdaptationReason.time &&
+                    _loadTimeApproval == null)
           ? await _loadAdaptationPermissions(
               currentPackage.programmeVersionId!.trim(),
             )
@@ -231,6 +257,8 @@ class ProgrammeAdaptationAcceptanceService {
         request: proposal.request!,
         authoredDraft: draft,
         adaptationPermissions: permissions,
+        timeApproval: timeApproval,
+        executionContext: executionContext,
         slotKey: executionContext.packageSlotKey,
       );
       final fresh = ProgrammeAdaptationProposalMapper.fromPipelineRun(
@@ -240,6 +268,7 @@ class ProgrammeAdaptationAcceptanceService {
         authoredDraft: draft,
         knowledge: knowledge,
         approval: approval,
+        hasPrivateTimeApproval: timeApproval != null,
         proposedAt: proposal.proposedAt,
       );
       if (!fresh.isAcceptable) {
@@ -256,7 +285,7 @@ class ProgrammeAdaptationAcceptanceService {
       );
       const codec = SessionExecutionPlanCodec();
       if (freshFingerprint != proposal.reviewedPlanFingerprint ||
-          (approval != null &&
+          ((approval != null || proposal.reason == AdaptationReason.time) &&
               jsonEncode(codec.encodePlan(fresh.reviewedExecutablePlan!)) !=
                   jsonEncode(
                     codec.encodePlan(proposal.reviewedExecutablePlan!),

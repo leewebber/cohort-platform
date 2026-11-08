@@ -10,6 +10,7 @@ import 'package:cohort_platform/models/adaptation_request.dart';
 import 'package:cohort_platform/models/protocol_draft.dart';
 
 import 'approved_equipment_substitution.dart';
+import 'approved_time_option.dart';
 import 'programme_adaptation_fingerprints.dart';
 import 'programme_adaptation_plan_applier.dart';
 
@@ -24,6 +25,7 @@ class ProgrammeAdaptationProposalMapper {
     required ProtocolDraft authoredDraft,
     required KnowledgeGraphReader knowledge,
     ApprovedEquipmentSubstitution? approval,
+    bool hasPrivateTimeApproval = false,
     DateTime? proposedAt,
   }) {
     final stamp = proposedAt ?? DateTime.now().toUtc();
@@ -38,6 +40,7 @@ class ProgrammeAdaptationProposalMapper {
       'pipeline:SessionAdaptationPipeline',
       'adapter:PlanPackageSessionAdaptationAdapter',
       if (approval != null) ApprovedEquipmentSubstitution.provenance,
+      if (hasPrivateTimeApproval) ApprovedTimeOption.provenance,
     ];
 
     final identity = _identityFields(package);
@@ -189,7 +192,11 @@ class ProgrammeAdaptationProposalMapper {
     }
 
     final snapshot = application.snapshot!;
-    final sessionChanges = _sessionChanges(snapshot);
+    final isTimeOption = request.reason == AdaptationReason.time;
+    final sessionChanges = _sessionChanges(
+      snapshot,
+      timeOptionDraft: isTimeOption ? authoredDraft : null,
+    );
     final exerciseChanges = _exerciseChanges(snapshot, knowledge);
 
     if (sessionChanges.isEmpty && exerciseChanges.isEmpty) {
@@ -212,6 +219,7 @@ class ProgrammeAdaptationProposalMapper {
         snapshot: snapshot,
         knowledge: knowledge,
         approval: approval,
+        preserveRetainedBlocks: isTimeOption,
       );
       final originalFingerprint = ProgrammeAdaptationFingerprints.plan(
         package.plan,
@@ -346,8 +354,9 @@ class ProgrammeAdaptationProposalMapper {
   }
 
   static List<ProgrammeAdaptationMaterialChange> _sessionChanges(
-    AdaptedSessionExecutionSnapshot snapshot,
-  ) {
+    AdaptedSessionExecutionSnapshot snapshot, {
+    ProtocolDraft? timeOptionDraft,
+  }) {
     final changes = <ProgrammeAdaptationMaterialChange>[];
 
     final originalDuration = snapshot.originalPlannedDurationMin;
@@ -361,7 +370,7 @@ class ProgrammeAdaptationProposalMapper {
           targetId: snapshot.sourceProtocolId,
           actionLabel: 'adjustSessionDuration',
           summary:
-              'Session duration ${originalDuration}m → ${resultingDuration}m',
+              'Estimated session duration ${originalDuration}m → ${resultingDuration}m',
           beforeValue: '${originalDuration}m',
           afterValue: '${resultingDuration}m',
         ),
@@ -369,14 +378,18 @@ class ProgrammeAdaptationProposalMapper {
     }
 
     for (final omitted in snapshot.omittedBlocks) {
+      final title = timeOptionDraft?.blocks
+          .singleWhere((block) => block.localId == omitted.sourceBlockLocalId)
+          .title;
       changes.add(
         ProgrammeAdaptationMaterialChange(
           scope: ProgrammeAdaptationChangeScope.session,
           targetId: omitted.sourceBlockLocalId,
           actionLabel: omitted.omissionAction.name,
-          summary:
-              'Omit block ${omitted.sourceBlockLocalId} '
-              '(${omitted.blockTypeDbValue})',
+          summary: title == null
+              ? 'Omit block ${omitted.sourceBlockLocalId} '
+                    '(${omitted.blockTypeDbValue})'
+              : 'Omit $title. All remaining sets, reps and rests stay as prescribed.',
           blockLocalId: omitted.sourceBlockLocalId,
           beforeValue: 'included',
           afterValue: 'omitted',

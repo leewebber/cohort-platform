@@ -30,7 +30,7 @@ void main() {
     late InMemoryKvStore kv;
 
     setUp(() {
-      draft = buildTimedPlanningSession(protocolId: 'proto.accept.1.6c');
+      draft = buildApprovedTimeSession(protocolId: 'proto.accept.1.6c');
       package = _packageFromDraft(draft);
       kv = InMemoryKvStore();
       final tables = InMemoryProgrammeTables();
@@ -44,12 +44,17 @@ void main() {
       );
       proposalService = ProgrammeAdaptationProposalService(
         loadProtocolDraft: (_) async => draft,
+        loadAdaptationPermissions: (_) async =>
+            const [approvedTimeFixturePermission],
       );
       acceptanceService = ProgrammeAdaptationAcceptanceService(
         prepareService: prepareService,
         loadProtocolDraft: (_) async => draft,
+        loadAdaptationPermissions: (_) async =>
+            const [approvedTimeFixturePermission],
       );
       executionContext = ProgrammeExecutionContext(
+        packageSlotKey: approvedTimeFixtureSlot,
         assignmentId: package.assignmentId!,
         programmeVersionId: package.programmeVersionId!,
         sessionSlotId: 'slot.1',
@@ -66,6 +71,7 @@ void main() {
 
     Future<ProgrammeAdaptationProposal> reviewable() {
       return proposalService.propose(
+        slotKey: approvedTimeFixtureSlot,
         package: package,
         request: const AdaptationRequest(
           reason: AdaptationReason.time,
@@ -152,6 +158,7 @@ void main() {
         AdaptationRequest(reason: AdaptationReason.time, availableMinutes: 90),
       ]) {
         final proposal = await proposalService.propose(
+          slotKey: approvedTimeFixtureSlot,
           package: package,
           request: request,
         );
@@ -165,6 +172,24 @@ void main() {
         expect(result.errorCode, 'not_acceptable');
         expect(package.acceptedAdaptation, isNull);
       }
+    });
+
+    test('approval must still be present at acceptance', () async {
+      final proposal = await reviewable();
+      expect(proposal.isAcceptable, isTrue);
+      final noApproval = ProgrammeAdaptationAcceptanceService(
+        prepareService: prepareService,
+        loadProtocolDraft: (_) async => draft,
+      );
+      final before = Map.of(kv.debugDump);
+      final result = await noApproval.accept(
+        athleteId: 'athlete.1',
+        currentPackage: package,
+        proposal: proposal,
+        executionContext: executionContext,
+      );
+      expect(result.success, isFalse);
+      expect(kv.debugDump, before);
     });
 
     test('stale plan fingerprint fails closed', () async {

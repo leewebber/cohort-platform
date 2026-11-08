@@ -7,11 +7,14 @@ import 'package:cohort_platform/features/session/models/prepared_execution_packa
 import 'package:cohort_platform/models/adaptation_reason.dart';
 import 'package:cohort_platform/models/adaptation_request.dart';
 import 'package:cohort_platform/models/protocol_draft.dart';
+import 'package:cohort_platform/models/session_block_type.dart';
 
 import 'adaptation_request_constraint_mapper.dart';
 import 'planned_session_adaptation_input_adapter.dart';
 import 'planned_session_protocol_metadata_merge.dart';
 import 'programme_adaptation_permission_gate.dart';
+import 'approved_time_option.dart';
+import 'package:cohort_platform/features/programme/models/programme_execution_context.dart';
 
 /// Failure thrown when the prepared package cannot be adapted lawfully.
 class PlanPackageAdaptationAdapterException implements Exception {
@@ -47,6 +50,8 @@ class PlanPackageSessionAdaptationAdapter {
     required ProtocolDraft authoredDraft,
     List<PlanPackageAdaptationPermission> adaptationPermissions = const [],
     String? slotKey,
+    ApprovedTimeOption? timeApproval,
+    ProgrammeExecutionContext? executionContext,
     Map<String, ExerciseAdaptationMetadataForEvaluation>? exerciseMetadataById,
   }) {
     _assertEligiblePackage(package);
@@ -71,13 +76,20 @@ class PlanPackageSessionAdaptationAdapter {
       }
     }
 
+    final policyDraft =
+        timeApproval?.authorize(
+          package: package,
+          context: executionContext,
+          draft: authoredDraft,
+        ) ??
+        authoredDraft;
     final planned = package.plan.protocol != null
         ? PlannedSessionProtocolMetadataMerge.merge(
-            draft: authoredDraft,
+            draft: policyDraft,
             protocol: package.plan.protocol!,
           )
         : PlannedSessionAdaptationInputAdapter.fromProtocolDraft(
-            authoredDraft,
+            policyDraft,
             exerciseMetadataById: exerciseMetadataById,
           );
 
@@ -95,10 +107,50 @@ class PlanPackageSessionAdaptationAdapter {
       );
     }
 
-    return pipeline.run(
+    final run = pipeline.run(
       plannedSession: planned,
       constraints: AdaptationRequestConstraintMapper.fromRequest(request),
     );
+    if (request.reason == AdaptationReason.time &&
+        run.plan.status != AdaptationPlanStatus.noPlanRequired) {
+      final approved = const ProgrammeAdaptationPermissionGate()
+          .allowsOptionalAccessoryOmission(
+            permissions: adaptationPermissions,
+            slotKey: slotKey,
+          );
+      final removable = policyDraft.blocks.where(
+        (block) =>
+            block.blockType == SessionBlockType.accessory &&
+            block.blockPriority == BlockPriority.optional &&
+            block.adaptationPolicy?.canRemove == true,
+      );
+      final steps = run.plan.steps;
+      final shortened = run.application.snapshot?.resultingEstimatedDurationMin;
+      final budget = request.availableMinutes;
+      final originalDuration = policyDraft.durationMin;
+      final preparedDuration = package.plan.durationMin;
+      if (!approved ||
+          removable.length != 1 ||
+          !run.plan.exactDurationFeasibilityConfirmed ||
+          steps.length != 1 ||
+          steps.single.actionType != AdaptationActionType.removeBlock ||
+          steps.single.blockLocalId != removable.single.localId ||
+          shortened == null ||
+          budget == null ||
+          shortened > budget ||
+          shortened != policyDraft.minimumViableDurationMin ||
+          originalDuration == null ||
+          (preparedDuration != originalDuration &&
+              !(timeApproval != null && preparedDuration == null)) ||
+          steps.single.expectedTimeSavingMinutes !=
+              originalDuration - shortened) {
+        throw PlanPackageAdaptationAdapterException(
+          'time_option_unavailable',
+          'No coach-approved shorter option fits the time you selected.',
+        );
+      }
+    }
+    return run;
   }
 
   void _assertEligiblePackage(PreparedExecutionPackage package) {

@@ -9,6 +9,10 @@ import 'package:cohort_platform/models/protocol_draft.dart';
 import 'package:cohort_platform/models/session_block_exercise_link.dart';
 import 'package:cohort_platform/models/session_block_type.dart';
 import 'package:cohort_platform/models/strength_exercise_prescription.dart';
+import 'package:cohort_platform/models/timer_configuration.dart';
+import 'package:cohort_platform/models/workout_format.dart';
+import 'package:cohort_platform/features/adaptation/services/adaptation_policy_gate.dart';
+import 'package:cohort_platform/features/authored_plan_package/plan_package_manifest.dart';
 
 import 'adaptation_evaluation_test_support.dart';
 import 'programme_session_authoring_test_support.dart';
@@ -118,6 +122,82 @@ ProtocolDraft buildTimedPlanningSession({
             prescription: StrengthExercisePrescription(
               sets: 3,
               reps: StrengthRepPrescription.exact(12),
+            ),
+          ),
+        ],
+      ),
+    ],
+  );
+}
+
+const approvedTimeFixtureSlot = 'fixture-time-strength';
+const approvedTimeFixturePermission = PlanPackageAdaptationPermission(
+  id: 'fixture-omit-accessory',
+  changeKind: AdaptationChangeKind.removeOptionalAccessories,
+  targetRef: approvedTimeFixtureSlot,
+  athleteAgreementRequired: true,
+);
+
+/// Synthetic 45 → 30 minute strength option. Only the 15-minute accessory
+/// block is optional. Keep the preparation and all four working sets.
+ProtocolDraft buildApprovedTimeSession({required String protocolId}) {
+  const protected = BlockAdaptationPolicy(
+    canRemove: false,
+    canShorten: false,
+    canReduceVolume: false,
+    canReduceIntensity: false,
+    canIncreaseRest: false,
+    canSuperset: false,
+    canReplaceExercises: false,
+    canReplaceBlock: false,
+  );
+  const optional = BlockAdaptationPolicy(
+    canRemove: true,
+    canShorten: false,
+    canReduceVolume: false,
+    canReduceIntensity: false,
+    canIncreaseRest: false,
+    canSuperset: false,
+    canReplaceExercises: false,
+    canReplaceBlock: false,
+  );
+  final draft = buildTimedPlanningSession(
+    protocolId: protocolId,
+    plannedDurationMin: 45,
+    minimumViableDurationMin: 30,
+  );
+  final [prep, strength, accessory] = draft.blocks;
+  return draft.copyWith(
+    blocks: [
+      prep.copyWith(
+        title: 'Preparation',
+        content: 'Five minutes of easy walking to warm up.',
+        workoutFormat: WorkoutFormat.steadyState,
+        timerConfiguration: const TimerConfiguration(durationSeconds: 300),
+        blockPriority: BlockPriority.essential,
+        adaptationPolicy: protected,
+      ),
+      strength.copyWith(
+        title: 'Bench press',
+        workoutFormat: WorkoutFormat.other,
+        timerConfiguration: const TimerConfiguration(durationSeconds: 1500),
+        adaptationPolicy: protected,
+      ),
+      accessory.copyWith(
+        title: 'Optional upper-body accessories',
+        workoutFormat: WorkoutFormat.other,
+        timerConfiguration: const TimerConfiguration(durationSeconds: 900),
+        blockPriority: BlockPriority.optional,
+        adaptationPolicy: optional,
+        linkedExercises: [
+          SessionBlockExerciseLink(
+            localId: 'link-acc-1',
+            exerciseId: 'ACC-001',
+            position: 1,
+            prescription: StrengthExercisePrescription(
+              sets: 3,
+              reps: StrengthRepPrescription.exact(12),
+              restSeconds: 60,
             ),
           ),
         ],

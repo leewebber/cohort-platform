@@ -5,6 +5,7 @@ import '../../features/authored_plan_package/plan_package_manifest.dart';
 import '../../features/authored_plan_package/plan_package_schema.dart';
 import '../../features/programme/models/programme_execution_context.dart';
 import 'approved_equipment_substitution.dart';
+import 'approved_time_option.dart';
 
 /// Reads the exact authored version through the athlete's existing RLS scope.
 class ProgrammeAdaptationPermissionReader {
@@ -43,6 +44,26 @@ class ProgrammeAdaptationPermissionReader {
         : ApprovedEquipmentSubstitution.fromJson(
             Map<String, dynamic>.from(raw as Map),
           );
+  }
+
+  Future<ApprovedTimeOption?> loadApprovedTime(
+    ProgrammeExecutionContext context,
+  ) async {
+    if (context.occurrenceId == null || context.packageSlotKey == null) {
+      return null;
+    }
+    final raw = await (_client ?? SupabaseService.client).rpc(
+      'read_my_approved_time_option_v1',
+      params: {
+        'p_assignment_id': context.assignmentId,
+        'p_version_id': context.programmeVersionId,
+        'p_occurrence_id': context.occurrenceId,
+        'p_slot_key': context.packageSlotKey,
+      },
+    );
+    return raw == null
+        ? null
+        : ApprovedTimeOption.fromJson(Map<String, dynamic>.from(raw as Map));
   }
 
   List<PlanPackageAdaptationPermission> _parse(List rows) => [

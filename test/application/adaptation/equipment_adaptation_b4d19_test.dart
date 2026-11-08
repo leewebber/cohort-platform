@@ -44,6 +44,8 @@ import 'package:cohort_platform/features/session/services/programme_training_ses
 import 'package:cohort_platform/features/session/services/session_execution_launcher.dart';
 import 'package:cohort_platform/models/programme_vocabulary.dart';
 import 'package:cohort_platform/models/programme_version.dart';
+import 'package:cohort_platform/models/programme_version_session_slot.dart';
+import 'package:cohort_platform/models/exercise.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:http/testing.dart';
@@ -96,9 +98,15 @@ void main() {
     );
   }
 
-  testWidgets('equipment review, accept, cold restore and programme History', (
-    tester,
-  ) async {
+  Future<void> verifyAdaptationJourney(
+    WidgetTester tester, {
+    required bool forTime,
+  }) async {
+    final journeyDraft = forTime
+        ? buildApprovedTimeSession(protocolId: 'proto.time.fixture')
+        : draft;
+    final retainedIndex = forTime ? 1 : 0;
+    final expectedExercise = forTime ? 'Barbell bench press' : 'Goblet squat';
     tester.view.physicalSize = const Size(900, 1100);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.resetPhysicalSize);
@@ -106,7 +114,9 @@ void main() {
     addTearDown(AthletePersistence.resetForTests);
     addTearDown(AthleteSessionMemoryStore.instance.clearAll);
 
-    const athlete = 'equipment-fixture-athlete';
+    final athlete = forTime
+        ? 'time-fixture-athlete'
+        : 'equipment-fixture-athlete';
     final tables = InMemoryProgrammeTables();
     final assignments = InMemoryProgrammeAssignmentStore(tables);
     final versions = InMemoryProgrammeVersionStore(tables);
@@ -121,7 +131,7 @@ void main() {
       lifecycleStatus: ProgrammeLifecycleStatus.published,
       libraryScope: ProgrammeLibraryScope.cohortGlobal,
       ownerType: ProgrammeOwnerType.global,
-      name: 'Equipment fixture programme',
+      name: forTime ? 'Time fixture programme' : 'Equipment fixture programme',
       packageContentHash: assignment.materialisedPackageContentHash,
       packageSchemaVersion: 2,
     );
@@ -135,11 +145,12 @@ void main() {
             dayKey: 'day_1',
             dayOrder: 1,
             slots: [
-              ProgrammeScheduleTestFixtures.requiredSlot(
+              ProgrammeVersionSessionSlot(
                 id: ProgrammeScheduleTestFixtures.slot1Id,
                 dayId: ProgrammeScheduleTestFixtures.day1Id,
                 sessionOrder: 1,
-                protocolId: draft.protocolId,
+                protocolId: journeyDraft.protocolId,
+                packageSlotKey: forTime ? approvedTimeFixtureSlot : null,
               ),
             ],
           ),
@@ -159,7 +170,7 @@ void main() {
           occurrenceId: 'fixture-occurrence',
           sessionSlotId: resolved.slot.id,
           programmeVersionId: version.id,
-          protocolId: draft.protocolId,
+          protocolId: journeyDraft.protocolId,
           programmedSessionKey: resolved.programmedSessionKey.value,
           weekNumber: 1,
           dayKey: 'day_1',
@@ -169,7 +180,7 @@ void main() {
           state: resumed
               ? FixedProgrammeOccurrenceState.inProgress
               : FixedProgrammeOccurrenceState.today,
-          sessionTitle: draft.name,
+          sessionTitle: journeyDraft.name,
           trainingSessionId: resumed ? 91 : null,
         );
 
@@ -191,8 +202,10 @@ void main() {
               if (permitted)
                 {
                   'permission_key': 'fixture-equipment',
-                  'change_kind': 'substitute_approved_equipment',
-                  'target_ref': 'programme',
+                  'change_kind': forTime
+                      ? 'remove_optional_accessories'
+                      : 'substitute_approved_equipment',
+                  'target_ref': forTime ? approvedTimeFixtureSlot : 'programme',
                   'athlete_agreement_required': true,
                 },
             ]),
@@ -209,7 +222,23 @@ void main() {
       client: client,
     );
     final start = _EquipmentFixtureStart(athlete, assignment.lineageCode);
-    final original = package.plan;
+    final original = forTime
+        ? _packageFromDraft(
+            journeyDraft,
+            exercisesById: const {
+              'BP-001': Exercise(
+                exerciseId: 'BP-001',
+                name: 'Barbell bench press',
+                published: true,
+              ),
+              'ACC-001': Exercise(
+                exerciseId: 'ACC-001',
+                name: 'Accessory raise',
+                published: true,
+              ),
+            },
+          ).plan
+        : package.plan;
     var kv = InMemoryKvStore();
     var records = InMemoryPerformanceRecordStore();
     late AthleteProgrammeSessionPrepareService prepare;
@@ -246,8 +275,8 @@ void main() {
                 prepareService: prepare,
                 loadAdaptationPermissions: permissionReader.load,
                 loadProtocolDraft: (id) async {
-                  expect(id, draft.protocolId);
-                  return draft;
+                  expect(id, journeyDraft.protocolId);
+                  return journeyDraft;
                 },
                 loadKnowledge: () async => knowledge,
               ),
@@ -279,10 +308,15 @@ void main() {
 
     Future<void> review() async {
       await tap('Adapt Session');
-      await tap('Equipment');
-      await tap('Kettlebell');
-      await tap('Bodyweight');
-      await tap('Continue');
+      if (forTime) {
+        await tap('Time');
+        await tap('30');
+      } else {
+        await tap('Equipment');
+        await tap('Kettlebell');
+        await tap('Bodyweight');
+        await tap('Continue');
+      }
     }
 
     await mount(resumed: false);
@@ -294,7 +328,9 @@ void main() {
     await review();
     expect(
       find.textContaining(
-        'Authored adaptation permissions do not permit equipment',
+        forTime
+            ? 'No coach-approved shorter option'
+            : 'Authored adaptation permissions do not permit equipment',
       ),
       findsOneWidget,
     );
@@ -306,7 +342,11 @@ void main() {
     permitted = true;
     await review();
     expect(
-      find.textContaining('Back squat → Goblet squat'),
+      find.textContaining(
+        forTime
+            ? 'Estimated session duration 45m → 30m'
+            : 'Back squat → Goblet squat',
+      ),
       findsOneWidget,
       reason: tester
           .widgetList<Text>(find.byType(Text))
@@ -314,7 +354,11 @@ void main() {
           .join(' | '),
     );
     expect(
-      find.textContaining('Reduces absolute load potential'),
+      find.textContaining(
+        forTime
+            ? 'Omit Optional upper-body accessories. All remaining sets, reps and rests stay as prescribed.'
+            : 'Reduces absolute load potential',
+      ),
       findsOneWidget,
     );
     expect(kv.debugDump[preparedKey], originalBytes);
@@ -328,14 +372,22 @@ void main() {
     expect(permissionReads, List.filled(4, 'eq.${version.id}'));
     final accepted = prepare.cachedPackageForKey(key)!;
     expect(accepted.acceptedAdaptation, isNotNull);
+    final retained = accepted.plan.blocks[retainedIndex];
+    if (forTime) {
+      expect(accepted.plan.durationMin, 30);
+      expect(accepted.plan.blocks, original.blocks.take(2).toList());
+      expect(accepted.acceptedAdaptation!.exerciseChanges, isEmpty);
+    } else {
+      expect(
+        retained.linkedExercises.single.exerciseId,
+        JourneyDEquipmentAdaptationContract.replacementExerciseId,
+      );
+      expect(accepted.plan.blocks.last, same(original.blocks.last));
+    }
     expect(
-      accepted.plan.blocks.first.linkedExercises.single.exerciseId,
-      JourneyDEquipmentAdaptationContract.replacementExerciseId,
-    );
-    expect(accepted.plan.blocks.last, same(original.blocks.last));
-    expect(
-      accepted.plan.blocks.first.linkedExercises.single.prescription!.toJson(),
-      original.blocks.first.linkedExercises.single.prescription!.toJson(),
+      retained.linkedExercises.single.prescription!.toJson(),
+      original.blocks[retainedIndex].linkedExercises.single.prescription!
+          .toJson(),
     );
     expect(
       assignment.toUpdateMap(),
@@ -343,18 +395,26 @@ void main() {
     );
 
     await tap('Begin');
+    expect(
+      find.byType(ActiveSessionScreen),
+      findsOneWidget,
+      reason: tester
+          .widgetList<Text>(find.byType(Text))
+          .map((t) => t.data)
+          .join(' | '),
+    );
     var screen = tester.widget<ActiveSessionScreen>(
       find.byType(ActiveSessionScreen),
     );
     expect(screen.trainingSessionId, 91);
     final initialDraft = screen.performanceController.draft;
-    final firstBlock = initialDraft.blockDrafts.first;
-    final goblet = firstBlock.exerciseResults.single;
-    final setId = goblet.sets.first.setResultId;
-    expect(goblet.exerciseSnapshot.displayName, 'Goblet squat');
+    final workingBlock = initialDraft.blockDrafts[retainedIndex];
+    final workingExercise = workingBlock.exerciseResults.single;
+    final setId = workingExercise.sets.first.setResultId;
+    expect(workingExercise.exerciseSnapshot.displayName, expectedExercise);
     screen.performanceController.updateSet(
-      firstBlock.sourceBlockId,
-      goblet.sourceExerciseId,
+      workingBlock.sourceBlockId,
+      workingExercise.sourceExerciseId,
       setId,
       (set) => set.copyWith(reps: 5, load: 16, loadUnit: 'kg', completed: true),
     );
@@ -385,15 +445,28 @@ void main() {
     ]);
     expect(screen.trainingSessionId, 91);
     expect(screen.performanceController.draft.recordId, initialDraft.recordId);
-    final restored = screen
-        .performanceController
-        .draft
-        .blockDrafts
-        .first
-        .exerciseResults
-        .single;
-    expect(restored.sourceExerciseId, goblet.sourceExerciseId);
-    expect(restored.exerciseSnapshot.displayName, 'Goblet squat');
+    final restoredDraft = screen.performanceController.draft;
+    if (forTime) {
+      expect(
+        restoredDraft.blockDrafts.map((b) => b.sourceBlockId),
+        original.blocks.take(2).map((b) => b.blockId),
+      );
+      expect(
+        prepare
+            .cachedPackageForKey(key)!
+            .plan
+            .blocks[1]
+            .linkedExercises
+            .single
+            .prescription!
+            .toJson(),
+        original.blocks[1].linkedExercises.single.prescription!.toJson(),
+      );
+    }
+    final restored =
+        restoredDraft.blockDrafts[retainedIndex].exerciseResults.single;
+    expect(restored.sourceExerciseId, workingExercise.sourceExerciseId);
+    expect(restored.exerciseSnapshot.displayName, expectedExercise);
     expect(restored.sets.first.setResultId, setId);
     expect(restored.sets.first.reps, 5);
     expect(restored.sets.first.load, 16);
@@ -425,20 +498,31 @@ void main() {
     await tap('Resume');
     await tap('Finish Session');
     expect(find.text('Review Session'), findsOneWidget);
-    expect(find.textContaining('Back squat → Goblet squat'), findsOneWidget);
+    if (!forTime) {
+      expect(find.textContaining('Back squat → Goblet squat'), findsOneWidget);
+    }
     await tap('Save and finish');
     expect(find.text('Session saved'), findsOneWidget);
-    expect(find.textContaining('Back squat → Goblet squat'), findsOneWidget);
+    if (!forTime) {
+      expect(find.textContaining('Back squat → Goblet squat'), findsOneWidget);
+    }
     expect(completion.calls, hasLength(1));
-    expect(completion.calls.single['protocol_id'], draft.protocolId);
+    expect(completion.calls.single['protocol_id'], journeyDraft.protocolId);
     expect(completion.calls.single['occurrence_id'], 'fixture-occurrence');
 
     final history = await coordinator.listHistory(athleteId: athlete);
     expect(history, hasLength(1));
     expect(history.single.recordId, initialDraft.recordId);
-    final result = history.single.blockResults.first.exerciseResults.single;
-    expect(result.sourceExerciseId, goblet.sourceExerciseId);
-    expect(result.exerciseSnapshot.displayName, 'Goblet squat');
+    if (forTime) {
+      expect(
+        history.single.blockResults.map((b) => b.sourceBlockId),
+        original.blocks.take(2).map((b) => b.blockId),
+      );
+    }
+    final result =
+        history.single.blockResults[retainedIndex].exerciseResults.single;
+    expect(result.sourceExerciseId, workingExercise.sourceExerciseId);
+    expect(result.exerciseSnapshot.displayName, expectedExercise);
     expect(result.setResults.first.load, 16);
     await tester.pumpWidget(const SizedBox());
     await tester.pumpWidget(
@@ -451,9 +535,21 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
-    expect(find.text('Goblet squat'), findsOneWidget);
-    expect(find.text('Back squat'), findsNothing);
-  });
+    expect(find.text(expectedExercise), findsOneWidget);
+    expect(
+      find.text(forTime ? 'Optional upper-body accessories' : 'Back squat'),
+      findsNothing,
+    );
+  }
+
+  testWidgets(
+    'equipment review, accept, cold restore and programme History',
+    (tester) => verifyAdaptationJourney(tester, forTime: false),
+  );
+  testWidgets(
+    'approved time option review, accept, cold restore and programme History',
+    (tester) => verifyAdaptationJourney(tester, forTime: true),
+  );
 
   group('B4d.19 equipment request validation', () {
     test('missing availableEquipment fails closed', () async {
@@ -912,23 +1008,53 @@ void main() {
   });
 
   group('B4d.19 regressions and Journey D harness contract', () {
-    test('time adaptation still produces acceptable proposal', () async {
-      final timed = buildTimedPlanningSession(protocolId: 'proto.time.reg');
-      final timedPackage = _packageFromDraft(timed);
-      final proposal =
-          await ProgrammeAdaptationProposalService(
-            knowledge: knowledge,
-            loadProtocolDraft: (_) async => timed,
-            loadAdaptationPermissions: (_) async => const [],
-          ).propose(
-            package: timedPackage,
-            request: const AdaptationRequest(
-              reason: AdaptationReason.time,
-              availableMinutes: 40,
+    test(
+      'time approval does not authorise a planner-generated set cut',
+      () async {
+        final option = buildApprovedTimeSession(protocolId: 'proto.time.reg');
+        final generic = buildTimedPlanningSession(
+          protocolId: option.protocolId,
+        );
+        final timed = option.copyWith(
+          blocks: [
+            option.blocks[0],
+            option.blocks[1].copyWith(
+              adaptationPolicy: generic.blocks[1].adaptationPolicy,
             ),
-          );
-      expect(proposal.isAcceptable, isTrue);
-    });
+            option.blocks[2],
+          ],
+        );
+        final timedPackage = _packageFromDraft(timed);
+        const timeRequest = AdaptationRequest(
+          reason: AdaptationReason.time,
+          availableMinutes: 30,
+        );
+        final unguarded = PlanPackageSessionAdaptationAdapter().pipeline.run(
+          plannedSession:
+              PlannedSessionAdaptationInputAdapter.fromProtocolDraft(timed),
+          constraints: AdaptationRequestConstraintMapper.fromRequest(
+            timeRequest,
+          ),
+        );
+        expect(
+          unguarded.plan.steps.map((step) => step.actionType),
+          contains(AdaptationActionType.reduceVolume),
+        );
+        final proposal =
+            await ProgrammeAdaptationProposalService(
+              knowledge: knowledge,
+              loadProtocolDraft: (_) async => timed,
+              loadAdaptationPermissions: (_) async => const [
+                approvedTimeFixturePermission,
+              ],
+            ).propose(
+              package: timedPackage,
+              slotKey: approvedTimeFixtureSlot,
+              request: timeRequest,
+            );
+        expect(proposal.isAcceptable, isFalse);
+      },
+    );
 
     test('environment still fails closed', () async {
       final proposal = await service().propose(
@@ -1210,7 +1336,10 @@ ProtocolDraft buildEquipmentPlanningSession({
   );
 }
 
-PreparedExecutionPackage _packageFromDraft(ProtocolDraft draft) {
+PreparedExecutionPackage _packageFromDraft(
+  ProtocolDraft draft, {
+  Map<String, Exercise> exercisesById = const {},
+}) {
   final key = ProgrammedSessionKey(
     planId: 'lineage.equip',
     planVersion: 'version.equip',
@@ -1231,7 +1360,7 @@ PreparedExecutionPackage _packageFromDraft(ProtocolDraft draft) {
         .map(
           (block) => SessionExecutionBlock.fromSessionBlock(
             block,
-            exercisesById: const {},
+            exercisesById: exercisesById,
           ),
         )
         .toList(growable: false),

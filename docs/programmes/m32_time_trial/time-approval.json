@@ -1,0 +1,9 @@
+{
+  "permission_key": "m32-omit-optional-accessory",
+  "slot_key": "M32-W01-D01-STRENGTH",
+  "protocol_id": "protocol-cfdd230d-4fbc-42fa-b571-b10d48bc06e9",
+  "session_intent": "upper_body_strength",
+  "full_minutes": 45,
+  "short_minutes": 30,
+  "omitted_block_position": 3
+}

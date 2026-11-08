@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../application/adaptation/approved_equipment_substitution.dart';
+import '../../../application/adaptation/approved_time_option.dart';
 import '../../../application/adaptation/programme_adaptation_acceptance_service.dart';
 import '../../../application/adaptation/programme_adaptation_fingerprints.dart';
 import '../../../application/adaptation/programme_adaptation_proposal_service.dart';
@@ -45,6 +46,7 @@ class ProgrammeAdaptFlow {
     ProgrammeProtocolDraftLoader? loadProtocolDraft,
     ProgrammeKnowledgeLoader? loadKnowledge,
     ProgrammeEquipmentApprovalLoader? loadEquipmentApproval,
+    ProgrammeTimeApprovalLoader? loadTimeApproval,
   }) {
     final permissions =
         loadAdaptationPermissions ??
@@ -54,10 +56,16 @@ class ProgrammeAdaptFlow {
         (loadAdaptationPermissions == null
             ? const ProgrammeAdaptationPermissionReader().loadApprovedEquipment
             : null);
+    final approvedTime =
+        loadTimeApproval ??
+        (loadAdaptationPermissions == null
+            ? const ProgrammeAdaptationPermissionReader().loadApprovedTime
+            : null);
     return ProgrammeAdaptFlow(
       proposalService: ProgrammeAdaptationProposalService(
         loadAdaptationPermissions: permissions,
         loadEquipmentApproval: approvedEquipment,
+        loadTimeApproval: approvedTime,
         loadProtocolDraft: loadProtocolDraft,
         loadKnowledge: loadKnowledge,
       ),
@@ -65,6 +73,7 @@ class ProgrammeAdaptFlow {
         prepareService: prepareService,
         loadAdaptationPermissions: permissions,
         loadEquipmentApproval: approvedEquipment,
+        loadTimeApproval: approvedTime,
         loadProtocolDraft: loadProtocolDraft,
         loadKnowledge: loadKnowledge,
       ),

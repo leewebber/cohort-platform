@@ -17,7 +17,6 @@ import 'package:cohort_platform/models/programme_version_day.dart';
 import 'package:cohort_platform/models/programme_version_phase.dart';
 import 'package:cohort_platform/models/programme_version_session_slot.dart';
 import 'package:cohort_platform/models/programme_version_week.dart';
-import 'package:cohort_platform/models/programme_vocabulary.dart';
 
 /// In-memory Programme Engine stores for unit tests.
 class InMemoryProgrammeTables {
@@ -283,6 +282,7 @@ class InMemoryProgrammeVersionStore implements ProgrammeVersionStore {
               sessionOrder: slot.sessionOrder,
               protocolId: slot.protocolId,
               displayTitle: slot.displayTitle,
+              packageSlotKey: slot.packageSlotKey,
               timeOfDay: slot.timeOfDay,
               isOptional: slot.isOptional,
               completionExpectation: slot.completionExpectation,

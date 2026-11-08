@@ -1,0 +1,22 @@
+{
+  "version_id": "d0576566-e080-4e6f-9428-6bb10d82826a",
+  "protocol_id": "protocol-cfdd230d-4fbc-42fa-b571-b10d48bc06e9",
+  "slot_key": "M32-W01-D01-STRENGTH",
+  "programme.plan-package.yaml_sha256": "2fec8a85f6a6e7561dd9079dedf26bec38d752d925d5cb5dc63b8b614323e9d5",
+  "protocol-graphs.json_sha256": "707f67605d19a7cc92fd70dbf8dabd8dac7d16e57a98839757761c199452280b",
+  "time-approval.json_sha256": "69426e5f772f7cf7dbf919c4783801041c613efa553120a172cb11745374bc56",
+  "catalogue-pins.json_sha256": "536a93c808f667c45f6e40c8a0d0a973290d1864ae2b5bd608c3662ecb19a8c4",
+  "package_content_hash": "a8c76e1f4745929da17c9a929b169372c6475db21755f870dcb4100ead8d9050",
+  "migration": {
+    "file": "supabase/migrations/20261108130000_approved_strength_time_options.sql",
+    "file_sha256": "a55b63fbf79eca1e2d37bc376668bda75c371b93aac5fd86a2eaf14dbe8e68cc",
+    "expected_hosted_ledger_before": 138,
+    "expected_hosted_ledger_after": 139,
+    "expected_ledger_entry": {
+      "name": "approved_strength_time_options",
+      "version": "20261108130000",
+      "statement_count": 10,
+      "statement_array_sha256": "5a02fa26b316849d6dbbd6468d3cb6afd4f6e6ceaf1904a94dc6bfcace92531b"
+    }
+  }
+}

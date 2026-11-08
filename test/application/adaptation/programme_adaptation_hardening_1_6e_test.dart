@@ -41,7 +41,7 @@ void main() {
     late InMemoryKvStore kv;
 
     setUp(() {
-      draft = buildTimedPlanningSession(protocolId: 'proto.harden.1.6e');
+      draft = buildApprovedTimeSession(protocolId: 'proto.harden.1.6e');
       originalPackage = _packageFromDraft(draft);
       originalPlan = originalPackage.plan;
       kv = InMemoryKvStore();
@@ -56,15 +56,20 @@ void main() {
       );
       proposalService = ProgrammeAdaptationProposalService(
         loadProtocolDraft: (_) async => draft,
+        loadAdaptationPermissions: (_) async =>
+            const [approvedTimeFixturePermission],
       );
       acceptanceService = ProgrammeAdaptationAcceptanceService(
         prepareService: prepareService,
         loadProtocolDraft: (_) async => draft,
+        loadAdaptationPermissions: (_) async =>
+            const [approvedTimeFixturePermission],
       );
       reversionService = ProgrammeAdaptationReversionService(
         prepareService: prepareService,
       );
       executionContext = ProgrammeExecutionContext(
+        packageSlotKey: approvedTimeFixtureSlot,
         assignmentId: originalPackage.assignmentId!,
         programmeVersionId: originalPackage.programmeVersionId!,
         sessionSlotId: 'slot.1',
@@ -133,6 +138,7 @@ void main() {
           AdaptationRequest(reason: AdaptationReason.recovery),
         ]) {
           final proposal = await proposalService.propose(
+            slotKey: approvedTimeFixtureSlot,
             package: originalPackage,
             request: request,
           );
@@ -169,6 +175,7 @@ void main() {
           () async {
         final before = ProgrammeAdaptationFingerprints.package(originalPackage);
         final proposal = await proposalService.propose(
+          slotKey: approvedTimeFixtureSlot,
           package: originalPackage,
           request: const AdaptationRequest(
             reason: AdaptationReason.time,
@@ -199,6 +206,7 @@ void main() {
       test('accepted adaptation remains recognisable as the same programme',
           () async {
         final proposal = await proposalService.propose(
+          slotKey: approvedTimeFixtureSlot,
           package: originalPackage,
           request: const AdaptationRequest(
             reason: AdaptationReason.time,
@@ -242,6 +250,7 @@ void main() {
       test('reversion restores the recognisable original prepared session',
           () async {
         final proposal = await proposalService.propose(
+          slotKey: approvedTimeFixtureSlot,
           package: originalPackage,
           request: const AdaptationRequest(
             reason: AdaptationReason.time,
@@ -272,6 +281,7 @@ void main() {
       test('local persistence preserves Coaching Recognition provenance',
           () async {
         final proposal = await proposalService.propose(
+          slotKey: approvedTimeFixtureSlot,
           package: originalPackage,
           request: const AdaptationRequest(
             reason: AdaptationReason.time,
@@ -315,6 +325,7 @@ void main() {
       test('propose → accept → revert → fresh propose remains compute-then-accept',
           () async {
         final firstProposal = await proposalService.propose(
+          slotKey: approvedTimeFixtureSlot,
           package: originalPackage,
           request: const AdaptationRequest(
             reason: AdaptationReason.time,
@@ -349,6 +360,7 @@ void main() {
         // cannot collide with the consumed first proposal id.
         await Future<void>.delayed(const Duration(milliseconds: 2));
         final fresh = await proposalService.propose(
+          slotKey: approvedTimeFixtureSlot,
           package: reverted.package!,
           request: const AdaptationRequest(
             reason: AdaptationReason.time,

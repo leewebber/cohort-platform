@@ -1,0 +1,98 @@
+{
+  "package_schema_version": 2,
+  "programme": {
+    "lineage_code": "M32-STRENGTH-TIME-TRIAL",
+    "name": "Upper-body strength time trial",
+    "description": "Separate one-session strength time-option trial.",
+    "coaching_intent": "Keep the five-minute warm-up and the full bench press. The accessory block is optional under the approved shorter option.",
+    "duration_weeks": 1,
+    "sessions_per_week": 1,
+    "library_scope": "coach_private",
+    "owner_type": "coach",
+    "version_number": 1
+  },
+  "sessions": [
+    {
+      "session_key": "m32-upper-body-time-trial",
+      "protocol_id": "protocol-cfdd230d-4fbc-42fa-b571-b10d48bc06e9",
+      "session_lineage_id": "8a86c7e1-82b9-4a8a-8e05-c9931dd6d686",
+      "revision_number": 1,
+      "title": "Upper-body strength time trial"
+    }
+  ],
+  "weeks": [
+    {
+      "week_number": 1,
+      "days": [
+        {
+          "day_key": "day_1",
+          "day_order": 1,
+          "day_type": "training",
+          "title": "Upper-body strength time trial",
+          "slots": [
+            {
+              "slot_key": "M32-W01-D01-STRENGTH",
+              "session_key": "m32-upper-body-time-trial",
+              "session_order": 1,
+              "display_title": "Upper-body strength time trial",
+              "time_of_day": "any",
+              "is_optional": false,
+              "completion_expectation": "required",
+              "progression": {
+                "prescription_summary": "One reviewed strength session. No automatic progression."
+              }
+            }
+          ]
+        },
+        {
+          "day_key": "day_2",
+          "day_order": 2,
+          "day_type": "rest",
+          "title": "Rest",
+          "slots": []
+        },
+        {
+          "day_key": "day_3",
+          "day_order": 3,
+          "day_type": "rest",
+          "title": "Rest",
+          "slots": []
+        },
+        {
+          "day_key": "day_4",
+          "day_order": 4,
+          "day_type": "rest",
+          "title": "Rest",
+          "slots": []
+        },
+        {
+          "day_key": "day_5",
+          "day_order": 5,
+          "day_type": "rest",
+          "title": "Rest",
+          "slots": []
+        },
+        {
+          "day_key": "day_6",
+          "day_order": 6,
+          "day_type": "rest",
+          "title": "Rest",
+          "slots": []
+        },
+        {
+          "day_key": "day_7",
+          "day_order": 7,
+          "day_type": "rest",
+          "title": "Rest",
+          "slots": []
+        }
+      ]
+    }
+  ],
+  "phases": [],
+  "adaptation_permissions": [],
+  "protected_invariants": [],
+  "assessments": [],
+  "performance_evidence_requirements": [],
+  "comparison_identities": []
+}

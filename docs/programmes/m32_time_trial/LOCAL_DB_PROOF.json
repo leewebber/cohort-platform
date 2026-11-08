@@ -1,0 +1,20 @@
+{
+  "trial": {
+    "version": "d0576566-e080-4e6f-9428-6bb10d82826a",
+    "package_hash": "a8c76e1f4745929da17c9a929b169372c6475db21755f870dcb4100ead8d9050",
+    "local_scope_seal_hash": "06c3ce5fd6dff600bec8c21fa5977f3d93e06389ad73c67b398760c0d9808db5"
+  },
+  "migration": {
+    "name": "approved_strength_time_options",
+    "version": "20261108130000",
+    "statement_count": 10,
+    "statement_array_sha256": "5a02fa26b316849d6dbbd6468d3cb6afd4f6e6ceaf1904a94dc6bfcace92531b"
+  },
+  "environment": "disposable_loopback",
+  "log_sha256": "65dfa110666ff9e6a66d4b80e7a95dbf540dd4933fd6887612064d78306d0da7",
+  "cli_preview_only_pinned_migration": true,
+  "cli_apply_and_final_empty_preview": true,
+  "m31_ordinary_athlete_database_checks_passed": 2,
+  "m32_ordinary_athlete_database_checks_passed": 1,
+  "hosted_operations": false
+}

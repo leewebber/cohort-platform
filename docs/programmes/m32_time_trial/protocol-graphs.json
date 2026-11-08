@@ -1,0 +1,85 @@
+[
+  {
+    "protocol_id": "protocol-cfdd230d-4fbc-42fa-b571-b10d48bc06e9",
+    "revision_number": 1,
+    "classification": "private",
+    "blocks": [
+      {
+        "position": 1,
+        "block_type": "warm_up",
+        "title": "Preparation",
+        "content": "Five minutes of easy walking to warm up.",
+        "workout_format": "steady_state",
+        "performance_capture_mode": "completion",
+        "timer_config": {
+          "duration_seconds": 300
+        },
+        "exercises": [
+          {
+            "position": 1,
+            "exercise_id": "EX-008",
+            "display_label_override": "Walking"
+          }
+        ]
+      },
+      {
+        "position": 2,
+        "block_type": "strength",
+        "title": "Bench press",
+        "content": "Four working sets of eight. Keep 120 seconds of rest between sets.",
+        "workout_format": "other",
+        "performance_capture_mode": "strength",
+        "timer_config": {
+          "duration_seconds": 1500
+        },
+        "exercises": [
+          {
+            "position": 1,
+            "exercise_id": "EX-083",
+            "display_label_override": "Barbell bench press",
+            "prescription": {
+              "sets": 4,
+              "reps": {
+                "type": "exact",
+                "exact_reps": 8
+              },
+              "rest_seconds": 120,
+              "load": {
+                "type": "athleteSelected"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "position": 3,
+        "block_type": "accessory",
+        "title": "Optional upper-body accessories",
+        "content": "Dumbbell lateral raise, three sets of 12 with 60 seconds of rest.",
+        "workout_format": "other",
+        "performance_capture_mode": "strength",
+        "timer_config": {
+          "duration_seconds": 900
+        },
+        "exercises": [
+          {
+            "position": 1,
+            "exercise_id": "EX-044",
+            "display_label_override": "Dumbbell lateral raise",
+            "prescription": {
+              "sets": 3,
+              "reps": {
+                "type": "exact",
+                "exact_reps": 12
+              },
+              "rest_seconds": 60,
+              "load": {
+                "type": "athleteSelected"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

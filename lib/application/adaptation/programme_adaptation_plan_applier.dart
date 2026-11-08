@@ -21,10 +21,51 @@ class ProgrammeAdaptationPlanApplier {
     required AdaptedSessionExecutionSnapshot snapshot,
     KnowledgeGraphReader? knowledge,
     ApprovedEquipmentSubstitution? approval,
+    bool preserveRetainedBlocks = false,
   }) {
     if (snapshot.sourceProtocolId.trim() != authoredDraft.protocolId.trim()) {
       throw StateError(
         'Snapshot protocol does not match authored draft protocol.',
+      );
+    }
+
+    if (preserveRetainedBlocks) {
+      final omission = snapshot.omittedBlocks.single;
+      final block = authoredDraft.blocks.singleWhere(
+        (block) => block.localId == omission.sourceBlockLocalId,
+      );
+      final expected = authoredDraft.blocks.map((b) => b.stableId).toList();
+      if (snapshot.appliedAdaptationAudit.single.actionType !=
+              AdaptationActionType.removeBlock ||
+          expected.toSet().length != expected.length ||
+          originalPlan.blocks.length != expected.length ||
+          originalPlan.blocks.indexed.any(
+            (entry) =>
+                entry.$2.blockId != expected[entry.$1] ||
+                entry.$2.position != authoredDraft.blocks[entry.$1].position ||
+                entry.$2.blockType != authoredDraft.blocks[entry.$1].blockType,
+          )) {
+        throw StateError(
+          'The approved omission does not match the prepared plan.',
+        );
+      }
+      final retained = originalPlan.blocks.where(
+        (b) => b.blockId != block.stableId,
+      );
+      return SessionExecutionPlan(
+        sessionId: originalPlan.sessionId,
+        sessionTitle: originalPlan.sessionTitle,
+        blocks: List.unmodifiable(retained),
+        protocol: originalPlan.protocol,
+        durationMin: snapshot.resultingEstimatedDurationMin,
+        coachNotes: originalPlan.coachNotes,
+        programmeContextLabel: originalPlan.programmeContextLabel,
+        prescriptionLoadOverrides: originalPlan.prescriptionLoadOverrides,
+        boundPrescriptionSnapshot: originalPlan.boundPrescriptionSnapshot,
+        durationChoiceSnapshot: originalPlan.durationChoiceSnapshot,
+        runningTargetAdmissionSnapshot:
+            originalPlan.runningTargetAdmissionSnapshot,
+        authoredSource: originalPlan.authoredSource,
       );
     }
 

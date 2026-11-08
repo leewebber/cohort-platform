@@ -14,6 +14,7 @@ import 'package:cohort_platform/models/protocol_draft.dart';
 
 import 'equipment_adaptation_request_validator.dart';
 import 'approved_equipment_substitution.dart';
+import 'approved_time_option.dart';
 import 'plan_package_session_adaptation_adapter.dart';
 import 'programme_adaptation_proposal_mapper.dart';
 
@@ -39,6 +40,7 @@ class ProgrammeAdaptationProposalService {
     ProgrammeAdaptationPermissionLoader? loadAdaptationPermissions,
     ProgrammeKnowledgeLoader? loadKnowledge,
     this.loadEquipmentApproval,
+    this.loadTimeApproval,
     KnowledgeGraphReader? knowledge,
   }) : _loadProtocolDraft =
            loadProtocolDraft ??
@@ -54,6 +56,7 @@ class ProgrammeAdaptationProposalService {
   final ProgrammeAdaptationPermissionLoader _loadAdaptationPermissions;
   final ProgrammeKnowledgeLoader _loadKnowledge;
   final ProgrammeEquipmentApprovalLoader? loadEquipmentApproval;
+  final ProgrammeTimeApprovalLoader? loadTimeApproval;
   final PlanPackageSessionAdaptationAdapter? _adapterOverride;
 
   static KnowledgeGraphReader? _cachedKnowledge;
@@ -138,9 +141,17 @@ class ProgrammeAdaptationProposalService {
               executionContext != null
           ? await loadEquipmentApproval?.call(executionContext)
           : null;
+      final timeApproval =
+          request.reason == AdaptationReason.time && executionContext != null
+          ? await loadTimeApproval?.call(executionContext)
+          : null;
       final permissions = approval != null
           ? [approval.permission]
-          : request.reason == AdaptationReason.equipment
+          : timeApproval != null
+          ? [timeApproval.permission]
+          : request.reason == AdaptationReason.equipment ||
+                (request.reason == AdaptationReason.time &&
+                    loadTimeApproval == null)
           ? await _loadAdaptationPermissions(package.programmeVersionId!.trim())
           : const <PlanPackageAdaptationPermission>[];
       final scopedKnowledge =
@@ -159,7 +170,12 @@ class ProgrammeAdaptationProposalService {
         request: effectiveRequest,
         authoredDraft: draft,
         adaptationPermissions: permissions,
-        slotKey: slotKey ?? executionContext?.packageSlotKey,
+        timeApproval: timeApproval,
+        executionContext: executionContext,
+        slotKey:
+            request.reason == AdaptationReason.time && executionContext != null
+            ? executionContext.packageSlotKey
+            : slotKey ?? executionContext?.packageSlotKey,
       );
       return ProgrammeAdaptationProposalMapper.fromPipelineRun(
         package: package,
@@ -168,6 +184,7 @@ class ProgrammeAdaptationProposalService {
         authoredDraft: draft,
         knowledge: scopedKnowledge,
         approval: approval,
+        hasPrivateTimeApproval: timeApproval != null,
         proposedAt: proposedAt,
       );
     } on PlanPackageAdaptationAdapterException catch (error) {
@@ -215,6 +232,8 @@ class ProgrammeAdaptationProposalService {
       'empty_prescription' ||
       'empty_prepared_plan' =>
         ProgrammeAdaptationNoSafeReason.staleOrMismatchedPreparedSession,
+      'time_option_unavailable' =>
+        ProgrammeAdaptationNoSafeReason.noLawfulSessionSolution,
       'substitution_not_permitted' =>
         ProgrammeAdaptationNoSafeReason.substitutionNotPermitted,
       _ => ProgrammeAdaptationNoSafeReason.pipelineUnableToPlan,

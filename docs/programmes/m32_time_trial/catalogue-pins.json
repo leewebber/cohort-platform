@@ -1,0 +1,27 @@
+{
+  "source": "docs/checkpoints/m11_catalogue_operation/resumed_preflight_2026_11_04/evidence/final-postcheck.raw.json",
+  "source_sha256": "ee7321f12e025692b96fe96d99b1cda76b20e49503892bc6fea385d9231ce0a8",
+  "rows": [
+    {
+      "exercise_id": "EX-008",
+      "name": "Walking",
+      "slug": "walking",
+      "equipment": null,
+      "published": true
+    },
+    {
+      "exercise_id": "EX-083",
+      "name": "Bench Press",
+      "slug": "bench-press",
+      "equipment": "Barbell, Bench, Full Gym",
+      "published": true
+    },
+    {
+      "exercise_id": "EX-044",
+      "name": "Lateral Raise",
+      "slug": "lateral-raise",
+      "equipment": "One Dumbbell, Two Dumbbells",
+      "published": true
+    }
+  ]
+}

@@ -33,7 +33,7 @@ void main() {
     late InMemoryKvStore kv;
 
     setUp(() {
-      draft = buildTimedPlanningSession(protocolId: 'proto.accept.1.6d');
+      draft = buildApprovedTimeSession(protocolId: 'proto.accept.1.6d');
       originalPackage = _packageFromDraft(draft);
       originalPlan = originalPackage.plan;
       kv = InMemoryKvStore();
@@ -48,15 +48,20 @@ void main() {
       );
       proposalService = ProgrammeAdaptationProposalService(
         loadProtocolDraft: (_) async => draft,
+        loadAdaptationPermissions: (_) async =>
+            const [approvedTimeFixturePermission],
       );
       acceptanceService = ProgrammeAdaptationAcceptanceService(
         prepareService: prepareService,
         loadProtocolDraft: (_) async => draft,
+        loadAdaptationPermissions: (_) async =>
+            const [approvedTimeFixturePermission],
       );
       reversionService = ProgrammeAdaptationReversionService(
         prepareService: prepareService,
       );
       executionContext = ProgrammeExecutionContext(
+        packageSlotKey: approvedTimeFixtureSlot,
         assignmentId: originalPackage.assignmentId!,
         programmeVersionId: originalPackage.programmeVersionId!,
         sessionSlotId: 'slot.1',
@@ -73,6 +78,7 @@ void main() {
 
     Future<PreparedExecutionPackage> acceptAdapted() async {
       final proposal = await proposalService.propose(
+        slotKey: approvedTimeFixtureSlot,
         package: originalPackage,
         request: const AdaptationRequest(
           reason: AdaptationReason.time,
@@ -278,6 +284,7 @@ void main() {
 
     test('old accepted proposal cannot be replayed after reversion', () async {
       final proposal = await proposalService.propose(
+        slotKey: approvedTimeFixtureSlot,
         package: originalPackage,
         request: const AdaptationRequest(
           reason: AdaptationReason.time,
@@ -319,6 +326,7 @@ void main() {
       expect(reverted.success, isTrue);
 
       final fresh = await proposalService.propose(
+        slotKey: approvedTimeFixtureSlot,
         package: reverted.package!,
         request: const AdaptationRequest(
           reason: AdaptationReason.time,
