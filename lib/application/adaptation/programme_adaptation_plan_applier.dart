@@ -5,7 +5,7 @@ import 'package:cohort_platform/features/session/models/session_execution_plan.d
 import 'package:cohort_platform/models/protocol_draft.dart';
 import 'package:cohort_platform/models/strength_exercise_prescription.dart';
 
-import 'm31_thursday_equipment_trial.dart';
+import 'approved_equipment_substitution.dart';
 
 /// Builds a reviewed [SessionExecutionPlan] from an adapted snapshot + authored draft.
 ///
@@ -20,7 +20,7 @@ class ProgrammeAdaptationPlanApplier {
     required ProtocolDraft authoredDraft,
     required AdaptedSessionExecutionSnapshot snapshot,
     KnowledgeGraphReader? knowledge,
-    bool isThursdayTrial = false,
+    ApprovedEquipmentSubstitution? approval,
   }) {
     if (snapshot.sourceProtocolId.trim() != authoredDraft.protocolId.trim()) {
       throw StateError(
@@ -42,7 +42,7 @@ class ProgrammeAdaptationPlanApplier {
         authoredDraft,
         swaps.single,
         knowledge,
-        isThursdayTrial: isThursdayTrial,
+        approval: approval,
       );
     }
 
@@ -91,7 +91,7 @@ class ProgrammeAdaptationPlanApplier {
     ProtocolDraft draft,
     AdaptationStepAuditEntry swap,
     KnowledgeGraphReader knowledge, {
-    required bool isThursdayTrial,
+    required ApprovedEquipmentSubstitution? approval,
   }) {
     final source = swap.originalValueReference;
     final replacement = swap.appliedValueReference;
@@ -116,18 +116,15 @@ class ProgrammeAdaptationPlanApplier {
         ? null
         : knowledge.exerciseById(replacement);
     final prescription = original.prescription;
-    final approvedTrialPlacement =
-        isThursdayTrial &&
-        draft.protocolId == M31ThursdayEquipmentTrial.protocolId &&
-        source == M31ThursdayEquipmentTrial.sourceId &&
-        replacement == M31ThursdayEquipmentTrial.replacementId &&
-        block.position == 2 &&
-        original.position == 1 &&
-        prescription?.authoredDetails?['source_occurrence_id'] ==
-            M31ThursdayEquipmentTrial.occurrenceId &&
-        prescription?.performanceCapture?.loadLabel == 'Total barbell load';
-    if (isThursdayTrial && !approvedTrialPlacement) {
-      throw StateError('The approved trial occurrence does not match.');
+    if (approval != null &&
+        (draft.protocolId != approval.protocolId ||
+            source != approval.sourceId ||
+            replacement != approval.replacementId ||
+            block.position != approval.blockPosition ||
+            original.position != approval.exercisePosition ||
+            prescription?.authoredDetails?['source_occurrence_id'] !=
+                approval.occurrenceKey)) {
+      throw StateError('The approved exercise occurrence does not match.');
     }
     const bodyweight = 'cohort.equipment.bodyweight';
     // Keep this slice to a working strength placement with transferable
@@ -145,7 +142,7 @@ class ProgrammeAdaptationPlanApplier {
         !prescription.hasStructuredData ||
         (prescription.load != null &&
             prescription.load!.type != StrengthLoadType.athleteSelected) ||
-        (!approvedTrialPlacement &&
+        (approval == null &&
             (prescription.coachCue?.trim().isNotEmpty == true ||
                 prescription.authoredDetails != null ||
                 prescription.performanceCapture != null)) ||
@@ -181,9 +178,7 @@ class ProgrammeAdaptationPlanApplier {
               exerciseId: candidate.id,
               displayName: candidate.meta.label,
               position: original.position,
-              prescription: approvedTrialPlacement
-                  ? M31ThursdayEquipmentTrial.prescription
-                  : prescription,
+              prescription: approval?.prescription ?? prescription,
               executionGroupKey: original.executionGroupKey,
               executionGroupLabel: original.executionGroupLabel,
               executionGroupRounds: original.executionGroupRounds,

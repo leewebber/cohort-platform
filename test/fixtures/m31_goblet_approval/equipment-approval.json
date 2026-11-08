@@ -1,0 +1,38 @@
+{
+  "slot_key": "M31-LOCAL-GOBLET-D04",
+  "protocol_id": "protocol-0e6039a1-2821-4286-9bf5-1b52adf7f995",
+  "source_occurrence_id": "m31-fixture-back-squat",
+  "block_position": 2,
+  "exercise_position": 1,
+  "source_exercise_id": "EX-073",
+  "replacement_exercise_id": "EX-030",
+  "missing_equipment": "cohort.equipment.barbell",
+  "required_equipment": "cohort.equipment.dumbbell",
+  "matching_dumbbell_pair": false,
+  "explanation": "Use one dumbbell for the goblet squat. Do 2 sets of 6–8 at 2–3 reps in reserve. Choose and log the load in kg.",
+  "prescription": {
+    "sets": 2,
+    "reps": {
+      "type": "range",
+      "min_reps": 6,
+      "max_reps": 8
+    },
+    "rir_range": [
+      2,
+      3
+    ],
+    "rest_seconds_range": [
+      120,
+      180
+    ],
+    "tempo": "Lower under control for about two seconds.",
+    "coach_cue": "Hold one dumbbell at your chest and lower under control.",
+    "load": {
+      "type": "athleteSelected"
+    },
+    "performance_capture": {
+      "load_unit": "kg",
+      "load_label": "Load (kg)"
+    }
+  }
+}

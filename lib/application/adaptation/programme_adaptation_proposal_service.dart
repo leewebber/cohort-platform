@@ -4,6 +4,7 @@ import 'package:cohort_platform/features/adaptation/services/adaptation_policy_g
 import 'package:cohort_platform/features/admin/services/protocol_builder_service.dart';
 import 'package:cohort_platform/features/authored_plan_package/plan_package_manifest.dart';
 import 'package:cohort_platform/features/session/models/prepared_execution_package.dart';
+import 'package:cohort_platform/features/programme/models/programme_execution_context.dart';
 import 'package:cohort_platform/features/workout_player/services/coach_brain_workout_plan_service.dart';
 import 'package:cohort_platform/knowledge/io/yaml_knowledge_ontology_loader.dart';
 import 'package:cohort_platform/knowledge/read/in_memory_knowledge_graph_reader.dart';
@@ -12,9 +13,8 @@ import 'package:cohort_platform/models/adaptation_request.dart';
 import 'package:cohort_platform/models/protocol_draft.dart';
 
 import 'equipment_adaptation_request_validator.dart';
-import 'm31_thursday_equipment_trial.dart';
+import 'approved_equipment_substitution.dart';
 import 'plan_package_session_adaptation_adapter.dart';
-import 'programme_adaptation_permission_reader.dart';
 import 'programme_adaptation_proposal_mapper.dart';
 
 typedef ProgrammeProtocolDraftLoader =
@@ -38,6 +38,7 @@ class ProgrammeAdaptationProposalService {
     ProgrammeProtocolDraftLoader? loadProtocolDraft,
     ProgrammeAdaptationPermissionLoader? loadAdaptationPermissions,
     ProgrammeKnowledgeLoader? loadKnowledge,
+    this.loadEquipmentApproval,
     KnowledgeGraphReader? knowledge,
   }) : _loadProtocolDraft =
            loadProtocolDraft ??
@@ -52,6 +53,7 @@ class ProgrammeAdaptationProposalService {
   final ProgrammeProtocolDraftLoader _loadProtocolDraft;
   final ProgrammeAdaptationPermissionLoader _loadAdaptationPermissions;
   final ProgrammeKnowledgeLoader _loadKnowledge;
+  final ProgrammeEquipmentApprovalLoader? loadEquipmentApproval;
   final PlanPackageSessionAdaptationAdapter? _adapterOverride;
 
   static KnowledgeGraphReader? _cachedKnowledge;
@@ -64,6 +66,7 @@ class ProgrammeAdaptationProposalService {
     required AdaptationRequest request,
     DateTime? proposedAt,
     String? slotKey,
+    ProgrammeExecutionContext? executionContext,
   }) async {
     if (!_isEligible(package)) {
       return ProgrammeAdaptationProposalMapper.noSafeFromException(
@@ -130,32 +133,23 @@ class ProgrammeAdaptationProposalService {
     }
 
     try {
-      final isTrial =
+      final approval =
           request.reason == AdaptationReason.equipment &&
-          package.programmeVersionId == M31ThursdayEquipmentTrial.versionId;
-      if (isTrial && !M31ThursdayEquipmentTrial.matches(package, slotKey)) {
-        throw PlanPackageAdaptationAdapterException(
-          'substitution_not_permitted',
-          'This slot is outside the equipment trial.',
-        );
-      }
-      final permissions = isTrial
-          ? await const ProgrammeAdaptationPermissionReader().loadThursdayTrial(
-              assignmentId: package.assignmentId!,
-              versionId: package.programmeVersionId!,
-              slotKey: slotKey!,
-            )
+              executionContext != null
+          ? await loadEquipmentApproval?.call(executionContext)
+          : null;
+      final permissions = approval != null
+          ? [approval.permission]
           : request.reason == AdaptationReason.equipment
           ? await _loadAdaptationPermissions(package.programmeVersionId!.trim())
           : const <PlanPackageAdaptationPermission>[];
-      final scopedKnowledge = isTrial
-          ? M31ThursdayEquipmentTrial.authorize(
-              package: package,
-              authoredSlot: slotKey,
-              request: effectiveRequest,
-              permissions: permissions,
-            )
-          : knowledge;
+      final scopedKnowledge =
+          approval?.authorize(
+            package: package,
+            context: executionContext!,
+            request: effectiveRequest,
+          ) ??
+          knowledge;
       final adapter =
           _adapterOverride ??
           PlanPackageSessionAdaptationAdapter(knowledge: scopedKnowledge);
@@ -165,7 +159,7 @@ class ProgrammeAdaptationProposalService {
         request: effectiveRequest,
         authoredDraft: draft,
         adaptationPermissions: permissions,
-        slotKey: slotKey,
+        slotKey: slotKey ?? executionContext?.packageSlotKey,
       );
       return ProgrammeAdaptationProposalMapper.fromPipelineRun(
         package: package,
@@ -173,7 +167,7 @@ class ProgrammeAdaptationProposalService {
         run: run,
         authoredDraft: draft,
         knowledge: scopedKnowledge,
-        isThursdayTrial: isTrial,
+        approval: approval,
         proposedAt: proposedAt,
       );
     } on PlanPackageAdaptationAdapterException catch (error) {

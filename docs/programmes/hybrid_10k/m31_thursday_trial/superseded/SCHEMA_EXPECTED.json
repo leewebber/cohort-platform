@@ -1,0 +1,62 @@
+{
+  "triggers": [
+    {
+      "name": "programme_versions_m31_require_thursday_trial_seal",
+      "enabled": "O",
+      "deferrable": true,
+      "definition_sha256": "611b56792564a5928de1e014b3d336571d60d3e25cc794ffaa2646287e123d5a",
+      "initially_deferred": true
+    },
+    {
+      "name": "programme_versions_m31_seed_thursday_trial_permission",
+      "enabled": "O",
+      "deferrable": false,
+      "definition_sha256": "9745ef6b26918443a9827c6f4d8f7843025ca80bcd3e4eda91d4608ef48d5059",
+      "initially_deferred": false
+    }
+  ],
+  "functions": [
+    {
+      "owner": "postgres",
+      "signature": "public.cohort_m31_require_thursday_trial_seal()",
+      "volatility": "v",
+      "anon_execute": false,
+      "configuration": [
+        "search_path=pg_catalog, pg_temp"
+      ],
+      "public_execute": false,
+      "security_definer": true,
+      "definition_sha256": "88432f73e44a03ab55aeafffbf681e809119ae2325c4102ed663e59a0f48ab08",
+      "service_role_execute": false,
+      "authenticated_execute": false
+    },
+    {
+      "owner": "postgres",
+      "signature": "public.cohort_m31_seed_thursday_trial_permission()",
+      "volatility": "v",
+      "anon_execute": false,
+      "configuration": [
+        "search_path=pg_catalog, pg_temp"
+      ],
+      "public_execute": false,
+      "security_definer": false,
+      "definition_sha256": "e397e7bec02a30b08433142e516797edf54ee44dd28808f43d14b143ddefeda1",
+      "service_role_execute": false,
+      "authenticated_execute": false
+    },
+    {
+      "owner": "postgres",
+      "signature": "public.read_m31_thursday_trial_permission(uuid,uuid,text)",
+      "volatility": "s",
+      "anon_execute": false,
+      "configuration": [
+        "search_path=pg_catalog, pg_temp"
+      ],
+      "public_execute": false,
+      "security_definer": true,
+      "definition_sha256": "a5b20dd10cb2e2eff2a35b0c69ee8c43264544223d2ed2302ab6d97a80cf9072",
+      "service_role_execute": false,
+      "authenticated_execute": true
+    }
+  ]
+}

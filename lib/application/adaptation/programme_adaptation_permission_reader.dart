@@ -3,6 +3,8 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../core/services/supabase_service.dart';
 import '../../features/authored_plan_package/plan_package_manifest.dart';
 import '../../features/authored_plan_package/plan_package_schema.dart';
+import '../../features/programme/models/programme_execution_context.dart';
+import 'approved_equipment_substitution.dart';
 
 /// Reads the exact authored version through the athlete's existing RLS scope.
 class ProgrammeAdaptationPermissionReader {
@@ -21,21 +23,27 @@ class ProgrammeAdaptationPermissionReader {
         .eq('version_id', versionId),
   );
 
-  Future<List<PlanPackageAdaptationPermission>> loadThursdayTrial({
-    required String assignmentId,
-    required String versionId,
-    required String slotKey,
-  }) async => _parse(
-    await (_client ?? SupabaseService.client).rpc(
-          'read_m31_thursday_trial_permission',
-          params: {
-            'p_assignment_id': assignmentId,
-            'p_version_id': versionId,
-            'p_slot_key': slotKey,
-          },
-        )
-        as List,
-  );
+  Future<ApprovedEquipmentSubstitution?> loadApprovedEquipment(
+    ProgrammeExecutionContext context,
+  ) async {
+    if (context.occurrenceId == null || context.packageSlotKey == null) {
+      return null;
+    }
+    final raw = await (_client ?? SupabaseService.client).rpc(
+      'read_my_approved_equipment_substitution_v1',
+      params: {
+        'p_assignment_id': context.assignmentId,
+        'p_version_id': context.programmeVersionId,
+        'p_occurrence_id': context.occurrenceId,
+        'p_slot_key': context.packageSlotKey,
+      },
+    );
+    return raw == null
+        ? null
+        : ApprovedEquipmentSubstitution.fromJson(
+            Map<String, dynamic>.from(raw as Map),
+          );
+  }
 
   List<PlanPackageAdaptationPermission> _parse(List rows) => [
     for (final row in rows)

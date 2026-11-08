@@ -14,9 +14,8 @@ import 'package:cohort_platform/features/programme/services/athlete_programme_se
 import 'package:cohort_platform/features/session/models/prepared_execution_package.dart';
 import 'package:cohort_platform/features/workout_player/models/workout_session_brief.dart';
 
-import 'm31_thursday_equipment_trial.dart';
+import 'approved_equipment_substitution.dart';
 import 'plan_package_session_adaptation_adapter.dart';
-import 'programme_adaptation_permission_reader.dart';
 import 'programme_adaptation_fingerprints.dart';
 import 'programme_adaptation_proposal_mapper.dart';
 import 'programme_adaptation_proposal_service.dart';
@@ -71,6 +70,7 @@ class ProgrammeAdaptationAcceptanceService {
     ProgrammeProtocolDraftLoader? loadProtocolDraft,
     ProgrammeAdaptationPermissionLoader? loadAdaptationPermissions,
     ProgrammeKnowledgeLoader? loadKnowledge,
+    this._loadEquipmentApproval,
     KnowledgeGraphReader? knowledge,
   }) : _adapterOverride = adapter,
        _loadProtocolDraft =
@@ -93,6 +93,7 @@ class ProgrammeAdaptationAcceptanceService {
   final ProgrammeProtocolDraftLoader _loadProtocolDraft;
   final ProgrammeAdaptationPermissionLoader _loadAdaptationPermissions;
   final ProgrammeKnowledgeLoader _loadKnowledge;
+  final ProgrammeEquipmentApprovalLoader? _loadEquipmentApproval;
   final Set<String> _consumedProposalIds = <String>{};
   bool _acceptInFlight = false;
 
@@ -196,37 +197,29 @@ class ProgrammeAdaptationAcceptanceService {
     // Freshness revalidation: re-run pipeline and require identical reviewed plan.
     try {
       final draft = await _loadProtocolDraft(currentPackage.protocolId!.trim());
-      final isTrial =
-          proposal.reason == AdaptationReason.equipment &&
-          currentPackage.programmeVersionId ==
-              M31ThursdayEquipmentTrial.versionId;
-      final slotKey = executionContext.packageSlotKey;
-      if (isTrial &&
-          !M31ThursdayEquipmentTrial.matches(currentPackage, slotKey)) {
-        throw PlanPackageAdaptationAdapterException(
-          'substitution_not_permitted',
-          'This slot is outside the equipment trial.',
-        );
+      final approval = proposal.reason == AdaptationReason.equipment
+          ? await _loadEquipmentApproval?.call(executionContext)
+          : null;
+      if (proposal.evaluationProvenance.contains(
+            ApprovedEquipmentSubstitution.provenance,
+          ) !=
+          (approval != null)) {
+        throw StateError('Equipment approval changed since review.');
       }
-      final permissions = isTrial
-          ? await const ProgrammeAdaptationPermissionReader().loadThursdayTrial(
-              assignmentId: currentPackage.assignmentId!,
-              versionId: currentPackage.programmeVersionId!,
-              slotKey: slotKey!,
-            )
+      final permissions = approval != null
+          ? [approval.permission]
           : proposal.reason == AdaptationReason.equipment
           ? await _loadAdaptationPermissions(
               currentPackage.programmeVersionId!.trim(),
             )
           : const <PlanPackageAdaptationPermission>[];
-      final knowledge = isTrial
-          ? M31ThursdayEquipmentTrial.authorize(
-              package: currentPackage,
-              authoredSlot: slotKey,
-              request: proposal.request!,
-              permissions: permissions,
-            )
-          : await _loadKnowledge();
+      final knowledge =
+          approval?.authorize(
+            package: currentPackage,
+            context: executionContext,
+            request: proposal.request!,
+          ) ??
+          await _loadKnowledge();
       // Must use the same knowledge-backed adapter path as propose. Without
       // knowledge, equipment substitutions cannot resolve and freshness fails
       // closed even though the reviewed proposal was acceptable.
@@ -238,7 +231,7 @@ class ProgrammeAdaptationAcceptanceService {
         request: proposal.request!,
         authoredDraft: draft,
         adaptationPermissions: permissions,
-        slotKey: slotKey,
+        slotKey: executionContext.packageSlotKey,
       );
       final fresh = ProgrammeAdaptationProposalMapper.fromPipelineRun(
         package: currentPackage,
@@ -246,7 +239,7 @@ class ProgrammeAdaptationAcceptanceService {
         run: run,
         authoredDraft: draft,
         knowledge: knowledge,
-        isThursdayTrial: isTrial,
+        approval: approval,
         proposedAt: proposal.proposedAt,
       );
       if (!fresh.isAcceptable) {
@@ -263,7 +256,7 @@ class ProgrammeAdaptationAcceptanceService {
       );
       const codec = SessionExecutionPlanCodec();
       if (freshFingerprint != proposal.reviewedPlanFingerprint ||
-          (isTrial &&
+          (approval != null &&
               jsonEncode(codec.encodePlan(fresh.reviewedExecutablePlan!)) !=
                   jsonEncode(
                     codec.encodePlan(proposal.reviewedExecutablePlan!),

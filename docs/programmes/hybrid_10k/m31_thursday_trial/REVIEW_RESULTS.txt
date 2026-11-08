@@ -1,5 +1,17 @@
-NOTICE:  REPRODUCED: original hook allowed legacy private v2 to publish the candidate and seed permission without retained artifact
-NOTICE:  PASS: legacy publication and a failure after permission seeding roll back the whole trial
-NOTICE:  PASS: service-role retained publish commits one seal and permission; exact retry and conflicting retry preserve both rows
-NOTICE:  PASS: ordinary athlete sees one permission before End programme and zero after commit
-NOTICE:  PASS: End programme preserves the sealed permission row and function ACLs are bounded
+M3.1 reusable equipment substitution. Disposable local evidence only.
+NOTICE:  PASS legacy refusal, wrong placement, fixed load refusal and atomic rollback for both fixture versions
+NOTICE:  PASS two data-only service-role publications, exact retries, conflicts, immutable rows and scoped grants
+NOTICE:  PASS unchanged retained publication for a private v2 graph without equipment permission
+OWNER PASS exact occurrence and access removed after End programme for EX-078 → EX-040
+ACCEPTANCE PASS decline preserves bytes; exact single placement changes only after acceptance
+HISTORY PASS EX-040 after cold restore and completion at 16 kg per dumbbell
+OWNER PASS exact occurrence and access removed after End programme for EX-073 → EX-030
+ACCEPTANCE PASS decline preserves bytes; exact single placement changes only after acceptance
+HISTORY PASS EX-030 after cold restore and completion at 16 kg
+00:06 +134: All tests passed!
+No issues found!
+PHASE2_CONSOLIDATION_SAFETY_GATE=start
+groups_passed=6
+groups_failed=0
+PHASE2_CONSOLIDATION_SAFETY_GATE=PASS
+Offline deployment copy verified at 137 files, excluding the candidate-specific migration.

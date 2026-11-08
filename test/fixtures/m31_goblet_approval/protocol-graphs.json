@@ -1,0 +1,75 @@
+[
+  {
+    "source_session_id": "M31-LOCAL-GOBLET-D04",
+    "protocol_id": "protocol-0e6039a1-2821-4286-9bf5-1b52adf7f995",
+    "revision_number": 1,
+    "classification": "REVIEW_ONLY_NOT_ADMITTED_OR_PUBLISHED",
+    "blocks": [
+      {
+        "position": 1,
+        "block_type": "warm_up",
+        "title": "Preparation",
+        "content": "Retained proposed preparation: 5 minutes walking/marching; 10 bodyweight squats; 8 unloaded hinges; 8 scapular pull-ups OR shoulder-blade movements; 8 arm circles each direction. First loaded lower-body pattern: 2–4 progressively loaded warm-up sets; each new upper-body pattern: 1–2 light sets as needed; no failure. Bodyweight squats/unloaded hinges are preparation, not working squat/RDL prescriptions.",
+        "workout_format": "none",
+        "exercises": [],
+        "coach_notes": "Review order shown; within-session order remains part of D8 review. Preparation and warm-up sets are separate from working sets.\n\nTuesday introduces threshold intervals; Friday stays easy alongside Sunday’s long run. Strength uses the selected standard doses and prescribed repetitions in reserve.\n\nUse this week’s exact sets, rests and repetitions in reserve. The selected consolidation, lower-body control and taper instructions manage strength workload alongside the running."
+      },
+      {
+        "position": 2,
+        "block_type": "strength",
+        "title": "Thursday selected strength",
+        "content": "Exact founder-selected standard and week-specific doses; full programme D8 review pending.",
+        "workout_format": "none",
+        "performance_capture_mode": "auto",
+        "exercises": [
+          {
+            "position": 1,
+            "exercise_id": "EX-073",
+            "variant_key": "local_barbell_squat",
+            "source_occurrence_id": "m31-fixture-back-squat",
+            "display_label_override": "Back Squat",
+            "prescription": {
+              "sets": 2,
+              "reps": {
+                "type": "range",
+                "min_reps": 5,
+                "max_reps": 6
+              },
+              "per_side": false,
+              "tempo": "Retained controlled standard, ~2 seconds lowering, no forced pause, purposeful lift",
+              "coach_cue": "Local fixture barbell squat.",
+              "authored_details": {
+                "source_occurrence_id": "m31-fixture-back-squat"
+              },
+              "load": {
+                "type": "athleteSelected"
+              },
+              "rest_seconds_range": [
+                120,
+                180
+              ],
+              "rir_range": [
+                2,
+                3
+              ],
+              "performance_capture": {
+                "load_unit": "kg",
+                "load_label": "Total barbell load"
+              }
+            },
+            "content_holds": [],
+            "effective_dose_status": "EXACT_SELECTED_DOSE_FULL_PROGRAMME_D8_PENDING"
+          }
+        ]
+      },
+      {
+        "position": 3,
+        "block_type": "cool_down",
+        "title": "Finish",
+        "content": "3–5 minutes easy walking; retained proposed finish.",
+        "workout_format": "none",
+        "exercises": []
+      }
+    ]
+  }
+]

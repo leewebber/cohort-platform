@@ -8,7 +8,7 @@ class AdaptationRequest {
     this.recoveryState,
     this.environment,
     this.availableEquipment,
-    this.confirmedMatchingDumbbellPairWithoutBarbell = false,
+    this.confirmedMatchingDumbbellPair = false,
     this.availableMinutes,
   });
 
@@ -16,7 +16,7 @@ class AdaptationRequest {
   final RecoveryState? recoveryState;
   final AdaptationSessionEnvironment? environment;
   final Set<String>? availableEquipment;
-  final bool confirmedMatchingDumbbellPairWithoutBarbell;
+  final bool confirmedMatchingDumbbellPair;
   final int? availableMinutes;
 
   @override

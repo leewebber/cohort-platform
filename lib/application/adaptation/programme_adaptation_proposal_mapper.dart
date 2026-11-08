@@ -9,6 +9,7 @@ import 'package:cohort_platform/models/adaptation_reason.dart';
 import 'package:cohort_platform/models/adaptation_request.dart';
 import 'package:cohort_platform/models/protocol_draft.dart';
 
+import 'approved_equipment_substitution.dart';
 import 'programme_adaptation_fingerprints.dart';
 import 'programme_adaptation_plan_applier.dart';
 
@@ -22,7 +23,7 @@ class ProgrammeAdaptationProposalMapper {
     required SessionAdaptationPipelineRun run,
     required ProtocolDraft authoredDraft,
     required KnowledgeGraphReader knowledge,
-    bool isThursdayTrial = false,
+    ApprovedEquipmentSubstitution? approval,
     DateTime? proposedAt,
   }) {
     final stamp = proposedAt ?? DateTime.now().toUtc();
@@ -36,6 +37,7 @@ class ProgrammeAdaptationProposalMapper {
       'application:${run.application.status.name}',
       'pipeline:SessionAdaptationPipeline',
       'adapter:PlanPackageSessionAdaptationAdapter',
+      if (approval != null) ApprovedEquipmentSubstitution.provenance,
     ];
 
     final identity = _identityFields(package);
@@ -209,7 +211,7 @@ class ProgrammeAdaptationProposalMapper {
         authoredDraft: authoredDraft,
         snapshot: snapshot,
         knowledge: knowledge,
-        isThursdayTrial: isThursdayTrial,
+        approval: approval,
       );
       final originalFingerprint = ProgrammeAdaptationFingerprints.plan(
         package.plan,

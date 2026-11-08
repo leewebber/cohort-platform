@@ -1,0 +1,109 @@
+{
+  "adaptation_permissions": [
+    {
+      "id": "m31-local-goblet-permission",
+      "change_kind": "substitute_approved_equipment",
+      "target_ref": "M31-LOCAL-GOBLET-D04",
+      "athlete_agreement_required": true,
+      "scope_note": "Disposable fixture only. EX-073 to EX-030 at the exact squat placement."
+    }
+  ],
+  "assessments": [],
+  "comparison_identities": [],
+  "package_schema_version": 2,
+  "performance_evidence_requirements": [],
+  "phases": [],
+  "programme": {
+    "coaching_intent": "Verify one approved squat replacement.",
+    "description": "Disposable proof only.",
+    "duration_weeks": 1,
+    "library_scope": "coach_private",
+    "lineage_code": "M31-LOCAL-GOBLET-ONLY",
+    "name": "M3.1 local goblet substitution fixture",
+    "owner_type": "coach",
+    "sessions_per_week": 1,
+    "version_number": 1
+  },
+  "protected_invariants": [],
+  "sessions": [
+    {
+      "session_key": "m31-local-goblet-session",
+      "protocol_id": "protocol-0e6039a1-2821-4286-9bf5-1b52adf7f995",
+      "session_lineage_id": "e6cc9fa5-74b5-4d61-8c56-2b7b9b81f27c",
+      "revision_number": 1,
+      "title": "Local squat fixture"
+    }
+  ],
+  "weeks": [
+    {
+      "days": [
+        {
+          "day_key": "day_1",
+          "day_order": 1,
+          "day_type": "rest",
+          "title": "Rest",
+          "slots": []
+        },
+        {
+          "day_key": "day_2",
+          "day_order": 2,
+          "day_type": "rest",
+          "title": "Rest",
+          "slots": []
+        },
+        {
+          "day_key": "day_3",
+          "day_order": 3,
+          "day_type": "rest",
+          "title": "Rest",
+          "slots": []
+        },
+        {
+          "day_key": "day_4",
+          "day_order": 4,
+          "day_type": "training",
+          "slots": [
+            {
+              "completion_expectation": "required",
+              "display_title": "Local squat fixture",
+              "is_optional": false,
+              "progression": {
+                "prescription_summary": "D1–D7 plus exact founder-selected week doses; D8 full-programme review in TEN_WEEK_REVIEW.md. No automatic progression."
+              },
+              "session_key": "m31-local-goblet-session",
+              "session_order": 1,
+              "slot_key": "M31-LOCAL-GOBLET-D04",
+              "time_of_day": "any",
+              "coach_note": "Use this week’s exact sets, rests and repetitions in reserve. The selected consolidation, lower-body control and taper instructions manage strength workload alongside the running."
+            }
+          ],
+          "title": "Local squat fixture"
+        },
+        {
+          "day_key": "day_5",
+          "day_order": 5,
+          "day_type": "rest",
+          "title": "Rest",
+          "slots": []
+        },
+        {
+          "day_key": "day_6",
+          "day_order": 6,
+          "day_type": "rest",
+          "title": "Rest",
+          "slots": []
+        },
+        {
+          "day_key": "day_7",
+          "day_order": 7,
+          "day_type": "rest",
+          "title": "Rest",
+          "slots": []
+        }
+      ],
+      "title": "Performance foundation",
+      "week_number": 1,
+      "coach_note": "Tuesday introduces threshold intervals; Friday stays easy alongside Sunday’s long run. Strength uses the selected standard doses and prescribed repetitions in reserve."
+    }
+  ]
+}

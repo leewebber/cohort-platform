@@ -100,7 +100,7 @@ class _AdaptationBottomSheetState extends State<AdaptationBottomSheet> {
             AdaptationRequest(
               reason: AdaptationReason.equipment,
               availableEquipment: Set<String>.from(_selectedEquipment),
-              confirmedMatchingDumbbellPairWithoutBarbell: _confirmedPair,
+              confirmedMatchingDumbbellPair: _confirmedPair,
             ),
           ),
         );
@@ -257,7 +257,7 @@ class _EquipmentStep extends StatelessWidget {
           ],
           if (confirmDumbbellPair)
             _EquipmentCheckbox(
-              label: 'I have two matching dumbbells and no barbell',
+              label: 'I have two matching dumbbells',
               value: confirmedPair,
               onChanged: onConfirmPair,
             ),

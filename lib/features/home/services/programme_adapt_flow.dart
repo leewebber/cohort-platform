@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../application/adaptation/m31_thursday_equipment_trial.dart';
+import '../../../application/adaptation/approved_equipment_substitution.dart';
 import '../../../application/adaptation/programme_adaptation_acceptance_service.dart';
 import '../../../application/adaptation/programme_adaptation_fingerprints.dart';
 import '../../../application/adaptation/programme_adaptation_proposal_service.dart';
@@ -44,19 +44,27 @@ class ProgrammeAdaptFlow {
     ProgrammeAdaptationPermissionLoader? loadAdaptationPermissions,
     ProgrammeProtocolDraftLoader? loadProtocolDraft,
     ProgrammeKnowledgeLoader? loadKnowledge,
+    ProgrammeEquipmentApprovalLoader? loadEquipmentApproval,
   }) {
     final permissions =
         loadAdaptationPermissions ??
         const ProgrammeAdaptationPermissionReader().load;
+    final approvedEquipment =
+        loadEquipmentApproval ??
+        (loadAdaptationPermissions == null
+            ? const ProgrammeAdaptationPermissionReader().loadApprovedEquipment
+            : null);
     return ProgrammeAdaptFlow(
       proposalService: ProgrammeAdaptationProposalService(
         loadAdaptationPermissions: permissions,
+        loadEquipmentApproval: approvedEquipment,
         loadProtocolDraft: loadProtocolDraft,
         loadKnowledge: loadKnowledge,
       ),
       acceptanceService: ProgrammeAdaptationAcceptanceService(
         prepareService: prepareService,
         loadAdaptationPermissions: permissions,
+        loadEquipmentApproval: approvedEquipment,
         loadProtocolDraft: loadProtocolDraft,
         loadKnowledge: loadKnowledge,
       ),
@@ -86,10 +94,22 @@ class ProgrammeAdaptFlow {
       package.plan,
     );
 
-    final slotKey = executionContext?.packageSlotKey;
+    // Only the signed-in occurrence's approved equipment can enable this
+    // additional confirmation. Proposal and acceptance read it independently.
+    ApprovedEquipmentSubstitution? approval;
+    if (executionContext != null) {
+      try {
+        approval = await _proposalService.loadEquipmentApproval?.call(
+          executionContext,
+        );
+      } catch (_) {
+        // The proposal path handles permission-read failures without a change.
+      }
+    }
+    if (!context.mounted) return const ProgrammeAdaptFlowResult();
     final request = await showAdaptationBottomSheet(
       context,
-      confirmDumbbellPair: M31ThursdayEquipmentTrial.matches(package, slotKey),
+      confirmDumbbellPair: approval?.matchingDumbbellPair == true,
     );
     if (request == null || !context.mounted) {
       _assertUnchanged(package, beforeFingerprint, beforePlanFingerprint);
@@ -101,7 +121,7 @@ class ProgrammeAdaptFlow {
       proposal = await _proposalService.propose(
         package: package,
         request: request,
-        slotKey: slotKey,
+        executionContext: executionContext,
       );
     } catch (error) {
       if (!context.mounted) return const ProgrammeAdaptFlowResult();

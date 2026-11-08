@@ -1,0 +1,38 @@
+{
+  "slot_key": "LW10K-W01-D04",
+  "protocol_id": "protocol-514e5f5a-c825-49cd-911a-a2bdf4f6c6d3",
+  "source_occurrence_id": "W01-B-barbell_rdl",
+  "block_position": 2,
+  "exercise_position": 1,
+  "source_exercise_id": "EX-078",
+  "replacement_exercise_id": "EX-040",
+  "missing_equipment": "cohort.equipment.barbell",
+  "required_equipment": "cohort.equipment.dumbbell",
+  "matching_dumbbell_pair": true,
+  "explanation": "Keep the bilateral hinge. Do 2 working sets of 5–6 reps at 2–3 reps in reserve, resting 120–180 seconds. Lower under control for about two seconds. Choose your own load and record kg per dumbbell. Your barbell load will not carry over.",
+  "prescription": {
+    "sets": 2,
+    "reps": {
+      "type": "range",
+      "min_reps": 5,
+      "max_reps": 6
+    },
+    "rir_range": [
+      2,
+      3
+    ],
+    "rest_seconds_range": [
+      120,
+      180
+    ],
+    "tempo": "Lower under control for about two seconds.",
+    "coach_cue": "Use one of two matching dumbbells in each hand. Hinge with soft knees and keep the dumbbells close. Stop before spinal position changes.",
+    "load": {
+      "type": "athleteSelected"
+    },
+    "performance_capture": {
+      "load_unit": "kg",
+      "load_label": "kg per dumbbell"
+    }
+  }
+}

@@ -2,19 +2,22 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:cohort_plan_package/cohort_plan_package.dart';
-import 'package:cohort_platform/application/adaptation/m31_thursday_equipment_trial.dart';
 import 'package:cohort_platform/features/private_programme/reviewed_protocol_graph_artifact.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'm31_thursday_trial_fixture.dart';
+
 const m31Candidate = 'docs/programmes/hybrid_10k/m31_thursday_trial';
 
-Map<String, Object?> buildTrialPublication() {
+const gobletCandidate = 'test/fixtures/m31_goblet_approval';
+const gobletVersion = '8104b7ef-f09f-43cc-9815-97b279f186d0';
+
+Map<String, Object?> buildTrialPublication(String directory, String graphHash) {
   final compile = const PlanPackageCompiler().compile(
-    File('$m31Candidate/programme.plan-package.yaml').readAsStringSync(),
+    File('$directory/programme.plan-package.yaml').readAsStringSync(),
   );
   expect(compile.isValid, isTrue, reason: compile.issues.toString());
-  expect(compile.contentHashSha256, M31ThursdayEquipmentTrial.packageHash);
-  final graph = File('$m31Candidate/protocol-graphs.json').readAsStringSync();
+  final graph = File('$directory/protocol-graphs.json').readAsStringSync();
   return const PlanPackageImportPayloadBuilder().buildRetainedPublication(
       compileResult: compile,
       importedBy: 'm31-local-trial',
@@ -22,8 +25,7 @@ Map<String, Object?> buildTrialPublication() {
     ..['protocol_graphs'] = const ReviewedProtocolGraphArtifact().decode(
       compileResult: compile,
       source: graph,
-      expectedSha256:
-          '7dd9eff7c49a00d92a003163935d71749a43247fd7a82fb271f83d326bd65a64',
+      expectedSha256: graphHash,
     )
     ..['publication_kind'] = 'private_exact_version'
     ..['library_scope'] = 'coach_private';
@@ -31,7 +33,18 @@ Map<String, Object?> buildTrialPublication() {
 
 void main() {
   test('the one-session private trial preserves the genuine Thursday blocks', () {
-    final payload = buildTrialPublication();
+    final payload = buildTrialPublication(
+      m31Candidate,
+      '7dd9eff7c49a00d92a003163935d71749a43247fd7a82fb271f83d326bd65a64',
+    );
+    expect(
+      payload['package_content_hash'],
+      M31ThursdayEquipmentTrial.packageHash,
+    );
+    final goblet = buildTrialPublication(
+      gobletCandidate,
+      'ee85a6b76110d5c6e42a0ecc2e7bbaf4a07533c03dd44783f76af0c34ff894e4',
+    );
     final trial = (payload['protocol_graphs'] as List).single as Map;
     final source =
         jsonDecode(
@@ -58,7 +71,23 @@ void main() {
     // Emit only when explicitly preparing the disposable local publication fixture.
     final output = Platform.environment['M31_LOCAL_PAYLOAD'];
     if (output != null) {
-      File(output).writeAsStringSync(jsonEncode(payload));
+      final fixtures = {
+        M31ThursdayEquipmentTrial.versionId: (m31Candidate, payload),
+        gobletVersion: (gobletCandidate, goblet),
+      };
+      File(output).writeAsStringSync(
+        jsonEncode([
+          for (final entry in fixtures.entries)
+            {
+              'payload': {...entry.value.$2, 'programme_version_id': entry.key},
+              'approval': jsonDecode(
+                File(
+                  '${entry.value.$1}/equipment-approval.json',
+                ).readAsStringSync(),
+              ),
+            },
+        ]),
+      );
     }
   });
 }

@@ -1,62 +1,58 @@
-{
-  "triggers": [
-    {
-      "name": "programme_versions_m31_require_thursday_trial_seal",
-      "enabled": "O",
-      "deferrable": true,
-      "definition_sha256": "611b56792564a5928de1e014b3d336571d60d3e25cc794ffaa2646287e123d5a",
-      "initially_deferred": true
-    },
-    {
-      "name": "programme_versions_m31_seed_thursday_trial_permission",
-      "enabled": "O",
-      "deferrable": false,
-      "definition_sha256": "9745ef6b26918443a9827c6f4d8f7843025ca80bcd3e4eda91d4608ef48d5059",
-      "initially_deferred": false
-    }
-  ],
-  "functions": [
-    {
-      "owner": "postgres",
-      "signature": "public.cohort_m31_require_thursday_trial_seal()",
-      "volatility": "v",
-      "anon_execute": false,
-      "configuration": [
-        "search_path=pg_catalog, pg_temp"
-      ],
-      "public_execute": false,
-      "security_definer": true,
-      "definition_sha256": "88432f73e44a03ab55aeafffbf681e809119ae2325c4102ed663e59a0f48ab08",
-      "service_role_execute": false,
-      "authenticated_execute": false
-    },
-    {
-      "owner": "postgres",
-      "signature": "public.cohort_m31_seed_thursday_trial_permission()",
-      "volatility": "v",
-      "anon_execute": false,
-      "configuration": [
-        "search_path=pg_catalog, pg_temp"
-      ],
-      "public_execute": false,
-      "security_definer": false,
-      "definition_sha256": "e397e7bec02a30b08433142e516797edf54ee44dd28808f43d14b143ddefeda1",
-      "service_role_execute": false,
-      "authenticated_execute": false
-    },
-    {
-      "owner": "postgres",
-      "signature": "public.read_m31_thursday_trial_permission(uuid,uuid,text)",
-      "volatility": "s",
-      "anon_execute": false,
-      "configuration": [
-        "search_path=pg_catalog, pg_temp"
-      ],
-      "public_execute": false,
-      "security_definer": true,
-      "definition_sha256": "a5b20dd10cb2e2eff2a35b0c69ee8c43264544223d2ed2302ab6d97a80cf9072",
-      "service_role_execute": false,
-      "authenticated_execute": true
-    }
-  ]
-}
+[
+  {
+    "anon": false,
+    "owner": "postgres",
+    "config": [
+      "search_path=pg_catalog, pg_temp"
+    ],
+    "public": false,
+    "sha256": "17c2b93e4bb046b0045fbdaaa68ef3c7d54a1ffeeb69e44a64c4aa99ad16953e",
+    "definer": true,
+    "signature": "public.cohort_seed_approved_equipment_permission()",
+    "volatility": "v",
+    "service_role": false,
+    "authenticated": false
+  },
+  {
+    "anon": false,
+    "owner": "postgres",
+    "config": [
+      "search_path=pg_catalog, pg_temp"
+    ],
+    "public": false,
+    "sha256": "dea81743afe701d95cd4cb00cdf556c14ebe33328b109cfe8d28ff000ca47a5d",
+    "definer": true,
+    "signature": "public.publish_private_equipment_substitution_v1(jsonb,jsonb)",
+    "volatility": "v",
+    "service_role": true,
+    "authenticated": false
+  },
+  {
+    "anon": false,
+    "owner": "postgres",
+    "config": [
+      "search_path=public, pg_temp"
+    ],
+    "public": false,
+    "sha256": "53aac8c91e86f710fb2956a568019783eeff318d482a824864b88e140d3b6af1",
+    "definer": true,
+    "signature": "public.publish_private_exact_programme_version(jsonb)",
+    "volatility": "v",
+    "service_role": true,
+    "authenticated": false
+  },
+  {
+    "anon": false,
+    "owner": "postgres",
+    "config": [
+      "search_path=pg_catalog, pg_temp"
+    ],
+    "public": false,
+    "sha256": "a827c9490dffe6834881b8a43193da044d01fdf3e62e1433ebe1a0fac7f45e8c",
+    "definer": true,
+    "signature": "public.read_my_approved_equipment_substitution_v1(uuid,uuid,uuid,text)",
+    "volatility": "s",
+    "service_role": false,
+    "authenticated": true
+  }
+]
