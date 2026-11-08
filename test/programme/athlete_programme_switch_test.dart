@@ -643,6 +643,10 @@ void main() {
           find.textContaining('completed sessions will stay in History'),
           findsOneWidget,
         );
+        expect(
+          find.textContaining('resume any unfinished sessions'),
+          findsOneWidget,
+        );
         await tester.tap(find.text('Keep programme'));
         await tester.pumpAndSettle();
         expect(endCalls, 0);

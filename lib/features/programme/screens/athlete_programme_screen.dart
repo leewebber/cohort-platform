@@ -464,6 +464,7 @@ class _AthleteProgrammeScreenState extends State<AthleteProgrammeScreen> {
           title: const Text('End programme?'),
           content: Text(
             'End $name as your active programme? '
+            'You won’t be able to resume any unfinished sessions in this programme. '
             'Your completed sessions will stay in History.',
           ),
           actions: [
@@ -492,6 +493,7 @@ class _AthleteProgrammeScreenState extends State<AthleteProgrammeScreen> {
         ).endProgramme(
           assignmentId: assignment.id,
           programmeVersionId: assignment.programmeVersionId,
+          allowUnfinished: true,
         );
       }
       if (!mounted || widget.athleteId != assignment.athleteId) return;

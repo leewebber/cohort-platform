@@ -150,10 +150,12 @@ class SupabaseAcquisitionStore implements AcquisitionStore {
   Future<void> endProgramme({
     required String assignmentId,
     required String programmeVersionId,
+    bool allowUnfinished = false,
   }) async {
     final result = await _call('end_my_fixed_programme', {
       'p_assignment_id': assignmentId,
       'p_programme_version_id': programmeVersionId,
+      if (allowUnfinished) 'p_allow_unfinished': true,
     });
     if (result['status'] != 'ok' ||
         result['athlete_id'] != athleteId ||

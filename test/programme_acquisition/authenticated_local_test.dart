@@ -579,6 +579,67 @@ void main() {
       """),
         'paused:0',
       );
+
+      debugPrint('M12_STAGE=end-with-unfinished');
+      final retryAssignment = await foreign.acquire(v2, londonToday);
+      final retryOccurrence = await occurrence(retryAssignment);
+      await proveEndStartRace(
+        openSql: openSql,
+        sql: sql,
+        setup: athleteTransaction(other),
+        first: "${start(retryOccurrence)}->>'status'",
+        firstStatus: 'created',
+        second:
+            "public.end_my_fixed_programme('$other','$retryAssignment','$v2',true)->>'status'",
+        secondStatus: 'ok',
+      );
+      expect(
+        await sql("""
+        SELECT status || ':' || (SELECT count(*) FROM public.programme_slot_outcomes
+          WHERE assignment_id='$retryAssignment' AND outcome_status='in_progress')
+        FROM public.programme_assignments WHERE id='$retryAssignment' AND ended_at IS NOT NULL;
+      """),
+        'paused:1',
+      );
+
+      final restartedTrial = await foreign.acquire(v2, londonToday);
+      final restartedOccurrence = await occurrence(restartedTrial);
+      expect(restartedTrial, isNot(retryAssignment));
+      expect(restartedOccurrence, isNot(retryOccurrence));
+      final endParams = {
+        'p_expected_athlete_id': other,
+        'p_assignment_id': retryAssignment,
+        'p_programme_version_id': v2,
+        'p_allow_unfinished': true,
+      };
+      final staleEnd = await b.rpc('end_my_fixed_programme', params: endParams);
+      expect(staleEnd['status'], 'ok');
+      final staleResume = await b.rpc(
+        'create_or_resume_fixed_programme_occurrence_session',
+        params: {'p_occurrence_id': retryOccurrence},
+      );
+      expect(staleResume['code'], 'fixed_assignment_ineligible');
+      expect((await foreign.catalogue()).single.assignmentId, restartedTrial);
+
+      final freshStart = await b.rpc(
+        'create_or_resume_fixed_programme_occurrence_session',
+        params: {'p_occurrence_id': restartedOccurrence},
+      );
+      expect(freshStart['status'], 'created');
+      await expectLater(
+        foreign.endProgramme(
+          assignmentId: restartedTrial,
+          programmeVersionId: v2,
+        ),
+        throwsA(endError('programme_session_in_progress')),
+      );
+      await foreign.endProgramme(
+        assignmentId: restartedTrial,
+        programmeVersionId: v2,
+        allowUnfinished: true,
+      );
+      expect((await foreign.catalogue()).single.assignmentId, isNull);
+      expect(await history(), savedHistory);
     },
     timeout: const Timeout(Duration(minutes: 2)),
     skip: configPath == null
