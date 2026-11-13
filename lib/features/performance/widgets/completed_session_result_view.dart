@@ -422,6 +422,10 @@ class _CompletedBlockCard extends StatelessWidget {
             const SizedBox(height: CohortSpacing.md),
             Text('Prescription', style: CohortTextStyles.eyebrow),
             const SizedBox(height: CohortSpacing.xs),
+            for (final label in block.qualityPaceLabels) ...[
+              Text(label, style: CohortTextStyles.body),
+              const SizedBox(height: CohortSpacing.xs),
+            ],
             Text(block.prescriptionContext!, style: CohortTextStyles.muted),
           ],
         ],
@@ -457,21 +461,12 @@ class _CompletedCircuitAccordionState
       children: [
         InkWell(
           onTap: () => setState(() => _expanded = !_expanded),
-          child: Row(
-            children: [
-              Expanded(
-                child: Text(
-                  circuit.result.format == 'emom'
-                      ? 'EMOM performance'
-                      : 'Circuit performance',
-                  style: CohortTextStyles.body.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-              _ComparisonBadge(status: circuit.comparisonStatus),
-              Icon(_expanded ? Icons.expand_less : Icons.expand_more),
-            ],
+          child: _CompletedResultHeading(
+            title: circuit.result.format == 'emom'
+                ? 'EMOM performance'
+                : 'Circuit performance',
+            status: circuit.comparisonStatus,
+            expanded: _expanded,
           ),
         ),
         if (circuit.primaryLabel != null) ...[
@@ -641,19 +636,10 @@ class _CompletedIntervalAccordionState
             hint: _expanded
                 ? 'Collapse interval detail'
                 : 'Expand interval detail',
-            child: Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    'Interval performance',
-                    style: CohortTextStyles.body.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-                _ComparisonBadge(status: interval.comparisonStatus),
-                Icon(_expanded ? Icons.expand_less : Icons.expand_more),
-              ],
+            child: _CompletedResultHeading(
+              title: 'Interval performance',
+              status: interval.comparisonStatus,
+              expanded: _expanded,
             ),
           ),
         ),
@@ -790,25 +776,11 @@ class _CompletedExerciseAccordionState
                   padding: const EdgeInsets.symmetric(
                     vertical: CohortSpacing.sm,
                   ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          exercise.displayName,
-                          style: CohortTextStyles.body.copyWith(
-                            color: CohortColors.textPrimary,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: CohortSpacing.sm),
-                      _ComparisonBadge(status: exercise.comparisonStatus),
-                      const SizedBox(width: CohortSpacing.xs),
-                      Icon(
-                        _expanded ? Icons.expand_less : Icons.expand_more,
-                        color: CohortColors.textSecondary,
-                      ),
-                    ],
+                  child: _CompletedResultHeading(
+                    title: exercise.displayName,
+                    status: exercise.comparisonStatus,
+                    expanded: _expanded,
+                    titleColor: CohortColors.textPrimary,
                   ),
                 ),
               ),
@@ -822,6 +794,50 @@ class _CompletedExerciseAccordionState
 
   void _toggle() {
     setState(() => _expanded = !_expanded);
+  }
+}
+
+class _CompletedResultHeading extends StatelessWidget {
+  const _CompletedResultHeading({
+    required this.title,
+    required this.status,
+    required this.expanded,
+    this.titleColor,
+  });
+
+  final String title;
+  final StrengthExerciseComparisonStatus status;
+  final bool expanded;
+  final Color? titleColor;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: OverflowBar(
+            alignment: MainAxisAlignment.spaceBetween,
+            spacing: CohortSpacing.sm,
+            overflowSpacing: CohortSpacing.xs,
+            children: [
+              Text(
+                title,
+                style: CohortTextStyles.body.copyWith(
+                  color: titleColor,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              _ComparisonBadge(status: status),
+            ],
+          ),
+        ),
+        const SizedBox(width: CohortSpacing.xs),
+        Icon(
+          expanded ? Icons.expand_less : Icons.expand_more,
+          color: CohortColors.textSecondary,
+        ),
+      ],
+    );
   }
 }
 
@@ -852,11 +868,13 @@ class _ComparisonBadge extends StatelessWidget {
             children: [
               Icon(visual.icon, size: 14, color: visual.foreground),
               const SizedBox(width: 4),
-              Text(
-                status.label,
-                style: CohortTextStyles.small.copyWith(
-                  color: visual.foreground,
-                  fontWeight: FontWeight.w700,
+              Flexible(
+                child: Text(
+                  status.label,
+                  style: CohortTextStyles.small.copyWith(
+                    color: visual.foreground,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ),
             ],

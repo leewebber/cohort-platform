@@ -7,6 +7,7 @@ import 'package:cohort_platform/features/session/models/prepared_execution_packa
 import 'package:cohort_platform/models/adaptation_reason.dart';
 import 'package:cohort_platform/models/adaptation_request.dart';
 import 'package:cohort_platform/models/protocol_draft.dart';
+import 'package:cohort_platform/models/recovery_state.dart';
 import 'package:cohort_platform/models/session_block_type.dart';
 
 import 'adaptation_request_constraint_mapper.dart';
@@ -14,6 +15,7 @@ import 'planned_session_adaptation_input_adapter.dart';
 import 'planned_session_protocol_metadata_merge.dart';
 import 'programme_adaptation_permission_gate.dart';
 import 'approved_time_option.dart';
+import 'approved_recovery_option.dart';
 import 'package:cohort_platform/features/programme/models/programme_execution_context.dart';
 
 /// Failure thrown when the prepared package cannot be adapted lawfully.
@@ -51,6 +53,7 @@ class PlanPackageSessionAdaptationAdapter {
     List<PlanPackageAdaptationPermission> adaptationPermissions = const [],
     String? slotKey,
     ApprovedTimeOption? timeApproval,
+    ApprovedRecoveryOption? recoveryApproval,
     ProgrammeExecutionContext? executionContext,
     Map<String, ExerciseAdaptationMetadataForEvaluation>? exerciseMetadataById,
   }) {
@@ -76,8 +79,18 @@ class PlanPackageSessionAdaptationAdapter {
       }
     }
 
+    if (recoveryApproval != null &&
+        (timeApproval != null ||
+            request.reason != AdaptationReason.recovery ||
+            request.recoveryState != RecoveryState.poorSleep)) {
+      throw PlanPackageAdaptationAdapterException(
+        'recovery_option_unavailable',
+        'No approved recovery adjustment for this workout.',
+      );
+    }
+    final approvedOmission = recoveryApproval?.omission ?? timeApproval;
     final policyDraft =
-        timeApproval?.authorize(
+        approvedOmission?.authorize(
           package: package,
           context: executionContext,
           draft: authoredDraft,
@@ -107,12 +120,20 @@ class PlanPackageSessionAdaptationAdapter {
       );
     }
 
+    final constraints = AdaptationRequestConstraintMapper.fromRequest(request);
     final run = pipeline.run(
       plannedSession: planned,
-      constraints: AdaptationRequestConstraintMapper.fromRequest(request),
+      // The fixed endpoint bounds the existing omission planner. It is set
+      // by the Recovery approval and is independent of athlete time budget.
+      constraints: recoveryApproval == null
+          ? constraints
+          : constraints.copyWith(
+              availableDurationMin: recoveryApproval.omission.shortMinutes,
+            ),
     );
-    if (request.reason == AdaptationReason.time &&
-        run.plan.status != AdaptationPlanStatus.noPlanRequired) {
+    if (recoveryApproval != null ||
+        (request.reason == AdaptationReason.time &&
+            run.plan.status != AdaptationPlanStatus.noPlanRequired)) {
       final approved = const ProgrammeAdaptationPermissionGate()
           .allowsOptionalAccessoryOmission(
             permissions: adaptationPermissions,
@@ -126,7 +147,8 @@ class PlanPackageSessionAdaptationAdapter {
       );
       final steps = run.plan.steps;
       final shortened = run.application.snapshot?.resultingEstimatedDurationMin;
-      final budget = request.availableMinutes;
+      final budget =
+          recoveryApproval?.omission.shortMinutes ?? request.availableMinutes;
       final originalDuration = policyDraft.durationMin;
       final preparedDuration = package.plan.durationMin;
       if (!approved ||
@@ -141,12 +163,14 @@ class PlanPackageSessionAdaptationAdapter {
           shortened != policyDraft.minimumViableDurationMin ||
           originalDuration == null ||
           (preparedDuration != originalDuration &&
-              !(timeApproval != null && preparedDuration == null)) ||
+              !(approvedOmission != null && preparedDuration == null)) ||
           steps.single.expectedTimeSavingMinutes !=
               originalDuration - shortened) {
         throw PlanPackageAdaptationAdapterException(
           'time_option_unavailable',
-          'No coach-approved shorter option fits the time you selected.',
+          recoveryApproval == null
+              ? 'No coach-approved shorter option fits the time you selected.'
+              : 'No approved recovery adjustment for this workout.',
         );
       }
     }

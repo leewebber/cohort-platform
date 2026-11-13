@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -27,15 +28,20 @@ import 'package:cohort_platform/models/session_block_type.dart';
 import 'package:cohort_platform/models/strength_exercise_prescription.dart';
 import 'package:cohort_platform/application/adaptation/programme_adaptation_permission_reader.dart';
 import 'package:cohort_platform/core/persistence/athlete_persistence.dart';
+import 'package:cohort_platform/features/app_shell/athlete_app_shell.dart';
 import 'package:cohort_platform/features/home/services/programme_adapt_flow.dart';
 import 'package:cohort_platform/features/home/widgets/athlete_programme_today_section.dart';
 import 'package:cohort_platform/features/performance/models/training_session_record.dart';
+import 'package:cohort_platform/features/performance/models/performance_result_data.dart';
+import 'package:cohort_platform/features/performance/models/training_block_result_status.dart';
+import 'package:cohort_platform/features/performance/models/training_session_record_status.dart';
 import 'package:cohort_platform/features/performance/repositories/in_memory_performance_record_store.dart';
 import 'package:cohort_platform/features/performance/screens/training_history_detail_screen.dart';
 import 'package:cohort_platform/features/performance/services/performance_record_save_coordinator.dart';
 import 'package:cohort_platform/features/programme/models/fixed_programme_occurrence_projection.dart';
 import 'package:cohort_platform/features/programme/services/athlete_programme_completion_service.dart';
 import 'package:cohort_platform/features/programme/services/athlete_programme_completion_store.dart';
+import 'package:cohort_platform/features/programme/services/fixed_programme_occurrence_projection_store.dart';
 import 'package:cohort_platform/features/session/controllers/session_execution_controller.dart';
 import 'package:cohort_platform/features/session/screens/active_session_screen.dart';
 import 'package:cohort_platform/features/session/services/production_restore_envelope_store.dart';
@@ -46,6 +52,12 @@ import 'package:cohort_platform/models/programme_vocabulary.dart';
 import 'package:cohort_platform/models/programme_version.dart';
 import 'package:cohort_platform/models/programme_version_session_slot.dart';
 import 'package:cohort_platform/models/exercise.dart';
+import 'package:cohort_platform/application/adaptation/approved_recovery_option.dart';
+import 'package:cohort_platform/application/adaptation/approved_time_option.dart';
+import 'package:cohort_platform/features/auth/models/user_profile.dart';
+import 'package:cohort_platform/features/auth/services/current_user_session.dart';
+import 'package:cohort_platform/models/session_block.dart';
+import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:http/testing.dart';
@@ -56,6 +68,45 @@ import '../../support/adaptation_planning_test_support.dart';
 import '../../support/in_memory_programme_stores.dart';
 import '../../support/programme_session_authoring_test_support.dart';
 import '../../support/programme_schedule_test_fixtures.dart';
+
+const _recoveryVersion = '7e1d15e7-20ee-46d4-b5e9-0d6449010330';
+const _recoverySlot = '7e1d15e7-20ee-46d4-b5e9-0d6449010331';
+const _recoveryOccurrence = '7e1d15e7-20ee-46d4-b5e9-0d6449010332';
+const _recoverySlotKey = 'M32-W01-D01-STRENGTH';
+const _recoveryPackageHash =
+    'a8c76e1f4745929da17c9a929b169372c6475db21755f870dcb4100ead8d9050';
+
+ProtocolDraft _recoveryTrialDraft() {
+  final source = File(
+    'docs/programmes/m32_time_trial/protocol-graphs.json',
+  ).readAsStringSync();
+  expect(
+    sha256.convert(utf8.encode(source)).toString(),
+    '707f67605d19a7cc92fd70dbf8dabd8dac7d16e57a98839757761c199452280b',
+  );
+  final graph = (jsonDecode(source) as List).single as Map<String, dynamic>;
+  return ProtocolDraft(
+    protocolId: graph['protocol_id'] as String,
+    name: 'Private recovery strength fixture',
+    steps: const [],
+    durationMin: 45,
+    blocks: [
+      for (final row in (graph['blocks'] as List).cast<Map<String, dynamic>>())
+        SessionBlock.fromRow(
+          {...row, 'block_id': 'recovery-block-${row['position']}'},
+          linkedExercises: [
+            for (final exercise
+                in (row['exercises'] as List).cast<Map<String, dynamic>>())
+              SessionBlockExerciseLink.fromRow({
+                ...exercise,
+                'id':
+                    'recovery-link-${row['position']}-${exercise['position']}',
+              }),
+          ],
+        ),
+    ],
+  );
+}
 
 void main() {
   late InMemoryKnowledgeGraphReader knowledge;
@@ -100,13 +151,23 @@ void main() {
 
   Future<void> verifyAdaptationJourney(
     WidgetTester tester, {
-    required bool forTime,
+    required AdaptationReason reason,
+    bool finishEarly = false,
+    bool keepOriginal = false,
   }) async {
-    final journeyDraft = forTime
+    final forRecovery = reason == AdaptationReason.recovery;
+    final forTime = reason == AdaptationReason.time;
+    final forOmission = forTime || forRecovery;
+    final journeyDraft = forRecovery
+        ? _recoveryTrialDraft()
+        : forTime
         ? buildApprovedTimeSession(protocolId: 'proto.time.fixture')
         : draft;
-    final retainedIndex = forTime ? 1 : 0;
-    final expectedExercise = forTime ? 'Barbell bench press' : 'Goblet squat';
+    final retainedIndex = forOmission ? 1 : 0;
+    final recordedReps = forRecovery ? 8 : 5;
+    final expectedExercise = forOmission
+        ? 'Barbell bench press'
+        : 'Goblet squat';
     tester.view.physicalSize = const Size(900, 1100);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.resetPhysicalSize);
@@ -114,14 +175,38 @@ void main() {
     addTearDown(AthletePersistence.resetForTests);
     addTearDown(AthleteSessionMemoryStore.instance.clearAll);
 
-    final athlete = forTime
+    final athlete = forRecovery
+        ? 'recovery-fixture-athlete'
+        : forTime
         ? 'time-fixture-athlete'
         : 'equipment-fixture-athlete';
+    final occurrenceId = forRecovery
+        ? _recoveryOccurrence
+        : 'fixture-occurrence';
+    final slotId = forRecovery
+        ? _recoverySlot
+        : ProgrammeScheduleTestFixtures.slot1Id;
+    const scheduledDay = '2026-11-09';
+    if (forRecovery) {
+      CurrentUserSession.bind(
+        UserProfile(
+          id: athlete,
+          displayName: 'Recovery fixture athlete',
+          isCoach: false,
+          isAthlete: true,
+        ),
+      );
+      addTearDown(CurrentUserSession.clear);
+    }
     final tables = InMemoryProgrammeTables();
     final assignments = InMemoryProgrammeAssignmentStore(tables);
     final versions = InMemoryProgrammeVersionStore(tables);
     final assignment = ProgrammeScheduleTestFixtures.materialisedAssignment(
       athleteId: athlete,
+      programmeVersionId: forRecovery ? _recoveryVersion : null,
+      packageContentHash: forRecovery
+          ? _recoveryPackageHash
+          : 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
     ).copyWith(scheduleMode: 'fixed_schedule');
     tables.assignments.add(assignment);
     final version = ProgrammeVersion(
@@ -129,8 +214,13 @@ void main() {
       lineageId: ProgrammeScheduleTestFixtures.lineageId,
       versionNumber: 1,
       lifecycleStatus: ProgrammeLifecycleStatus.published,
-      libraryScope: ProgrammeLibraryScope.cohortGlobal,
-      ownerType: ProgrammeOwnerType.global,
+      libraryScope: forRecovery
+          ? ProgrammeLibraryScope.coachPrivate
+          : ProgrammeLibraryScope.cohortGlobal,
+      ownerType: forRecovery
+          ? ProgrammeOwnerType.coach
+          : ProgrammeOwnerType.global,
+      ownerId: forRecovery ? 'fixture-coach' : null,
       name: forTime ? 'Time fixture programme' : 'Equipment fixture programme',
       packageContentHash: assignment.materialisedPackageContentHash,
       packageSchemaVersion: 2,
@@ -146,11 +236,15 @@ void main() {
             dayOrder: 1,
             slots: [
               ProgrammeVersionSessionSlot(
-                id: ProgrammeScheduleTestFixtures.slot1Id,
+                id: slotId,
                 dayId: ProgrammeScheduleTestFixtures.day1Id,
                 sessionOrder: 1,
                 protocolId: journeyDraft.protocolId,
-                packageSlotKey: forTime ? approvedTimeFixtureSlot : null,
+                packageSlotKey: forRecovery
+                    ? _recoverySlotKey
+                    : forTime
+                    ? approvedTimeFixtureSlot
+                    : null,
               ),
             ],
           ),
@@ -167,7 +261,7 @@ void main() {
     FixedProgrammeOccurrenceProjection occurrence({required bool resumed}) =>
         FixedProgrammeOccurrenceProjection(
           assignmentId: assignment.id,
-          occurrenceId: 'fixture-occurrence',
+          occurrenceId: occurrenceId,
           sessionSlotId: resolved.slot.id,
           programmeVersionId: version.id,
           protocolId: journeyDraft.protocolId,
@@ -175,8 +269,8 @@ void main() {
           weekNumber: 1,
           dayKey: 'day_1',
           sessionOrder: 1,
-          scheduledDate: '2026-11-09',
-          originalScheduledDate: '2026-11-09',
+          scheduledDate: scheduledDay,
+          originalScheduledDate: scheduledDay,
           state: resumed
               ? FixedProgrammeOccurrenceState.inProgress
               : FixedProgrammeOccurrenceState.today,
@@ -222,7 +316,9 @@ void main() {
       client: client,
     );
     final start = _EquipmentFixtureStart(athlete, assignment.lineageCode);
-    final original = forTime
+    final original = forRecovery
+        ? _packageFromDraft(journeyDraft).plan
+        : forTime
         ? _packageFromDraft(
             journeyDraft,
             exercisesById: const {
@@ -239,6 +335,58 @@ void main() {
             },
           ).plan
         : package.plan;
+    var recoveryApprovalId = 'm33-poor-sleep-omit-optional-lateral-raises';
+    var approvedOccurrence = _recoveryOccurrence;
+    var recoveryReadCount = 0;
+    var today = scheduledDay;
+    var authorityStarted = false;
+    FixedProgrammeCalendarProjection calendarFor(
+      FixedProgrammeOccurrenceProjection row,
+    ) => FixedProgrammeCalendarProjection(
+      assignmentId: assignment.id,
+      programmeName: version.name,
+      timezone: 'Asia/Makassar',
+      scheduleMode: 'fixed_schedule',
+      startDate: scheduledDay,
+      today: today,
+      weekStart: scheduledDay,
+      weekEnd: '2026-11-15',
+      occurrences: [row],
+      currentWeek: [
+        FixedProgrammeCalendarDayProjection(
+          date: row.scheduledDate,
+          state: row.state,
+          occurrence: row,
+        ),
+      ],
+    );
+    Future<ApprovedRecoveryOption?> loadRecoveryApproval(
+      ProgrammeExecutionContext context,
+    ) async {
+      recoveryReadCount++;
+      expect(context.occurrenceId, _recoveryOccurrence);
+      if (!permitted) return null;
+      return ApprovedRecoveryOption(
+        athleteId: athlete,
+        assignmentId: assignment.id,
+        versionId: _recoveryVersion,
+        slotId: _recoverySlot,
+        occurrenceId: approvedOccurrence,
+        scheduledDate: scheduledDay,
+        originalPlan: original,
+        omission: ApprovedAccessoryOmission.fromJson({
+          'permission_key': recoveryApprovalId,
+          'slot_key': _recoverySlotKey,
+          'protocol_id': journeyDraft.protocolId,
+          'package_hash': _recoveryPackageHash,
+          'full_minutes': 45,
+          'short_minutes': 30,
+          'omitted_block_position': 3,
+          'session_intent': 'upper_body_strength',
+        }),
+      );
+    }
+
     var kv = InMemoryKvStore();
     var records = InMemoryPerformanceRecordStore();
     late AthleteProgrammeSessionPrepareService prepare;
@@ -252,6 +400,13 @@ void main() {
         slotResolver: resolver,
         sessionLoader: _FixedLoader(original),
         localRepository: repository,
+        fixedOccurrenceStore: forRecovery
+            ? _LiveProjectionStore(
+                () => calendarFor(
+                  occurrence(resumed: resumed || authorityStarted),
+                ),
+              )
+            : null,
       );
       completion = _EquipmentFixtureCompletion(records);
       coordinator = PerformanceRecordSaveCoordinator(
@@ -263,32 +418,65 @@ void main() {
           localRepository: repository,
         ),
       );
+      final launcher = ProgrammeSessionExecutionLauncher(
+        startStore: start,
+        sessionExecutionLauncher: SessionExecutionLauncher(
+          saveCoordinator: coordinator,
+          restoreEnvelopeStore: ProductionRestoreEnvelopeStore(),
+        ),
+      );
+      final resumedOccurrence = occurrence(resumed: true);
       await tester.pumpWidget(
         MaterialApp(
-          home: Scaffold(
-            body: AthleteProgrammeTodaySection(
-              athleteId: athlete,
-              fixedAssignment: assignment,
-              fixedOccurrence: occurrence(resumed: resumed),
-              prepareService: prepare,
-              adaptFlow: ProgrammeAdaptFlow.forPreparedSession(
-                prepareService: prepare,
-                loadAdaptationPermissions: permissionReader.load,
-                loadProtocolDraft: (id) async {
-                  expect(id, journeyDraft.protocolId);
-                  return journeyDraft;
-                },
-                loadKnowledge: () async => knowledge,
-              ),
-              executionLauncher: ProgrammeSessionExecutionLauncher(
-                startStore: start,
-                sessionExecutionLauncher: SessionExecutionLauncher(
-                  saveCoordinator: coordinator,
-                  restoreEnvelopeStore: ProductionRestoreEnvelopeStore(),
+          home: resumed
+              ? AthleteAppShell(
+                  athleteIdOverride: athlete,
+                  assignmentStore: assignments,
+                  fixedOccurrenceStore: _ResumeProjectionStore(
+                    FixedProgrammeCalendarProjection(
+                      assignmentId: assignment.id,
+                      programmeName: version.name,
+                      timezone: 'Asia/Makassar',
+                      scheduleMode: 'fixed_schedule',
+                      startDate: '2026-11-09',
+                      today: '2026-11-09',
+                      weekStart: '2026-11-09',
+                      weekEnd: '2026-11-15',
+                      occurrences: [resumedOccurrence],
+                      currentWeek: [
+                        FixedProgrammeCalendarDayProjection(
+                          date: resumedOccurrence.scheduledDate,
+                          state: resumedOccurrence.state,
+                          occurrence: resumedOccurrence,
+                        ),
+                      ],
+                    ),
+                  ),
+                  prepareService: prepare,
+                  executionLauncher: launcher,
+                  performanceRecordStore: records,
+                )
+              : Scaffold(
+                  body: AthleteProgrammeTodaySection(
+                    athleteId: athlete,
+                    fixedAssignment: assignment,
+                    fixedOccurrence: occurrence(resumed: resumed),
+                    prepareService: prepare,
+                    adaptFlow: ProgrammeAdaptFlow.forPreparedSession(
+                      prepareService: prepare,
+                      loadAdaptationPermissions: permissionReader.load,
+                      loadRecoveryApproval: forRecovery
+                          ? loadRecoveryApproval
+                          : null,
+                      loadProtocolDraft: (id) async {
+                        expect(id, journeyDraft.protocolId);
+                        return journeyDraft;
+                      },
+                      loadKnowledge: () async => knowledge,
+                    ),
+                    executionLauncher: launcher,
+                  ),
                 ),
-              ),
-            ),
-          ),
         ),
       );
       await tester.pumpAndSettle();
@@ -306,9 +494,12 @@ void main() {
       );
     }
 
-    Future<void> review() async {
+    Future<void> review({String recoveryAnswer = 'Poor Sleep'}) async {
       await tap('Adapt Session');
-      if (forTime) {
+      if (forRecovery) {
+        await tap('Recovery');
+        await tap(recoveryAnswer);
+      } else if (forTime) {
         await tap('Time');
         await tap('30');
       } else {
@@ -328,7 +519,9 @@ void main() {
     await review();
     expect(
       find.textContaining(
-        forTime
+        forRecovery
+            ? 'No approved recovery adjustment for this workout.'
+            : forTime
             ? 'No coach-approved shorter option'
             : 'Authored adaptation permissions do not permit equipment',
       ),
@@ -340,10 +533,34 @@ void main() {
     expect(prepare.cachedPackageForKey(key)!.acceptedAdaptation, isNull);
 
     permitted = true;
+    if (forRecovery) {
+      approvedOccurrence = 'different-occurrence';
+      await review();
+      expect(find.text('Accept Adaptation'), findsNothing);
+      await tap('Keep Original Session');
+      expect(kv.debugDump[preparedKey], originalBytes);
+      approvedOccurrence = _recoveryOccurrence;
+      for (final answer in ['Slightly Tired', 'Very Fatigued', 'Feeling Ill']) {
+        final before = recoveryReadCount;
+        await review(recoveryAnswer: answer);
+        expect(find.text('Accept Adaptation'), findsNothing);
+        expect(recoveryReadCount, before);
+        await tap('Keep Original Session');
+      }
+    }
     await review();
+    if (forRecovery) {
+      expect(find.text('You reported poor sleep'), findsOneWidget);
+      expect(
+        find.textContaining('bench press 4 × 8 with 120 seconds’ rest'),
+        findsOneWidget,
+      );
+    }
     expect(
       find.textContaining(
-        forTime
+        forRecovery
+            ? '45 → 30 min estimated'
+            : forTime
             ? 'Estimated session duration 45m → 30m'
             : 'Back squat → Goblet squat',
       ),
@@ -355,7 +572,9 @@ void main() {
     );
     expect(
       find.textContaining(
-        forTime
+        forRecovery
+            ? 'Skip optional lateral raises'
+            : forTime
             ? 'Omit Optional upper-body accessories. All remaining sets, reps and rests stay as prescribed.'
             : 'Reduces absolute load potential',
       ),
@@ -367,28 +586,99 @@ void main() {
     expect(prepare.cachedPackageForKey(key)!.acceptedAdaptation, isNull);
     expect(start.calls, isEmpty);
 
-    await review();
-    await tap('Accept Adaptation');
-    expect(permissionReads, List.filled(4, 'eq.${version.id}'));
-    final accepted = prepare.cachedPackageForKey(key)!;
-    expect(accepted.acceptedAdaptation, isNotNull);
-    final retained = accepted.plan.blocks[retainedIndex];
-    if (forTime) {
-      expect(accepted.plan.durationMin, 30);
-      expect(accepted.plan.blocks, original.blocks.take(2).toList());
-      expect(accepted.acceptedAdaptation!.exerciseChanges, isEmpty);
-    } else {
-      expect(
-        retained.linkedExercises.single.exerciseId,
-        JourneyDEquipmentAdaptationContract.replacementExerciseId,
+    if (forRecovery) {
+      Future<void> refusesAfter(
+        FutureOr<void> Function() change,
+        FutureOr<void> Function() restore,
+      ) async {
+        await review();
+        expect(find.text('Accept Adaptation'), findsOneWidget);
+        await change();
+        await tap('Accept Adaptation');
+        expect(find.textContaining('could not revalidate'), findsOneWidget);
+        expect(prepare.cachedPackageForKey(key)!.acceptedAdaptation, isNull);
+        await restore();
+        expect(kv.debugDump[preparedKey], originalBytes);
+        await tap('OK');
+      }
+
+      await refusesAfter(
+        () => recoveryApprovalId = 'different-recovery-approval',
+        () =>
+            recoveryApprovalId = 'm33-poor-sleep-omit-optional-lateral-raises',
       );
-      expect(accepted.plan.blocks.last, same(original.blocks.last));
+      await refusesAfter(
+        () => today = '2026-11-10',
+        () => today = scheduledDay,
+      );
+      await refusesAfter(
+        () => authorityStarted = true,
+        () => authorityStarted = false,
+      );
+      await refusesAfter(
+        () => CurrentUserSession.bind(
+          const UserProfile(
+            id: 'different-athlete',
+            displayName: 'Different athlete',
+            isCoach: false,
+            isAthlete: true,
+          ),
+        ),
+        () => CurrentUserSession.bind(
+          UserProfile(
+            id: athlete,
+            displayName: 'Recovery fixture athlete',
+            isCoach: false,
+            isAthlete: true,
+          ),
+        ),
+      );
+      await refusesAfter(() {
+        tester.binding.handleAppLifecycleStateChanged(
+          AppLifecycleState.inactive,
+        );
+        tester.binding.handleAppLifecycleStateChanged(
+          AppLifecycleState.resumed,
+        );
+      }, () {});
+      await refusesAfter(
+        () => kv.remove(preparedKey),
+        () => kv.writeString(preparedKey, originalBytes!),
+      );
+      await review();
+      await tap('Cancel');
+      expect(kv.debugDump[preparedKey], originalBytes);
+      expect(start.calls, isEmpty);
     }
-    expect(
-      retained.linkedExercises.single.prescription!.toJson(),
-      original.blocks[retainedIndex].linkedExercises.single.prescription!
-          .toJson(),
-    );
+
+    if (!keepOriginal) {
+      await review();
+      await tap('Accept Adaptation');
+      expect(
+        permissionReads,
+        forRecovery ? isEmpty : List.filled(4, 'eq.${version.id}'),
+      );
+      final accepted = prepare.cachedPackageForKey(key)!;
+      expect(accepted.acceptedAdaptation, isNotNull);
+      final retained = accepted.plan.blocks[retainedIndex];
+      if (forOmission) {
+        expect(accepted.plan.durationMin, 30);
+        expect(accepted.acceptedAdaptation!.reasonCode, reason.name);
+        expect(accepted.plan.blocks, original.blocks.take(2).toList());
+        expect(accepted.acceptedAdaptation!.exerciseChanges, isEmpty);
+      } else {
+        expect(
+          retained.linkedExercises.single.exerciseId,
+          JourneyDEquipmentAdaptationContract.replacementExerciseId,
+        );
+        expect(accepted.plan.blocks.last, same(original.blocks.last));
+      }
+      expect(
+        retained.linkedExercises.single.prescription!.toJson(),
+        original.blocks[retainedIndex].linkedExercises.single.prescription!
+            .toJson(),
+      );
+    }
     expect(
       assignment.toUpdateMap(),
       (await assignments.getById(assignment.id))!.toUpdateMap(),
@@ -407,6 +697,31 @@ void main() {
       find.byType(ActiveSessionScreen),
     );
     expect(screen.trainingSessionId, 91);
+    expect(find.text('Finish early'), findsNothing);
+    if (forOmission) {
+      final blockCount = keepOriginal ? 3 : 2;
+      expect(find.text('Block 1 of $blockCount'), findsOneWidget);
+      expect(
+        find.text('1. Walk at an easy pace for 5 minutes.'),
+        findsOneWidget,
+      );
+      expect(
+        find.text('Optional upper-body accessories'),
+        keepOriginal ? findsOneWidget : findsNothing,
+      );
+      if (finishEarly) {
+        await tap('Next >');
+      } else {
+        await tap('Mark block complete');
+        expect(screen.controller.state.completedBlockIds, {
+          screen.controller.state.plan.blocks.first.blockId,
+        });
+      }
+      expect(find.text('Block 2 of $blockCount'), findsOneWidget);
+      expect(find.text('Barbell bench press'), findsOneWidget);
+      expect(find.text('4 × 8'), findsOneWidget);
+      expect(find.text('Rest 2 min'), findsOneWidget);
+    }
     final initialDraft = screen.performanceController.draft;
     final workingBlock = initialDraft.blockDrafts[retainedIndex];
     final workingExercise = workingBlock.exerciseResults.single;
@@ -416,8 +731,15 @@ void main() {
       workingBlock.sourceBlockId,
       workingExercise.sourceExerciseId,
       setId,
-      (set) => set.copyWith(reps: 5, load: 16, loadUnit: 'kg', completed: true),
+      (set) => set.copyWith(
+        reps: recordedReps,
+        load: 16,
+        loadUnit: 'kg',
+        completed: true,
+      ),
     );
+    final savedActiveBlock = screen.controller.state.activeBlockIndex;
+    final savedCompletedBlocks = screen.controller.state.completedBlockIds;
     await tap('Back to Home');
 
     // Relaunch with only serialized prepared state, restore envelope and actuals.
@@ -433,6 +755,8 @@ void main() {
     records = InMemoryPerformanceRecordStore()
       ..seedFromCompletionTrees(recordTrees.cast<Map<String, dynamic>>());
     await mount(resumed: true);
+    expect(start.calls, hasLength(1));
+    expect(find.text('Begin'), findsNothing);
     expect(find.text('Adapt Session'), findsNothing);
     expect(find.text('Revert to Original'), findsNothing);
     await tap('Resume');
@@ -440,16 +764,26 @@ void main() {
       find.byType(ActiveSessionScreen),
     );
     expect(start.calls.map((call) => call['occurrence_id']), [
-      'fixture-occurrence',
-      'fixture-occurrence',
+      occurrenceId,
+      occurrenceId,
     ]);
     expect(screen.trainingSessionId, 91);
+    expect(screen.programmeContext?.occurrenceId, occurrenceId);
+    expect(screen.controller.state.activeBlockIndex, savedActiveBlock);
+    expect(screen.controller.state.completedBlockIds, savedCompletedBlocks);
     expect(screen.performanceController.draft.recordId, initialDraft.recordId);
+    expect(records.exportCompletionTrees(), hasLength(1));
+    if (forRecovery) {
+      expect(
+        prepare.cachedPackageForKey(key)!.acceptedAdaptation!.reasonCode,
+        AdaptationReason.recovery.name,
+      );
+    }
     final restoredDraft = screen.performanceController.draft;
-    if (forTime) {
+    if (forOmission) {
       expect(
         restoredDraft.blockDrafts.map((b) => b.sourceBlockId),
-        original.blocks.take(2).map((b) => b.blockId),
+        original.blocks.take(keepOriginal ? 3 : 2).map((b) => b.blockId),
       );
       expect(
         prepare
@@ -468,55 +802,92 @@ void main() {
     expect(restored.sourceExerciseId, workingExercise.sourceExerciseId);
     expect(restored.exerciseSnapshot.displayName, expectedExercise);
     expect(restored.sets.first.setResultId, setId);
-    expect(restored.sets.first.reps, 5);
+    expect(restored.sets.first.reps, recordedReps);
     expect(restored.sets.first.load, 16);
+    expect(restored.sets.first.loadUnit, 'kg');
     expect(restored.sets.first.completed, isTrue);
 
-    for (final block in List.of(
-      screen.performanceController.draft.blockDrafts,
-    )) {
-      for (final exercise in block.exerciseResults) {
-        for (final set in exercise.sets.where((set) => !set.completed)) {
-          screen.performanceController.updateSet(
-            block.sourceBlockId,
-            exercise.sourceExerciseId,
-            set.setResultId,
-            (value) => value.copyWith(
-              reps: 5,
-              load: 16,
-              loadUnit: 'kg',
-              completed: true,
-            ),
-          );
+    if (finishEarly) {
+      final unfinished = screen.performanceController.draft.blockDrafts
+          .map((block) => block.status)
+          .toList();
+      await tap('Finish early');
+      expect(find.text('Save and finish early'), findsOneWidget);
+      await tap('Return to session');
+      expect(completion.calls, isEmpty);
+      expect(
+        screen.performanceController.draft.blockDrafts.map(
+          (block) => block.status,
+        ),
+        unfinished,
+      );
+      await tap('Finish early');
+    } else {
+      for (final block in List.of(
+        screen.performanceController.draft.blockDrafts,
+      )) {
+        for (final exercise in block.exerciseResults) {
+          for (final set in exercise.sets.where((set) => !set.completed)) {
+            screen.performanceController.updateSet(
+              block.sourceBlockId,
+              exercise.sourceExerciseId,
+              set.setResultId,
+              (value) => value.copyWith(
+                reps: recordedReps,
+                load: 16,
+                loadUnit: 'kg',
+                completed: true,
+              ),
+            );
+          }
         }
+        screen.performanceController.markBlockComplete(block.sourceBlockId);
+        screen.controller.markBlockComplete(block.sourceBlockId);
       }
-      screen.performanceController.markBlockComplete(block.sourceBlockId);
-      screen.controller.markBlockComplete(block.sourceBlockId);
+      // Save and reopen the real review route so it sees the completed capture.
+      await tap('Back to Home');
+      await tap('Resume');
+      await tap('Finish Session');
     }
-    // Save and reopen the real review route so it sees the completed capture.
-    await tap('Back to Home');
-    await tap('Resume');
-    await tap('Finish Session');
     expect(find.text('Review Session'), findsOneWidget);
-    if (!forTime) {
+    if (!forOmission) {
       expect(find.textContaining('Back squat → Goblet squat'), findsOneWidget);
     }
-    await tap('Save and finish');
+    await tap(finishEarly ? 'Save and finish early' : 'Save and finish');
     expect(find.text('Session saved'), findsOneWidget);
-    if (!forTime) {
+    if (finishEarly) {
+      expect(find.text('Session finished early'), findsOneWidget);
+      expect(completion.calls.single['status'], 'partially_completed');
+    }
+    if (!forOmission) {
       expect(find.textContaining('Back squat → Goblet squat'), findsOneWidget);
     }
     expect(completion.calls, hasLength(1));
     expect(completion.calls.single['protocol_id'], journeyDraft.protocolId);
-    expect(completion.calls.single['occurrence_id'], 'fixture-occurrence');
+    expect(completion.calls.single['occurrence_id'], occurrenceId);
 
     final history = await coordinator.listHistory(athleteId: athlete);
     expect(history, hasLength(1));
     expect(history.single.recordId, initialDraft.recordId);
-    if (forTime) {
+    if (finishEarly) {
+      expect(
+        history.single.status,
+        TrainingSessionRecordStatus.partiallyCompleted,
+      );
+      expect(
+        history.single.blockResults.every(
+          (block) => block.status == TrainingBlockResultStatus.notStarted,
+        ),
+        isTrue,
+      );
+      final warmUp = history.single.blockResults.first.resultData;
+      if (warmUp is CompletionResultData) expect(warmUp.completed, isFalse);
+    }
+
+    if (forOmission) {
       expect(
         history.single.blockResults.map((b) => b.sourceBlockId),
-        original.blocks.take(2).map((b) => b.blockId),
+        original.blocks.take(keepOriginal ? 3 : 2).map((b) => b.blockId),
       );
     }
     final result =
@@ -524,6 +895,11 @@ void main() {
     expect(result.sourceExerciseId, workingExercise.sourceExerciseId);
     expect(result.exerciseSnapshot.displayName, expectedExercise);
     expect(result.setResults.first.load, 16);
+    expect(result.setResults.first.reps, recordedReps);
+    if (finishEarly) {
+      expect(result.setResults.first.reps, 5);
+      expect(result.setResults.skip(1).every((set) => !set.completed), isTrue);
+    }
     await tester.pumpWidget(const SizedBox());
     await tester.pumpWidget(
       MaterialApp(
@@ -537,19 +913,38 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text(expectedExercise), findsOneWidget);
     expect(
-      find.text(forTime ? 'Optional upper-body accessories' : 'Back squat'),
-      findsNothing,
+      find.text(forOmission ? 'Optional upper-body accessories' : 'Back squat'),
+      keepOriginal ? findsOneWidget : findsNothing,
     );
   }
 
   testWidgets(
     'equipment review, accept, cold restore and programme History',
-    (tester) => verifyAdaptationJourney(tester, forTime: false),
+    (tester) =>
+        verifyAdaptationJourney(tester, reason: AdaptationReason.equipment),
   );
   testWidgets(
     'approved time option review, accept, cold restore and programme History',
-    (tester) => verifyAdaptationJourney(tester, forTime: true),
+    (tester) => verifyAdaptationJourney(tester, reason: AdaptationReason.time),
   );
+
+  testWidgets(
+    'Poor Sleep on the exact private occurrence reviews, accepts, restores and completes',
+    (tester) =>
+        verifyAdaptationJourney(tester, reason: AdaptationReason.recovery),
+  );
+
+  for (final keepOriginal in [true, false]) {
+    testWidgets(
+      'finish early preserves actuals in the ${keepOriginal ? 'ordinary' : 'adapted'} workout',
+      (tester) => verifyAdaptationJourney(
+        tester,
+        reason: AdaptationReason.time,
+        finishEarly: true,
+        keepOriginal: keepOriginal,
+      ),
+    );
+  }
 
   group('B4d.19 equipment request validation', () {
     test('missing availableEquipment fails closed', () async {
@@ -1409,6 +1804,35 @@ String _findKnowledgeRoot(Directory start) {
     dir = parent;
   }
   throw StateError('knowledge root not found from ${start.path}');
+}
+
+class _LiveProjectionStore implements FixedProgrammeOccurrenceProjectionStore {
+  _LiveProjectionStore(this.read);
+
+  final FixedProgrammeCalendarProjection Function() read;
+
+  @override
+  Future<FixedProgrammeCalendarProjection> resolveActive() async => read();
+
+  @override
+  Future<FixedProgrammeCalendarProjection> resolveForAssignment(
+    String assignmentId,
+  ) => resolveAssignmentFromActiveFallback(this, assignmentId);
+}
+
+class _ResumeProjectionStore
+    implements FixedProgrammeOccurrenceProjectionStore {
+  _ResumeProjectionStore(this.calendar);
+
+  final FixedProgrammeCalendarProjection calendar;
+
+  @override
+  Future<FixedProgrammeCalendarProjection> resolveActive() async => calendar;
+
+  @override
+  Future<FixedProgrammeCalendarProjection> resolveForAssignment(
+    String assignmentId,
+  ) => resolveAssignmentFromActiveFallback(this, assignmentId);
 }
 
 class _EquipmentFixtureStart implements ProgrammeTrainingSessionStartStore {

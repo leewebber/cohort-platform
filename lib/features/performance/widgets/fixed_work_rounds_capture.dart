@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/theme/colors.dart';
@@ -39,6 +40,8 @@ class _FixedWorkRoundsCaptureState extends State<FixedWorkRoundsCapture>
     with WidgetsBindingObserver {
   late FixedWorkRoundsController _controller;
   Timer? _ticker;
+  final _timerRevision = ValueNotifier(0);
+  bool _timerOpen = false;
   bool _manualOpen = false;
   bool _noteOpen = false;
   bool _prescriptionVisible = true;
@@ -64,8 +67,14 @@ class _FixedWorkRoundsCaptureState extends State<FixedWorkRoundsCapture>
   void didUpdateWidget(covariant FixedWorkRoundsCapture oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (!identical(oldWidget.result, widget.result)) {
+      final changedOutsideTimer = !identical(_controller.result, widget.result);
       _controller.hydrate(widget.result);
       _syncTicker();
+      if (_timerOpen && changedOutsideTimer) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted) _timerRevision.value++;
+        });
+      }
     }
   }
 
@@ -80,6 +89,7 @@ class _FixedWorkRoundsCaptureState extends State<FixedWorkRoundsCapture>
   void dispose() {
     _scrollPosition?.removeListener(_updatePrescriptionVisibility);
     _ticker?.cancel();
+    _timerRevision.dispose();
     SessionWakeLock.setEnabled(false);
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
@@ -114,42 +124,54 @@ class _FixedWorkRoundsCaptureState extends State<FixedWorkRoundsCapture>
     if (phase == FixedWorkPhase.work || phase == FixedWorkPhase.rest) {
       _ticker = Timer.periodic(const Duration(milliseconds: 200), (_) {
         if (!mounted) return;
-        if (_controller.phase == FixedWorkPhase.rest) {
-          _emit(_controller.completeRestIfDue());
+        final before = _controller.result;
+        final current = _controller.completeRestIfDue();
+        if (identical(before, current)) {
+          _timerRevision.value++;
         } else {
-          setState(() {});
+          _emit(current);
         }
       });
     }
   }
 
   void _emit(CircuitResultData next) {
+    if (!mounted) return;
     widget.onChanged(next);
     setState(() {});
+    _timerRevision.value++;
     _syncTicker();
+  }
+
+  Future<void> _openTimer({bool startRound = false}) async {
+    if (_timerOpen || (startRound && !_controller.canStartCurrentRound)) return;
+    _timerOpen = true;
+    FocusManager.instance.primaryFocus?.unfocus();
+    if (startRound) _emit(_controller.startRound());
+
+    final readOnly = widget.readOnly;
+    try {
+      await Navigator.of(context).push<void>(
+        MaterialPageRoute(
+          builder: (_) => _FixedWorkTimerScreen(
+            controller: _controller,
+            revision: _timerRevision,
+            clock: _clock,
+            onStart: readOnly ? null : () => _emit(_controller.startRound()),
+            onFinish: readOnly ? null : () => _emit(_controller.finishRound()),
+            onSkip: readOnly ? null : () => _emit(_controller.skipRest()),
+          ),
+        ),
+      );
+    } finally {
+      _timerOpen = false;
+    }
   }
 
   String _clock(int seconds) {
     final minutes = seconds ~/ 60;
     final remaining = seconds % 60;
     return '${minutes.toString().padLeft(2, '0')}:${remaining.toString().padLeft(2, '0')}';
-  }
-
-  String _stationWork(CircuitStationActual row) {
-    if (row.prescribedDistanceMeters != null) {
-      return '${row.prescribedDistanceMeters!.round()} m';
-    }
-    if (row.prescribedReps != null) {
-      return '${row.prescribedReps} reps';
-    }
-    return '';
-  }
-
-  SessionExecutionExerciseSummary? _exerciseFor(String stationId) {
-    for (final exercise in widget.linkedExercises) {
-      if (exercise.exerciseId == stationId) return exercise;
-    }
-    return null;
   }
 
   Future<void> _applyManualTime(CircuitRoundActual round, int? seconds) async {
@@ -189,11 +211,10 @@ class _FixedWorkRoundsCaptureState extends State<FixedWorkRoundsCapture>
       builder: (_) => SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(CohortSpacing.lg),
-          child: _PrescriptionList(
+          child: FixedWorkRoundsPrescription(
             result: _controller.result,
-            workLabel: _stationWork,
+            linkedExercises: widget.linkedExercises,
             onOpenExercise: widget.onOpenExercise,
-            exerciseFor: _exerciseFor,
           ),
         ),
       ),
@@ -209,11 +230,10 @@ class _FixedWorkRoundsCaptureState extends State<FixedWorkRoundsCapture>
       children: [
         KeyedSubtree(
           key: _prescriptionKey,
-          child: _PrescriptionList(
+          child: FixedWorkRoundsPrescription(
             result: result,
-            workLabel: _stationWork,
+            linkedExercises: widget.linkedExercises,
             onOpenExercise: widget.onOpenExercise,
-            exerciseFor: _exerciseFor,
           ),
         ),
         if (result.sharedSetup.isNotEmpty) ...[
@@ -252,26 +272,16 @@ class _FixedWorkRoundsCaptureState extends State<FixedWorkRoundsCapture>
           ),
         if (phase == FixedWorkPhase.finished)
           _FinishedSummary(result: result, clock: _clock)
-        else if (phase == FixedWorkPhase.rest)
-          _RestSurface(
-            controller: _controller,
-            clock: _clock,
-            onSkip: widget.readOnly ? null : () => _emit(_controller.skipRest()),
-          )
-        else if (phase == FixedWorkPhase.work)
-          _WorkSurface(
-            controller: _controller,
-            clock: _clock,
-            onFinish: widget.readOnly
-                ? null
-                : () => _emit(_controller.finishRound()),
-          )
-        else
+        else if (phase == FixedWorkPhase.ready)
           _ReadySurface(
             controller: _controller,
-            onStart: widget.readOnly
-                ? null
-                : () => _emit(_controller.startRound()),
+            onStart: widget.readOnly ? null : () => _openTimer(startRound: true),
+          )
+        else
+          CohortButton(
+            key: const ValueKey('fixed-work-open-timer'),
+            label: 'Open round timer',
+            onPressed: _openTimer,
           ),
         if (!widget.readOnly && phase != FixedWorkPhase.finished) ...[
           const SizedBox(height: CohortSpacing.sm),
@@ -357,18 +367,35 @@ class _FixedWorkRoundsCaptureState extends State<FixedWorkRoundsCapture>
   }
 }
 
-class _PrescriptionList extends StatelessWidget {
-  const _PrescriptionList({
+/// Authored fixed-work stations and recovery, without capture controls.
+class FixedWorkRoundsPrescription extends StatelessWidget {
+  const FixedWorkRoundsPrescription({
+    super.key,
     required this.result,
-    required this.workLabel,
-    required this.exerciseFor,
+    this.linkedExercises = const [],
     this.onOpenExercise,
   });
 
   final CircuitResultData result;
-  final String Function(CircuitStationActual) workLabel;
-  final SessionExecutionExerciseSummary? Function(String) exerciseFor;
+  final List<SessionExecutionExerciseSummary> linkedExercises;
   final ValueChanged<SessionExecutionExerciseSummary>? onOpenExercise;
+
+  String _stationWork(CircuitStationActual row) {
+    if (row.prescribedDistanceMeters != null) {
+      return '${row.prescribedDistanceMeters!.round()} m';
+    }
+    if (row.prescribedReps != null) {
+      return '${row.prescribedReps} reps';
+    }
+    return '';
+  }
+
+  SessionExecutionExerciseSummary? _exerciseFor(String stationId) {
+    for (final exercise in linkedExercises) {
+      if (exercise.exerciseId == stationId) return exercise;
+    }
+    return null;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -391,8 +418,8 @@ class _PrescriptionList extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
-                Text(workLabel(row), style: CohortTextStyles.body),
-                if (onOpenExercise != null && exerciseFor(row.stationId) != null)
+                Text(_stationWork(row), style: CohortTextStyles.body),
+                if (onOpenExercise != null && _exerciseFor(row.stationId) != null)
                   Semantics(
                     button: true,
                     label: 'Exercise info for ${row.displayName}',
@@ -401,7 +428,7 @@ class _PrescriptionList extends StatelessWidget {
                       visualDensity: VisualDensity.compact,
                       icon: const Icon(Icons.info_outline, size: 20),
                       onPressed: () =>
-                          onOpenExercise!(exerciseFor(row.stationId)!),
+                          onOpenExercise!(_exerciseFor(row.stationId)!),
                     ),
                   ),
               ],
@@ -411,11 +438,82 @@ class _PrescriptionList extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(top: CohortSpacing.xs),
             child: Text(
-              'Rest  ${result.restBetweenRoundsSeconds} seconds between rounds',
+              'Rest ${result.restBetweenRoundsSeconds} seconds between rounds',
               style: CohortTextStyles.body,
             ),
           ),
       ],
+    );
+  }
+}
+
+class _FixedWorkTimerScreen extends StatelessWidget {
+  const _FixedWorkTimerScreen({
+    required this.controller,
+    required this.revision,
+    required this.clock,
+    required this.onStart,
+    required this.onFinish,
+    required this.onSkip,
+  });
+
+  final FixedWorkRoundsController controller;
+  final ValueListenable<int> revision;
+  final String Function(int) clock;
+  final VoidCallback? onStart;
+  final VoidCallback? onFinish;
+  final VoidCallback? onSkip;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: CohortColors.background,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(CohortSpacing.lg),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Align(
+                alignment: Alignment.centerLeft,
+                child: TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text('Back to workout'),
+                ),
+              ),
+              Expanded(
+                child: Center(
+                  child: SingleChildScrollView(
+                    child: ValueListenableBuilder<int>(
+                      valueListenable: revision,
+                      builder: (context, _, _) => switch (controller.phase) {
+                        FixedWorkPhase.ready => _ReadySurface(
+                          controller: controller,
+                          onStart: onStart,
+                        ),
+                        FixedWorkPhase.work => _WorkSurface(
+                          controller: controller,
+                          clock: clock,
+                          onFinish: onFinish,
+                        ),
+                        FixedWorkPhase.rest => _RestSurface(
+                          controller: controller,
+                          clock: clock,
+                          onSkip: onSkip,
+                        ),
+                        FixedWorkPhase.finished => _FinishedSummary(
+                          result: controller.result,
+                          clock: clock,
+                        ),
+                      },
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
@@ -514,13 +612,6 @@ class _RestSurface extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final remaining = controller.displayedRestSeconds();
-    int? completed;
-    for (final round in controller.result.rounds) {
-      if (round.ordinal == controller.currentRound) {
-        completed = round.elapsedSeconds;
-        break;
-      }
-    }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -535,15 +626,9 @@ class _RestSurface extends StatelessWidget {
             style: CohortTextStyles.h1.copyWith(fontSize: 56),
           ),
         ),
-        if (completed != null) ...[
-          const SizedBox(height: CohortSpacing.sm),
-          Text(
-            'Round ${controller.currentRound} completed in ${clock(completed)}',
-            style: CohortTextStyles.body,
-          ),
-        ],
+        const SizedBox(height: CohortSpacing.sm),
         Text(
-          'Next: Round ${controller.currentRound + 1}',
+          'Round ${controller.currentRound} of ${controller.targetRounds} complete',
           style: CohortTextStyles.eyebrow,
         ),
         const SizedBox(height: CohortSpacing.md),

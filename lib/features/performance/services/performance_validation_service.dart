@@ -66,6 +66,55 @@ class PerformanceValidationService {
     return TrainingSessionRecordStatus.completed;
   }
 
+  bool hasWorkToFinishEarly(ActivePerformanceDraft draft) =>
+      draft.status == TrainingSessionRecordStatus.inProgress &&
+      draft.incompleteBlockCount > 0 &&
+      resolveCompletionStatus(draft) ==
+          TrainingSessionRecordStatus.partiallyCompleted &&
+      draft.blockDrafts.every(
+        (block) =>
+            block.blockSnapshot.structuredRunning == null &&
+            block.blockSnapshot.timedRunningWorkout == null,
+      ) &&
+      draft.blockDrafts.any(_hasPerformedWork);
+
+  bool _hasPerformedWork(BlockPerformanceDraft block) {
+    if (!_blockCountsTowardCompletion(block)) return false;
+    if (block.status == TrainingBlockResultStatus.completed) return true;
+    if (block.status == TrainingBlockResultStatus.skipped) return false;
+    if (block.exerciseResults.any(
+      (exercise) => exercise.sets.any(
+        (set) =>
+            set.reps != null ||
+            set.load != null ||
+            set.distance != null ||
+            set.durationSeconds != null ||
+            (block.captureMode == BlockCaptureMode.completion && set.completed),
+      ),
+    )) {
+      return true;
+    }
+
+    return switch (block.resultData) {
+      AmrapResultData(:final entered) || RoundsResultData(:final entered) =>
+        entered,
+      ForTimeResultData(:final elapsedSeconds) => (elapsedSeconds ?? 0) > 0,
+      IntervalResultData(:final recordedCount) => recordedCount > 0,
+      CircuitResultData result =>
+        result.recordedCount > 0 ||
+            result.scoreEntered ||
+            result.rounds.any((round) => round.elapsedSeconds != null) ||
+            result.stations.any((station) => station.hasRecordedActual),
+      EnduranceResultData(:final distance, :final durationSeconds) ||
+      DistanceResultData(:final distance, :final durationSeconds) =>
+        (distance ?? 0) > 0 || (durationSeconds ?? 0) > 0,
+      DurationResultData(:final durationSeconds) => (durationSeconds ?? 0) > 0,
+      CustomMetricResultData(:final numericValue, :final textValue) =>
+        numericValue != null || textValue?.trim().isNotEmpty == true,
+      _ => false,
+    };
+  }
+
   void _validateBlock(BlockPerformanceDraft block, Map<String, String> errors) {
     final prefix = 'block:${block.sourceBlockId}';
 

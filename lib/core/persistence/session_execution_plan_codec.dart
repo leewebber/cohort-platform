@@ -184,6 +184,7 @@ class SessionExecutionPlanCodec {
       timerConfiguration: map['timerConfiguration'] is Map
           ? TimerConfiguration.fromJson(
               Map<String, dynamic>.from(map['timerConfiguration'] as Map),
+              format: format,
             )
           : null,
       linkedExercises: exercises,

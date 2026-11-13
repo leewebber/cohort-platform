@@ -7,6 +7,7 @@ import 'package:cohort_platform/domain/running_workout/running_workout.dart';
 import 'package:cohort_platform/features/session/models/session_execution_plan.dart';
 import 'package:cohort_platform/features/session/models/running_target_admission.dart';
 import 'package:cohort_platform/features/session/models/authored_timed_running_execution.dart';
+import 'package:cohort_platform/features/session/models/structured_running_execution.dart';
 import 'package:cohort_platform/features/session/screens/quality_target_review_screen.dart';
 import 'package:cohort_platform/features/session/screens/structured_running_timer_screen.dart';
 import 'package:cohort_platform/features/session/services/running_target_admission_store.dart';
@@ -33,7 +34,10 @@ const contextFixture = ProgrammeExecutionContext(
   programmedSessionKey: 'key',
   packageSchemaVersion: 1,
 );
-SessionExecutionPlan fixturePlan() => SessionExecutionPlan(
+SessionExecutionPlan fixturePlan({
+  RunningWorkout? workout,
+  int durationSeconds = 1140,
+}) => SessionExecutionPlan(
   sessionId: 'quality-fixture',
   sessionTitle: '[FIXTURE ONLY] Quality run',
   blocks: [
@@ -45,12 +49,14 @@ SessionExecutionPlan fixturePlan() => SessionExecutionPlan(
       workoutFormat: WorkoutFormat.steadyState,
       position: 1,
       timerConfiguration: TimerConfiguration(
-        durationSeconds: 1140,
-        runningWorkout: const RunningWorkoutCodec().decode(
-          File(
-            'test/session/fixtures/quality_admission/quality_run.json',
-          ).readAsStringSync(),
-        ),
+        durationSeconds: durationSeconds,
+        runningWorkout:
+            workout ??
+            const RunningWorkoutCodec().decode(
+              File(
+                'test/session/fixtures/quality_admission/quality_run.json',
+              ).readAsStringSync(),
+            ),
       ),
     ),
   ],
@@ -471,6 +477,133 @@ void main() {
       await tester.pumpWidget(const SizedBox());
     });
   }
+  testWidgets('Week 4 Tuesday keeps all 15 quality-run phases readable', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(320, 568);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    final bodies =
+        jsonDecode(
+              File(
+                'docs/programmes/hybrid_10k/performance_selected_2026_11_03/'
+                'RUNNING_BODIES.json',
+              ).readAsStringSync(),
+            )
+            as List;
+    final selected =
+        bodies.singleWhere((row) => row['source_session_id'] == 'LW10K-W04-D02')
+            as Map<String, dynamic>;
+    final workout = const RunningWorkoutCodec().decodeMap(
+      selected['workout'] as Map<String, dynamic>,
+    );
+    final base = fixturePlan(
+      workout: workout,
+      durationSeconds: selected['fixed_seconds'] as int,
+    );
+    final document = fixtureDocument(frozen: true);
+    final template = (document['quality_targets'] as List).single as Map;
+    document['blocks'] = [
+      {'block_id': 'block', 'workout': selected['workout']},
+    ];
+    document['quality_targets'] = [
+      for (final step in runningAtomicSteps(workout))
+        if (step.target.kind == RunningTargetKind.qualityPaceRef)
+          {...template, 'step_id': step.stepId},
+    ];
+    validateRunningTargetDocument(
+      base,
+      document,
+      athleteId: owner,
+      occurrenceId: contextFixture.occurrenceId!,
+      assignmentId: contextFixture.assignmentId,
+      versionId: contextFixture.programmeVersionId,
+      packageHash: contextFixture.packageContentHash!,
+    );
+    final plan = applyRunningTargetAdmission(base, document);
+    final run = AuthoredTimedRunningExecution.fromBlock(
+      plan.blocks.single,
+      admission: plan.runningTargetAdmissionSnapshot,
+    );
+
+    StructuredRunningCursor? latest;
+    await tester.pumpWidget(
+      MaterialApp(
+        home: StructuredRunningTimerScreen(
+          execution: run,
+          elapsedTime: () => Duration.zero,
+          onCheckpoint: (cursor) async {
+            latest = cursor;
+            return true;
+          },
+        ),
+      ),
+    );
+    const clockKey = ValueKey('structured-running-clock');
+    const targetKey = ValueKey('authored-running-target');
+    final clock = find.byKey(clockKey);
+    expect(find.text('Start / resume').hitTestable(), findsOneWidget);
+    await tester.tap(find.text('Start / resume'));
+    await tester.pump();
+
+    const phases = [
+      ('Easy warm-up', 600, '10:00', false),
+      ('Relaxed acceleration', 20, '0:20', false),
+      ('Very easy recovery', 40, '0:40', false),
+      ('Relaxed acceleration', 20, '0:20', false),
+      ('Very easy recovery', 40, '0:40', false),
+      ('Relaxed acceleration', 20, '0:20', false),
+      ('Very easy recovery', 40, '0:40', false),
+      ('Threshold running', 300, '5:00', true),
+      ('Easy recovery', 90, '1:30', false),
+      ('Threshold running', 300, '5:00', true),
+      ('Easy recovery', 90, '1:30', false),
+      ('Threshold running', 300, '5:00', true),
+      ('Easy recovery', 90, '1:30', false),
+      ('Threshold running', 300, '5:00', true),
+      ('Very easy cooldown', 300, '5:00', false),
+    ];
+    expect(phases.fold(0, (total, phase) => total + phase.$2), 2550);
+    for (final (index, phase) in phases.indexed) {
+      final (label, seconds, clockLabel, hasTarget) = phase;
+      expect(
+        tester.widgetList<Text>(find.byType(Text)).map((text) => text.data),
+        unorderedEquals([
+          'Structured run',
+          label,
+          'Step ${index + 1} of 15',
+          clockLabel,
+          if (hasTarget) '5:19–5:32 /km',
+          'Pause',
+        ]),
+      );
+      expect(clock.hitTestable(), findsOneWidget);
+      expect(find.text('Pause').hitTestable(), findsOneWidget);
+      expect(find.byTooltip('Exit timer').hitTestable(), findsOneWidget);
+      expect(
+        find.byKey(targetKey).hitTestable(),
+        hasTarget ? findsOneWidget : findsNothing,
+      );
+      if (index == 7) {
+        await tester.tap(find.text('Pause'));
+        await tester.pump(const Duration(seconds: 5));
+        expect(tester.widget<Text>(clock).data, clockLabel);
+        expect(find.text('5:19–5:32 /km').hitTestable(), findsOneWidget);
+        await tester.tap(find.text('Start / resume'));
+        await tester.pump();
+      }
+      await tester.pump(Duration(seconds: seconds));
+    }
+
+    expect(latest?.isFinished, isTrue);
+    expect(find.text('Timer finished').hitTestable(), findsOneWidget);
+    expect(find.text('Record run results').hitTestable(), findsOneWidget);
+    expect(find.text('Start / resume'), findsNothing);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets(
     'frozen numerical targets display on work and no downtime is counted',
     (tester) async {
@@ -498,10 +631,10 @@ void main() {
         ),
       );
       expect(find.text('5:19–5:32 /km'), findsOneWidget);
-      expect(find.textContaining('5K estimate'), findsOneWidget);
-      expect(find.text('120 s'), findsOneWidget);
+      expect(find.textContaining('5K estimate'), findsNothing);
+      expect(find.text('2:00'), findsOneWidget);
       await tester.pump(const Duration(hours: 1));
-      expect(find.text('120 s'), findsOneWidget);
+      expect(find.text('2:00'), findsOneWidget);
       await tester.pumpWidget(const SizedBox());
     },
   );

@@ -1,4 +1,5 @@
 // Opt-in against a positively identified disposable local Supabase stack.
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
@@ -17,15 +18,19 @@ import 'package:cohort_platform/features/auth/repositories/supabase_profile_repo
 import 'package:cohort_platform/features/auth/services/profile_provisioning_service.dart';
 import 'package:cohort_platform/features/performance/controllers/performance_capture_controller.dart';
 import 'package:cohort_platform/features/performance/models/training_session_record.dart';
+import 'package:cohort_platform/features/performance/models/training_block_result_status.dart';
+import 'package:cohort_platform/features/performance/models/training_session_record_status.dart';
 import 'package:cohort_platform/features/performance/widgets/completed_session_result_view.dart';
 import 'package:cohort_platform/features/performance/repositories/supabase_performance_record_store.dart';
 import 'package:cohort_platform/features/performance/services/completed_session_result_projection.dart';
 import 'package:cohort_platform/features/performance/services/performance_record_save_coordinator.dart';
+import 'package:cohort_platform/features/programme/models/athlete_programme_completion.dart';
 import 'package:cohort_platform/features/programme/models/fixed_programme_occurrence_projection.dart';
 import 'package:cohort_platform/features/programme/models/programme_execution_context.dart';
 import 'package:cohort_platform/models/strength_exercise_prescription.dart';
 import 'package:cohort_platform/features/programme/services/athlete_programme_authored_slot_resolver.dart';
 import 'package:cohort_platform/features/programme/services/athlete_programme_completion_service.dart';
+import 'package:cohort_platform/features/programme/services/athlete_programme_completion_store.dart';
 import 'package:cohort_platform/features/programme/services/athlete_programme_completion_supabase_store.dart';
 import 'package:cohort_platform/features/programme/services/athlete_programme_session_prepare_service.dart';
 import 'package:cohort_platform/features/programme_acquisition/acquisition_store.dart';
@@ -52,6 +57,7 @@ void main() {
   for (final fixture in [
     (
       forTime: false,
+      finishEarly: false,
       directory: m31Candidate,
       version: M31ThursdayEquipmentTrial.versionId,
       sourceLabel: 'Barbell Romanian deadlift',
@@ -59,6 +65,7 @@ void main() {
     ),
     (
       forTime: false,
+      finishEarly: false,
       directory: gobletCandidate,
       version: gobletVersion,
       sourceLabel: 'Back Squat',
@@ -66,6 +73,15 @@ void main() {
     ),
     (
       forTime: true,
+      finishEarly: false,
+      directory: m32Candidate,
+      version: m32Version,
+      sourceLabel: 'Dumbbell lateral raise',
+      replacementLabel: 'Barbell bench press',
+    ),
+    (
+      forTime: true,
+      finishEarly: true,
       directory: m32Candidate,
       version: m32Version,
       sourceLabel: 'Dumbbell lateral raise',
@@ -73,7 +89,7 @@ void main() {
     ),
   ]) {
     testWidgets(
-      'ordinary athlete reviews, restarts and completes ${fixture.directory}',
+      'ordinary athlete reviews, restarts and ${fixture.finishEarly ? 'finishes early' : 'completes'} ${fixture.directory}',
       (tester) async {
         final forTime = fixture.forTime;
         final approvalFile = forTime
@@ -569,7 +585,10 @@ void main() {
                 if (forTime && exercise.sourceExerciseId != replacementId) {
                   continue;
                 }
-                for (final set in exercise.sets) {
+                for (final set
+                    in fixture.finishEarly
+                        ? exercise.sets.take(1)
+                        : exercise.sets) {
                   capture.updateSet(
                     block.sourceBlockId,
                     exercise.sourceExerciseId,
@@ -589,7 +608,9 @@ void main() {
                   );
                 }
               }
-              capture.markBlockComplete(block.sourceBlockId);
+              if (!fixture.finishEarly || block.position == 1) {
+                capture.markBlockComplete(block.sourceBlockId);
+              }
             }
             final store = SupabasePerformanceRecordStore();
             final saved = await PerformanceRecordSaveCoordinator(
@@ -643,24 +664,85 @@ void main() {
             final rebuilt = PerformanceRecordSaveCoordinator(
               store: store,
             ).restoreControllerFromRecord(readback);
-            final completion = AthleteProgrammeCompletionService(
-              store: const AthleteProgrammeCompletionSupabaseStore(),
-              performanceStore: store,
-            );
-            final result = await completion.submit(
-              controller: rebuilt,
-              programmeContext: reopened.executionContext!,
-              trainingSessionId: sessionId,
-              idempotencyKey: 'm31-local-${row['id']}',
-            );
-            expect(
-              result.isSuccess,
-              isTrue,
-              reason: '${result.code}: ${result.message}',
-            );
+            final completionKey = 'm31-local-${row['id']}';
+            if (fixture.finishEarly) {
+              final completionStore = _DropFirstCompletionReply();
+              final result =
+                  await PerformanceRecordSaveCoordinator(
+                    store: store,
+                    programmeCompletionService:
+                        AthleteProgrammeCompletionService(
+                          store: completionStore,
+                          performanceStore: store,
+                        ),
+                  ).completeSession(
+                    controller: rebuilt,
+                    programmeContext: reopened.executionContext!,
+                    trainingSessionId: sessionId,
+                    athleteId: athleteId,
+                    idempotencyKey: completionKey,
+                    finishEarly: true,
+                  );
+              expect(
+                result.progressionFailed,
+                isFalse,
+                reason: result.progressionMessage,
+              );
+              expect(
+                result.programmeCompletion?.status,
+                AthleteProgrammeCompletionStatus.alreadyCommitted,
+              );
+              expect(completionStore.replies, [
+                'committed',
+                'already_committed',
+              ]);
+              expect(completionStore.requests, hasLength(2));
+              expect(
+                completionStore.requests.last,
+                completionStore.requests.first,
+              );
+              expect(result.record.recordId, saved.recordId);
+              expect(
+                result.record.status,
+                TrainingSessionRecordStatus.partiallyCompleted,
+              );
+              final outcome = await sql("""
+                SELECT outcome_status || ':' || (completion_request_sha256 IS NOT NULL)::text
+                  FROM public.programme_slot_outcomes
+                  WHERE training_session_id = $sessionId;
+              """);
+              expect(outcome, 'completed_partial:true');
+            } else {
+              final completion = AthleteProgrammeCompletionService(
+                store: const AthleteProgrammeCompletionSupabaseStore(),
+                performanceStore: store,
+              );
+              final result = await completion.submit(
+                controller: rebuilt,
+                programmeContext: reopened.executionContext!,
+                trainingSessionId: sessionId,
+                idempotencyKey: completionKey,
+              );
+              expect(
+                result.isSuccess,
+                isTrue,
+                reason: '${result.code}: ${result.message}',
+              );
+            }
             final history = await store.listHistory(athleteId: athleteId);
             expect(history, hasLength(1));
             expect(history.single.recordId, saved.recordId);
+            if (fixture.finishEarly) {
+              expect(
+                history.single.status,
+                TrainingSessionRecordStatus.partiallyCompleted,
+              );
+              expect(history.single.blockResults.map((b) => b.status), [
+                TrainingBlockResultStatus.completed,
+                TrainingBlockResultStatus.notStarted,
+              ]);
+            }
+
             if (forTime) {
               expect(history.single.blockResults.map((b) => b.position), [
                 1,
@@ -672,9 +754,13 @@ void main() {
                 .expand((b) => b.exerciseResults)
                 .singleWhere((e) => e.sourceExerciseId == replacementId);
             expect(
-              retained.setResults.map((s) => [s.reps, s.load, s.loadUnit]),
+              retained.setResults
+                  .where((s) => s.completed)
+                  .map((s) => [s.reps, s.load, s.loadUnit]),
               [
-                for (final reps in actualReps) [reps, 16, 'kg'],
+                for (final reps
+                    in fixture.finishEarly ? actualReps.take(1) : actualReps)
+                  [reps, 16, 'kg'],
               ],
             );
             final projected = CompletedExerciseResultProjection.fromExercise(
@@ -686,8 +772,8 @@ void main() {
               expect(projected.coachCue, expectedPrescription.coachCue);
             }
             expect(
-              projected.sets.map((s) => s.loadLabel),
-              List.filled(actualReps.length, loggedLabel),
+              projected.sets.where((s) => s.loadLabel == loggedLabel),
+              hasLength(fixture.finishEarly ? 1 : actualReps.length),
             );
             debugPrint(
               'HISTORY PASS $replacementId after cold restore and completion at $loggedLabel',
@@ -779,5 +865,25 @@ void main() {
       skip: configFile == null,
       timeout: const Timeout(Duration(minutes: 2)),
     );
+  }
+}
+
+/// Lose the acknowledgement after the real loopback RPC commits.
+class _DropFirstCompletionReply implements AthleteProgrammeCompletionStore {
+  final requests = <String>[];
+  final replies = <Object?>[];
+
+  @override
+  Future<Map<String, dynamic>> completeAndAdvance(
+    Map<String, dynamic> payload,
+  ) async {
+    requests.add(jsonEncode(payload));
+    final reply = await const AthleteProgrammeCompletionSupabaseStore()
+        .completeAndAdvance(payload);
+    replies.add(reply['status']);
+    if (requests.length == 1) {
+      throw TimeoutException('Simulated lost completion acknowledgement');
+    }
+    return reply;
   }
 }

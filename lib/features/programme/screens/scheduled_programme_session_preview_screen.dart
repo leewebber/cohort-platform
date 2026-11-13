@@ -7,12 +7,16 @@ import '../../../core/widgets/cohort_card.dart';
 import '../../../core/widgets/section_title.dart';
 import '../../../data/repositories/programme_assignment_store.dart';
 import '../../../data/repositories/programme_assignment_supabase_store.dart';
+import '../../../models/workout_format.dart';
 import '../../exercises/exercise_detail/exercise_detail_screen.dart';
 import '../../performance/models/training_session_record.dart';
 import '../../performance/repositories/performance_record_store.dart';
 import '../../performance/repositories/supabase_performance_record_store.dart';
+import '../../performance/services/circuit_capture_contract.dart';
+import '../../performance/services/endurance_metrics_calculator.dart';
 import '../../performance/services/performance_result_summary_formatter.dart';
 import '../../performance/widgets/completed_session_result_view.dart';
+import '../../performance/widgets/fixed_work_rounds_capture.dart';
 import '../../home/controllers/home_today_session_refresh_controller.dart';
 import '../../session/models/session_execution_plan.dart';
 import '../../session/services/programme_session_execution_launcher.dart';
@@ -22,6 +26,7 @@ import '../models/fixed_programme_occurrence_projection.dart';
 import '../models/future_programme_session_swap.dart';
 import '../presentation/athlete_programme_lifecycle_presentation.dart';
 import '../presentation/programme_day_label_formatter.dart';
+import '../presentation/scheduled_quality_run_summary.dart';
 import '../services/athlete_catalogue_enrolment_services.dart';
 import '../services/athlete_programme_session_prepare_service.dart';
 import '../services/fixed_programme_occurrence_projection_store.dart';
@@ -226,6 +231,16 @@ class _ScheduledProgrammeSessionPreviewScreenState
       );
     }
     final plan = preview.plan;
+    final qualityRuns = {
+      for (final block in plan?.blocks ?? const <SessionExecutionBlock>[])
+        if (block.timerConfiguration?.durationSecondsRange == null)
+          block.blockId: ?ScheduledQualityRunSummary.fromWorkout(
+            block.timerConfiguration?.runningWorkout,
+          ),
+    };
+    final qualityRunTotal = plan?.blocks.length == 1
+        ? qualityRuns.values.firstOrNull?.totalSeconds
+        : null;
     return ListView(
       padding: const EdgeInsets.all(CohortSpacing.lg),
       children: [
@@ -261,7 +276,7 @@ class _ScheduledProgrammeSessionPreviewScreenState
             Text(focus, style: CohortTextStyles.body),
           ],
           const SizedBox(height: CohortSpacing.lg),
-          _overviewCard(plan),
+          _overviewCard(plan, exactSeconds: qualityRunTotal),
           const SizedBox(height: CohortSpacing.xl),
           const SectionTitle('Session blocks'),
           const SizedBox(height: CohortSpacing.md),
@@ -277,7 +292,19 @@ class _ScheduledProgrammeSessionPreviewScreenState
               onLaunchTimer: null,
               onOpenExercise: _openExercise,
               showActions: false,
+              showFixedWorkGuidance: true,
+              timerSummaryOverride: _qualityRunPhases(
+                qualityRuns[block.blockId],
+                showTotal: qualityRunTotal == null,
+              ),
               exerciseInfoOpensDetail: true,
+              performanceSection: CircuitCaptureContract.isFixedWork(block)
+                  ? FixedWorkRoundsPrescription(
+                      result: CircuitCaptureContract.authoredResult(block),
+                      linkedExercises: block.linkedExercises,
+                      onOpenExercise: _openExercise,
+                    )
+                  : null,
               recordedResultSummary: _recordedResultFor(record, block.blockId),
             ),
             const SizedBox(height: CohortSpacing.md),
@@ -326,7 +353,29 @@ class _ScheduledProgrammeSessionPreviewScreenState
     );
   }
 
-  Widget _overviewCard(SessionExecutionPlan plan) {
+  Widget? _qualityRunPhases(
+    ScheduledQualityRunSummary? summary, {
+    required bool showTotal,
+  }) {
+    if (summary == null) return null;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (showTotal)
+          Text(_exactTotal(summary.totalSeconds), style: CohortTextStyles.body),
+        for (final phase in summary.phases)
+          Padding(
+            padding: const EdgeInsets.only(top: CohortSpacing.xs),
+            child: Text(phase, style: CohortTextStyles.body),
+          ),
+      ],
+    );
+  }
+
+  String _exactTotal(int seconds) =>
+      '${EnduranceMetricsCalculator.formatAthleteDuration(seconds)} total';
+
+  Widget _overviewCard(SessionExecutionPlan plan, {int? exactSeconds}) {
     final protocol = plan.protocol;
     return CohortCard(
       child: Column(
@@ -341,7 +390,10 @@ class _ScheduledProgrammeSessionPreviewScreenState
             const SizedBox(height: CohortSpacing.xs),
             Text('Focus · $focus', style: CohortTextStyles.body),
           ],
-          if (plan.durationMin case final duration?) ...[
+          if (exactSeconds != null) ...[
+            const SizedBox(height: CohortSpacing.xs),
+            Text(_exactTotal(exactSeconds), style: CohortTextStyles.body),
+          ] else if (plan.durationMin case final duration?) ...[
             const SizedBox(height: CohortSpacing.xs),
             Text('$duration min estimated', style: CohortTextStyles.body),
           ],
@@ -350,7 +402,7 @@ class _ScheduledProgrammeSessionPreviewScreenState
             '${plan.blockCount} block${plan.blockCount == 1 ? '' : 's'}',
             style: CohortTextStyles.small,
           ),
-          if (_text(plan.coachNotes) case final notes?) ...[
+          if (_overviewCoachNotes(plan) case final notes?) ...[
             const SizedBox(height: CohortSpacing.md),
             Text('Coach notes', style: CohortTextStyles.eyebrow),
             const SizedBox(height: CohortSpacing.xs),
@@ -359,6 +411,27 @@ class _ScheduledProgrammeSessionPreviewScreenState
         ],
       ),
     );
+  }
+
+  String? _overviewCoachNotes(SessionExecutionPlan plan) {
+    final notes = _text(plan.coachNotes);
+    // Suppress the exact Apollo session summaries repeated by the blocks.
+    // Keep distinct authored session notes intact.
+    final repeatsBlock = plan.blocks.any((block) {
+      final timer = block.timerConfiguration;
+      final effort = timer?.targetRpe;
+      if (effort == null) return false;
+      if (CircuitCaptureContract.isFixedWork(block)) {
+        return block.workoutFormat == WorkoutFormat.rounds &&
+            timer?.effectiveTargetRounds == 3 &&
+            notes == 'Conditioning is three authored rounds at target RPE $effort.';
+      }
+      return block.workoutFormat == WorkoutFormat.emom &&
+          block.coachNotes ==
+              'Reduce calories or reps only if clean work cannot finish inside the minute.' &&
+          notes == 'EMOM target RPE $effort; scale only for clean completion.';
+    });
+    return repeatsBlock ? null : notes;
   }
 
   List<Widget> _executionAction(ScheduledProgrammeSessionPreview preview) {

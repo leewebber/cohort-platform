@@ -26,6 +26,7 @@ class ProgrammeAdaptationProposalMapper {
     required KnowledgeGraphReader knowledge,
     ApprovedEquipmentSubstitution? approval,
     bool hasPrivateTimeApproval = false,
+    bool hasPrivateRecoveryApproval = false,
     DateTime? proposedAt,
   }) {
     final stamp = proposedAt ?? DateTime.now().toUtc();
@@ -193,9 +194,11 @@ class ProgrammeAdaptationProposalMapper {
 
     final snapshot = application.snapshot!;
     final isTimeOption = request.reason == AdaptationReason.time;
+    final preservesRetainedBlocks = isTimeOption || hasPrivateRecoveryApproval;
     final sessionChanges = _sessionChanges(
       snapshot,
-      timeOptionDraft: isTimeOption ? authoredDraft : null,
+      omissionDraft: preservesRetainedBlocks ? authoredDraft : null,
+      isRecoveryOption: hasPrivateRecoveryApproval,
     );
     final exerciseChanges = _exerciseChanges(snapshot, knowledge);
 
@@ -219,7 +222,7 @@ class ProgrammeAdaptationProposalMapper {
         snapshot: snapshot,
         knowledge: knowledge,
         approval: approval,
-        preserveRetainedBlocks: isTimeOption,
+        preserveRetainedBlocks: preservesRetainedBlocks,
       );
       final originalFingerprint = ProgrammeAdaptationFingerprints.plan(
         package.plan,
@@ -242,16 +245,19 @@ class ProgrammeAdaptationProposalMapper {
         slotOrder: identity.slotOrder,
         sessionChanges: sessionChanges,
         exerciseChanges: exerciseChanges,
-        preservedIntent: preservedIntent,
+        preservedIntent: hasPrivateRecoveryApproval
+            ? 'Upper-body strength. Keep the five-minute easy walk and bench press 4 × 8 with 120 seconds’ rest.'
+            : preservedIntent,
         derivationExplanation:
             'Each proposed change is derived from today’s authored prescription '
             'for programmed session ${identity.key.value}. The authored Plan '
             'Package, later sessions, programme position, and scheduling remain '
             'unchanged. Only the current prepared session can change after '
             'explicit acceptance.',
-        athleteFacingMessage:
-            'Review the proposed adjustments below. Nothing has changed yet. '
-            'Your authored programme and later sessions stay as prescribed.',
+        athleteFacingMessage: hasPrivateRecoveryApproval
+            ? 'You reported poor sleep'
+            : 'Review the proposed adjustments below. Nothing has changed yet. '
+                  'Your authored programme and later sessions stay as prescribed.',
         policyKinds: policyKinds,
         evaluationProvenance: provenance,
         request: request,
@@ -355,7 +361,8 @@ class ProgrammeAdaptationProposalMapper {
 
   static List<ProgrammeAdaptationMaterialChange> _sessionChanges(
     AdaptedSessionExecutionSnapshot snapshot, {
-    ProtocolDraft? timeOptionDraft,
+    ProtocolDraft? omissionDraft,
+    required bool isRecoveryOption,
   }) {
     final changes = <ProgrammeAdaptationMaterialChange>[];
 
@@ -369,8 +376,9 @@ class ProgrammeAdaptationProposalMapper {
           scope: ProgrammeAdaptationChangeScope.session,
           targetId: snapshot.sourceProtocolId,
           actionLabel: 'adjustSessionDuration',
-          summary:
-              'Estimated session duration ${originalDuration}m → ${resultingDuration}m',
+          summary: isRecoveryOption
+              ? '$originalDuration → $resultingDuration min estimated'
+              : 'Estimated session duration ${originalDuration}m → ${resultingDuration}m',
           beforeValue: '${originalDuration}m',
           afterValue: '${resultingDuration}m',
         ),
@@ -378,7 +386,7 @@ class ProgrammeAdaptationProposalMapper {
     }
 
     for (final omitted in snapshot.omittedBlocks) {
-      final title = timeOptionDraft?.blocks
+      final title = omissionDraft?.blocks
           .singleWhere((block) => block.localId == omitted.sourceBlockLocalId)
           .title;
       changes.add(
@@ -386,12 +394,16 @@ class ProgrammeAdaptationProposalMapper {
           scope: ProgrammeAdaptationChangeScope.session,
           targetId: omitted.sourceBlockLocalId,
           actionLabel: omitted.omissionAction.name,
-          summary: title == null
+          summary: isRecoveryOption
+              ? 'Skip optional lateral raises'
+              : title == null
               ? 'Omit block ${omitted.sourceBlockLocalId} '
                     '(${omitted.blockTypeDbValue})'
               : 'Omit $title. All remaining sets, reps and rests stay as prescribed.',
           blockLocalId: omitted.sourceBlockLocalId,
-          beforeValue: 'included',
+          beforeValue: isRecoveryOption
+              ? '3 × 12 with 60 seconds’ rest'
+              : 'included',
           afterValue: 'omitted',
           planStepSequence: omitted.planStepSequence,
         ),

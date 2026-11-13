@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../../../domain/running_workout/running_workout.dart';
+import '../models/authored_timed_running_execution.dart';
 import '../models/structured_running_execution.dart';
 import '../services/structured_running_controller.dart';
 
@@ -159,9 +160,14 @@ class _StructuredRunningTimerScreenState
   @override
   Widget build(BuildContext context) {
     final cursor = _controller.cursor;
-    final step = widget.execution.stepForCursor(cursor);
-    final target = widget.execution.targetsByStepId[step.stepId];
+    final execution = widget.execution;
+    final step = execution.stepForCursor(cursor);
+    final target = execution.targetsByStepId[step.stepId];
     final distanceStep = _controller.isDistanceStep;
+    final minimalQuality =
+        execution is AuthoredTimedRunningExecution &&
+        execution.isQualityRun &&
+        !distanceStep;
     final seconds = (cursor.remainingMilliseconds / 1000).ceil();
     final elapsedSeconds = cursor.distanceElapsedMilliseconds ~/ 1000;
     return PopScope(
@@ -192,41 +198,53 @@ class _StructuredRunningTimerScreenState
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
-                          step.label ?? _roleLabel(step.role),
-                          style: Theme.of(context).textTheme.headlineMedium,
-                        ),
-                        const SizedBox(height: 12),
-                        Text(
-                          widget.execution.pauseOnInterruption
-                              ? 'Step ${_controller.stepIndex + 1} of ${_controller.totalSteps} · ${_positionLabel(step.role, cursor.repeatOrdinal)}'
-                              : _positionLabel(step.role, cursor.repeatOrdinal),
-                          key: const ValueKey('structured-running-position'),
-                          textAlign: TextAlign.center,
-                        ),
-                        if (step.notes case final notes?) ...[
-                          const SizedBox(height: 8),
-                          Text(notes, textAlign: TextAlign.center),
-                        ],
-                        if (widget.execution.pauseOnInterruption &&
-                            _controller.nextStep != null) ...[
-                          const SizedBox(height: 8),
+                        if (!minimalQuality || !cursor.isFinished) ...[
                           Text(
-                            'Next: ${_controller.nextStep!.label ?? _roleLabel(_controller.nextStep!.role)}',
-                            key: const ValueKey('structured-running-next'),
+                            step.label ?? _roleLabel(step.role),
+                            style: Theme.of(context).textTheme.headlineMedium,
+                            textAlign: minimalQuality ? TextAlign.center : null,
                           ),
-                        ],
-                        if (widget.execution.authoredGuidance
-                            case final guidance?) ...[
                           const SizedBox(height: 12),
                           Text(
-                            guidance,
-                            key: const ValueKey('structured-running-guidance'),
+                            minimalQuality
+                                ? 'Step ${_controller.stepIndex + 1} of ${_controller.totalSteps}'
+                                : execution.pauseOnInterruption
+                                ? 'Step ${_controller.stepIndex + 1} of ${_controller.totalSteps} · ${_positionLabel(step.role, cursor.repeatOrdinal)}'
+                                : _positionLabel(
+                                    step.role,
+                                    cursor.repeatOrdinal,
+                                  ),
+                            key: const ValueKey('structured-running-position'),
                             textAlign: TextAlign.center,
                           ),
                         ],
-                        const SizedBox(height: 12),
-                        ..._targetWidgets(step: step, target: target),
+                        if (!minimalQuality) ...[
+                          if (step.notes case final notes?) ...[
+                            const SizedBox(height: 8),
+                            Text(notes, textAlign: TextAlign.center),
+                          ],
+                          if (execution.pauseOnInterruption &&
+                              _controller.nextStep != null) ...[
+                            const SizedBox(height: 8),
+                            Text(
+                              'Next: ${_controller.nextStep!.label ?? _roleLabel(_controller.nextStep!.role)}',
+                              key: const ValueKey('structured-running-next'),
+                            ),
+                          ],
+                          if (execution.authoredGuidance
+                              case final guidance?) ...[
+                            const SizedBox(height: 12),
+                            Text(
+                              guidance,
+                              key: const ValueKey(
+                                'structured-running-guidance',
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+                          const SizedBox(height: 12),
+                          ..._targetWidgets(step: step, target: target),
+                        ],
                         if (distanceStep) ...[
                           const SizedBox(height: 12),
                           const Text(
@@ -255,29 +273,39 @@ class _StructuredRunningTimerScreenState
                               ? 'Timer finished'
                               : distanceStep
                               ? 'Active time ${_elapsed(elapsedSeconds)}'
+                              : minimalQuality
+                              ? _minutesAndSeconds(seconds)
                               : '$seconds s',
                           key: const ValueKey('structured-running-clock'),
                           style: Theme.of(context).textTheme.displayMedium,
                         ),
-                        const SizedBox(height: 24),
-                        FilledButton(
-                          onPressed:
-                              cursor.isFinished ||
-                                  _saveFailed ||
-                                  _isExiting ||
-                                  _confirmingDistance
-                              ? null
-                              : cursor.isPaused
-                              ? _controller.start
-                              : _controller.pause,
-                          child: Text(
-                            cursor.isPaused
-                                ? (widget.execution.pauseOnInterruption
-                                      ? 'Start / resume'
-                                      : 'Start')
-                                : 'Pause',
+                        if (minimalQuality &&
+                            !cursor.isFinished &&
+                            step.target.kind != RunningTargetKind.none) ...[
+                          const SizedBox(height: 12),
+                          ..._targetWidgets(step: step, target: target),
+                        ],
+                        if (!minimalQuality || !cursor.isFinished) ...[
+                          const SizedBox(height: 24),
+                          FilledButton(
+                            onPressed:
+                                cursor.isFinished ||
+                                    _saveFailed ||
+                                    _isExiting ||
+                                    _confirmingDistance
+                                ? null
+                                : cursor.isPaused
+                                ? _controller.start
+                                : _controller.pause,
+                            child: Text(
+                              cursor.isPaused
+                                  ? (execution.pauseOnInterruption
+                                        ? 'Start / resume'
+                                        : 'Start')
+                                  : 'Pause',
+                            ),
                           ),
-                        ),
+                        ],
                         if (distanceStep) ...[
                           const SizedBox(height: 12),
                           FilledButton(
@@ -296,7 +324,8 @@ class _StructuredRunningTimerScreenState
                             textAlign: TextAlign.center,
                           ),
                         ],
-                        if (widget.execution.pauseOnInterruption &&
+                        if (!minimalQuality &&
+                            execution.pauseOnInterruption &&
                             cursor.isPaused &&
                             !cursor.isFinished) ...[
                           const SizedBox(height: 12),
@@ -317,11 +346,13 @@ class _StructuredRunningTimerScreenState
                         ],
                         if (cursor.isFinished) ...[
                           const SizedBox(height: 12),
-                          const Text(
-                            'Timer finished. Record evidence before completing the block.',
-                            textAlign: TextAlign.center,
-                          ),
-                          const SizedBox(height: 12),
+                          if (!minimalQuality) ...[
+                            const Text(
+                              'Timer finished. Record evidence before completing the block.',
+                              textAlign: TextAlign.center,
+                            ),
+                            const SizedBox(height: 12),
+                          ],
                           FilledButton(
                             key: const ValueKey('review-running-repetitions'),
                             onPressed: _isExiting ? null : _exit,
@@ -439,10 +470,9 @@ class _StructuredRunningTimerScreenState
       ? 'Work repetition $repeatOrdinal'
       : '${_roleLabel(role)} · repetition $repeatOrdinal';
 
-  static String _formatPace(int milliseconds) {
-    final totalSeconds = (milliseconds / 1000).round();
-    final minutes = totalSeconds ~/ 60;
-    final seconds = totalSeconds.remainder(60).toString().padLeft(2, '0');
-    return '$minutes:$seconds';
-  }
+  static String _formatPace(int milliseconds) =>
+      _minutesAndSeconds((milliseconds / 1000).round());
+
+  static String _minutesAndSeconds(int seconds) =>
+      '${seconds ~/ 60}:${(seconds % 60).toString().padLeft(2, '0')}';
 }

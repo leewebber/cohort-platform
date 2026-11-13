@@ -10,10 +10,19 @@ import 'package:cohort_platform/features/performance/services/circuit_capture_co
 import 'package:cohort_platform/features/performance/services/circuit_result_comparison.dart';
 import 'package:cohort_platform/features/performance/services/emom_score_contract.dart';
 import 'package:cohort_platform/features/performance/widgets/emom_result_capture.dart';
+import 'package:cohort_platform/features/performance/services/performance_record_save_coordinator.dart';
+import 'package:cohort_platform/features/programme/models/fixed_programme_occurrence_projection.dart';
+import 'package:cohort_platform/features/programme/presentation/athlete_programme_lifecycle_presentation.dart';
+import 'package:cohort_platform/features/programme/screens/scheduled_programme_session_preview_screen.dart';
+import 'package:cohort_platform/features/programme/services/scheduled_programme_session_preview_service.dart';
 import 'package:cohort_platform/features/session/controllers/session_execution_controller.dart';
+import 'package:cohort_platform/features/session/screens/active_session_screen.dart';
+import 'package:cohort_platform/features/session/services/session_execution_loader.dart';
+import 'package:cohort_platform/features/session/widgets/athlete/athlete_block_card.dart';
 import 'package:cohort_platform/features/session/models/session_execution_plan.dart';
 import 'package:cohort_platform/features/session/services/block_timer_controller.dart';
 import 'package:cohort_platform/features/session/services/session_finish_eligibility.dart';
+import 'package:cohort_platform/models/session_block.dart';
 import 'package:cohort_platform/models/session_block_type.dart';
 import 'package:cohort_platform/models/strength_exercise_prescription.dart';
 import 'package:cohort_platform/models/timer_configuration.dart';
@@ -25,6 +34,7 @@ SessionExecutionPlan _apolloEmom({bool includeStations = true}) {
   return SessionExecutionPlan(
     sessionId: 'APOLLO-W1-SAT-R1',
     sessionTitle: 'Apollo Athletic',
+    coachNotes: 'EMOM target RPE 7-8; scale only for clean completion.',
     blocks: [
       SessionExecutionBlock(
         blockId: 'b1100016-0000-4000-8000-000000000016',
@@ -33,15 +43,17 @@ SessionExecutionPlan _apolloEmom({bool includeStations = true}) {
         content: 'Minute 1: RowErg 12 calories. Minute 2: Burpees 8 reps.',
         workoutFormat: WorkoutFormat.emom,
         position: 1,
+        coachNotes: 'Reduce calories or reps only if clean work cannot finish inside the minute.',
         timerConfiguration: TimerConfiguration.fromJson({
           'duration_seconds': 480,
           'interval_seconds': 60,
+          'target_rpe': '7-8',
           if (includeStations)
             'alternating': [
               {'minute': 1, 'exercise': 'EX-049', 'calories': 12},
               {'minute': 2, 'exercise': 'EX-009', 'reps': 8},
             ],
-        }),
+        }, format: WorkoutFormat.emom),
         linkedExercises: [
           SessionExecutionExerciseSummary(
             exerciseId: 'EX-049',
@@ -108,6 +120,63 @@ CircuitResultData _score(
 }
 
 void main() {
+  for (final scheduled in [true, false]) {
+    testWidgets(
+      '${scheduled ? 'scheduled preview' : 'active workout'} shows Apollo EMOM station targets in authored order',
+      (tester) async {
+        final plan = _apolloEmom();
+        await tester.pumpWidget(
+          MaterialApp(
+            home: scheduled
+                ? _scheduledPreview(plan)
+                : ActiveSessionScreen(
+                    controller: SessionExecutionController(
+                      plan: plan,
+                      sessionKey: 'apollo-emom-display',
+                    )..startSession(),
+                    performanceController:
+                        PerformanceCaptureController.initializeFromExecutionPlan(
+                          plan: plan,
+                          athleteId: 'fixture-athlete',
+                          trainingSessionId: 1,
+                        ),
+                    saveCoordinator: PerformanceRecordSaveCoordinator(
+                      store: InMemoryPerformanceRecordStore(),
+                    ),
+                  ),
+          ),
+        );
+        await tester.pumpAndSettle();
+        final block = find.widgetWithText(AthleteBlockCard, 'Alternating EMOM');
+        if (scheduled) {
+          expect(find.text(plan.coachNotes!), findsNothing);
+          await tester.scrollUntilVisible(
+            block,
+            250,
+            scrollable: find.byType(Scrollable).first,
+          );
+        }
+        final labels = tester
+            .widgetList<Text>(
+              find.descendant(of: block, matching: find.byType(Text)),
+            )
+            .map((text) => text.data)
+            .whereType<String>();
+        expect(
+          labels,
+          containsAllInOrder(['RowErg — 12 calories', 'Burpees — 8 reps']),
+        );
+        expect(labels, isNot(contains('— × —')));
+        expect(labels, isNot(contains('— × 8')));
+        expect(labels.where((label) => label == 'Target RPE 7–8'), hasLength(1));
+        expect(
+          labels.where((label) => label == plan.blocks.first.coachNotes),
+          hasLength(1),
+        );
+      },
+    );
+  }
+
   test('valid alternating EMOM projects two stations and eight intervals', () {
     final block = _apolloEmom().blocks.first;
     expect(CircuitCaptureContract.occurrenceCount(block), 8);
@@ -446,11 +515,30 @@ void main() {
     );
   });
 
+  test('authored block rows carry RPE for EMOM and fixed-work rounds only', () {
+    final emom = SessionBlock.fromRow({
+      'workout_format': 'emom',
+      'timer_config': {'target_rpe': '7-8'},
+    });
+    final rounds = SessionBlock.fromRow({
+      'workout_format': 'rounds',
+      'timer_config': {'target_rpe': '7-8'},
+    });
+    final fixedWork = SessionBlock.fromRow({
+      'workout_format': 'rounds',
+      'timer_config': {'target_rpe': '7-8', 'capture_strategy': 'fixed_work'},
+    });
+    expect(emom.timerConfiguration?.targetRpe, '7-8');
+    expect(fixedWork.timerConfiguration?.targetRpe, '7-8');
+    expect(rounds.timerConfiguration?.toJson(), isNot(contains('target_rpe')));
+  });
+
   test('local restore keeps EMOM timer configuration', () {
     const codec = SessionExecutionPlanCodec();
     final restored = codec.decodePlan(codec.encodePlan(_apolloEmom()));
     expect(restored.blocks.first.timerConfiguration?.stations, hasLength(2));
     expect(restored.blocks.first.timerConfiguration?.emomTotalSeconds, 480);
+    expect(restored.blocks.first.timerConfiguration?.targetRpe, '7-8');
     expect(CircuitCaptureContract.occurrenceCount(restored.blocks.first), 8);
   });
 
@@ -476,4 +564,62 @@ void main() {
     expect(find.textContaining('8 of 8'), findsWidgets);
     expect(find.text('Record at least one station actual before completing this block.'), findsNothing);
   });
+}
+
+ScheduledProgrammeSessionPreviewScreen _scheduledPreview(
+  SessionExecutionPlan plan,
+) {
+  const date = '2026-09-05';
+  const occurrence = FixedProgrammeOccurrenceProjection(
+    assignmentId: 'apollo-assignment',
+    occurrenceId: 'apollo-saturday',
+    sessionSlotId: 'apollo-slot',
+    programmeVersionId: 'apollo-version',
+    protocolId: 'APOLLO-W1-SAT-R1',
+    programmedSessionKey: 'apollo-saturday',
+    weekNumber: 1,
+    dayKey: 'day_6',
+    sessionOrder: 1,
+    scheduledDate: date,
+    originalScheduledDate: date,
+    state: FixedProgrammeOccurrenceState.today,
+    sessionTitle: 'Apollo Athletic',
+  );
+  return ScheduledProgrammeSessionPreviewScreen(
+    athleteId: 'fixture-athlete',
+    calendar: const FixedProgrammeCalendarProjection(
+      assignmentId: 'apollo-assignment',
+      programmeName: 'Apollo Build',
+      timezone: 'Asia/Makassar',
+      scheduleMode: 'fixed_schedule',
+      startDate: '2026-08-31',
+      today: date,
+      weekStart: '2026-08-31',
+      weekEnd: '2026-09-06',
+      occurrences: [occurrence],
+      currentWeek: [],
+    ),
+    day: AthleteProgrammeWeekDayPresentation(
+      date: DateTime.parse(date),
+      state: occurrence.state,
+      occurrence: occurrence,
+    ),
+    previewService: ScheduledProgrammeSessionPreviewService(
+      loader: _EmomPreviewLoader(plan),
+    ),
+  );
+}
+
+class _EmomPreviewLoader extends SessionExecutionLoader {
+  _EmomPreviewLoader(this.plan);
+
+  final SessionExecutionPlan plan;
+
+  @override
+  Future<SessionExecutionLoadResult> load({
+    required String protocolId,
+    String? displayTitle,
+    String? programmeContextLabel,
+    Map<String, String> prescriptionLoadOverrides = const {},
+  }) async => SessionExecutionLoadResult(plan: plan);
 }

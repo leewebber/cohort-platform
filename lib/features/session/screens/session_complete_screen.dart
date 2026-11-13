@@ -20,6 +20,7 @@ class SessionCompleteScreen extends StatelessWidget {
     this.progressionResult,
     this.programmeProgress,
     this.onDone,
+    this.finishedEarly = false,
   });
 
   final ActiveSessionState state;
@@ -28,6 +29,7 @@ class SessionCompleteScreen extends StatelessWidget {
   final ProgrammeProgressionResult? progressionResult;
   final ProgrammeProgressSummary? programmeProgress;
   final VoidCallback? onDone;
+  final bool finishedEarly;
 
   String? _elapsedLabel() {
     final started = state.startedAt;
@@ -67,10 +69,16 @@ class SessionCompleteScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('SESSION COMPLETE', style: CohortTextStyles.eyebrow),
+              Text(
+                finishedEarly ? 'PARTIAL WORKOUT' : 'SESSION COMPLETE',
+                style: CohortTextStyles.eyebrow,
+              ),
               const SizedBox(height: CohortSpacing.sm),
               SessionCompletionSummary(
                 sessionTitle: state.plan.sessionTitle,
+                heading: finishedEarly
+                    ? 'Session finished early'
+                    : 'Session complete',
                 completedCount: state.completedCount,
                 totalCount: executableBlocks,
                 skippedCount: skipped.clamp(0, executableBlocks),

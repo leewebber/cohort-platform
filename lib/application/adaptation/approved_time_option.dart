@@ -10,8 +10,15 @@ typedef ProgrammeTimeApprovalLoader =
     Future<ApprovedTimeOption?> Function(ProgrammeExecutionContext context);
 
 /// The immutable, assignment-scoped approval returned by the private reader.
-class ApprovedTimeOption {
-  ApprovedTimeOption.fromJson(Map<String, dynamic> json)
+class ApprovedTimeOption extends ApprovedAccessoryOmission {
+  ApprovedTimeOption.fromJson(super.json) : super.fromJson();
+
+  static const provenance = 'approval:private-time-option-v1';
+}
+
+/// Exact authored omission shared by independently approved options.
+class ApprovedAccessoryOmission {
+  ApprovedAccessoryOmission.fromJson(Map<String, dynamic> json)
     : slotKey = json['slot_key'] as String,
       protocolId = json['protocol_id'] as String,
       packageHash = json['package_hash'] as String,
@@ -26,7 +33,6 @@ class ApprovedTimeOption {
         athleteAgreementRequired: true,
       );
 
-  static const provenance = 'approval:private-time-option-v1';
   final String slotKey;
   final String protocolId;
   final String packageHash;
@@ -59,7 +65,7 @@ class ApprovedTimeOption {
         fullMinutes <= shortMinutes ||
         shortMinutes <= 0 ||
         permission.id.isEmpty) {
-      throw StateError('Private time approval does not match this session.');
+      throw StateError('Approved omission does not match this session.');
     }
     final omitted = draft.blocks.singleWhere(
       (b) => b.position == omittedPosition,

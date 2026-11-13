@@ -205,6 +205,13 @@ class _BlockTimerScreenState extends State<BlockTimerScreen>
   @override
   Widget build(BuildContext context) {
     final state = _state;
+    final isEmom = widget.format == WorkoutFormat.emom;
+    final nextStation = isEmom || state == null
+        ? null
+        : AuthoredStationTargetFormatter.nextStationLine(
+            label: state.nextStationLabel,
+            target: state.nextStationTarget,
+          );
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, _) {
@@ -244,10 +251,14 @@ class _BlockTimerScreenState extends State<BlockTimerScreen>
               Text(widget.format.displayLabel, style: CohortTextStyles.eyebrow),
               const SizedBox(height: CohortSpacing.md),
               if (state != null) ...[
-                Text(state.phaseLabel, style: CohortTextStyles.body),
-                if (widget.boundTarget case final target?)
-                  Text(state.isFinished ? 'Complete' : state.phase == BlockTimerPhase.work
-                      ? 'Prescribed · ${target.targetLabel}' : 'Recovery · no pace target'),
+                if (!isEmom ||
+                    state.totalRounds <= 1 ||
+                    state.phase == BlockTimerPhase.preparation)
+                  Text(state.phaseLabel, style: CohortTextStyles.body),
+                if (!isEmom)
+                  if (widget.boundTarget case final target?)
+                    Text(state.isFinished ? 'Complete' : state.phase == BlockTimerPhase.work
+                        ? 'Prescribed · ${target.targetLabel}' : 'Recovery · no pace target'),
                 const SizedBox(height: CohortSpacing.sm),
                 if (state.totalRounds > 1)
                   Text(
@@ -284,14 +295,10 @@ class _BlockTimerScreenState extends State<BlockTimerScreen>
                     ),
                   ),
                 ),
-                if (AuthoredStationTargetFormatter.nextStationLine(
-                      label: state.nextStationLabel,
-                      target: state.nextStationTarget,
-                    )
-                    case final next?) ...[
+                if (nextStation != null) ...[
                   const SizedBox(height: CohortSpacing.md),
                   Text(
-                    next,
+                    nextStation,
                     key: const ValueKey('block-timer-next-station'),
                     style: CohortTextStyles.small.copyWith(
                       color: CohortColors.textSecondary,
@@ -313,10 +320,7 @@ class _BlockTimerScreenState extends State<BlockTimerScreen>
                     if (state.currentStationTarget != null)
                       'Target ${state.currentStationTarget}',
                     _timeSummary(state),
-                    ?AuthoredStationTargetFormatter.nextStationLine(
-                      label: state.nextStationLabel,
-                      target: state.nextStationTarget,
-                    ),
+                    ?nextStation,
                   ].join('. '),
                 ),
               ],
@@ -437,12 +441,13 @@ class _BlockTimerScreenState extends State<BlockTimerScreen>
                   );
                 },
               ),
-              if (widget.prescriptionLines.isNotEmpty) ...[
+              if (!isEmom && widget.prescriptionLines.isNotEmpty) ...[
                 const SizedBox(height: CohortSpacing.lg),
                 for (final line in widget.prescriptionLines)
                   Text(line, style: CohortTextStyles.body),
               ],
-              if (widget.restoredWorkNote?.trim().isNotEmpty == true) ...[
+              if (!isEmom &&
+                  widget.restoredWorkNote?.trim().isNotEmpty == true) ...[
                 const SizedBox(height: CohortSpacing.sm),
                 Text(
                   widget.restoredWorkNote!,

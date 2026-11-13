@@ -4,6 +4,8 @@ import 'package:cohort_platform/features/session/models/session_execution_status
 import 'package:cohort_platform/features/session/services/block_timer_controller.dart';
 import 'package:cohort_platform/features/session/services/protocol_step_to_block_converter.dart';
 import 'package:cohort_platform/features/performance/controllers/performance_capture_controller.dart';
+import 'package:cohort_platform/features/performance/models/performance_snapshot.dart';
+import 'package:cohort_platform/features/programme/models/programme_execution_context.dart';
 import 'package:cohort_platform/features/session/services/session_finish_eligibility.dart';
 import 'package:cohort_platform/models/protocol_step.dart';
 import 'package:cohort_platform/models/session_block_type.dart';
@@ -118,6 +120,62 @@ void main() {
 
       expect(result.canFinish, isFalse);
       expect(result.reason, 'Complete 2 remaining blocks');
+    });
+
+    test('finish early keeps the authored running review gate separate', () {
+      final controller =
+          PerformanceCaptureController.initializeFromExecutionPlan(
+            plan: _samplePlan(),
+            athleteId: 'athlete',
+            trainingSessionId: 1,
+          )..markBlockComplete('block-1');
+      const programmeContext = ProgrammeExecutionContext(
+        assignmentId: 'assignment-1',
+        programmeVersionId: 'version-1',
+        sessionSlotId: 'slot-1',
+        weekNumber: 1,
+        dayKey: 'day_1',
+        sessionOrder: 1,
+        plannedProtocolId: 'session-1',
+        effectiveProtocolId: 'session-1',
+        occurrenceId: 'occurrence-1',
+        packageSchemaVersion: 2,
+      );
+      const evaluator = SessionFinishEligibilityEvaluator();
+      expect(
+        evaluator
+            .evaluateEarly(
+              controller: controller,
+              programmeContext: programmeContext,
+            )
+            .canFinish,
+        isTrue,
+      );
+
+      final draft = controller.draft;
+      final unfinished = draft.blockDrafts.last;
+      final running = PerformanceCaptureController(
+        draft: draft.copyWith(
+          blockDrafts: [
+            draft.blockDrafts.first,
+            unfinished.copyWith(
+              blockSnapshot: BlockPerformanceSnapshot.fromJson({
+                ...unfinished.blockSnapshot.toJson(),
+                'timedRunningWorkoutV1': {'steps': []},
+              }),
+            ),
+          ],
+        ),
+      );
+      expect(
+        evaluator
+            .evaluateEarly(
+              controller: running,
+              programmeContext: programmeContext,
+            )
+            .canFinish,
+        isFalse,
+      );
     });
   });
 

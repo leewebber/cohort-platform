@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cohort_platform/core/widgets/cohort_athlete_bottom_nav_bar.dart';
 import 'package:cohort_platform/features/app_shell/athlete_app_shell.dart';
 import 'package:cohort_platform/features/athlete_profile/services/athlete_profile_session.dart';
 import 'package:cohort_platform/features/auth/controllers/auth_controller.dart';
@@ -136,12 +137,26 @@ void main() {
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 200));
       expect(find.byType(AthleteAppShell), findsOneWidget);
-      expect(
-        tester.widget<AthleteAppShell>(find.byType(AthleteAppShell)).initialTab,
-        2,
-      );
-      expect(find.text('Home'), findsWidgets);
+      final navigation = find.byType(CohortAthleteBottomNavBar);
+      String selectedDestination() {
+        final bar = tester.widget<CohortAthleteBottomNavBar>(navigation);
+        return bar.destinations![bar.selectedIndex].label;
+      }
+
+      expect(selectedDestination(), 'Home');
+      expect(find.text('Resume'), findsNothing);
       expect(find.text('Preparing…'), findsNothing);
+
+      await tester.tap(
+        find.descendant(of: navigation, matching: find.text('Programmes')),
+      );
+      await tester.pumpAndSettle();
+      expect(selectedDestination(), 'Programmes');
+
+      tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
+      tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+      await tester.pumpAndSettle();
+      expect(selectedDestination(), 'Programmes');
       controller.dispose();
     });
 

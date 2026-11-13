@@ -16,6 +16,7 @@ import 'package:cohort_platform/features/workout_player/models/workout_session_b
 
 import 'approved_equipment_substitution.dart';
 import 'approved_time_option.dart';
+import 'approved_recovery_option.dart';
 import 'plan_package_session_adaptation_adapter.dart';
 import 'programme_adaptation_fingerprints.dart';
 import 'programme_adaptation_proposal_mapper.dart';
@@ -107,6 +108,7 @@ class ProgrammeAdaptationAcceptanceService {
     required ProgrammeAdaptationProposal proposal,
     required ProgrammeExecutionContext executionContext,
     DateTime? acceptedAt,
+    RecoveryReview? recoveryReview,
   }) async {
     if (_acceptInFlight) {
       return ProgrammeAdaptationAcceptanceResult.failed(
@@ -124,6 +126,7 @@ class ProgrammeAdaptationAcceptanceService {
         proposal: proposal,
         executionContext: executionContext,
         acceptedAt: acceptedAt,
+        recoveryReview: recoveryReview,
       );
     } finally {
       _acceptInFlight = false;
@@ -136,6 +139,7 @@ class ProgrammeAdaptationAcceptanceService {
     required ProgrammeAdaptationProposal proposal,
     required ProgrammeExecutionContext executionContext,
     DateTime? acceptedAt,
+    RecoveryReview? recoveryReview,
   }) async {
     final stamp = acceptedAt ?? DateTime.now().toUtc();
 
@@ -209,6 +213,20 @@ class ProgrammeAdaptationAcceptanceService {
 
     // Freshness revalidation: re-run pipeline and require identical reviewed plan.
     try {
+      ApprovedRecoveryOption? recoveryApproval;
+      if (proposal.reason == AdaptationReason.recovery) {
+        if (recoveryReview?.permitsAcceptance(proposal, athleteId) != true) {
+          throw StateError('A fresh recovery review is required.');
+        }
+        recoveryApproval = await recoveryReview!.readApproval(
+          package: currentPackage,
+          context: executionContext,
+          request: proposal.request!,
+        );
+        if (recoveryApproval == null) {
+          throw StateError('Recovery approval changed since review.');
+        }
+      }
       final draft = await _loadProtocolDraft(currentPackage.protocolId!.trim());
       final approval = proposal.reason == AdaptationReason.equipment
           ? await _loadEquipmentApproval?.call(executionContext)
@@ -232,6 +250,8 @@ class ProgrammeAdaptationAcceptanceService {
           ? [approval.permission]
           : timeApproval != null
           ? [timeApproval.permission]
+          : recoveryApproval != null
+          ? [recoveryApproval.omission.permission]
           : proposal.reason == AdaptationReason.equipment ||
                 (proposal.reason == AdaptationReason.time &&
                     _loadTimeApproval == null)
@@ -258,6 +278,7 @@ class ProgrammeAdaptationAcceptanceService {
         authoredDraft: draft,
         adaptationPermissions: permissions,
         timeApproval: timeApproval,
+        recoveryApproval: recoveryApproval,
         executionContext: executionContext,
         slotKey: executionContext.packageSlotKey,
       );
@@ -269,6 +290,7 @@ class ProgrammeAdaptationAcceptanceService {
         knowledge: knowledge,
         approval: approval,
         hasPrivateTimeApproval: timeApproval != null,
+        hasPrivateRecoveryApproval: recoveryApproval != null,
         proposedAt: proposal.proposedAt,
       );
       if (!fresh.isAcceptable) {
@@ -285,7 +307,9 @@ class ProgrammeAdaptationAcceptanceService {
       );
       const codec = SessionExecutionPlanCodec();
       if (freshFingerprint != proposal.reviewedPlanFingerprint ||
-          ((approval != null || proposal.reason == AdaptationReason.time) &&
+          ((approval != null ||
+                  recoveryApproval != null ||
+                  proposal.reason == AdaptationReason.time) &&
               jsonEncode(codec.encodePlan(fresh.reviewedExecutablePlan!)) !=
                   jsonEncode(
                     codec.encodePlan(proposal.reviewedExecutablePlan!),
@@ -304,6 +328,15 @@ class ProgrammeAdaptationAcceptanceService {
               'The adaptation changes no longer match what you reviewed. '
               'Please review again. Your prepared session was not changed.',
         );
+      }
+      if (recoveryApproval != null &&
+          await recoveryReview!.readApproval(
+                package: currentPackage,
+                context: executionContext,
+                request: proposal.request!,
+              ) ==
+              null) {
+        throw StateError('Recovery review is no longer current.');
       }
     } catch (_) {
       return ProgrammeAdaptationAcceptanceResult.failed(

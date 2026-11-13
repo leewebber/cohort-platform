@@ -70,24 +70,40 @@ class StrengthPrescriptionFormatter {
     final parts = <String>[
       formatSetsReps(prescription),
       ?formatLoad(prescription.load),
-      if (prescription.rirRange != null)
-        '${_range(prescription.rirRange!.min, prescription.rirRange!.max)} RIR',
+      ?formatEffort(prescription),
     ];
     return parts.join(' · ');
   }
 
   static String _range(int min, int max) => min == max ? '$min' : '$min–$max';
 
-  static String detailLine(StrengthExercisePrescription prescription) {
+  static String? formatEffort(StrengthExercisePrescription prescription) {
+    final range = prescription.rirRange;
+    return range == null ? null : '${_range(range.min, range.max)} RIR';
+  }
+
+  static List<String> restDetails(StrengthExercisePrescription prescription) =>
+      [
+        ?formatRest(prescription.restSeconds),
+        if (prescription.restSecondsRange case final range?)
+          'Rest ${_range(range.min, range.max)} s',
+        if (prescription.restAfterGroupSecondsRange case final range?)
+          'Rest after pair ${_range(range.min, range.max)} s',
+      ];
+
+  static String detailLine(
+    StrengthExercisePrescription prescription, {
+    String? Function(String?)? projectTempo,
+  }) {
     final parts = <String>[
-      ?formatRest(prescription.restSeconds),
-      if (prescription.restSecondsRange != null)
-        'Rest ${_range(prescription.restSecondsRange!.min, prescription.restSecondsRange!.max)} s',
-      if (prescription.restAfterGroupSecondsRange != null)
-        'Rest after pair ${_range(prescription.restAfterGroupSecondsRange!.min, prescription.restAfterGroupSecondsRange!.max)} s',
+      ...restDetails(prescription),
       if (prescription.holdSeconds != null)
         '${prescription.holdSeconds} s extended hold',
-      ?formatTempo(prescription.tempo),
+      ?formatTempo(
+        projectTempo == null
+            ? prescription.tempo
+            : projectTempo(prescription.tempo),
+      ),
     ];
     return parts.join(' · ');
   }

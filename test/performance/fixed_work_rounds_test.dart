@@ -4,14 +4,25 @@ import 'package:cohort_platform/features/performance/models/performance_result_d
 import 'package:cohort_platform/features/performance/models/training_session_record.dart';
 import 'package:cohort_platform/features/performance/models/training_session_record_status.dart';
 import 'package:cohort_platform/features/performance/mappers/performance_record_mapper.dart';
+import 'package:cohort_platform/features/performance/repositories/in_memory_performance_record_store.dart';
+import 'package:cohort_platform/features/performance/screens/training_history_screen.dart';
 import 'package:cohort_platform/features/performance/services/circuit_capture_contract.dart';
+import 'package:cohort_platform/features/performance/services/performance_record_save_coordinator.dart';
 import 'package:cohort_platform/features/performance/services/circuit_result_comparison.dart';
 import 'package:cohort_platform/features/performance/services/completed_session_result_projection.dart';
 import 'package:cohort_platform/features/performance/services/performance_correction_service.dart';
 import 'package:cohort_platform/features/performance/services/performance_result_summary_formatter.dart';
 import 'package:cohort_platform/features/performance/widgets/fixed_work_rounds_capture.dart';
 import 'package:cohort_platform/features/performance/widgets/round_time_field.dart';
+import 'package:cohort_platform/features/programme/models/fixed_programme_occurrence_projection.dart';
+import 'package:cohort_platform/features/programme/presentation/athlete_programme_lifecycle_presentation.dart';
+import 'package:cohort_platform/features/programme/screens/scheduled_programme_session_preview_screen.dart';
+import 'package:cohort_platform/features/programme/services/scheduled_programme_session_preview_service.dart';
+import 'package:cohort_platform/features/session/controllers/session_execution_controller.dart';
 import 'package:cohort_platform/features/session/models/session_execution_plan.dart';
+import 'package:cohort_platform/features/session/screens/active_session_screen.dart';
+import 'package:cohort_platform/features/session/services/session_execution_loader.dart';
+import 'package:cohort_platform/features/session/services/circuit_block_timer_bridge.dart';
 import 'package:cohort_platform/features/session/services/fixed_work_rounds_controller.dart';
 import 'package:cohort_platform/features/session/widgets/athlete/athlete_block_card.dart';
 import 'package:cohort_platform/features/performance/services/interval_pace_format.dart';
@@ -23,16 +34,22 @@ import 'package:cohort_platform/models/workout_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-SessionExecutionPlan _w5() {
+const _scalingCue =
+    'Complete the authored order; scale only to preserve clean execution and target RPE.';
+const _effortOverview = 'Conditioning is three authored rounds at target RPE 7-8.';
+
+SessionExecutionPlan _w5({bool withGuidance = false}) {
   return SessionExecutionPlan(
     sessionId: 'APOLLO-W5-SAT-R1',
     sessionTitle: 'Session',
+    coachNotes: withGuidance ? _effortOverview : null,
     blocks: [
       SessionExecutionBlock(
         blockId: 'cond',
         title: 'Conditioning',
         blockType: SessionBlockType.conditioning,
         content: 'Three rounds',
+        coachNotes: withGuidance ? _scalingCue : null,
         workoutFormat: WorkoutFormat.rounds,
         position: 1,
         timerConfiguration: TimerConfiguration.fromJson({
@@ -40,7 +57,8 @@ SessionExecutionPlan _w5() {
           'between_round_recovery_seconds': 90,
           'round_sequence': ['EX-131', 'EX-132', 'EX-050', 'EX-009'],
           'capture_strategy': 'fixed_work',
-        }),
+          if (withGuidance) 'target_rpe': '7-8',
+        }, format: WorkoutFormat.rounds),
         linkedExercises: [
           SessionExecutionExerciseSummary(
             exerciseId: 'EX-131',
@@ -146,6 +164,23 @@ void main() {
     expect(controller.currentRound, 2);
     expect(controller.canStartCurrentRound, isTrue);
     expect(controller.phase, isNot(FixedWorkPhase.work));
+  });
+
+  test('fixed-work cursors stay out of the generic timer restore', () {
+    final block = _w5().blocks.single;
+    final controller = FixedWorkRoundsController(
+      result: CircuitCaptureContract.authoredResult(block),
+    );
+    final work = controller.startRound();
+    final recovery = controller.finishRound();
+    expect(work.timerCursor?.workStartedAtMs, isNotNull);
+    expect(recovery.timerCursor?.restStartedAtMs, isNotNull);
+    for (final result in [work, recovery]) {
+      expect(
+        CircuitBlockTimerBridge.restoredState(block: block, result: result),
+        isNull,
+      );
+    }
   });
 
   test('skip rest arms the next ready state without starting work', () {
@@ -387,6 +422,93 @@ void main() {
     );
   });
 
+  for (final width in [320.0, 390.0]) {
+    testWidgets('saved Apollo W5 History is readable at ${width.toInt()} px', (
+      tester,
+    ) async {
+      tester.view.physicalSize = Size(width, 568);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+
+      const athleteId = 'athlete-1';
+      final plan = _w5();
+      final capture = PerformanceCaptureController.initializeFromExecutionPlan(
+        plan: plan,
+        athleteId: athleteId,
+        trainingSessionId: 51,
+      );
+      final block = plan.blocks.single;
+      final rounds = FixedWorkRoundsController(
+        result: CircuitCaptureContract.authoredResult(block),
+      );
+      rounds.recordManualTime(1, 87);
+      rounds.recordManualTime(2, 92);
+      rounds.recordManualTime(3, 98);
+      final result = rounds.result;
+      capture
+        ..updateBlockResultData(
+          block.blockId,
+          result
+              .replaceSetup(result.sharedSetup.first.copyWith(loadKg: 65))
+              .replaceSetup(result.sharedSetup.last.copyWith(loadKg: 50)),
+        )
+        ..markBlockComplete(block.blockId);
+      final store = InMemoryPerformanceRecordStore();
+      await store.completeRecord(
+        capture.buildPersistableDraft(
+          status: TrainingSessionRecordStatus.completed,
+        ),
+      );
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: TrainingHistoryScreen(
+            athleteId: athleteId,
+            saveCoordinator: PerformanceRecordSaveCoordinator(store: store),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('Session'), findsOneWidget);
+      await tester.tap(find.text('Session'));
+      await tester.pumpAndSettle();
+
+      final detail = find.byKey(const ValueKey('completed-session-result'));
+      final scrollable = find.descendant(
+        of: detail,
+        matching: find.byType(Scrollable),
+      );
+      for (final label in [
+        'Circuit performance',
+        'Equipment',
+        'Sled Push: 65.0 kg',
+        'Sled Pull: 50.0 kg',
+        'Round times',
+        'Round 1: 1:27',
+        'Round 2: 1:32',
+        'Round 3: 1:38',
+        'Prescribed work',
+        'Sled Push: Prescribed 20.0 m',
+        'Sled Pull: Prescribed 20.0 m',
+        'SkiErg: Prescribed 250.0 m',
+        'Burpees: Prescribed 8 reps',
+      ]) {
+        final row = find.descendant(of: detail, matching: find.text(label));
+        await tester.scrollUntilVisible(row, 100, scrollable: scrollable);
+        await Scrollable.ensureVisible(tester.element(row), alignment: 0.5);
+        await tester.pumpAndSettle();
+        final bounds = tester.getRect(row);
+        final viewport = tester.getRect(detail);
+        expect(bounds.left, greaterThanOrEqualTo(viewport.left), reason: label);
+        expect(bounds.right, lessThanOrEqualTo(viewport.right), reason: label);
+        expect(bounds.top, greaterThanOrEqualTo(viewport.top), reason: label);
+        expect(bounds.bottom, lessThanOrEqualTo(viewport.bottom), reason: label);
+      }
+      expect(tester.takeException(), isNull);
+    });
+  }
+
   test('manual times complete rounds without starting rest', () {
     final controller = FixedWorkRoundsController(
       result: CircuitCaptureContract.authoredResult(_w5().blocks.single),
@@ -431,6 +553,131 @@ void main() {
     expect(IntervalPaceFormat.isComplete('12'), isFalse);
     expect(IntervalPaceFormat.hasInvalidSeconds('199'), isTrue);
   });
+
+  testWidgets('Apollo W5 scheduled preview shows read-only fixed-work doses in order', (
+    tester,
+  ) async {
+    const date = '2026-10-03';
+    const occurrence = FixedProgrammeOccurrenceProjection(
+      occurrenceId: 'apollo-w5-saturday',
+      assignmentId: 'apollo-assignment',
+      sessionSlotId: 'apollo-slot',
+      programmeVersionId: 'apollo-version',
+      protocolId: 'APOLLO-W5-SAT-R1',
+      programmedSessionKey: 'apollo-w5-saturday',
+      weekNumber: 5,
+      dayKey: 'day_6',
+      sessionOrder: 1,
+      scheduledDate: date,
+      originalScheduledDate: date,
+      state: FixedProgrammeOccurrenceState.today,
+      sessionTitle: 'Apollo Athletic',
+    );
+    await tester.pumpWidget(
+      MaterialApp(
+        home: ScheduledProgrammeSessionPreviewScreen(
+          athleteId: 'fixture-athlete',
+          calendar: const FixedProgrammeCalendarProjection(
+            assignmentId: 'apollo-assignment',
+            programmeName: 'Apollo Build',
+            timezone: 'Asia/Makassar',
+            scheduleMode: 'fixed_schedule',
+            startDate: '2026-08-31',
+            today: date,
+            weekStart: '2026-09-28',
+            weekEnd: '2026-10-04',
+            occurrences: [occurrence],
+            currentWeek: [],
+          ),
+          day: AthleteProgrammeWeekDayPresentation(
+            date: DateTime.parse(date),
+            state: occurrence.state,
+            occurrence: occurrence,
+          ),
+          previewService: ScheduledProgrammeSessionPreviewService(
+            loader: _W5PreviewLoader(),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('Begin'), findsOneWidget);
+    expect(find.text(_effortOverview), findsNothing);
+    final card = find.widgetWithText(AthleteBlockCard, 'Conditioning');
+    await tester.scrollUntilVisible(
+      card,
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
+    final labels = tester
+        .widgetList<Text>(find.descendant(of: card, matching: find.byType(Text)))
+        .map((text) => text.data)
+        .whereType<String>();
+    expect(
+      labels,
+      containsAllInOrder([
+        '3 ROUNDS',
+        'Sled Push',
+        '20 m',
+        'Sled Pull',
+        '20 m',
+        'SkiErg',
+        '250 m',
+        'Burpees',
+        '8 reps',
+        'Rest 90 seconds between rounds',
+      ]),
+    );
+    expect(labels.where((label) => label == 'Target RPE 7–8'), hasLength(1));
+    expect(labels.where((label) => label == _scalingCue), hasLength(1));
+    expect(find.byType(FixedWorkRoundsCapture), findsNothing);
+    expect(find.byType(TextField), findsNothing);
+    expect(labels, isNot(contains('START TIMER')));
+    expect(labels, isNot(contains('Mark block complete')));
+  });
+
+  for (final withGuidance in [true, false]) {
+    testWidgets(
+      'fixed-work start ${withGuidance ? 'keeps authored guidance on the workout block' : 'omits absent guidance'}',
+      (tester) async {
+        final plan = _w5(withGuidance: withGuidance);
+        await tester.pumpWidget(
+          MaterialApp(
+            home: ActiveSessionScreen(
+              controller: SessionExecutionController(
+                plan: plan,
+                sessionKey: 'apollo-w5-guidance-$withGuidance',
+              )..startSession(),
+              performanceController:
+                  PerformanceCaptureController.initializeFromExecutionPlan(
+                    plan: plan,
+                    athleteId: 'fixture-athlete',
+                    trainingSessionId: 1,
+                  ),
+              saveCoordinator: PerformanceRecordSaveCoordinator(
+                store: InMemoryPerformanceRecordStore(),
+              ),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+        final start = find.byKey(const ValueKey('fixed-work-start-1'));
+        expect(start, findsOneWidget);
+        final beforeCount = withGuidance ? findsOneWidget : findsNothing;
+        expect(find.text('Target RPE 7–8'), beforeCount);
+        expect(find.text(_scalingCue), beforeCount);
+        expect(find.text('Coach notes'), beforeCount);
+        if (!withGuidance) expect(find.textContaining('RPE'), findsNothing);
+
+        await tester.ensureVisible(start);
+        await tester.tap(start);
+        await tester.pumpAndSettle();
+        expect(find.byKey(const ValueKey('fixed-work-clock')), findsOneWidget);
+        expect(find.textContaining('RPE'), findsNothing);
+        expect(find.text('Coach notes'), findsNothing);
+      },
+    );
+  }
 
   testWidgets('prescription appears once with loads and start timer visible', (
     tester,
@@ -517,6 +764,109 @@ void main() {
     expect(find.text('Enter seconds as 00–59'), findsOneWidget);
   });
 
+  testWidgets('Apollo timer keeps clock and actions in view on a small phone', (
+    tester,
+  ) async {
+    const phone = Size(320, 568);
+    tester.view.physicalSize = phone;
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    final plan = _w5(withGuidance: true);
+    final performance = PerformanceCaptureController.initializeFromExecutionPlan(
+      plan: plan,
+      athleteId: 'fixture-athlete',
+      trainingSessionId: 1,
+    );
+    CircuitResultData result() =>
+        performance.draft.blockDrafts.single.resultData as CircuitResultData;
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: ActiveSessionScreen(
+          controller: SessionExecutionController(
+            plan: plan,
+            sessionKey: 'apollo-w5-small-timer',
+          )..startSession(),
+          performanceController: performance,
+          saveCoordinator: PerformanceRecordSaveCoordinator(
+            store: InMemoryPerformanceRecordStore(),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    final start = find.byKey(const ValueKey('fixed-work-start-1'));
+    await tester.ensureVisible(start);
+    await tester.tap(start);
+    await tester.pumpAndSettle();
+
+    void expectOnScreen(Finder finder) {
+      expect(finder, findsOneWidget);
+      final rect = tester.getRect(finder);
+      expect(rect.top, greaterThanOrEqualTo(0));
+      expect(rect.bottom, lessThanOrEqualTo(phone.height));
+    }
+
+    Future<void> tapPrimary(String key) async {
+      final action = find.byKey(ValueKey(key));
+      expectOnScreen(action);
+      expect(action.hitTestable(), findsOneWidget);
+      await tester.tap(action);
+      await tester.pumpAndSettle();
+    }
+
+    final clock = find.byKey(const ValueKey('fixed-work-clock'));
+    expectOnScreen(clock);
+    final startedAt = result().timerCursor?.workStartedAtMs;
+    expect(startedAt, isNotNull);
+    await tester.tap(find.text('Back to workout'));
+    await tester.pumpAndSettle();
+    expect(clock, findsNothing);
+    expect(find.text('Target RPE 7–8'), findsOneWidget);
+    expect(find.text(_scalingCue), findsOneWidget);
+    expect(find.byKey(const ValueKey('fixed-work-load-EX-131')), findsOneWidget);
+    expect(find.byKey(const ValueKey('fixed-work-load-EX-132')), findsOneWidget);
+    final reopen = find.byKey(const ValueKey('fixed-work-open-timer'));
+    await tester.ensureVisible(reopen);
+    await tester.runAsync(
+      () => Future<void>.delayed(const Duration(milliseconds: 1100)),
+    );
+    await tester.tap(reopen);
+    await tester.pumpAndSettle();
+    expect(result().timerCursor?.currentRound, 1);
+    expect(result().timerCursor?.workStartedAtMs, startedAt);
+    expect(tester.widget<Text>(clock).data, isNot('00:00'));
+
+    for (var round = 1; round <= 3; round++) {
+      expectOnScreen(clock);
+      expectOnScreen(find.text('Round $round of 3'));
+      expect(find.text('Sled Push'), findsNothing);
+      expect(find.byType(TextField), findsNothing);
+      expect(find.textContaining('RPE'), findsNothing);
+      await tapPrimary('fixed-work-finish-$round');
+      if (round < 3) {
+        expectOnScreen(find.text('REST'));
+        expectOnScreen(find.text('Round $round of 3 complete'));
+        expectOnScreen(clock);
+        expect(find.text('01:30'), findsOneWidget);
+        expect(find.byKey(ValueKey('fixed-work-start-${round + 1}')), findsNothing);
+        await tapPrimary('fixed-work-skip-rest');
+        expect(clock, findsNothing);
+        await tapPrimary('fixed-work-start-${round + 1}');
+      }
+    }
+    expect(find.text('Circuit complete'), findsOneWidget);
+    expect(clock, findsNothing);
+    expect(find.text('REST'), findsNothing);
+    await tester.tap(find.text('Back to workout'));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const ValueKey('fixed-work-load-EX-131')), findsOneWidget);
+    expect(find.byKey(const ValueKey('fixed-work-load-EX-132')), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('no overflow on a narrow screen', (tester) async {
     tester.view.physicalSize = const Size(320, 640);
     tester.view.devicePixelRatio = 1;
@@ -538,4 +888,17 @@ void main() {
     expect(tester.takeException(), isNull);
     expect(find.text('START TIMER'), findsOneWidget);
   });
+}
+
+class _W5PreviewLoader extends SessionExecutionLoader {
+  @override
+  Future<SessionExecutionLoadResult> load({
+    required String protocolId,
+    String? displayTitle,
+    String? programmeContextLabel,
+    Map<String, String> prescriptionLoadOverrides = const {},
+  }) async {
+    expect(protocolId, 'APOLLO-W5-SAT-R1');
+    return SessionExecutionLoadResult(plan: _w5(withGuidance: true));
+  }
 }

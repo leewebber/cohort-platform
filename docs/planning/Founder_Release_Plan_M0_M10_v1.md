@@ -6,24 +6,101 @@ This plan controls delivery priorities. It preserves technical authority contrac
 it does not grant implementation, content, hosted, account or release authority.
 [M0 findings and critical path](../checkpoints/m0_alpha_baseline/HANDOFF.md).
 
-## Current single point — M1.3 installed restart acceptance
+## Current development — M2.4 Finish early
 
-Lee installed signed iPhone build 1.0.0 (9). Keep programme left Bali Hybrid Base active. Lee then ended Bali and acquired Hybrid 10K. Read-only verification confirmed Bali's end marker, matching History fingerprints, and a single active Hybrid 10K assignment with 60 scheduled occurrences from Monday 9 November 2026 WITA. The founder accepted the exact ledger-136 reconciliation and released the client hold. The final CLI dry-run was not run. [Verified M1.2 transition](../checkpoints/m12_end_programme_release/INSTALLED_TRANSITION.md)
+Ordinary and adapted workouts shared the Active Session finish gate, which
+required every block to be complete. Eligible fixed-schedule programme workouts
+now offer Finish early once there is recorded work and an unfinished block.
+The athlete reviews and confirms the partial save. The existing completion RPC
+closes that occurrence with a partial outcome and keeps unfinished blocks and
+sets incomplete. The same request reconciles to one History record. Structured
+and authored timed running retain their separate completion rules.
 
-The next check is the first scheduled Hybrid 10K strength session on signed iPhone build 1.0.0 (11). Save genuine actuals, close and reopen Cohort, resume the same session, and verify one completed History entry after finishing. Installed restart acceptance and Gate A remain open. D8 approval, coach UI acceptance and the authoring and discretionary polish freeze stand.
+M1.3 main-account Hybrid 10K testing continues independently. Cold-launch Home
+with Resume is a separate M2.4 slice. Device validation requires a separately
+approved build.
 
-## Parallel M3.1 equipment-substitution acceptance
+## M2.1 strength logging
 
-The separate private RDL trial passed on signed iPhone build 1.0.0 (11). Lee verified decline, acceptance, restart and History. Field Manual readback confirmed one completed trial record with the approved replacement and kg per dumbbell actuals. [Installed acceptance](../checkpoints/M31_EQUIPMENT_SUBSTITUTION_INSTALLED_ACCEPTANCE.md)
+M3.1 and M3.2 passed their private iPhone trials. M1.3 main-account Hybrid 10K
+live testing continues independently. Its first scheduled strength-session
+restart check and Gate A remain open. The verified M1.2 transition retained
+Bali History and left Hybrid 10K as the sole active main-account programme
+with 60 occurrences from 9 November 2026 WITA. The retained D8 approval,
+coach UI acceptance and discretionary authoring polish freeze still apply.
+[Installed transition](../checkpoints/m12_end_programme_release/INSTALLED_TRANSITION.md)
 
-## Parallel M3.2 strength time-option release review
+The ordered [alpha critical path](../checkpoints/m0_alpha_baseline/HANDOFF.md#m03--one-ordered-alpha-critical-path)
+puts M2.1–M2.4 execution gaps before further M3 adaptation. The previously listed
+M1.3 action is a live acceptance check. The M3.2 schema and publication holds in
+older records are historical. Start with one observed M2.1 logging issue in the
+ordinary Programme Athlete runner. Tapping outside the weight field now dismisses
+the keypad while preserving the entered load in the local candidate. This helps
+athletes move through sets and keep accurate actuals during real gym sessions.
+The focused iOS touch test reproduces the defect on the original field and passes
+with the change. All 58 focused checks and changed-file analysis passed. Physical
+iPhone validation of this change belongs in the next separately approved build.
 
-The pinned private strength trial passed disposable publication, scoped read, review, restart, completion and History checks. Signed iPhone build 1.0.0 (12) matches the reviewed app source. The single schema migration awaits separate approval and fresh hosted preflight. Trial publication, recipient access and installed acceptance remain separate. M3.2 preparation proceeds in parallel with live M1.3 testing. [Trial](../programmes/m32_time_trial/README.md) · [Schema-only approval](../programmes/m32_time_trial/SCHEMA_ONLY_APPROVAL.md)
+### M2.1 strength execution readability
 
-Athlete UX backlog
+The existing session execution loader orders the authored blocks and exercise
+links and carries their typed prescriptions into the workout plan. The adaptation
+applier supplies the same runner with the retained or approved replacement blocks.
+The strength screen now projects athlete copy at display time. It shares the exact
+retained warm-up mappings with the Studio review, numbers the authored actions in
+order and puts load, effort and rest beside sets and reps. Setup, tempo and
+coaching cues are available from the expanded exercise card. Authored source,
+timers, capture dimensions, persistence and completion retain their original
+contracts.
 
-- Simplify the workout screen and warm-up text.
-- Make the weight-entry keypad easy to dismiss.
+**Thursday Preparation wording reviewed.** Workout guidance keeps “Use this
+week’s exact sets, rests and repetitions in reserve.” The [authored Thursday
+Preparation note](../programmes/hybrid_10k/m31_thursday_trial/protocol-graphs.json#L15)
+gives no separate workout action for its consolidation and taper commentary, so
+the athlete view omits that commentary. Concrete prescriptions and exercise cues
+remain in the strength cards, including the reverse lunge’s 90 seconds of rest
+after both sides. The original note remains in the authored graph.
+
+Local verification passed 102 focused tests across standard and adapted workouts,
+keypad dismissal, carry presentation, Studio preview and runtime dependencies.
+Changed-file analysis was clean. The wider execution wiring check has one
+pre-existing source assertion failure. Its expected launch statement is absent
+on the clean `623d9a6` base, which reproduces the failure.
+
+## Installed adaptation acceptance
+
+M3.1 proved the approved equipment substitution with Lee Athlete Test on signed
+iPhone build 1.0.0 (11), including decline, acceptance, restart and one History
+record with kg per dumbbell actuals.
+[Installed M3.1 acceptance](../checkpoints/M31_EQUIPMENT_SUBSTITUTION_INSTALLED_ACCEPTANCE.md)
+
+M3.2 passed on signed iPhone build 1.0.0 (12), source `ec21aa4`, with the same
+test athlete and exact private version `d0576566-e080-4e6f-9428-6bb10d82826a`.
+Keep Original preserved all three blocks. The accepted 45 → 30 minute option
+kept the five-minute walk and bench press 4 × 8 with 120 seconds’ rest and omitted
+the optional lateral raises. The shortened workout and entered set survived cold
+restart. Field Manual readback at ledger 139 confirmed one completion receipt,
+one History record and unchanged main-account Hybrid 10K assignment and
+60 occurrences. [Trial contract](../programmes/m32_time_trial/README.md)
+
+## Athlete UX findings and scheduled work
+
+| Finding | Scheduled point |
+|---|---|
+| Workout execution and warm-up instructions are hard to read. | Current M2.1 readability slice in the athlete strength runner. Keep coach and technical metadata out of athlete instructions. Check the same boundary in M2.2 WOD and M2.3 running surfaces as their execution work is reviewed. Confirm movement-instruction adequacy under M4.3. |
+| EMOM station rows used strength placeholders. Athletes need the authored effort and scaling cue before starting. | M2.2 shows authored station doses, RPE and the scaling cue on the workout block. The EMOM timer shows the countdown, current station and dose, interval progress and essential controls. |
+| The scheduled fixed-work rounds card omitted the station prescription. | M2.2 reuses the read-only station and recovery summary in the scheduled preview. The fixed-work block shows the authored effort and scaling cue before timing. The dedicated fixed-work timer shows the work or recovery clock, round progress and the next action. The workout block retains the prescription and load entry. |
+| The weight-entry keypad is hard to dismiss. | M2.1 logging slice implemented locally and carried forward. Verify that dismissing the keypad preserves the entered value and leaves the normal save path in control. |
+| Finish early was missing in ordinary and adapted workouts. | M2.4 local fix. The athlete confirms a partial save that preserves actuals and leaves unfinished work incomplete. Authenticated loopback verified one partial receipt, same-request retry and one History record. |
+| A normal signed-in cold launch should land on Home and show Resume for an in-progress workout. | M2.4 restart and navigation follow-up before the M4.2 device matrix. Check normal signed-in entry and owner-scoped in-progress restore. Use M1.3 live results as parallel evidence. |
+| Completed Training History detail overflows horizontally at 320 px for Apollo Week 5 Saturday. Reproduced on parent `94d3f93` before the dedicated fixed-work timer. | Separate M2.4 small-screen History follow-up before the M4.2 device matrix. Keep work times, sled loads and prescribed targets readable at 320 px. |
+
+After the execution gaps are resolved, the remaining M3 work is governed recovery
+suggestions and individual exercise swaps. Gate A still includes the WOD whiteboard
+and correct timers/results under M2.2, structured running under M2.3, the Garmin
+round trip under M2.5, and the M4 release checks. Broader progression, performance
+metrics and WOD polish remain in M5, with exercise video coverage in M6. Existing
+prescription, evidence and release boundaries continue to apply.
 
 ## Retained M1.1 compatible-client readiness
 

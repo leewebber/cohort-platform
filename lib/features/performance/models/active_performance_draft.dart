@@ -1,4 +1,5 @@
 import '../../../core/utils/database_uuid.dart';
+import '../../../models/workout_format.dart';
 import 'performance_result_data.dart';
 import 'performance_result_type.dart';
 import 'performance_snapshot.dart';
@@ -228,7 +229,8 @@ class ActivePerformanceDraft {
 
   int get incompleteBlockCount => blockDrafts.where((block) {
     if (!block.blockSnapshot.content.trim().isNotEmpty &&
-        block.blockSnapshot.exercises.isEmpty) {
+        block.blockSnapshot.exercises.isEmpty &&
+        !block.blockSnapshot.workoutFormat.supportsTimer) {
       return false;
     }
     return block.status != TrainingBlockResultStatus.completed &&

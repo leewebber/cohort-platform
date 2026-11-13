@@ -432,6 +432,28 @@ class PerformanceCaptureController {
     return this;
   }
 
+  /// Snapshot for a confirmed early finish. The editable draft stays intact
+  /// if the athlete returns to the session or a save needs to be retried.
+  PerformanceCaptureController forEarlyFinish() {
+    return PerformanceCaptureController(
+      draft: _draft.copyWith(
+        blockDrafts: [
+          for (final block in _draft.blockDrafts)
+            if (block.status == TrainingBlockResultStatus.completed)
+              block
+            else
+              block.copyWith(
+                resultData: _syncResultCompletion(
+                  block.resultData,
+                  completed: false,
+                ),
+              ),
+        ],
+      ),
+      validationService: _validationService,
+    );
+  }
+
   ActivePerformanceDraft buildPersistableDraft({
     required TrainingSessionRecordStatus status,
     DateTime? completedAt,

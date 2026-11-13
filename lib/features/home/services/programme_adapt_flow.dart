@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../application/adaptation/approved_equipment_substitution.dart';
+import '../../../application/adaptation/approved_recovery_option.dart';
 import '../../../application/adaptation/approved_time_option.dart';
 import '../../../application/adaptation/programme_adaptation_acceptance_service.dart';
 import '../../../application/adaptation/programme_adaptation_fingerprints.dart';
@@ -10,6 +11,7 @@ import '../../../core/presentation/athlete_safe_error_presenter.dart';
 import '../../../core/theme/text_styles.dart';
 import '../../../core/widgets/adaptation_bottom_sheet.dart';
 import '../../../core/widgets/programme_adaptation_proposal_sheet.dart';
+import '../../../models/adaptation_reason.dart';
 import '../../adaptation/models/programme_adaptation_proposal.dart';
 import '../../programme/models/programme_execution_context.dart';
 import '../../programme/services/athlete_programme_session_prepare_service.dart';
@@ -37,6 +39,8 @@ class ProgrammeAdaptFlow {
   ProgrammeAdaptFlow({
     ProgrammeAdaptationProposalService? proposalService,
     this._acceptanceService,
+    this._recoveryPrepareService,
+    this._loadRecoveryApproval,
   }) : _proposalService =
            proposalService ?? ProgrammeAdaptationProposalService();
 
@@ -47,6 +51,7 @@ class ProgrammeAdaptFlow {
     ProgrammeKnowledgeLoader? loadKnowledge,
     ProgrammeEquipmentApprovalLoader? loadEquipmentApproval,
     ProgrammeTimeApprovalLoader? loadTimeApproval,
+    ProgrammeRecoveryApprovalLoader? loadRecoveryApproval,
   }) {
     final permissions =
         loadAdaptationPermissions ??
@@ -62,6 +67,12 @@ class ProgrammeAdaptFlow {
             ? const ProgrammeAdaptationPermissionReader().loadApprovedTime
             : null);
     return ProgrammeAdaptFlow(
+      recoveryPrepareService: prepareService,
+      loadRecoveryApproval:
+          loadRecoveryApproval ??
+          (loadAdaptationPermissions == null
+              ? const ProgrammeAdaptationPermissionReader().loadApprovedRecovery
+              : null),
       proposalService: ProgrammeAdaptationProposalService(
         loadAdaptationPermissions: permissions,
         loadEquipmentApproval: approvedEquipment,
@@ -82,6 +93,9 @@ class ProgrammeAdaptFlow {
 
   final ProgrammeAdaptationProposalService _proposalService;
   final ProgrammeAdaptationAcceptanceService? _acceptanceService;
+  final AthleteProgrammeSessionPrepareService? _recoveryPrepareService;
+  final ProgrammeRecoveryApprovalLoader? _loadRecoveryApproval;
+  Object? _recoveryReviewToken;
 
   /// Opens reason selection → evaluation → review → optional accept.
   Future<ProgrammeAdaptFlowResult> open(
@@ -89,6 +103,55 @@ class ProgrammeAdaptFlow {
     required String athleteId,
     required PreparedExecutionPackage package,
     ProgrammeExecutionContext? executionContext,
+  }) async {
+    final loadApproval = _loadRecoveryApproval;
+    final prepareService = _recoveryPrepareService;
+    if (loadApproval == null || prepareService == null) {
+      return _open(
+        context,
+        athleteId: athleteId,
+        package: package,
+        executionContext: executionContext,
+      );
+    }
+
+    final token = Object();
+    _recoveryReviewToken = token;
+    final lifecycle = WidgetsBinding.instance.lifecycleState;
+    var uninterrupted =
+        lifecycle == null || lifecycle == AppLifecycleState.resumed;
+    final listener = AppLifecycleListener(
+      onStateChange: (state) {
+        if (state != AppLifecycleState.resumed) uninterrupted = false;
+      },
+    );
+    final review = RecoveryReview(
+      athleteId: athleteId,
+      prepareService: prepareService,
+      loadApproval: loadApproval,
+      isOpen: () =>
+          context.mounted && uninterrupted && _recoveryReviewToken == token,
+    );
+    try {
+      return await _open(
+        context,
+        athleteId: athleteId,
+        package: package,
+        executionContext: executionContext,
+        recoveryReview: review,
+      );
+    } finally {
+      if (_recoveryReviewToken == token) _recoveryReviewToken = null;
+      listener.dispose();
+    }
+  }
+
+  Future<ProgrammeAdaptFlowResult> _open(
+    BuildContext context, {
+    required String athleteId,
+    required PreparedExecutionPackage package,
+    ProgrammeExecutionContext? executionContext,
+    RecoveryReview? recoveryReview,
   }) async {
     if (!_isEligible(package)) {
       await _showSafeMessage(
@@ -131,6 +194,7 @@ class ProgrammeAdaptFlow {
         package: package,
         request: request,
         executionContext: executionContext,
+        recoveryReview: recoveryReview,
       );
     } catch (error) {
       if (!context.mounted) return const ProgrammeAdaptFlowResult();
@@ -153,6 +217,12 @@ class ProgrammeAdaptFlow {
       return ProgrammeAdaptFlowResult(proposal: proposal);
     }
 
+    if (request.reason == AdaptationReason.recovery && proposal.isAcceptable) {
+      if (recoveryReview?.isCurrent != true) {
+        return const ProgrammeAdaptFlowResult();
+      }
+      recoveryReview!.bindProposal(proposal);
+    }
     final accepted = await showProgrammeAdaptationProposalSheet(
       context,
       proposal,
@@ -177,6 +247,7 @@ class ProgrammeAdaptFlow {
       currentPackage: package,
       proposal: proposal,
       executionContext: activeContext,
+      recoveryReview: recoveryReview,
     );
 
     if (!result.success) {

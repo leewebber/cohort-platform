@@ -5,7 +5,8 @@ import '../../../core/theme/spacing.dart';
 import '../../../core/theme/text_styles.dart';
 import '../../../models/strength_exercise_prescription.dart';
 import '../../../models/strength_prescription_formatter.dart';
-import '../../session/models/session_execution_plan.dart';
+import '../models/session_execution_plan.dart';
+import '../presentation/strength_workout_instructions.dart';
 
 class StrengthPrescriptionDisplay extends StatelessWidget {
   const StrengthPrescriptionDisplay({
@@ -13,18 +14,24 @@ class StrengthPrescriptionDisplay extends StatelessWidget {
     required this.exerciseName,
     required this.prescription,
     this.coachCue,
+    this.useStrengthInstructions = false,
   });
 
   StrengthPrescriptionDisplay.fromSummary({
     super.key,
     required SessionExecutionExerciseSummary summary,
-  }) : exerciseName = summary.athleteLabel,
+    this.useStrengthInstructions = false,
+  }) : exerciseName =
+           useStrengthInstructions && summary.athleteLabel == summary.exerciseId
+           ? 'Exercise'
+           : summary.athleteLabel,
        prescription = summary.prescription,
        coachCue = summary.prescription?.coachCue;
 
   final String exerciseName;
   final StrengthExercisePrescription? prescription;
   final String? coachCue;
+  final bool useStrengthInstructions;
 
   @override
   Widget build(BuildContext context) {
@@ -33,8 +40,17 @@ class StrengthPrescriptionDisplay extends StatelessWidget {
     }
 
     final summary = StrengthPrescriptionFormatter.summaryLine(prescription!);
-    final details = StrengthPrescriptionFormatter.detailLine(prescription!);
-    final cue = coachCue?.trim().isNotEmpty == true ? coachCue!.trim() : null;
+    final details = StrengthPrescriptionFormatter.detailLine(
+      prescription!,
+      projectTempo: useStrengthInstructions
+          ? StrengthWorkoutInstructions.tempo
+          : null,
+    );
+    final cue = useStrengthInstructions
+        ? StrengthWorkoutInstructions.cue(coachCue)
+        : coachCue?.trim().isNotEmpty == true
+        ? coachCue!.trim()
+        : null;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

@@ -15,6 +15,7 @@ import 'package:cohort_platform/models/protocol_draft.dart';
 import 'equipment_adaptation_request_validator.dart';
 import 'approved_equipment_substitution.dart';
 import 'approved_time_option.dart';
+import 'approved_recovery_option.dart';
 import 'plan_package_session_adaptation_adapter.dart';
 import 'programme_adaptation_proposal_mapper.dart';
 
@@ -70,6 +71,7 @@ class ProgrammeAdaptationProposalService {
     DateTime? proposedAt,
     String? slotKey,
     ProgrammeExecutionContext? executionContext,
+    RecoveryReview? recoveryReview,
   }) async {
     if (!_isEligible(package)) {
       return ProgrammeAdaptationProposalMapper.noSafeFromException(
@@ -100,6 +102,31 @@ class ProgrammeAdaptationProposalService {
             'programme and prepared session are unchanged.',
         proposedAt: proposedAt,
       );
+    }
+
+    ApprovedRecoveryOption? recoveryApproval;
+    if (request.reason == AdaptationReason.recovery) {
+      try {
+        if (executionContext != null) {
+          recoveryApproval = await recoveryReview?.readApproval(
+            package: package,
+            context: executionContext,
+            request: request,
+          );
+        }
+      } catch (_) {
+        // A failed authority read offers no adjustment.
+      }
+      if (recoveryApproval == null) {
+        return ProgrammeAdaptationProposalMapper.noSafeFromException(
+          package: package,
+          request: request,
+          noSafeReason:
+              ProgrammeAdaptationNoSafeReason.unsupportedConstraintFamily,
+          message: 'No approved recovery adjustment for this workout.',
+          proposedAt: proposedAt,
+        );
+      }
     }
 
     final knowledge = await _loadKnowledge();
@@ -149,6 +176,8 @@ class ProgrammeAdaptationProposalService {
           ? [approval.permission]
           : timeApproval != null
           ? [timeApproval.permission]
+          : recoveryApproval != null
+          ? [recoveryApproval.omission.permission]
           : request.reason == AdaptationReason.equipment ||
                 (request.reason == AdaptationReason.time &&
                     loadTimeApproval == null)
@@ -171,6 +200,7 @@ class ProgrammeAdaptationProposalService {
         authoredDraft: draft,
         adaptationPermissions: permissions,
         timeApproval: timeApproval,
+        recoveryApproval: recoveryApproval,
         executionContext: executionContext,
         slotKey:
             request.reason == AdaptationReason.time && executionContext != null
@@ -185,6 +215,7 @@ class ProgrammeAdaptationProposalService {
         knowledge: scopedKnowledge,
         approval: approval,
         hasPrivateTimeApproval: timeApproval != null,
+        hasPrivateRecoveryApproval: recoveryApproval != null,
         proposedAt: proposedAt,
       );
     } on PlanPackageAdaptationAdapterException catch (error) {
@@ -232,7 +263,7 @@ class ProgrammeAdaptationProposalService {
       'empty_prescription' ||
       'empty_prepared_plan' =>
         ProgrammeAdaptationNoSafeReason.staleOrMismatchedPreparedSession,
-      'time_option_unavailable' =>
+      'time_option_unavailable' || 'recovery_option_unavailable' =>
         ProgrammeAdaptationNoSafeReason.noLawfulSessionSolution,
       'substitution_not_permitted' =>
         ProgrammeAdaptationNoSafeReason.substitutionNotPermitted,

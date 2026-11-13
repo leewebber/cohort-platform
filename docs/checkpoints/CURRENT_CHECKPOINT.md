@@ -1,5 +1,32 @@
 # Current repository checkpoint
 
+> **M2.4 Finish early locally verified (2026-11-08).**
+> Ordinary and adapted scheduled programme workouts can save recorded work
+> as partial through the existing completion authority. Unfinished blocks
+> and sets stay incomplete. Authenticated loopback verification confirmed
+> a partial receipt, retry and one History record. [Release plan](../planning/Founder_Release_Plan_M0_M10_v1.md#current-development--m24-finish-early).
+> Cold-launch Home with Resume remains a separate M2.4 slice. Main-account
+> Hybrid 10K live testing continues in parallel.
+>
+> **M2.1 strength readability locally verified (2026-11-08).**
+> The athlete runner presents ordered warm-up actions, a concise strength
+> prescription and optional setup, tempo and cues. The weight-keypad fix
+> remains in the local candidate. The [release plan](../planning/Founder_Release_Plan_M0_M10_v1.md#m21-strength-execution-readability)
+> records the Thursday Preparation wording decision and local verification. Finish early
+> and cold-launch Home with Resume remain M2.4. Main-account Hybrid 10K testing
+> continues independently.
+>
+> **M3.2 installed acceptance passed (2026-11-08).**
+> Signed iPhone build 1.0.0 (12) with Lee Athlete Test proved Keep Original,
+> the accepted 45 → 30 minute option, restored actuals after cold restart and
+> one History record. Field Manual readback confirmed one completion at ledger
+> 139 and preserved the main-account Hybrid 10K assignment and all 60 occurrences.
+> M3.1 remains accepted. Main-account M1.3 live testing continues in parallel.
+> The [release plan](../planning/Founder_Release_Plan_M0_M10_v1.md#m21-strength-logging)
+> selects M2.1 strength logging next, starting with the weight keypad, and
+> schedules the four athlete UX findings. Hosted and device changes remain
+> separately approved. Gate A remains open.
+>
 > **M1.2 End programme deployment closed out (2026-11-07)**
 > [Closeout](./m12_end_programme_release/DEPLOYMENT_CLOSEOUT.md) records Lee's
 > acceptance of exact ledger-136, schema, function and protected-state

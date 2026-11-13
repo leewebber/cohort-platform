@@ -10,6 +10,7 @@ import '../../../core/presentation/athlete_safe_error_presenter.dart';
 import '../../../core/theme/spacing.dart';
 import '../../../core/widgets/cohort_button.dart';
 import '../presentation/daily_journey_accessibility.dart';
+import '../presentation/strength_workout_instructions.dart';
 import '../../../features/exercises/exercise_detail/exercise_detail_screen.dart';
 import '../../../features/home/controllers/home_today_session_refresh_controller.dart';
 import '../../../features/programme/models/programme_execution_context.dart';
@@ -532,18 +533,26 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen>
           stationLabels: labels,
           steadyStateTimer: _steadyStateTimers[block.blockId],
         );
+    final useStrengthInstructions = StrengthWorkoutInstructions.appliesTo(
+      _controller.state.plan,
+      block,
+    );
     final popped = await Navigator.of(context).push<BlockTimerState>(
       MaterialPageRoute(
         builder: (_) => BlockTimerScreen(
-          blockTitle: block.title,
+          blockTitle: useStrengthInstructions
+              ? StrengthWorkoutInstructions.title(block.title)
+              : block.title,
           format: block.workoutFormat,
           configuration: block.timerConfiguration!,
           boundTarget: block.boundTarget,
           stationLabels: labels,
-          prescriptionLines: block.content
-              .split('\n')
-              .where((line) => line.trim().isNotEmpty)
-              .toList(),
+          prescriptionLines: useStrengthInstructions
+              ? StrengthWorkoutInstructions.blockLines(block)
+              : block.content
+                    .split('\n')
+                    .where((line) => line.trim().isNotEmpty)
+                    .toList(),
           restoredWorkNote: existing is ForTimeResultData
               ? existing.remainingWorkNote
               : null,
@@ -694,15 +703,21 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen>
     return _performanceController.draft.blockDraftFor(blockId);
   }
 
-  Future<void> _finishSession() async {
+  Future<void> _finishSession({bool finishEarly = false}) async {
     if (_completionLocked || _saveState == PerformanceSaveState.completing) {
       return;
     }
     final state = _controller.state;
-    final eligibility = const SessionFinishEligibilityEvaluator().evaluate(
-      incompleteBlockCount: state.incompleteCount,
-      performanceDraft: _performanceController.draft,
-    );
+    const evaluator = SessionFinishEligibilityEvaluator();
+    final eligibility = finishEarly
+        ? evaluator.evaluateEarly(
+            controller: _performanceController,
+            programmeContext: widget.programmeContext,
+          )
+        : evaluator.evaluate(
+            incompleteBlockCount: state.incompleteCount,
+            performanceDraft: _performanceController.draft,
+          );
     if (!eligibility.canFinish) {
       if (!mounted) return;
       ScaffoldMessenger.of(
@@ -749,6 +764,7 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen>
           athleteId: widget.athleteId!,
           programmeContext: widget.programmeContext,
           programmeProgress: widget.programmeProgress,
+          finishEarly: finishEarly,
           saveCoordinator: _saveCoordinator,
           homeWorkoutExecution:
               widget.workoutLaunchContext?.homeWorkoutExecution,
@@ -834,6 +850,17 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen>
           performanceDraft: _performanceController.draft,
         );
 
+    final canFinishEarly =
+        state.incompleteCount > 0 &&
+        widget.trainingSessionId != null &&
+        widget.athleteId != null &&
+        const SessionFinishEligibilityEvaluator()
+            .evaluateEarly(
+              controller: _performanceController,
+              programmeContext: widget.programmeContext,
+            )
+            .canFinish;
+
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, result) async {
@@ -862,7 +889,7 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen>
                 JourneyAnnouncement(message: _journeyAnnouncement),
                 const SizedBox(height: CohortSpacing.md),
                 AthleteSessionHeader(
-                  title: state.plan.sessionTitle,
+                  title: StrengthWorkoutInstructions.sessionTitle(state.plan),
                   subtitle: state.plan.programmeContextLabel,
                 ),
                 const SizedBox(height: CohortSpacing.lg),
@@ -889,6 +916,11 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen>
                   Builder(
                     builder: (context) {
                       final block = state.plan.blocks[index];
+                      final useStrengthInstructions =
+                          StrengthWorkoutInstructions.appliesTo(
+                            state.plan,
+                            block,
+                          );
                       final isActive = index == activeIndex;
                       final isExpanded =
                           isActive || state.isBlockExpanded(block.blockId);
@@ -896,11 +928,12 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen>
                           ? _blockDraft(block.blockId)
                           : null;
                       final isEmom = block.workoutFormat == WorkoutFormat.emom;
-                      final emomResult =
-                          blockDraft?.resultData is CircuitResultData
-                          ? blockDraft!.resultData as CircuitResultData
+                      final result = blockDraft?.resultData;
+                      final circuitResult = result is CircuitResultData
+                          ? result
                           : null;
-                      final timerStarted = emomResult?.usedInAppTimer == true;
+                      final timerStarted =
+                          circuitResult?.usedInAppTimer == true;
                       final performanceReplacesExerciseList =
                           CircuitCaptureContract.isFixedWork(block) ||
                           (blockDraft != null &&
@@ -919,9 +952,11 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen>
 
                       return AthleteBlockCard(
                         block: block,
+                        useStrengthInstructions: useStrengthInstructions,
                         isExpanded: isExpanded,
                         isActive: isActive,
                         isComplete: state.isBlockComplete(block.blockId),
+                        showFixedWorkGuidance: true,
                         stackActions: isEmom,
                         timerActionLabel:
                             _timedRunning[block.blockId]?.isFinished == true
@@ -937,9 +972,9 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen>
                             : null,
                         recordedResultSummary:
                             state.isBlockComplete(block.blockId) &&
-                                emomResult != null &&
-                                emomResult.isEmomScore
-                            ? EmomScoreContract.completedSummary(emomResult)
+                                circuitResult != null &&
+                                circuitResult.isEmomScore
+                            ? EmomScoreContract.completedSummary(circuitResult)
                             : null,
                         onToggleExpanded: () {
                           if (isActive) return;
@@ -990,6 +1025,7 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen>
                             ? null
                             : BlockResultEditor(
                                 blockDraft: blockDraft,
+                                useStrengthInstructions: useStrengthInstructions,
                                 linkedExercises: block.linkedExercises,
                                 previousStrengthHistory:
                                     _previousStrengthHistory,
@@ -1079,6 +1115,18 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen>
                   key: const ValueKey('finish-session-reason'),
                   softWrap: true,
                 ),
+                if (canFinishEarly) ...[
+                  const SizedBox(height: CohortSpacing.sm),
+                  CohortButton(
+                    label: 'Finish early',
+                    variant: CohortButtonVariant.secondary,
+                    onPressed:
+                        _completionLocked ||
+                            _saveState == PerformanceSaveState.completing
+                        ? null
+                        : () => _finishSession(finishEarly: true),
+                  ),
+                ],
               ],
             ),
           ),

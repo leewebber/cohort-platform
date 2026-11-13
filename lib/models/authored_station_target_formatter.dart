@@ -8,12 +8,20 @@ import 'timer_configuration.dart';
 class AuthoredStationTargetFormatter {
   const AuthoredStationTargetFormatter._();
 
-  static String? fromTimerSpec(TimerStationSpec spec) {
+  static String? fromTimerSpec(
+    TimerStationSpec spec, {
+    bool spellOutCalories = false,
+  }) {
     if (spec.isRest) return 'Rest';
+    final calorieUnit = !spellOutCalories
+        ? 'cal'
+        : spec.calories == 1
+        ? 'calorie'
+        : 'calories';
     final target = spec.workSeconds != null
         ? '${spec.workSeconds} s · recover remainder'
         : spec.calories != null
-        ? '${spec.calories} cal'
+        ? '${spec.calories} $calorieUnit'
         : spec.reps != null
         ? '${spec.reps} reps'
         : formatDistance(meters: spec.distanceMeters, text: spec.distanceText);

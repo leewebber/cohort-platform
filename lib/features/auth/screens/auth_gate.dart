@@ -139,7 +139,6 @@ class _AuthGateState extends State<AuthGate> {
       store: widget.acquisitionStore,
       onSignOut: widget.controller.signOut,
       child: AthleteAppShell(
-        initialTab: 2,
         authController: widget.controller,
         pendingWorkoutProgress: _hydration?.pendingWorkoutProgress,
         planDefinitionMissing: _hydration?.planDefinitionMissing ?? false,

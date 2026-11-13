@@ -148,13 +148,14 @@ class SessionBlock {
     Map<String, dynamic> row, {
     List<SessionBlockExerciseLink> linkedExercises = const [],
   }) {
+    final format = WorkoutFormatDb.fromDb(row['workout_format']?.toString());
     final timerRaw = row['timer_config'];
-    TimerConfiguration? timer;
-    if (timerRaw is Map<String, dynamic>) {
-      timer = TimerConfiguration.fromJson(timerRaw);
-    } else if (timerRaw is Map) {
-      timer = TimerConfiguration.fromJson(Map<String, dynamic>.from(timerRaw));
-    }
+    final timer = timerRaw is Map
+        ? TimerConfiguration.fromJson(
+            Map<String, dynamic>.from(timerRaw),
+            format: format,
+          )
+        : null;
 
     return SessionBlock(
       localId: 'block-${row['block_id']}',
@@ -162,7 +163,7 @@ class SessionBlock {
       blockType: SessionBlockTypeDb.fromDb(row['block_type']?.toString()),
       title: row['title']?.toString() ?? '',
       content: row['content']?.toString() ?? '',
-      workoutFormat: WorkoutFormatDb.fromDb(row['workout_format']?.toString()),
+      workoutFormat: format,
       timerConfiguration: timer,
       linkedExercises: linkedExercises,
       coachNotes: row['coach_notes']?.toString(),
@@ -253,7 +254,10 @@ class SessionBlock {
       workoutFormat: workoutFormat,
       timerConfiguration: timerConfiguration == null
           ? null
-          : TimerConfiguration.fromJson(timerConfiguration!.toJson()),
+          : TimerConfiguration.fromJson(
+              timerConfiguration!.toJson(),
+              format: workoutFormat,
+            ),
       linkedExercises: clonedLinks,
       coachNotes: coachNotes,
       position: position,

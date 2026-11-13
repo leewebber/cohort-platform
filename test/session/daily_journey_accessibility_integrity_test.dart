@@ -203,7 +203,7 @@ void main() {
     expect(find.text('00:43'), findsNothing);
   });
 
-  testWidgets('strength fields expose set number, units, and checkbox state',
+  testWidgets('strength fields retain the load when a touch dismisses the keypad',
       (tester) async {
     final plan = previewStrengthPlan();
     final execution = SessionExecutionController(
@@ -245,7 +245,25 @@ void main() {
       find.bySemanticsLabel('Draft restored. Your entered results are on this phone.'),
       findsWidgets,
     );
-  });
+
+    final loadField = find.widgetWithText(TextField, 'Set 1 load, kilograms');
+    await tester.ensureVisible(loadField);
+    await tester.enterText(loadField, '42.5');
+    await tester.pumpAndSettle();
+    expect(tester.testTextInput.isVisible, isTrue);
+
+    final progress = find.text('Block 1 of 1');
+    await tester.ensureVisible(progress);
+    await tester.tap(progress);
+    await tester.pumpAndSettle();
+    expect(tester.widget<TextField>(loadField).focusNode!.hasFocus, isFalse);
+    expect(tester.testTextInput.isVisible, isFalse);
+    expect(tester.widget<TextField>(loadField).controller!.text, '42.5');
+    expect(
+      performance.draft.blockDrafts.first.exerciseResults.first.sets.first.load,
+      42.5,
+    );
+  }, variant: const TargetPlatformVariant({TargetPlatform.iOS}));
 
   testWidgets('completion pending announces retry without a second path',
       (tester) async {

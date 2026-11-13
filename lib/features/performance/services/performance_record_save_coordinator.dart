@@ -6,6 +6,7 @@ import '../../programme/models/programme_execution_context.dart';
 import '../../programme/models/programme_progression_result.dart';
 import '../../programme/services/athlete_programme_completion_service.dart';
 import '../../session/services/programme_session_progression_coordinator.dart';
+import '../../session/services/session_finish_eligibility.dart';
 import '../../adaptation/models/adaptation_execution_result.dart';
 import '../../adaptation/services/adaptation_execution_coordinator.dart';
 import '../controllers/performance_capture_controller.dart';
@@ -85,8 +86,21 @@ class PerformanceRecordSaveCoordinator {
     ProgrammeExecutionContext? programmeContext,
     TrainingSessionRecordStatus? forcedStatus,
     String? idempotencyKey,
+    bool finishEarly = false,
   }) async {
-    final validation = controller.validateForCompletion();
+    if (finishEarly &&
+        !const SessionFinishEligibilityEvaluator().allowsEarlyFinish(
+          draft: controller.draft,
+          programmeContext: programmeContext,
+        )) {
+      throw PerformanceRecordStoreException(
+        'Finish early is unavailable for this workout or its current results.',
+      );
+    }
+    final completionController = finishEarly
+        ? controller.forEarlyFinish()
+        : controller;
+    final validation = completionController.validateForCompletion();
     if (!validation.isValid) {
       throw PerformanceRecordStoreException(
         validation.fieldErrors.values.first,
@@ -95,16 +109,17 @@ class PerformanceRecordSaveCoordinator {
 
     // Sprint 1.5A programme path: one atomic RPC for completion + cursor.
     if (programmeContext != null && programmeContext.isProgrammeBacked) {
-      if (!_allowsProgrammeCompletion(
-        controller: controller,
-        programmeContext: programmeContext,
-      )) {
+      if (!finishEarly &&
+          !_allowsProgrammeCompletion(
+            controller: completionController,
+            programmeContext: programmeContext,
+          )) {
         throw PerformanceRecordStoreException(
           'Complete every required programme block before saving and finishing.',
         );
       }
       return _completeProgrammeBacked(
-        controller: controller,
+        controller: completionController,
         trainingSessionId: trainingSessionId,
         athleteId: athleteId,
         programmeContext: programmeContext,
@@ -266,7 +281,7 @@ class PerformanceRecordSaveCoordinator {
   }
 }
 
-/// Limits programme completion to fully completed sessions, plus the one
+/// Limits normal Finish Session to fully completed sessions, plus the one
 /// server-supported partial case: an exact-occurrence structured run whose
 /// completed block contains resolved skipped work repetitions.
 ///

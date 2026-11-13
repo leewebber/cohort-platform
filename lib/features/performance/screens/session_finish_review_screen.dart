@@ -46,6 +46,7 @@ class SessionFinishReviewScreen extends StatefulWidget {
     this.flushPendingTree,
     this.onAuthoritativeReload,
     this.onSessionCompleted,
+    this.finishEarly = false,
   });
 
   final PerformanceCaptureController performanceController;
@@ -59,6 +60,7 @@ class SessionFinishReviewScreen extends StatefulWidget {
   final Future<bool> Function()? flushPendingTree;
   final Future<void>? Function()? onAuthoritativeReload;
   final VoidCallback? onSessionCompleted;
+  final bool finishEarly;
 
   @override
   State<SessionFinishReviewScreen> createState() =>
@@ -169,6 +171,7 @@ class _SessionFinishReviewScreenState extends State<SessionFinishReviewScreen> {
         athleteId: widget.athleteId,
         programmeContext: widget.programmeContext,
         forcedStatus: status,
+        finishEarly: widget.finishEarly,
         idempotencyKey: _frozenIdempotencyKey,
       );
 
@@ -257,6 +260,7 @@ class _SessionFinishReviewScreenState extends State<SessionFinishReviewScreen> {
           builder: (_) => SessionCompleteScreen(
             state: widget.executionController.state,
             savedRecord: result.record,
+            finishedEarly: widget.finishEarly,
             adaptationMessage:
                 widget.programmeContext?.acceptedEquipmentSummary ??
                 result.adaptationResult?.athleteMessage,
@@ -278,6 +282,9 @@ class _SessionFinishReviewScreenState extends State<SessionFinishReviewScreen> {
   @override
   Widget build(BuildContext context) {
     final draft = _performanceController.draft;
+    final saveLabel = widget.finishEarly
+        ? 'Save and finish early'
+        : 'Save and finish';
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -286,6 +293,11 @@ class _SessionFinishReviewScreenState extends State<SessionFinishReviewScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text('Review Session', style: CohortTextStyles.h1),
+              if (widget.finishEarly)
+                const Text(
+                  'Save your recorded work and close this scheduled workout. '
+                  'Unfinished blocks stay incomplete.',
+                ),
               if (widget.programmeContext?.acceptedEquipmentSummary
                   case final summary?)
                 Text(summary, style: CohortTextStyles.body),
@@ -371,10 +383,10 @@ class _SessionFinishReviewScreenState extends State<SessionFinishReviewScreen> {
               CohortButton(
                 label: _saveState == PerformanceSaveState.completing
                     ? 'Completing…'
-                    : 'Save and finish',
+                    : saveLabel,
                 semanticLabel: _saveState == PerformanceSaveState.completing
                     ? 'Completion pending'
-                    : 'Save and finish',
+                    : saveLabel,
                 onPressed:
                     _saveState == PerformanceSaveState.saving ||
                         _saveState == PerformanceSaveState.completing

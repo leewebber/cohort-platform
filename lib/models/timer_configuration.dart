@@ -25,6 +25,7 @@ class TimerConfiguration {
     this.targetRounds,
     this.restBetweenRoundsSeconds,
     this.timerNotes,
+    this.targetRpe,
     this.tracking = const [],
     this.stations = const [],
     this.captureStrategy,
@@ -45,6 +46,7 @@ class TimerConfiguration {
   final int? targetRounds;
   final int? restBetweenRoundsSeconds;
   final String? timerNotes;
+  final String? targetRpe;
   final List<String> tracking;
   final List<TimerStationSpec> stations;
   final CircuitCaptureStrategy? captureStrategy;
@@ -102,6 +104,7 @@ class TimerConfiguration {
       restBetweenRoundsSeconds:
           restBetweenRoundsSeconds ?? this.restBetweenRoundsSeconds,
       timerNotes: timerNotes ?? this.timerNotes,
+      targetRpe: targetRpe,
       tracking: tracking ?? this.tracking,
       stations: stations ?? this.stations,
       captureStrategy: captureStrategy ?? this.captureStrategy,
@@ -129,6 +132,7 @@ class TimerConfiguration {
         'restBetweenRoundsSeconds': restBetweenRoundsSeconds,
       if (timerNotes != null && timerNotes!.trim().isNotEmpty)
         'timerNotes': timerNotes!.trim(),
+      if (targetRpe != null) 'target_rpe': targetRpe,
       if (tracking.isNotEmpty) 'tracking': tracking,
       if (stations.isNotEmpty)
         'stations': stations.map((station) => station.toJson()).toList(),
@@ -138,7 +142,10 @@ class TimerConfiguration {
     };
   }
 
-  factory TimerConfiguration.fromJson(Map<String, dynamic>? json) {
+  factory TimerConfiguration.fromJson(
+    Map<String, dynamic>? json, {
+    WorkoutFormat? format,
+  }) {
     if (json == null || json.isEmpty) {
       return const TimerConfiguration();
     }
@@ -149,6 +156,13 @@ class TimerConfiguration {
     );
     final authoredRounds = _int(json['rounds']);
     final runningRaw = json['running_workout'];
+    final captureStrategy = CircuitCaptureStrategyDb.tryParse(
+      (json['capture_strategy'] ?? json['captureStrategy'])?.toString(),
+    );
+    final hasAuthoredEffort =
+        format == WorkoutFormat.emom ||
+        (format == WorkoutFormat.rounds &&
+            captureStrategy == CircuitCaptureStrategy.fixedWork);
     if (json.containsKey('running_workout') && runningRaw is! Map) {
       throw const FormatException('Invalid authored running workout.');
     }
@@ -181,11 +195,14 @@ class TimerConfiguration {
             json['between_round_recovery_seconds'],
       ),
       timerNotes: (json['timerNotes'] ?? json['timer_notes'])?.toString(),
+      targetRpe: switch (hasAuthoredEffort ? json['target_rpe'] : null) {
+        final String rpe when rpe.trim().isNotEmpty => rpe.trim(),
+        final num rpe => rpe.toString(),
+        _ => null,
+      },
       tracking: _tracking(json['tracking'] ?? json['record']),
       stations: TimerStationSpec.listFromJson(json),
-      captureStrategy: CircuitCaptureStrategyDb.tryParse(
-        (json['capture_strategy'] ?? json['captureStrategy'])?.toString(),
-      ),
+      captureStrategy: captureStrategy,
       runningWorkout: runningRaw is Map
           ? const RunningWorkoutCodec().decodeMap(
               Map<String, dynamic>.from(runningRaw),
@@ -241,6 +258,7 @@ class TimerConfiguration {
         intervalSeconds: base.intervalSeconds,
         preparationSeconds: base.preparationSeconds,
         timerNotes: base.timerNotes,
+        targetRpe: base.targetRpe,
         stations: base.stations,
         captureStrategy: base.captureStrategy,
       ),
@@ -274,6 +292,9 @@ class TimerConfiguration {
         rounds: base.rounds,
         restBetweenRoundsSeconds: base.restBetweenRoundsSeconds,
         timerNotes: base.timerNotes,
+        targetRpe: base.captureStrategy == CircuitCaptureStrategy.fixedWork
+            ? base.targetRpe
+            : null,
         stations: base.stations,
         captureStrategy: base.captureStrategy,
       ),

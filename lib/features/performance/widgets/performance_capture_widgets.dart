@@ -6,12 +6,14 @@ import '../../../core/theme/spacing.dart';
 import '../../../core/theme/text_styles.dart';
 import '../../../core/widgets/cohort_button.dart';
 import '../../../core/widgets/cohort_card.dart';
+import '../../../models/authored_station_target_formatter.dart';
 import '../../../models/strength_exercise_prescription.dart';
 import '../../../models/strength_prescription_formatter.dart';
 import '../../../domain/running_workout/running_workout.dart';
 import '../services/strength_exercise_capture_completion.dart';
 import '../../session/models/session_execution_plan.dart';
 import '../../session/presentation/daily_journey_accessibility.dart';
+import '../../session/presentation/strength_workout_instructions.dart';
 import '../../session/services/athlete_exercise_label_resolver.dart';
 import '../../workout_player/models/previous_performance_snapshot.dart';
 import '../../workout_player/services/previous_performance_resolver.dart';
@@ -184,6 +186,7 @@ class BlockResultEditor extends StatelessWidget {
     this.previousPerformanceResolver = const PreviousPerformanceResolver(),
     this.previousStrengthHistory,
     this.onRetryPreviousStrength,
+    this.useStrengthInstructions = false,
   });
 
   final BlockPerformanceDraft blockDraft;
@@ -203,6 +206,7 @@ class BlockResultEditor extends StatelessWidget {
   final PreviousPerformanceResolver previousPerformanceResolver;
   final PreviousStrengthHistoryState? previousStrengthHistory;
   final VoidCallback? onRetryPreviousStrength;
+  final bool useStrengthInstructions;
 
   static bool showsCaptureFields(BlockPerformanceDraft blockDraft) {
     return _captureModeFor(blockDraft) != BlockCaptureMode.completion ||
@@ -260,6 +264,7 @@ class BlockResultEditor extends StatelessWidget {
           previousPerformanceResolver: previousPerformanceResolver,
           previousStrengthHistory: previousStrengthHistory,
           onRetryPreviousStrength: onRetryPreviousStrength,
+          useStrengthInstructions: useStrengthInstructions,
         ),
       ],
     );
@@ -280,6 +285,7 @@ class _ResultEditorBody extends StatelessWidget {
     this.previousPerformanceResolver = const PreviousPerformanceResolver(),
     this.previousStrengthHistory,
     this.onRetryPreviousStrength,
+    this.useStrengthInstructions = false,
   });
 
   final BlockPerformanceDraft blockDraft;
@@ -299,6 +305,7 @@ class _ResultEditorBody extends StatelessWidget {
   final PreviousPerformanceResolver previousPerformanceResolver;
   final PreviousStrengthHistoryState? previousStrengthHistory;
   final VoidCallback? onRetryPreviousStrength;
+  final bool useStrengthInstructions;
 
   @override
   Widget build(BuildContext context) {
@@ -317,6 +324,7 @@ class _ResultEditorBody extends StatelessWidget {
           previousPerformanceResolver: previousPerformanceResolver,
           previousStrengthHistory: previousStrengthHistory,
           onRetryPreviousStrength: onRetryPreviousStrength,
+          useStrengthInstructions: useStrengthInstructions,
         );
       case BlockCaptureMode.amrap:
         return _AmrapEditor(
@@ -1110,6 +1118,7 @@ class _StrengthEditor extends StatefulWidget {
     this.onOpenExercise,
     this.previousStrengthHistory,
     this.onRetryPreviousStrength,
+    this.useStrengthInstructions = false,
   });
 
   final BlockPerformanceDraft blockDraft;
@@ -1127,6 +1136,7 @@ class _StrengthEditor extends StatefulWidget {
   final ValueChanged<SessionExecutionExerciseSummary>? onOpenExercise;
   final PreviousStrengthHistoryState? previousStrengthHistory;
   final VoidCallback? onRetryPreviousStrength;
+  final bool useStrengthInstructions;
 
   @override
   State<_StrengthEditor> createState() => _StrengthEditorState();
@@ -1297,7 +1307,25 @@ class _StrengthEditorState extends State<_StrengthEditor> {
                     exercise: exercise,
                     prescription: summary?.prescription,
                   );
-              final label = _exerciseLabel(exercise);
+              final prescription = summary?.prescription;
+              final useOverview =
+                  widget.useStrengthInstructions &&
+                  prescription?.authoredDistanceLabel == null;
+              final exerciseLabel = _exerciseLabel(exercise);
+              final label = widget.useStrengthInstructions &&
+                      exerciseLabel == exercise.sourceExerciseId
+                  ? 'Exercise'
+                  : exerciseLabel;
+              final overview = !useOverview || prescription == null
+                  ? const <String>[]
+                  : [
+                      if (StrengthPrescriptionFormatter.formatLoad(
+                            prescription.load,
+                          ) case final load?)
+                        'Load: $load',
+                      ?StrengthPrescriptionFormatter.formatEffort(prescription),
+                      ...StrengthPrescriptionFormatter.restDetails(prescription),
+                    ];
               final cardKey = _cardKeys.putIfAbsent(
                 exercise.exerciseResultId,
                 GlobalKey.new,
@@ -1322,6 +1350,7 @@ class _StrengthEditorState extends State<_StrengthEditor> {
                     child: _StrengthExerciseAccordionCard(
                       label: label,
                       volume: volume,
+                      overview: overview,
                       statusLine: status,
                       isExpanded: expanded,
                       isComplete: complete,
@@ -1343,19 +1372,23 @@ class _StrengthEditorState extends State<_StrengthEditor> {
                                   history: widget.previousStrengthHistory,
                                   onRetry: widget.onRetryPreviousStrength,
                                   useProvidedPrevious: true,
+                                  showToday:
+                                      !useOverview || prescription == null,
                                 ),
-                                if (StrengthPrescriptionFormatter.formatRest(
-                                      summary?.prescription?.restSeconds,
-                                    ) !=
-                                    null) ...[
-                                  const SizedBox(height: CohortSpacing.sm),
-                                  Text(
-                                    StrengthPrescriptionFormatter.formatRest(
-                                      summary!.prescription!.restSeconds,
-                                    )!,
-                                    style: CohortTextStyles.small,
+                                if (useOverview)
+                                  _StrengthTechnique(summary: summary)
+                                else if (StrengthPrescriptionFormatter.formatRest(
+                                      prescription?.restSeconds,
+                                    ) case final rest?)
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                      top: CohortSpacing.sm,
+                                    ),
+                                    child: Text(
+                                      rest,
+                                      style: CohortTextStyles.small,
+                                    ),
                                   ),
-                                ],
                                 const SizedBox(height: CohortSpacing.sm),
                                 for (final set in exercise.sets)
                                   Padding(
@@ -1413,10 +1446,46 @@ class _StrengthEditorState extends State<_StrengthEditor> {
   }
 }
 
+class _StrengthTechnique extends StatelessWidget {
+  const _StrengthTechnique({required this.summary});
+
+  final SessionExecutionExerciseSummary? summary;
+
+  @override
+  Widget build(BuildContext context) {
+    final prescription = summary?.prescription;
+    final lines = [
+      ...StrengthWorkoutInstructions.lines(summary?.exercise?.setup),
+      ?StrengthPrescriptionFormatter.formatTempo(
+        StrengthWorkoutInstructions.tempo(prescription?.tempo),
+      ),
+      if (prescription?.holdSeconds case final seconds?)
+        '$seconds s extended hold',
+      ?StrengthWorkoutInstructions.cue(
+        prescription?.coachCue ?? summary?.exercise?.coachingCues,
+      ),
+    ];
+    if (lines.isEmpty) return const SizedBox.shrink();
+    return ExpansionTile(
+      tilePadding: EdgeInsets.zero,
+      expandedCrossAxisAlignment: CrossAxisAlignment.start,
+      title: const Text('Setup, tempo & cues'),
+      children: [
+        for (final line in lines)
+          Padding(
+            padding: const EdgeInsets.only(bottom: CohortSpacing.xs),
+            child: Text(line, style: CohortTextStyles.small),
+          ),
+      ],
+    );
+  }
+}
+
 class _StrengthExerciseAccordionCard extends StatelessWidget {
   const _StrengthExerciseAccordionCard({
     required this.label,
     required this.volume,
+    required this.overview,
     required this.isExpanded,
     required this.isComplete,
     required this.reduceMotion,
@@ -1428,6 +1497,7 @@ class _StrengthExerciseAccordionCard extends StatelessWidget {
 
   final String label;
   final String volume;
+  final List<String> overview;
   final String? statusLine;
   final bool isExpanded;
   final bool isComplete;
@@ -1441,6 +1511,7 @@ class _StrengthExerciseAccordionCard extends StatelessWidget {
     final semanticsLabel = [
       label,
       volume,
+      ...overview,
       if (statusLine != null) statusLine,
     ].join('. ');
 
@@ -1495,6 +1566,18 @@ class _StrengthExerciseAccordionCard extends StatelessWidget {
                                         volume,
                                         style: CohortTextStyles.small,
                                       ),
+                                      if (overview.isNotEmpty)
+                                        Wrap(
+                                          spacing: CohortSpacing.sm,
+                                          runSpacing: 2,
+                                          children: [
+                                            for (final metric in overview)
+                                              Text(
+                                                metric,
+                                                style: CohortTextStyles.small,
+                                              ),
+                                          ],
+                                        ),
                                       if (statusLine != null) ...[
                                         const SizedBox(height: 2),
                                         Text(
@@ -1609,6 +1692,7 @@ class _ExerciseTargetComparison extends StatelessWidget {
     this.history,
     this.onRetry,
     this.useProvidedPrevious = false,
+    this.showToday = true,
   });
 
   final SessionExecutionExerciseSummary? summary;
@@ -1617,6 +1701,7 @@ class _ExerciseTargetComparison extends StatelessWidget {
   final PreviousStrengthHistoryState? history;
   final VoidCallback? onRetry;
   final bool useProvidedPrevious;
+  final bool showToday;
 
   @override
   Widget build(BuildContext context) {
@@ -1626,20 +1711,22 @@ class _ExerciseTargetComparison extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Today', style: CohortTextStyles.eyebrow),
-        Text(
-          prescription == null
-              ? 'No authored target available.'
-              : [
-                  StrengthPrescriptionFormatter.summaryLine(prescription),
-                  if (StrengthPrescriptionFormatter.detailLine(
-                    prescription,
-                  ).isNotEmpty)
-                    StrengthPrescriptionFormatter.detailLine(prescription),
-                ].join(' · '),
-          style: CohortTextStyles.small,
-        ),
-        const SizedBox(height: CohortSpacing.xs),
+        if (showToday) ...[
+          Text('Today', style: CohortTextStyles.eyebrow),
+          Text(
+            prescription == null
+                ? 'No authored target available.'
+                : [
+                    StrengthPrescriptionFormatter.summaryLine(prescription),
+                    if (StrengthPrescriptionFormatter.detailLine(
+                      prescription,
+                    ).isNotEmpty)
+                      StrengthPrescriptionFormatter.detailLine(prescription),
+                  ].join(' · '),
+            style: CohortTextStyles.small,
+          ),
+          const SizedBox(height: CohortSpacing.xs),
+        ],
         Text('Previous performance', style: CohortTextStyles.eyebrow),
         lastTimeBody,
       ],
@@ -1762,6 +1849,7 @@ class _ExerciseActualRow extends StatelessWidget {
             ),
             value: set.load?.toString() ?? '',
             allowDecimal: true,
+            dismissOnTapOutside: true,
             autofocus: set.setNumber == 1 && !set.completed && !showReps,
             onChanged: (value) {
               final parsed = double.tryParse(value);

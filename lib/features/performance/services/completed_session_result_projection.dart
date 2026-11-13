@@ -1,5 +1,7 @@
 import '../../../models/session_block_type.dart';
 import '../../../domain/running_workout/running_workout.dart';
+import '../../programme/presentation/scheduled_quality_run_summary.dart';
+import '../../session/models/running_target_admission.dart';
 import '../models/interval_work_result.dart';
 import '../models/performance_result_data.dart';
 import '../models/performance_result_type.dart';
@@ -142,6 +144,7 @@ class CompletedBlockResultProjection {
     required this.summary,
     required this.exercises,
     this.prescriptionContext,
+    this.qualityPaceLabels = const {},
     this.interval,
     this.circuit,
   });
@@ -152,6 +155,7 @@ class CompletedBlockResultProjection {
   final String summary;
   final List<CompletedExerciseResultProjection> exercises;
   final String? prescriptionContext;
+  final Set<String> qualityPaceLabels;
   final CompletedIntervalBlockProjection? interval;
   final CompletedCircuitBlockProjection? circuit;
 
@@ -189,7 +193,9 @@ class CompletedBlockResultProjection {
                 ),
               )
               .toList(growable: false);
-    final prescription = block.blockSnapshot.content.trim();
+    final qualityRun = _qualityRunPrescription(block.blockSnapshot, current);
+    final prescription =
+        qualityRun?.context ?? block.blockSnapshot.content.trim();
     final summary = interval != null
         ? interval.collapsedSummary
         : circuit != null
@@ -210,9 +216,94 @@ class CompletedBlockResultProjection {
           : prescription.isEmpty
           ? null
           : prescription,
+      qualityPaceLabels: qualityRun?.paceLabels ?? const {},
       interval: interval,
       circuit: circuit,
     );
+  }
+
+  static ({String context, Set<String> paceLabels})? _qualityRunPrescription(
+    BlockPerformanceSnapshot block,
+    TrainingSessionRecord current,
+  ) {
+    final rawWorkout = block.timedRunningWorkout;
+    if (rawWorkout == null) return null;
+
+    final RunningWorkout workout;
+    try {
+      workout = const RunningWorkoutCodec().decodeMap(rawWorkout);
+    } on RunningWorkoutCodecException {
+      return null;
+    }
+    final summary = ScheduledQualityRunSummary.fromWorkout(workout);
+    if (summary == null) return null;
+
+    return (
+      context: [
+        '${formatCompletedDuration(summary.totalSeconds)} total',
+        ...summary.phases,
+      ].join('\n'),
+      paceLabels: _frozenQualityPaces(workout, block.sourceBlockId, current),
+    );
+  }
+
+  static Set<String> _frozenQualityPaces(
+    RunningWorkout workout,
+    String blockId,
+    TrainingSessionRecord current,
+  ) {
+    final packet = current.sessionSnapshot.runningTargetAdmissionSnapshot;
+    if (packet == null ||
+        packet['schema_version'] != 1 ||
+        current.trainingSessionId == null ||
+        packet['training_session_id'] != current.trainingSessionId ||
+        packet['athlete_id'] != current.athleteId ||
+        packet['protocol_id'] != current.sessionSnapshot.sourceProtocolId ||
+        packet['quality'] is! Map ||
+        packet['accepted_at'] is! String ||
+        DateTime.tryParse(packet['accepted_at'] as String) == null) {
+      return const {};
+    }
+
+    final RunningWorkout resolved;
+    try {
+      // Resolve only the saved target rows and their exact block/step binding.
+      // Current athlete inputs are neither read nor used to derive the range.
+      resolved = resolveAdmittedRunningTargets(workout, blockId, packet);
+    } on FormatException {
+      return const {};
+    } on RunningWorkoutCodecException {
+      return const {};
+    } on TypeError {
+      // An incomplete historical packet must not hide recorded actuals.
+      return const {};
+    }
+    final byStepId = {
+      for (final step in runningAtomicSteps(resolved)) step.stepId: step.target,
+    };
+    final labels = <String>{};
+    for (final step in runningAtomicSteps(workout)) {
+      if (step.role != RunningStepRole.work ||
+          step.target.kind != RunningTargetKind.qualityPaceRef) {
+        continue;
+      }
+      final target = byStepId[step.stepId];
+      if (target == null || target.kind != RunningTargetKind.paceRange) continue;
+      final label = switch (step.target.qualityCategory) {
+        'threshold' => 'Threshold work',
+        '10k_specific' => '10K-specific work',
+        'short_5k' => 'Short 5K work',
+        _ => 'Quality work',
+      };
+      final lower = IntervalPaceFormat.formatSecondsPerKm(
+        target.paceMillisecondsPerKilometreLow! / 1000,
+      );
+      final upper = IntervalPaceFormat.formatSecondsPerKm(
+        target.paceMillisecondsPerKilometreHigh! / 1000,
+      );
+      labels.add('$label · $lower–$upper/km');
+    }
+    return labels;
   }
 
   static String _blockHeadline(

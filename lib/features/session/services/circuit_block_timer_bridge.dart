@@ -43,6 +43,8 @@ class CircuitBlockTimerBridge {
       );
     }
     if (result is CircuitResultData && result.timerCursor != null) {
+      // Fixed work restores its wall-clock anchors in its capture controller.
+      if (result.isFixedWork) return null;
       return stateFrom(
         cursor: result.timerCursor!,
         format: block.workoutFormat,

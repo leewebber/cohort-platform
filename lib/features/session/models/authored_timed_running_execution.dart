@@ -16,6 +16,7 @@ class AuthoredTimedRunningExecution extends TimedRunningExecution {
     required this.workout,
     required this.executionMappingSha256,
     required this.authoredGuidance,
+    required this.isQualityRun,
   });
 
   @override
@@ -26,6 +27,7 @@ class AuthoredTimedRunningExecution extends TimedRunningExecution {
   final String executionMappingSha256;
   @override
   final String? authoredGuidance;
+  final bool isQualityRun;
   @override
   bool get pauseOnInterruption => true;
 
@@ -44,8 +46,9 @@ class AuthoredTimedRunningExecution extends TimedRunningExecution {
       throw const FormatException('This authored run is not executable.');
     }
     const codec = RunningWorkoutCodec();
+    final source = codec.decode(codec.encode(config!.runningWorkout!));
     final decoded = resolveAdmittedRunningTargets(
-      codec.decode(codec.encode(config!.runningWorkout!)),
+      source,
       block.blockId,
       admission,
     );
@@ -95,6 +98,9 @@ class AuthoredTimedRunningExecution extends TimedRunningExecution {
       workout: workout,
       executionMappingSha256: digest,
       authoredGuidance: guidance.isEmpty ? null : guidance,
+      isQualityRun: runningAtomicSteps(
+        source,
+      ).any((step) => step.target.kind == RunningTargetKind.qualityPaceRef),
     );
   }
 }

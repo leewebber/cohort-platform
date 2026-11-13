@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:cohort_platform/core/persistence/athlete_local_repository.dart';
 import 'package:cohort_platform/core/persistence/local_kv_store.dart';
 import 'package:cohort_platform/features/home/home_screen.dart';
@@ -44,6 +47,9 @@ import 'package:cohort_platform/models/protocol.dart';
 import 'package:cohort_platform/models/session_block_type.dart';
 import 'package:cohort_platform/models/strength_exercise_prescription.dart';
 import 'package:cohort_platform/models/workout_format.dart';
+import 'package:cohort_platform/features/session/screens/quality_target_review_screen.dart';
+import 'package:cohort_platform/features/session/services/running_target_admission_store.dart';
+import 'package:cohort_platform/models/timer_configuration.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -344,6 +350,7 @@ class _CalendarCompletionCoordinator extends PerformanceRecordSaveCoordinator {
     ProgrammeExecutionContext? programmeContext,
     TrainingSessionRecordStatus? forcedStatus,
     String? idempotencyKey,
+    bool finishEarly = false,
   }) async {
     calls += 1;
     final record = const PerformanceRecordMapper().fromDraft(
@@ -454,7 +461,33 @@ class _StartStore implements ProgrammeTrainingSessionStartStore {
   }
 }
 
-ProgrammeVersion _version() => ProgrammeVersion(
+class _QualityStartStore extends _StartStore {
+  @override
+  Future<Map<String, dynamic>> createOrResume(
+    Map<String, dynamic> payload,
+  ) async {
+    calls.add(Map<String, dynamic>.from(payload));
+    return {'code': 'running_target_review_required'};
+  }
+}
+
+class _MissingQualityInput
+    implements RunningTargetAdmissionStore, QualityRunningTargetAdmissionStore {
+  @override
+  Future<Map<String, dynamic>> reviewQuality(
+    String occurrenceId,
+    String source,
+  ) async => {
+    'status': 'input_required',
+    'reason': 'missing_5k',
+    'evaluation_timezone': 'Atlantic/Canary',
+  };
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
+}
+
+ProgrammeVersion _version({int? packageSchemaVersion}) => ProgrammeVersion(
   id: ProgrammeScheduleTestFixtures.versionId,
   lineageId: ProgrammeScheduleTestFixtures.lineageId,
   versionNumber: 1,
@@ -466,6 +499,7 @@ ProgrammeVersion _version() => ProgrammeVersion(
   sessionsPerWeek: 7,
   approvedForGlobal: true,
   packageContentHash: _hash,
+  packageSchemaVersion: packageSchemaVersion,
 );
 
 ProgrammeAssignment _assignment({
@@ -577,10 +611,11 @@ List<FixedProgrammeOccurrenceProjection> _firstWeekOccurrences({
 }
 
 Future<InMemoryProgrammeTables> _tablesWith(
-  ProgrammeAssignment assignment,
-) async {
+  ProgrammeAssignment assignment, {
+  int? packageSchemaVersion,
+}) async {
   final tables = InMemoryProgrammeTables();
-  final version = _version();
+  final version = _version(packageSchemaVersion: packageSchemaVersion);
   await InMemoryProgrammeVersionStore(tables).saveTemplateTree(
     version: version,
     tree: ProgrammeScheduleTestFixtures.foundationWeekOneTree(
@@ -601,7 +636,7 @@ Future<InMemoryProgrammeTables> _tablesWith(
 
 AthleteProgrammeSessionPrepareService _prepareService({
   required InMemoryProgrammeTables tables,
-  required _EchoLoader loader,
+  required SessionExecutionLoader loader,
   required FixedProgrammeOccurrenceProjectionStore projectionStore,
 }) => AthleteProgrammeSessionPrepareService(
   assignmentStore: InMemoryProgrammeAssignmentStore(tables),
@@ -1919,6 +1954,152 @@ void main() {
         expect(tester.takeException(), isNull);
       },
     );
+
+    testWidgets('Week 4 quality preview shows the exact plan before review', (
+      tester,
+    ) async {
+      tester.view.physicalSize = const Size(390, 844);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+
+      final bodies = jsonDecode(
+        File(
+          'docs/programmes/hybrid_10k/performance_selected_2026_11_03/'
+          'RUNNING_BODIES.json',
+        ).readAsStringSync(),
+      ) as List;
+      final source = bodies.singleWhere(
+        (row) => row['source_session_id'] == 'LW10K-W04-D02',
+      ) as Map<String, dynamic>;
+      final plan = SessionExecutionPlan(
+        sessionId: 'RN-006',
+        sessionTitle: 'Consolidation threshold',
+        durationMin: 43,
+        blocks: [
+          SessionExecutionBlock(
+            blockId: 'quality-block',
+            title: 'Consolidation threshold',
+            blockType: SessionBlockType.conditioning,
+            content: 'Follow the authored work and recovery.',
+            workoutFormat: WorkoutFormat.steadyState,
+            position: 0,
+            timerConfiguration: TimerConfiguration.fromJson({
+              'durationSeconds': source['fixed_seconds'],
+              'running_workout': source['workout'],
+            }),
+          ),
+        ],
+      );
+      final assignment = _assignment();
+      final occurrence = _occurrence(
+        assignment: assignment,
+        id: '00000000-0000-4000-8000-000000000202',
+        slotId: ProgrammeScheduleTestFixtures.slot2Id,
+        protocolId: plan.sessionId,
+        dayKey: 'day_2',
+        date: '2026-09-02',
+        state: FixedProgrammeOccurrenceState.today,
+        sessionTitle: plan.sessionTitle,
+      );
+      final calendar = _calendar(
+        assignment: assignment,
+        today: occurrence.scheduledDate,
+        occurrences: [occurrence],
+      );
+      final day = AthleteProgrammeLifecycleFormatter.fromFixedProjection(
+        calendar,
+      ).week.days.firstWhere((candidate) => candidate.occurrence != null);
+      final loader = _PlanPreviewLoader(plan);
+      final tables = await _tablesWith(assignment, packageSchemaVersion: 2);
+      final startStore = _QualityStartStore();
+      final activeLauncher = _NoopSessionExecutionLauncher();
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Builder(
+            builder: (context) => TextButton(
+              onPressed: () => openScheduledProgrammeSessionPreview(
+                context: context,
+                athleteId: assignment.athleteId,
+                calendar: calendar,
+                day: day,
+                previewService: ScheduledProgrammeSessionPreviewService(
+                  loader: loader,
+                ),
+                assignmentStore: InMemoryProgrammeAssignmentStore(tables),
+                prepareService: _prepareService(
+                  tables: tables,
+                  loader: loader,
+                  projectionStore: _ProjectionStore(calendar),
+                ),
+                executionLauncher: ProgrammeSessionExecutionLauncher(
+                  startStore: startStore,
+                  sessionExecutionLauncher: activeLauncher,
+                  runningTargets: _MissingQualityInput(),
+                ),
+              ),
+              child: const Text('Open preview'),
+            ),
+          ),
+        ),
+      );
+      await tester.tap(find.text('Open preview'));
+      await tester.pumpAndSettle();
+
+      final scrollable = find.byType(Scrollable).first;
+      await tester.scrollUntilVisible(
+        find.text('42:30 total'),
+        140,
+        scrollable: scrollable,
+        maxScrolls: 8,
+      );
+      expect(find.text('43 min estimated'), findsNothing);
+      final phases = [
+        '10 min easy warm-up',
+        '3 × 20 sec relaxed acceleration · 40 sec very easy recovery after each',
+        '4 × 5 min threshold running · 90 sec easy recovery between reps only (3 recoveries)',
+        '5 min very easy cooldown',
+      ];
+      await tester.scrollUntilVisible(
+        find.text(phases.last),
+        140,
+        scrollable: scrollable,
+      );
+      final rows = tester.widgetList<Text>(find.byType(Text)).map((t) => t.data);
+      expect(rows.where(phases.contains), orderedEquals(phases));
+      expect(find.textContaining('2550s total'), findsNothing);
+      expect(find.text('Start timer'), findsNothing);
+      expect(find.text('Accept targets and start'), findsNothing);
+      expect(startStore.calls, isEmpty);
+
+      // The review screen's long dropdown label needs more space in the
+      // widget test font. The preview itself was checked at phone width.
+      tester.view.physicalSize = const Size(700, 1000);
+      await tester.pumpAndSettle();
+      await tester.scrollUntilVisible(
+        find.text('Begin'),
+        -180,
+        scrollable: scrollable,
+      );
+      await tester.tap(find.text('Begin'));
+      await tester.pumpAndSettle();
+      expect(startStore.calls, hasLength(1));
+      expect(find.byType(QualityTargetReviewScreen), findsOneWidget);
+      final review = tester.widget<QualityTargetReviewScreen>(
+        find.byType(QualityTargetReviewScreen),
+      );
+      expect(
+        review.plan.blocks.single.timerConfiguration!.toJson()['running_workout'],
+        source['workout'],
+      );
+      expect(review.programmeContext.occurrenceId, occurrence.occurrenceId);
+      expect(startStore.calls.single['occurrence_id'], occurrence.occurrenceId);
+      expect(startStore.calls.single['target_review_hash'], isNull);
+      expect(find.text('Authored RPE instead of pace'), findsNothing);
+      expect(find.text('Accept targets and start'), findsNothing);
+      expect(activeLauncher.calls, 0);
+      expect(tester.takeException(), isNull);
+    });
 
     testWidgets('Today Begin is occurrence-bound and preview itself is inert', (
       tester,

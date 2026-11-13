@@ -5,11 +5,14 @@ import '../../../../core/theme/spacing.dart';
 import '../../../../core/theme/text_styles.dart';
 import '../../../../core/widgets/cohort_button.dart';
 import '../../../../core/widgets/cohort_card.dart';
+import '../../../../models/authored_station_target_formatter.dart';
 import '../../../../models/session_block_type.dart';
 import '../../../../models/strength_exercise_prescription.dart';
 import '../../../../models/strength_prescription_formatter.dart';
+import '../../../../models/workout_format.dart';
 import '../../../performance/services/circuit_capture_contract.dart';
 import '../../models/session_execution_plan.dart';
+import '../../presentation/strength_workout_instructions.dart';
 import '../strength_prescription_display.dart';
 import 'athlete_session_components.dart';
 
@@ -28,6 +31,7 @@ class AthleteBlockCard extends StatelessWidget {
     this.showActions = true,
     this.exerciseInfoOpensDetail = false,
     this.performanceSection,
+    this.timerSummaryOverride,
     this.performanceReplacesExerciseList = false,
     this.recordedResultSummary,
     this.showBlockNavigation = false,
@@ -36,6 +40,8 @@ class AthleteBlockCard extends StatelessWidget {
     this.timerActionLabel = 'Start timer',
     this.completeActionLabel,
     this.stackActions = false,
+    this.useStrengthInstructions = false,
+    this.showFixedWorkGuidance = false,
   });
 
   final SessionExecutionBlock block;
@@ -50,6 +56,7 @@ class AthleteBlockCard extends StatelessWidget {
   final bool showActions;
   final bool exerciseInfoOpensDetail;
   final Widget? performanceSection;
+  final Widget? timerSummaryOverride;
 
   /// Active per-exercise controls include the movement and prescription, so
   /// rendering the structured summary list as well would duplicate each row.
@@ -64,10 +71,21 @@ class AthleteBlockCard extends StatelessWidget {
   final String timerActionLabel;
   final String? completeActionLabel;
   final bool stackActions;
+  final bool useStrengthInstructions;
+  final bool showFixedWorkGuidance;
 
   @override
   Widget build(BuildContext context) {
     final isFixedWork = CircuitCaptureContract.isFixedWork(block);
+    final isEmom = block.workoutFormat == WorkoutFormat.emom;
+    final showPreStartGuidance =
+        isFixedWork && showFixedWorkGuidance && !isComplete;
+    final coachNotes = isFixedWork
+        ? block.coachNotes?.trim()
+        : block.coachNotes;
+    final title = useStrengthInstructions
+        ? StrengthWorkoutInstructions.title(block.title)
+        : block.title;
     final borderColor = isActive
         ? CohortColors.olive
         : isComplete
@@ -90,7 +108,7 @@ class AthleteBlockCard extends StatelessWidget {
                 button: true,
                 expanded: isExpanded,
                 label: [
-                  block.title,
+                  title,
                   if (isActive) 'Active' else if (isComplete) 'Completed' else 'Not started',
                   isFixedWork ? 'Fixed-work rounds' : block.blockTypeLabel,
                 ].join('. '),
@@ -102,7 +120,7 @@ class AthleteBlockCard extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(block.title, style: CohortTextStyles.cardTitle),
+                        Text(title, style: CohortTextStyles.cardTitle),
                         Text(
                           isFixedWork
                               ? 'Fixed-work rounds'
@@ -144,28 +162,51 @@ class AthleteBlockCard extends StatelessWidget {
                 Text(target.dose),
                 Text('Prescribed · ${target.targetLabel}'),
               ],
-              if (!isFixedWork) WorkoutContentText(content: block.content),
-              if (block.timerSummary != null && !isFixedWork) ...[
+              if (!isFixedWork)
+                if (useStrengthInstructions)
+                  _StrengthBlockInstructions(block: block)
+                else
+                  WorkoutContentText(content: block.content),
+              if (timerSummaryOverride case final summary?) ...[
+                const SizedBox(height: CohortSpacing.sm),
+                summary,
+              ] else if (block.timerSummary != null && !isFixedWork) ...[
                 const SizedBox(height: CohortSpacing.sm),
                 TimerSummaryText(summary: block.timerSummary!),
               ],
-              if (block.linkedExercises.isNotEmpty &&
-                  !performanceReplacesExerciseList &&
-                  !isFixedWork) ...[
-                const SizedBox(height: CohortSpacing.md),
-                _ExecutionExerciseList(
-                  exercises: block.linkedExercises,
-                  onOpenExercise: onOpenExercise,
-                  exerciseInfoOpensDetail: exerciseInfoOpensDetail,
-                ),
+              if (!performanceReplacesExerciseList && !isFixedWork) ...[
+                if (isEmom)
+                  _EmomStationList(
+                    block: block,
+                    onOpenExercise: onOpenExercise,
+                    exerciseInfoOpensDetail: exerciseInfoOpensDetail,
+                  )
+                else if (block.linkedExercises.isNotEmpty) ...[
+                  const SizedBox(height: CohortSpacing.md),
+                  _ExecutionExerciseList(
+                    exercises: block.linkedExercises,
+                    onOpenExercise: onOpenExercise,
+                    exerciseInfoOpensDetail: exerciseInfoOpensDetail,
+                    useStrengthInstructions: useStrengthInstructions,
+                  ),
+                ],
               ],
-              if (block.coachNotes != null &&
-                  !isFixedWork &&
+              if ((isEmom && !isFixedWork) || showPreStartGuidance)
+                if (block.timerConfiguration?.targetRpe case final targetRpe?) ...[
+                  const SizedBox(height: CohortSpacing.md),
+                  Text(
+                    'Target RPE ${targetRpe.replaceAll('-', '–')}',
+                    style: CohortTextStyles.body,
+                  ),
+                ],
+              if (!useStrengthInstructions &&
+                  coachNotes?.isNotEmpty == true &&
+                  (!isFixedWork || showPreStartGuidance) &&
                   !block.blockType.supportsStructuredStrengthPrescription) ...[
                 const SizedBox(height: CohortSpacing.md),
                 Text('Coach notes', style: CohortTextStyles.eyebrow),
                 const SizedBox(height: CohortSpacing.xs),
-                Text(block.coachNotes!, style: CohortTextStyles.body),
+                Text(coachNotes!, style: CohortTextStyles.body),
               ],
               if (performanceSection != null) ...[
                 const SizedBox(height: CohortSpacing.lg),
@@ -237,16 +278,111 @@ class AthleteBlockCard extends StatelessWidget {
   }
 }
 
+class _StrengthBlockInstructions extends StatelessWidget {
+  const _StrengthBlockInstructions({required this.block});
+
+  final SessionExecutionBlock block;
+
+  @override
+  Widget build(BuildContext context) {
+    final lines = StrengthWorkoutInstructions.blockLines(block);
+    final notes = StrengthWorkoutInstructions.lines(block.coachNotes);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        for (final line in lines)
+          Padding(
+            padding: const EdgeInsets.only(bottom: CohortSpacing.xs),
+            child: WorkoutContentText(content: line),
+          ),
+        if (notes.isNotEmpty)
+          ExpansionTile(
+            tilePadding: EdgeInsets.zero,
+            expandedCrossAxisAlignment: CrossAxisAlignment.start,
+            title: const Text('Workout guidance'),
+            children: [
+              for (final note in notes) WorkoutContentText(content: note),
+            ],
+          ),
+      ],
+    );
+  }
+}
+
+class _EmomStationList extends StatelessWidget {
+  const _EmomStationList({
+    required this.block,
+    required this.onOpenExercise,
+    required this.exerciseInfoOpensDetail,
+  });
+
+  final SessionExecutionBlock block;
+  final ValueChanged<SessionExecutionExerciseSummary> onOpenExercise;
+  final bool exerciseInfoOpensDetail;
+
+  @override
+  Widget build(BuildContext context) {
+    final timerStations = block.timerConfiguration?.stations ?? const [];
+    final stations = timerStations.isEmpty
+        ? CircuitCaptureContract.authoredStationSpecs(block)
+        : timerStations;
+    if (stations.isEmpty) return const SizedBox.shrink();
+
+    final exercises = {
+      for (final exercise in block.linkedExercises) exercise.exerciseId: exercise,
+    };
+    final rows = <Widget>[];
+    for (final station in stations) {
+      final exercise = exercises[station.exerciseId];
+      final target = AuthoredStationTargetFormatter.fromTimerSpec(
+        station,
+        spellOutCalories: true,
+      );
+      final name = exercise?.athleteLabel ?? 'Station ${station.position}';
+      final line = station.isRest
+          ? 'Rest'
+          : target == null
+          ? name
+          : '$name — $target';
+      rows.add(
+        exercise == null
+            ? Padding(
+                padding: const EdgeInsets.only(bottom: CohortSpacing.sm),
+                child: Text(line, style: CohortTextStyles.body),
+              )
+            : _ExecutionExerciseRow(
+                exercise: exercise,
+                onOpenExercise: onOpenExercise,
+                exerciseInfoOpensDetail: exerciseInfoOpensDetail,
+                useStrengthInstructions: false,
+                stationLine: line,
+              ),
+      );
+    }
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: CohortSpacing.md),
+        Text('Stations', style: CohortTextStyles.eyebrow),
+        const SizedBox(height: CohortSpacing.sm),
+        ...rows,
+      ],
+    );
+  }
+}
+
 class _ExecutionExerciseList extends StatelessWidget {
   const _ExecutionExerciseList({
     required this.exercises,
     required this.onOpenExercise,
     required this.exerciseInfoOpensDetail,
+    required this.useStrengthInstructions,
   });
 
   final List<SessionExecutionExerciseSummary> exercises;
   final ValueChanged<SessionExecutionExerciseSummary> onOpenExercise;
   final bool exerciseInfoOpensDetail;
+  final bool useStrengthInstructions;
 
   @override
   Widget build(BuildContext context) {
@@ -269,6 +405,7 @@ class _ExecutionExerciseList extends StatelessWidget {
               exercise: exercise,
               onOpenExercise: onOpenExercise,
               exerciseInfoOpensDetail: exerciseInfoOpensDetail,
+              useStrengthInstructions: useStrengthInstructions,
             ),
         ],
         for (final entry in grouped.entries) ...[
@@ -286,6 +423,7 @@ class _ExecutionExerciseList extends StatelessWidget {
               order: index + 1,
               onOpenExercise: onOpenExercise,
               exerciseInfoOpensDetail: exerciseInfoOpensDetail,
+              useStrengthInstructions: useStrengthInstructions,
             ),
         ],
       ],
@@ -298,13 +436,17 @@ class _ExecutionExerciseRow extends StatelessWidget {
     required this.exercise,
     required this.onOpenExercise,
     required this.exerciseInfoOpensDetail,
+    required this.useStrengthInstructions,
     this.order,
+    this.stationLine,
   });
 
   final SessionExecutionExerciseSummary exercise;
   final ValueChanged<SessionExecutionExerciseSummary> onOpenExercise;
   final bool exerciseInfoOpensDetail;
+  final bool useStrengthInstructions;
   final int? order;
+  final String? stationLine;
 
   @override
   Widget build(BuildContext context) {
@@ -327,9 +469,12 @@ class _ExecutionExerciseRow extends StatelessWidget {
               borderRadius: BorderRadius.circular(4),
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: CohortSpacing.xs),
-                child: StrengthPrescriptionDisplay.fromSummary(
-                  summary: exercise,
-                ),
+                child: stationLine == null
+                    ? StrengthPrescriptionDisplay.fromSummary(
+                        summary: exercise,
+                        useStrengthInstructions: useStrengthInstructions,
+                      )
+                    : Text(stationLine!, style: CohortTextStyles.body),
               ),
             ),
           ),
@@ -474,9 +619,11 @@ class SessionCompletionSummary extends StatelessWidget {
     required this.skippedCount,
     this.elapsedLabel,
     this.contextLabel,
+    this.heading = 'Session complete',
   });
 
   final String sessionTitle;
+  final String heading;
   final int completedCount;
   final int totalCount;
   final int skippedCount;
@@ -488,7 +635,7 @@ class SessionCompletionSummary extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Session complete', style: CohortTextStyles.h1),
+        Text(heading, style: CohortTextStyles.h1),
         const SizedBox(height: CohortSpacing.sm),
         Text(sessionTitle, style: CohortTextStyles.body),
         if (contextLabel != null) ...[

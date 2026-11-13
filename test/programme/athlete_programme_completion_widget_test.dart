@@ -26,6 +26,7 @@ class _DelayedSaveCoordinator extends PerformanceRecordSaveCoordinator {
     programmeContext,
     forcedStatus,
     String? idempotencyKey,
+    bool finishEarly = false,
   }) async {
     calls++;
     await gate.future;
@@ -51,6 +52,7 @@ class _RetrySaveCoordinator extends PerformanceRecordSaveCoordinator {
     ProgrammeExecutionContext? programmeContext,
     forcedStatus,
     String? idempotencyKey,
+    bool finishEarly = false,
   }) async {
     calls++;
     idempotencyKeys.add(idempotencyKey);
